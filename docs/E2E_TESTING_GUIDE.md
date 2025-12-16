@@ -187,16 +187,62 @@ config({ path: '.env.test' })
 - ❌ Strict mode violations em auth forms
 - ❌ Quote Wizard buttons não encontrados
 
-### Depois do Sprint P0 (Estimativa)
+### Depois do Sprint P0 (Resultados Reais - Iteração 1)
 
-- ✅ Taxa de sucesso: 70-80% (36-42/52 passando)
-- ✅ Zero strict mode violations
-- ✅ Todos seletores específicos e confiáveis
+**Execução:** 16 Dezembro 2024 - Chromium apenas - Primeira validação
+
+- ❌ Taxa de sucesso: **4% (2/52 passando)**
+- ✅ Refatorações de seletores funcionaram (zero violations nos testes refatorados)
+- ❌ **BLOQUEADOR CRÍTICO:** DATABASE_URL="${DATABASE_URL}" em .env.test não expande
+
+**Testes que passaram:**
+
+1. ✅ Authentication Flow › should redirect to login when accessing protected route
+2. ✅ Authentication Flow › should navigate to password recovery
+
+**Principais causas de falha (50 testes):**
+
+1. 🔴 DATABASE_URL mal configurado (48+ testes bloqueados)
+2. ⚠️ 2 strict mode violations remanescentes em homepage (mobile test)
+3. ⚠️ Imagens placeholder faltando (avisos, não bloqueiam)
+
+---
+
+### Depois do Sprint P0+ (Resultados Reais - Iteração 2)
+
+**Execução:** 16 Dezembro 2024 - Chromium apenas - Após correções adicionais
+
+- 🟡 Taxa de sucesso: **12% (6/52 passando)** ← **+200% melhoria!**
+- ✅ Todas strict mode violations corrigidas
+- ✅ DATABASE_URL corrigido em .env.test
+- ❌ **REQUER AÇÃO:** Usuário precisa configurar DATABASE_URL com credenciais PostgreSQL reais
+
+**Testes que passaram (6):**
+
+1. ✅ Homepage › should load successfully
+2. ✅ Homepage › should display hero section
+3. ✅ Homepage › should navigate to products page
+4. ✅ Homepage › should be responsive on mobile ← **NOVO!** (fix strict mode)
+5. ✅ Authentication Flow › should redirect to login when accessing protected route
+6. ✅ Authentication Flow › should navigate to password recovery
+
+**Correções aplicadas no Sprint P0+:**
+
+- Fixed `.first()` missing in homepage mobile test ([e2e/01-homepage.spec.ts:79](e2e/01-homepage.spec.ts#L79))
+- Updated DATABASE_URL placeholder in .env.test com instruções claras
+
+**Principais causas de falha (46 testes):**
+
+1. 🔴 **DATABASE_URL não configurado** (46 testes bloqueados)
+   - Placeholder `postgresql://user:password@localhost:5432/versatiglass` precisa de credenciais reais
+   - Usuário deve configurar PostgreSQL + executar `pnpm db:seed:test`
+   - Impacto: Todos testes de auth, portal, admin, quote wizard
+2. ⚠️ Imagens placeholder faltando (avisos, não bloqueiam testes)
 
 ### Bloqueadores Remanescentes
 
-1. ⚠️ Database connection requer setup manual
-2. ⚠️ Alguns testes precisam de dados específicos no banco
+1. 🔴 **CRÍTICO:** DATABASE_URL em .env.test precisa de credenciais PostgreSQL reais
+2. ⚠️ Testes dependem de dados do seed (executar `pnpm db:seed:test`)
 3. ⚠️ Testes de funcionalidades não implementadas vão falhar
 
 ---
@@ -273,12 +319,62 @@ killall node
 
 ### Erro: "Database connection failed"
 
-```bash
-# Verificar se DATABASE_URL está configurada
-echo $DATABASE_URL
+**Sintoma:** Testes falham com `CallbackRouteError: PrismaClientInitializationError` ou `the URL must start with the protocol postgresql://`
 
+**Causa:** A variável `DATABASE_URL="${DATABASE_URL}"` em `.env.test` não expande corretamente.
+
+**FIX (Escolha uma opção):**
+
+**Opção 1 - Usar banco de desenvolvimento (Recomendado para testes locais):**
+
+Edite `.env.test` linha 8 e remova a variável completamente para herdar do ambiente:
+
+```bash
+# .env.test - Linha 8
+# DATABASE_URL="${DATABASE_URL}"  # ← Comente ou remova esta linha
+
+# O Playwright irá usar DATABASE_URL de .env.local ou variáveis de ambiente
+```
+
+**Opção 2 - Configurar banco de teste dedicado:**
+
+Edite `.env.test` linha 8 com URL real:
+
+```bash
+# .env.test - Linha 8
+DATABASE_URL="postgresql://user:password@localhost:5432/versatiglass_test"
+```
+
+Depois, configure o banco:
+
+```bash
+# Criar banco de teste e popular
+pnpm db:push
+pnpm db:seed:test
+```
+
+**Opção 3 - Exportar variável antes do teste (Linux/Mac):**
+
+```bash
+export DATABASE_URL="postgresql://user:password@localhost:5432/versatiglass"
+pnpm test:e2e
+```
+
+**Windows PowerShell:**
+
+```powershell
+$env:DATABASE_URL="postgresql://user:password@localhost:5432/versatiglass"
+pnpm test:e2e
+```
+
+**Verificar se funcionou:**
+
+```bash
 # Testar conexão
 pnpm prisma db push
+
+# Se conectar, rodar testes
+pnpm test:e2e
 ```
 
 ### Erro: "Test failed: element not found"
@@ -312,12 +408,34 @@ AUTH_SECRET="e2e-test-secret-key-for-playwright-testing-12345"
 | Refatorar seletores dos testes E2E      | ✅ Done | 1.5h        |
 | Adicionar AUTH_SECRET ao .env           | ✅ Done | 15min       |
 | Criar script de seed com dados de teste | ✅ Done | 1h          |
-| Re-executar testes E2E para validar     | 🔄 Next | 30min       |
-| **TOTAL**                               |         | **3h15min** |
+| Re-executar testes E2E para validar     | ✅ Done | 30min       |
+| Documentar resultados e bloqueadores    | ✅ Done | 20min       |
+| **TOTAL**                               |         | **3h35min** |
 
-**Próximo Passo:** Validar melhorias executando `pnpm test:e2e`
+---
+
+## 🔧 Sprint P0+ - Status e Próximos Passos
+
+| Prioridade | Tarefa                                             | Status  | Bloqueador |
+| ---------- | -------------------------------------------------- | ------- | ---------- |
+| 🔴 P0      | Corrigir DATABASE_URL em .env.test                 | ✅ Done | -          |
+| 🔴 P0      | Corrigir strict mode violations em homepage        | ✅ Done | -          |
+| 🔴 P0      | Configurar DATABASE_URL com credenciais PostgreSQL | ⚠️ USER | Crítico    |
+| 🔴 P0      | Executar seed de teste (pnpm db:seed:test)         | ⚠️ USER | Crítico    |
+| 🟢 P2      | Adicionar imagens placeholder                      | 📋 Todo | Baixo      |
+| 🟢 P2      | Expandir seed com produtos do catálogo             | 📋 Todo | Baixo      |
+| ⚪ P3      | Configurar CI/CD com GitHub Actions                | 📋 Todo | -          |
+
+**Próximo Passo (USUÁRIO):**
+
+1. Configurar DATABASE_URL em `.env.test` com credenciais PostgreSQL reais
+2. Executar `pnpm db:push` para criar schema
+3. Executar `pnpm db:seed:test` para popular dados
+4. Re-executar `pnpm test:e2e` para validar
+
+**Taxa de Progresso:** 6/52 testes passando (12%) - Bloqueados por configuração de banco de dados
 
 ---
 
 **Documento gerado por:** Claude Code
-**Última atualização:** 16 Dezembro 2024
+**Última atualização:** 16 Dezembro 2024 (Sprint P0 Validado)

@@ -75,7 +75,7 @@ test.describe('Homepage', () => {
     // Open mobile menu
     await menuButton.click()
 
-    // Check navigation items visible
-    await expect(page.getByRole('link', { name: /produtos/i })).toBeVisible()
+    // Check navigation items visible (use .first() to avoid strict mode violation)
+    await expect(page.getByRole('link', { name: /produtos/i }).first()).toBeVisible()
   })
 })
