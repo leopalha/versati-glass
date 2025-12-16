@@ -95,7 +95,7 @@ function LoginForm() {
         <h1 className="mb-2 font-display text-3xl font-bold text-white">
           Entrar
         </h1>
-        <p className="text-neutral-400">
+        <p className="text-neutral-700">
           Acesse sua conta para acompanhar seus pedidos
         </p>
       </div>
@@ -138,7 +138,7 @@ function LoginForm() {
           <span className="w-full border-t border-neutral-700" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-neutral-150 px-2 text-neutral-500">ou</span>
+          <span className="bg-neutral-150 px-2 text-neutral-600">ou</span>
         </div>
       </div>
 
@@ -165,7 +165,7 @@ function LoginForm() {
           />
           <button
             type="button"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-white"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? (
@@ -200,7 +200,7 @@ function LoginForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-neutral-400">
+      <p className="mt-6 text-center text-sm text-neutral-700">
         Nao tem uma conta?{' '}
         <Link href="/registro" className="text-gold-400 hover:text-gold-300">
           Cadastre-se

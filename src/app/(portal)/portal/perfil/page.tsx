@@ -150,9 +150,9 @@ export default function PerfilPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="mb-2 block text-sm text-neutral-400">Nome</label>
+                <label className="mb-2 block text-sm text-neutral-700">Nome</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
+                  <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-600" />
                   <Input
                     name="name"
                     value={formData.name}
@@ -163,9 +163,9 @@ export default function PerfilPage() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-neutral-400">Email</label>
+                <label className="mb-2 block text-sm text-neutral-700">Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-600" />
                   <Input
                     name="email"
                     type="email"
@@ -175,15 +175,15 @@ export default function PerfilPage() {
                     disabled
                   />
                 </div>
-                <p className="mt-1 text-xs text-neutral-500">
+                <p className="mt-1 text-xs text-neutral-600">
                   O email nao pode ser alterado
                 </p>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-neutral-400">Telefone</label>
+                <label className="mb-2 block text-sm text-neutral-700">Telefone</label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
+                  <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-600" />
                   <Input
                     name="phone"
                     value={formData.phone}
@@ -216,7 +216,7 @@ export default function PerfilPage() {
 
             <form className="space-y-4">
               <div>
-                <label className="mb-2 block text-sm text-neutral-400">CEP</label>
+                <label className="mb-2 block text-sm text-neutral-700">CEP</label>
                 <Input
                   name="zipCode"
                   value={formData.zipCode}
@@ -227,7 +227,7 @@ export default function PerfilPage() {
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-2">
-                  <label className="mb-2 block text-sm text-neutral-400">Rua</label>
+                  <label className="mb-2 block text-sm text-neutral-700">Rua</label>
                   <Input
                     name="street"
                     value={formData.street}
@@ -235,7 +235,7 @@ export default function PerfilPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-400">Numero</label>
+                  <label className="mb-2 block text-sm text-neutral-700">Numero</label>
                   <Input
                     name="number"
                     value={formData.number}
@@ -245,7 +245,7 @@ export default function PerfilPage() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-neutral-400">
+                <label className="mb-2 block text-sm text-neutral-700">
                   Complemento
                 </label>
                 <Input
@@ -257,7 +257,7 @@ export default function PerfilPage() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-neutral-400">Bairro</label>
+                <label className="mb-2 block text-sm text-neutral-700">Bairro</label>
                 <Input
                   name="neighborhood"
                   value={formData.neighborhood}
@@ -267,7 +267,7 @@ export default function PerfilPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-400">Cidade</label>
+                  <label className="mb-2 block text-sm text-neutral-700">Cidade</label>
                   <Input
                     name="city"
                     value={formData.city}
@@ -275,7 +275,7 @@ export default function PerfilPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-400">Estado</label>
+                  <label className="mb-2 block text-sm text-neutral-700">Estado</label>
                   <Input
                     name="state"
                     value={formData.state}
@@ -299,7 +299,7 @@ export default function PerfilPage() {
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-400">
+                  <label className="mb-2 block text-sm text-neutral-700">
                     Senha Atual
                   </label>
                   <Input
@@ -310,7 +310,7 @@ export default function PerfilPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-400">
+                  <label className="mb-2 block text-sm text-neutral-700">
                     Nova Senha
                   </label>
                   <Input
@@ -321,7 +321,7 @@ export default function PerfilPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-400">
+                  <label className="mb-2 block text-sm text-neutral-700">
                     Confirmar Nova Senha
                   </label>
                   <Input

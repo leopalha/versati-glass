@@ -110,7 +110,7 @@ export default function SobrePage() {
                 <p className="mb-2 font-display text-5xl font-bold text-gold-400">
                   {stat.value}
                 </p>
-                <p className="text-neutral-400">{stat.label}</p>
+                <p className="text-neutral-700">{stat.label}</p>
               </Card>
             ))}
           </div>
@@ -195,7 +195,7 @@ export default function SobrePage() {
             <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
               Nossos Valores
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-neutral-400">
+            <p className="mx-auto max-w-2xl text-lg text-neutral-700">
               Os princípios que guiam cada decisão e ação na Versati Glass
             </p>
           </div>
@@ -208,7 +208,7 @@ export default function SobrePage() {
                 <h3 className="mb-3 text-xl font-bold text-white">
                   {value.title}
                 </h3>
-                <p className="text-neutral-400">{value.description}</p>
+                <p className="text-neutral-700">{value.description}</p>
               </Card>
             ))}
           </div>
@@ -239,7 +239,7 @@ export default function SobrePage() {
                   <h3 className="mb-2 text-xl font-bold text-white">
                     {item.title}
                   </h3>
-                  <p className="text-neutral-400">{item.description}</p>
+                  <p className="text-neutral-700">{item.description}</p>
                 </Card>
               </div>
             ))}

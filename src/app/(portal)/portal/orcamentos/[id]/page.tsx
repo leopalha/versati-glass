@@ -160,7 +160,7 @@ export default function OrcamentoDetalhePage() {
         <PortalHeader title="Orcamento nao encontrado" />
         <div className="p-6">
           <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <FileText className="mb-4 h-16 w-16 text-neutral-500" />
+            <FileText className="mb-4 h-16 w-16 text-neutral-600" />
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Orcamento nao encontrado
             </h3>
@@ -190,7 +190,7 @@ export default function OrcamentoDetalhePage() {
         {/* Back button */}
         <Link
           href="/portal/orcamentos"
-          className="mb-6 inline-flex items-center gap-2 text-neutral-400 hover:text-white"
+          className="mb-6 inline-flex items-center gap-2 text-neutral-700 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar para orcamentos
@@ -203,7 +203,7 @@ export default function OrcamentoDetalhePage() {
               <AlertCircle className="h-5 w-5 text-red-400" />
               <div>
                 <p className="font-medium text-red-400">Orcamento Expirado</p>
-                <p className="text-sm text-neutral-400">
+                <p className="text-sm text-neutral-700">
                   Este orcamento expirou em{' '}
                   {new Date(quote.validUntil).toLocaleDateString('pt-BR')}. Solicite um novo
                   orcamento.
@@ -230,31 +230,31 @@ export default function OrcamentoDetalhePage() {
                   >
                     <div className="flex items-start gap-4">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-neutral-200">
-                        <Package className="h-6 w-6 text-neutral-400" />
+                        <Package className="h-6 w-6 text-neutral-700" />
                       </div>
                       <div>
                         <p className="font-medium text-white">{item.description}</p>
                         {item.specifications && (
-                          <p className="text-sm text-neutral-400">{item.specifications}</p>
+                          <p className="text-sm text-neutral-700">{item.specifications}</p>
                         )}
                         <div className="mt-1 flex flex-wrap gap-2">
                           {item.width && item.height && (
-                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-400">
+                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
                               {item.width}m x {item.height}m
                             </span>
                           )}
                           {item.color && (
-                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-400">
+                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
                               {item.color}
                             </span>
                           )}
                           {item.finish && (
-                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-400">
+                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
                               {item.finish}
                             </span>
                           )}
                           {item.thickness && (
-                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-400">
+                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
                               {item.thickness}
                             </span>
                           )}
@@ -265,7 +265,7 @@ export default function OrcamentoDetalhePage() {
                       <p className="font-medium text-white">
                         {formatCurrency(Number(item.totalPrice))}
                       </p>
-                      <p className="text-sm text-neutral-400">
+                      <p className="text-sm text-neutral-700">
                         {item.quantity}x {formatCurrency(Number(item.unitPrice))}
                       </p>
                     </div>
@@ -295,14 +295,14 @@ export default function OrcamentoDetalhePage() {
 
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-neutral-400">Subtotal</span>
+                  <span className="text-neutral-700">Subtotal</span>
                   <span className="text-white">
                     {formatCurrency(Number(quote.subtotal))}
                   </span>
                 </div>
                 {Number(quote.discount) > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-neutral-400">Desconto</span>
+                    <span className="text-neutral-700">Desconto</span>
                     <span className="text-green-400">
                       -{formatCurrency(Number(quote.discount))}
                     </span>
@@ -320,8 +320,8 @@ export default function OrcamentoDetalhePage() {
 
               {/* Validity */}
               <div className="mt-4 flex items-center gap-2 text-sm">
-                <Calendar className="h-4 w-4 text-neutral-500" />
-                <span className={isExpired ? 'text-red-400' : 'text-neutral-400'}>
+                <Calendar className="h-4 w-4 text-neutral-600" />
+                <span className={isExpired ? 'text-red-400' : 'text-neutral-700'}>
                   Valido ate {new Date(quote.validUntil).toLocaleDateString('pt-BR')}
                 </span>
               </div>

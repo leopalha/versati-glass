@@ -156,7 +156,7 @@ export default function AdminConversaDetalhePage() {
         <div className="p-6">
           <Link
             href="/admin/conversas"
-            className="inline-flex items-center gap-2 text-neutral-400 hover:text-white"
+            className="inline-flex items-center gap-2 text-neutral-700 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             Voltar para conversas
@@ -188,7 +188,7 @@ export default function AdminConversaDetalhePage() {
         <div className="flex flex-1 flex-col">
           <Link
             href="/admin/conversas"
-            className="mb-4 inline-flex items-center gap-2 text-neutral-400 hover:text-white"
+            className="mb-4 inline-flex items-center gap-2 text-neutral-700 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             Voltar
@@ -287,23 +287,23 @@ export default function AdminConversaDetalhePage() {
 
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-neutral-300">
-                <User className="h-5 w-5 text-neutral-500" />
+                <User className="h-5 w-5 text-neutral-600" />
                 <span>
                   {conversation.customerName || conversation.user?.name || 'Nao identificado'}
                 </span>
               </div>
               <div className="flex items-center gap-3 text-neutral-300">
-                <Phone className="h-5 w-5 text-neutral-500" />
+                <Phone className="h-5 w-5 text-neutral-600" />
                 <span>+{conversation.phoneNumber}</span>
               </div>
               {conversation.user?.email && (
                 <div className="flex items-center gap-3 text-neutral-300">
-                  <Mail className="h-5 w-5 text-neutral-500" />
+                  <Mail className="h-5 w-5 text-neutral-600" />
                   <span>{conversation.user.email}</span>
                 </div>
               )}
               <div className="flex items-center gap-3 text-neutral-300">
-                <Clock className="h-5 w-5 text-neutral-500" />
+                <Clock className="h-5 w-5 text-neutral-600" />
                 <span>
                   Iniciada em{' '}
                   {new Date(conversation.createdAt).toLocaleDateString('pt-BR')}
@@ -313,7 +313,7 @@ export default function AdminConversaDetalhePage() {
 
             {/* Status */}
             <div className="mt-4 border-t border-neutral-300 pt-4">
-              <p className="text-sm text-neutral-400">Status</p>
+              <p className="text-sm text-neutral-700">Status</p>
               <div className="mt-1 flex items-center gap-2">
                 {conversation.status === 'ACTIVE' ? (
                   <>
@@ -327,8 +327,8 @@ export default function AdminConversaDetalhePage() {
                   </>
                 ) : (
                   <>
-                    <CheckCircle className="h-4 w-4 text-neutral-400" />
-                    <span className="text-neutral-400">Fechada</span>
+                    <CheckCircle className="h-4 w-4 text-neutral-700" />
+                    <span className="text-neutral-700">Fechada</span>
                   </>
                 )}
               </div>
@@ -337,7 +337,7 @@ export default function AdminConversaDetalhePage() {
             {/* Quick actions */}
             {conversation.user && (
               <div className="mt-4 border-t border-neutral-300 pt-4">
-                <p className="mb-2 text-sm text-neutral-400">Acoes Rapidas</p>
+                <p className="mb-2 text-sm text-neutral-700">Acoes Rapidas</p>
                 <div className="space-y-2">
                   <Link
                     href={`/admin/clientes/${conversation.user.id}`}

@@ -140,7 +140,7 @@ export default function RegisterPage() {
         <h1 className="mb-2 font-display text-3xl font-bold text-white">
           Criar Conta
         </h1>
-        <p className="text-neutral-400">
+        <p className="text-neutral-700">
           Cadastre-se para acompanhar seus pedidos
         </p>
       </div>
@@ -183,7 +183,7 @@ export default function RegisterPage() {
           <span className="w-full border-t border-neutral-700" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-neutral-150 px-2 text-neutral-500">ou</span>
+          <span className="bg-neutral-150 px-2 text-neutral-600">ou</span>
         </div>
       </div>
 
@@ -232,7 +232,7 @@ export default function RegisterPage() {
           />
           <button
             type="button"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-white"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? (
@@ -255,7 +255,7 @@ export default function RegisterPage() {
           />
           <button
             type="button"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-white"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
           >
             {showConfirmPassword ? (
@@ -280,7 +280,7 @@ export default function RegisterPage() {
             }
             disabled={isLoading}
           />
-          <label htmlFor="acceptTerms" className="text-sm text-neutral-400">
+          <label htmlFor="acceptTerms" className="text-sm text-neutral-700">
             Li e aceito os{' '}
             <Link href="/termos" className="text-gold-400 hover:text-gold-300">
               Termos de Uso
@@ -310,7 +310,7 @@ export default function RegisterPage() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-neutral-400">
+      <p className="mt-6 text-center text-sm text-neutral-700">
         Ja tem uma conta?{' '}
         <Link href="/login" className="text-gold-400 hover:text-gold-300">
           Entrar

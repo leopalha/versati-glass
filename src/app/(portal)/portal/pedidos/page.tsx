@@ -44,11 +44,11 @@ export default async function PedidosPage() {
       <div className="p-6">
         {orders.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <Package className="mb-4 h-16 w-16 text-neutral-500" />
+            <Package className="mb-4 h-16 w-16 text-neutral-600" />
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhum pedido ainda
             </h3>
-            <p className="mb-4 text-neutral-400">
+            <p className="mb-4 text-neutral-700">
               Solicite um orcamento para comecar
             </p>
             <Link
@@ -76,7 +76,7 @@ export default async function PedidosPage() {
                         {statusLabels[order.status]?.label || order.status}
                       </span>
                     </div>
-                    <div className="mt-2 flex items-center gap-4 text-sm text-neutral-400">
+                    <div className="mt-2 flex items-center gap-4 text-sm text-neutral-700">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
                         {new Date(order.createdAt).toLocaleDateString('pt-BR')}
@@ -87,7 +87,7 @@ export default async function PedidosPage() {
 
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <p className="text-sm text-neutral-400">Total</p>
+                      <p className="text-sm text-neutral-700">Total</p>
                       <p className="font-display text-xl font-bold text-gold-500">
                         {formatCurrency(Number(order.total))}
                       </p>
@@ -108,13 +108,13 @@ export default async function PedidosPage() {
                     {order.items.slice(0, 3).map((item) => (
                       <span
                         key={item.id}
-                        className="rounded-lg bg-neutral-200 px-3 py-1 text-sm text-neutral-300"
+                        className="rounded-lg bg-neutral-200 px-3 py-1 text-sm text-neutral-800"
                       >
                         {item.description}
                       </span>
                     ))}
                     {order.items.length > 3 && (
-                      <span className="rounded-lg bg-neutral-200 px-3 py-1 text-sm text-neutral-400">
+                      <span className="rounded-lg bg-neutral-200 px-3 py-1 text-sm text-neutral-700">
                         +{order.items.length - 3} mais
                       </span>
                     )}

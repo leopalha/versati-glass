@@ -90,7 +90,7 @@ export default async function AdminPedidosPage() {
               <Link
                 key={status}
                 href={`/admin/pedidos?status=${status}`}
-                className="rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-400 hover:bg-neutral-250 hover:text-white"
+                className="rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-700 hover:bg-neutral-250 hover:text-white"
               >
                 {label} ({count})
               </Link>
@@ -100,11 +100,11 @@ export default async function AdminPedidosPage() {
 
         {orders.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <Package className="mb-4 h-16 w-16 text-neutral-500" />
+            <Package className="mb-4 h-16 w-16 text-neutral-600" />
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhum pedido
             </h3>
-            <p className="text-neutral-400">
+            <p className="text-neutral-700">
               Os pedidos aparecerao aqui
             </p>
           </Card>
@@ -113,25 +113,25 @@ export default async function AdminPedidosPage() {
             <table className="w-full">
               <thead className="bg-neutral-200">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Pedido
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Cliente
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Status
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Pagamento
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Total
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Data
                   </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-right text-sm font-medium text-neutral-700">
                     Acoes
                   </th>
                 </tr>
@@ -141,18 +141,18 @@ export default async function AdminPedidosPage() {
                   <tr key={order.id} className="hover:bg-neutral-200/50">
                     <td className="px-4 py-3">
                       <p className="font-medium text-white">#{order.number}</p>
-                      <p className="text-xs text-neutral-500">
+                      <p className="text-xs text-neutral-600">
                         {order.items.length} item(s)
                       </p>
                     </td>
                     <td className="px-4 py-3">
                       <p className="text-white">{order.user.name}</p>
-                      <p className="text-xs text-neutral-500">{order.user.email}</p>
+                      <p className="text-xs text-neutral-600">{order.user.email}</p>
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-full px-2 py-1 text-xs font-medium ${
-                          statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-400'
+                          statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-700'
                         }`}
                       >
                         {statusLabels[order.status]?.label || order.status}
@@ -161,7 +161,7 @@ export default async function AdminPedidosPage() {
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-full px-2 py-1 text-xs font-medium ${
-                          paymentLabels[order.paymentStatus]?.color || 'bg-neutral-500/20 text-neutral-400'
+                          paymentLabels[order.paymentStatus]?.color || 'bg-neutral-500/20 text-neutral-700'
                         }`}
                       >
                         {paymentLabels[order.paymentStatus]?.label || order.paymentStatus}
@@ -173,7 +173,7 @@ export default async function AdminPedidosPage() {
                       </p>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-1 text-sm text-neutral-400">
+                      <div className="flex items-center gap-1 text-sm text-neutral-700">
                         <Calendar className="h-4 w-4" />
                         {new Date(order.createdAt).toLocaleDateString('pt-BR')}
                       </div>

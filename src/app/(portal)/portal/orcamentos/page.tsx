@@ -38,11 +38,11 @@ export default async function OrcamentosPage() {
       <div className="p-6">
         {quotes.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <FileText className="mb-4 h-16 w-16 text-neutral-500" />
+            <FileText className="mb-4 h-16 w-16 text-neutral-600" />
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhum orcamento ainda
             </h3>
-            <p className="mb-4 text-neutral-400">
+            <p className="mb-4 text-neutral-700">
               Solicite seu primeiro orcamento
             </p>
             <Link
@@ -76,7 +76,7 @@ export default async function OrcamentosPage() {
                           {isExpired ? 'Expirado' : statusInfo.label}
                         </span>
                       </div>
-                      <div className="mt-2 flex items-center gap-4 text-sm text-neutral-400">
+                      <div className="mt-2 flex items-center gap-4 text-sm text-neutral-700">
                         <span className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
                           {new Date(quote.createdAt).toLocaleDateString('pt-BR')}
@@ -91,7 +91,7 @@ export default async function OrcamentosPage() {
 
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="text-sm text-neutral-400">Total</p>
+                        <p className="text-sm text-neutral-700">Total</p>
                         <p className="font-display text-xl font-bold text-gold-500">
                           {formatCurrency(Number(quote.total))}
                         </p>

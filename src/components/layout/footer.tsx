@@ -1,6 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 import { Mail, MapPin, Phone, Instagram, Facebook } from 'lucide-react'
 import { Logo } from '@/components/shared/logo'
+import { ThemeSwitcher } from '@/components/ui/theme-switcher'
 
 const navigation = {
   produtos: [
@@ -115,9 +118,15 @@ export function Footer() {
 
         {/* Bottom */}
         <div className="mt-16 border-t border-neutral-300 pt-8 sm:mt-20 lg:mt-24">
-          <p className="text-xs leading-5 text-neutral-500 text-center">
-            &copy; {new Date().getFullYear()} Versati Glass. Todos os direitos reservados.
-          </p>
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <p className="text-xs leading-5 text-neutral-600 text-center">
+              &copy; {new Date().getFullYear()} Versati Glass. Todos os direitos reservados.
+            </p>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-neutral-600">Tema:</span>
+              <ThemeSwitcher variant="compact" showLabel={false} />
+            </div>
+          </div>
         </div>
       </div>
     </footer>

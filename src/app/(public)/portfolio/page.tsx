@@ -219,10 +219,10 @@ export default function PortfolioPage() {
                   <h3 className="mb-2 text-xl font-bold text-white">
                     {project.title}
                   </h3>
-                  <p className="mb-1 text-sm text-neutral-500">
+                  <p className="mb-1 text-sm text-neutral-600">
                     {project.location} • {project.year}
                   </p>
-                  <p className="mb-4 text-sm text-neutral-400">
+                  <p className="mb-4 text-sm text-neutral-700">
                     {project.description}
                   </p>
                   <div className="mb-4 flex flex-wrap gap-2">

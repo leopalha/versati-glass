@@ -44,11 +44,11 @@ export default async function AdminClientesPage() {
       <div className="p-6">
         {customers.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <Users className="mb-4 h-16 w-16 text-neutral-500" />
+            <Users className="mb-4 h-16 w-16 text-neutral-600" />
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhum cliente
             </h3>
-            <p className="text-neutral-400">
+            <p className="text-neutral-700">
               Os clientes aparecerao aqui
             </p>
           </Card>
@@ -57,22 +57,22 @@ export default async function AdminClientesPage() {
             <table className="w-full">
               <thead className="bg-neutral-200">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Cliente
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Contato
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Pedidos
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Total Gasto
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Cadastro
                   </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-right text-sm font-medium text-neutral-700">
                     Acoes
                   </th>
                 </tr>
@@ -95,7 +95,7 @@ export default async function AdminClientesPage() {
                           </div>
                           <div>
                             <p className="font-medium text-white">{customer.name}</p>
-                            <p className="text-xs text-neutral-500">{customer.email}</p>
+                            <p className="text-xs text-neutral-600">{customer.email}</p>
                           </div>
                         </div>
                       </td>
@@ -114,7 +114,7 @@ export default async function AdminClientesPage() {
                         </p>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 text-sm text-neutral-400">
+                        <div className="flex items-center gap-1 text-sm text-neutral-700">
                           <Calendar className="h-4 w-4" />
                           {new Date(customer.createdAt).toLocaleDateString('pt-BR')}
                         </div>

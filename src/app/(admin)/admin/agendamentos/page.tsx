@@ -104,7 +104,7 @@ export default async function AdminAgendamentosPage() {
                 <Calendar className="h-5 w-5 text-yellow-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Hoje</p>
+                <p className="text-sm text-neutral-700">Hoje</p>
                 <p className="text-xl font-bold text-white">{todayAppointments.length}</p>
               </div>
             </div>
@@ -115,7 +115,7 @@ export default async function AdminAgendamentosPage() {
                 <Clock className="h-5 w-5 text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Agendados</p>
+                <p className="text-sm text-neutral-700">Agendados</p>
                 <p className="text-xl font-bold text-white">{scheduledCount}</p>
               </div>
             </div>
@@ -126,7 +126,7 @@ export default async function AdminAgendamentosPage() {
                 <CheckCircle className="h-5 w-5 text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Confirmados</p>
+                <p className="text-sm text-neutral-700">Confirmados</p>
                 <p className="text-xl font-bold text-white">{confirmedCount}</p>
               </div>
             </div>
@@ -137,7 +137,7 @@ export default async function AdminAgendamentosPage() {
                 <CheckCircle className="h-5 w-5 text-purple-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Concluidos</p>
+                <p className="text-sm text-neutral-700">Concluidos</p>
                 <p className="text-xl font-bold text-white">{completedCount}</p>
               </div>
             </div>
@@ -152,14 +152,14 @@ export default async function AdminAgendamentosPage() {
 
           {todayAppointments.length === 0 ? (
             <Card className="p-6 text-center">
-              <Calendar className="mx-auto mb-3 h-12 w-12 text-neutral-500" />
-              <p className="text-neutral-400">Nenhum agendamento para hoje</p>
+              <Calendar className="mx-auto mb-3 h-12 w-12 text-neutral-600" />
+              <p className="text-neutral-700">Nenhum agendamento para hoje</p>
             </Card>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {todayAppointments.map((appointment) => {
                 const statusInfo = statusLabels[appointment.status] || statusLabels.SCHEDULED
-                const typeInfo = typeLabels[appointment.type] || { label: appointment.type, color: 'bg-neutral-500/20 text-neutral-400' }
+                const typeInfo = typeLabels[appointment.type] || { label: appointment.type, color: 'bg-neutral-500/20 text-neutral-700' }
                 const StatusIcon = statusInfo.icon
 
                 return (
@@ -181,19 +181,19 @@ export default async function AdminAgendamentosPage() {
                           {appointment.scheduledTime}
                         </span>
                         {appointment.estimatedDuration && (
-                          <span className="text-xs text-neutral-500">
+                          <span className="text-xs text-neutral-600">
                             (~{appointment.estimatedDuration} min)
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-center gap-2 text-neutral-300">
-                        <User className="h-4 w-4 text-neutral-500" />
+                        <User className="h-4 w-4 text-neutral-600" />
                         <span>{appointment.user.name}</span>
                       </div>
 
-                      <div className="flex items-start gap-2 text-sm text-neutral-400">
-                        <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-neutral-500" />
+                      <div className="flex items-start gap-2 text-sm text-neutral-700">
+                        <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-neutral-600" />
                         <span>
                           {appointment.addressStreet}, {appointment.addressNumber}
                           <br />
@@ -211,7 +211,7 @@ export default async function AdminAgendamentosPage() {
                       )}
 
                       {appointment.assignedTo && (
-                        <p className="text-xs text-neutral-500">
+                        <p className="text-xs text-neutral-600">
                           Tecnico: {appointment.assignedTo.name}
                         </p>
                       )}
@@ -233,7 +233,7 @@ export default async function AdminAgendamentosPage() {
             <div className="space-y-3">
               {upcomingAppointments.map((appointment) => {
                 const statusInfo = statusLabels[appointment.status] || statusLabels.SCHEDULED
-                const typeInfo = typeLabels[appointment.type] || { label: appointment.type, color: 'bg-neutral-500/20 text-neutral-400' }
+                const typeInfo = typeLabels[appointment.type] || { label: appointment.type, color: 'bg-neutral-500/20 text-neutral-700' }
 
                 return (
                   <Card key={appointment.id} className="p-4">
@@ -243,7 +243,7 @@ export default async function AdminAgendamentosPage() {
                           <p className="text-2xl font-bold text-white">
                             {new Date(appointment.scheduledDate).getDate()}
                           </p>
-                          <p className="text-xs text-neutral-400">
+                          <p className="text-xs text-neutral-700">
                             {new Date(appointment.scheduledDate).toLocaleDateString('pt-BR', {
                               month: 'short',
                             })}
@@ -254,12 +254,12 @@ export default async function AdminAgendamentosPage() {
                             <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${typeInfo.color}`}>
                               {typeInfo.label}
                             </span>
-                            <span className="text-sm text-neutral-400">
+                            <span className="text-sm text-neutral-700">
                               {appointment.scheduledTime}
                             </span>
                           </div>
                           <p className="font-medium text-white">{appointment.user.name}</p>
-                          <p className="text-sm text-neutral-500">
+                          <p className="text-sm text-neutral-600">
                             {appointment.addressNeighborhood}, {appointment.addressCity}
                           </p>
                         </div>

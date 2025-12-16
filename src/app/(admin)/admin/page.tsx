@@ -131,7 +131,7 @@ export default async function AdminDashboardPage() {
                   <p className="font-medium text-yellow-400">
                     {stats.waitingConversations} conversa(s) aguardando atendimento
                   </p>
-                  <p className="text-sm text-neutral-400">
+                  <p className="text-sm text-neutral-700">
                     Clientes solicitaram atendimento humano
                   </p>
                 </div>
@@ -154,7 +154,7 @@ export default async function AdminDashboardPage() {
                 <DollarSign className="h-6 w-6 text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Faturamento (mes)</p>
+                <p className="text-sm text-neutral-700">Faturamento (mes)</p>
                 <p className="text-2xl font-bold text-white">
                   {formatCurrency(stats.monthlyRevenue)}
                 </p>
@@ -176,9 +176,9 @@ export default async function AdminDashboardPage() {
                 <Package className="h-6 w-6 text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Pedidos (mes)</p>
+                <p className="text-sm text-neutral-700">Pedidos (mes)</p>
                 <p className="text-2xl font-bold text-white">{stats.monthlyOrders}</p>
-                <p className="text-xs text-neutral-500">
+                <p className="text-xs text-neutral-600">
                   {stats.pendingOrders} em andamento
                 </p>
               </div>
@@ -191,9 +191,9 @@ export default async function AdminDashboardPage() {
                 <FileText className="h-6 w-6 text-purple-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Orcamentos</p>
+                <p className="text-sm text-neutral-700">Orcamentos</p>
                 <p className="text-2xl font-bold text-white">{stats.totalQuotes}</p>
-                <p className="text-xs text-neutral-500">
+                <p className="text-xs text-neutral-600">
                   {stats.pendingQuotes} pendentes
                 </p>
               </div>
@@ -206,7 +206,7 @@ export default async function AdminDashboardPage() {
                 <Calendar className="h-6 w-6 text-gold-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Agendamentos Hoje</p>
+                <p className="text-sm text-neutral-700">Agendamentos Hoje</p>
                 <p className="text-2xl font-bold text-white">{stats.todayAppointments}</p>
               </div>
             </div>
@@ -221,7 +221,7 @@ export default async function AdminDashboardPage() {
                 <Users className="h-5 w-5 text-cyan-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Total Clientes</p>
+                <p className="text-sm text-neutral-700">Total Clientes</p>
                 <p className="text-xl font-bold text-white">{stats.totalCustomers}</p>
               </div>
             </div>
@@ -233,7 +233,7 @@ export default async function AdminDashboardPage() {
                 <MessageSquare className="h-5 w-5 text-orange-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Aguardando Humano</p>
+                <p className="text-sm text-neutral-700">Aguardando Humano</p>
                 <p className="text-xl font-bold text-white">{stats.waitingConversations}</p>
               </div>
             </div>
@@ -245,7 +245,7 @@ export default async function AdminDashboardPage() {
                 <TrendingUp className="h-5 w-5 text-indigo-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-400">Total Pedidos</p>
+                <p className="text-sm text-neutral-700">Total Pedidos</p>
                 <p className="text-xl font-bold text-white">{stats.totalOrders}</p>
               </div>
             </div>
@@ -276,7 +276,7 @@ export default async function AdminDashboardPage() {
                 >
                   <div>
                     <p className="font-medium text-white">#{order.number}</p>
-                    <p className="text-sm text-neutral-400">{order.user.name}</p>
+                    <p className="text-sm text-neutral-700">{order.user.name}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-medium text-white">
@@ -284,7 +284,7 @@ export default async function AdminDashboardPage() {
                     </p>
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                        statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-400'
+                        statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-700'
                       }`}
                     >
                       {statusLabels[order.status]?.label || order.status}
@@ -311,7 +311,7 @@ export default async function AdminDashboardPage() {
 
             <div className="space-y-3">
               {stats.recentQuotes.length === 0 ? (
-                <p className="py-4 text-center text-neutral-500">
+                <p className="py-4 text-center text-neutral-600">
                   Nenhum orcamento pendente
                 </p>
               ) : (
@@ -323,13 +323,13 @@ export default async function AdminDashboardPage() {
                   >
                     <div>
                       <p className="font-medium text-white">#{quote.number}</p>
-                      <p className="text-sm text-neutral-400">{quote.customerName}</p>
+                      <p className="text-sm text-neutral-700">{quote.customerName}</p>
                     </div>
                     <div className="text-right">
                       <p className="font-medium text-white">
                         {formatCurrency(Number(quote.total))}
                       </p>
-                      <div className="flex items-center gap-1 text-xs text-neutral-400">
+                      <div className="flex items-center gap-1 text-xs text-neutral-700">
                         <Clock className="h-3 w-3" />
                         {new Date(quote.validUntil).toLocaleDateString('pt-BR')}
                       </div>

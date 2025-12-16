@@ -15,7 +15,7 @@ import Link from 'next/link'
 const statusLabels: Record<string, { label: string; color: string; icon: typeof Clock }> = {
   ACTIVE: { label: 'Ativa (IA)', color: 'bg-green-500/20 text-green-400', icon: Bot },
   WAITING_HUMAN: { label: 'Aguardando Humano', color: 'bg-yellow-500/20 text-yellow-400', icon: AlertCircle },
-  CLOSED: { label: 'Fechada', color: 'bg-neutral-500/20 text-neutral-400', icon: CheckCircle },
+  CLOSED: { label: 'Fechada', color: 'bg-neutral-500/20 text-neutral-700', icon: CheckCircle },
 }
 
 export default async function AdminConversasPage() {
@@ -80,20 +80,20 @@ export default async function AdminConversasPage() {
             className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
               waitingCount > 0
                 ? 'bg-yellow-500/10 text-yellow-400'
-                : 'bg-neutral-200 text-neutral-400'
+                : 'bg-neutral-200 text-neutral-700'
             }`}
           >
             Aguardando ({waitingCount})
           </Link>
           <Link
             href="/admin/conversas?status=active"
-            className="rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-400 hover:bg-neutral-250"
+            className="rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-700 hover:bg-neutral-250"
           >
             Ativas ({activeCount})
           </Link>
           <Link
             href="/admin/conversas?status=closed"
-            className="rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-400 hover:bg-neutral-250"
+            className="rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-700 hover:bg-neutral-250"
           >
             Fechadas ({closedCount})
           </Link>
@@ -101,11 +101,11 @@ export default async function AdminConversasPage() {
 
         {conversations.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <MessageSquare className="mb-4 h-16 w-16 text-neutral-500" />
+            <MessageSquare className="mb-4 h-16 w-16 text-neutral-600" />
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhuma conversa
             </h3>
-            <p className="text-neutral-400">
+            <p className="text-neutral-700">
               As conversas do WhatsApp aparecerao aqui
             </p>
           </Card>
@@ -126,7 +126,7 @@ export default async function AdminConversasPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-4">
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-250">
-                          <User className="h-6 w-6 text-neutral-400" />
+                          <User className="h-6 w-6 text-neutral-700" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
@@ -142,13 +142,13 @@ export default async function AdminConversasPage() {
                               {statusInfo.label}
                             </span>
                           </div>
-                          <p className="text-sm text-neutral-400">
+                          <p className="text-sm text-neutral-700">
                             +{conversation.phoneNumber}
                           </p>
                           {lastMessage && (
-                            <p className="mt-1 line-clamp-1 text-sm text-neutral-500">
+                            <p className="mt-1 line-clamp-1 text-sm text-neutral-600">
                               {lastMessage.direction === 'OUTBOUND' && (
-                                <span className="text-neutral-400">Voce: </span>
+                                <span className="text-neutral-700">Voce: </span>
                               )}
                               {lastMessage.content}
                             </p>
@@ -157,18 +157,18 @@ export default async function AdminConversasPage() {
                       </div>
 
                       <div className="text-right">
-                        <div className="flex items-center gap-1 text-xs text-neutral-500">
+                        <div className="flex items-center gap-1 text-xs text-neutral-600">
                           <Clock className="h-3 w-3" />
                           {new Date(conversation.lastMessageAt).toLocaleTimeString('pt-BR', {
                             hour: '2-digit',
                             minute: '2-digit',
                           })}
                         </div>
-                        <p className="mt-1 text-xs text-neutral-500">
+                        <p className="mt-1 text-xs text-neutral-600">
                           {new Date(conversation.lastMessageAt).toLocaleDateString('pt-BR')}
                         </p>
                         {conversation.assignedTo && (
-                          <p className="mt-2 text-xs text-neutral-400">
+                          <p className="mt-2 text-xs text-neutral-700">
                             Atribuido: {conversation.assignedTo.name}
                           </p>
                         )}

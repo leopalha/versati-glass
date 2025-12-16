@@ -150,7 +150,7 @@ export default function ProdutosPage() {
           <h1 className="mb-4 font-display text-5xl font-bold text-white md:text-6xl">
             Nossos Produtos
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-neutral-400">
+          <p className="mx-auto max-w-2xl text-lg text-neutral-700">
             Conheça nossa linha completa de soluções em vidro de alto padrão
           </p>
         </div>
@@ -195,12 +195,12 @@ export default function ProdutosPage() {
                 <h3 className="mb-2 text-xl font-bold text-white">
                   {product.name}
                 </h3>
-                <p className="mb-4 text-sm text-neutral-400">
+                <p className="mb-4 text-sm text-neutral-700">
                   {product.description}
                 </p>
                 <ul className="mb-4 space-y-1">
                   {product.features.map((feature, idx) => (
-                    <li key={idx} className="text-xs text-neutral-500">
+                    <li key={idx} className="text-xs text-neutral-600">
                       • {feature}
                     </li>
                   ))}

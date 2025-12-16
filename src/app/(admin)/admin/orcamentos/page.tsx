@@ -7,12 +7,12 @@ import { FileText, Eye, Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle
 import Link from 'next/link'
 
 const statusLabels: Record<string, { label: string; color: string; icon: typeof Clock }> = {
-  DRAFT: { label: 'Rascunho', color: 'bg-neutral-500/20 text-neutral-400', icon: Clock },
+  DRAFT: { label: 'Rascunho', color: 'bg-neutral-500/20 text-neutral-700', icon: Clock },
   SENT: { label: 'Enviado', color: 'bg-blue-500/20 text-blue-400', icon: AlertCircle },
   VIEWED: { label: 'Visualizado', color: 'bg-purple-500/20 text-purple-400', icon: Eye },
   ACCEPTED: { label: 'Aceito', color: 'bg-green-500/20 text-green-400', icon: CheckCircle },
   REJECTED: { label: 'Recusado', color: 'bg-red-500/20 text-red-400', icon: XCircle },
-  EXPIRED: { label: 'Expirado', color: 'bg-neutral-500/20 text-neutral-400', icon: Clock },
+  EXPIRED: { label: 'Expirado', color: 'bg-neutral-500/20 text-neutral-700', icon: Clock },
   CONVERTED: { label: 'Convertido', color: 'bg-gold-500/20 text-gold-400', icon: CheckCircle },
 }
 
@@ -75,7 +75,7 @@ export default async function AdminOrcamentosPage() {
             className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
               pendingCount > 0
                 ? 'bg-yellow-500/10 text-yellow-400'
-                : 'bg-neutral-200 text-neutral-400'
+                : 'bg-neutral-200 text-neutral-700'
             }`}
           >
             Pendentes ({pendingCount})
@@ -87,7 +87,7 @@ export default async function AdminOrcamentosPage() {
               <Link
                 key={status}
                 href={`/admin/orcamentos?status=${status}`}
-                className="rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-400 hover:bg-neutral-250 hover:text-white"
+                className="rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-700 hover:bg-neutral-250 hover:text-white"
               >
                 {label} ({count})
               </Link>
@@ -97,11 +97,11 @@ export default async function AdminOrcamentosPage() {
 
         {quotes.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <FileText className="mb-4 h-16 w-16 text-neutral-500" />
+            <FileText className="mb-4 h-16 w-16 text-neutral-600" />
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhum orcamento
             </h3>
-            <p className="text-neutral-400">
+            <p className="text-neutral-700">
               Os orcamentos aparecerao aqui
             </p>
           </Card>
@@ -110,25 +110,25 @@ export default async function AdminOrcamentosPage() {
             <table className="w-full">
               <thead className="bg-neutral-200">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Orcamento
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Cliente
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Status
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Total
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Validade
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
                     Criado
                   </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium text-neutral-400">
+                  <th className="px-4 py-3 text-right text-sm font-medium text-neutral-700">
                     Acoes
                   </th>
                 </tr>
@@ -145,13 +145,13 @@ export default async function AdminOrcamentosPage() {
                     <tr key={quote.id} className="hover:bg-neutral-200/50">
                       <td className="px-4 py-3">
                         <p className="font-medium text-white">#{quote.number}</p>
-                        <p className="text-xs text-neutral-500">
+                        <p className="text-xs text-neutral-600">
                           {quote.items.length} item(s)
                         </p>
                       </td>
                       <td className="px-4 py-3">
                         <p className="text-white">{quote.customerName}</p>
-                        <p className="text-xs text-neutral-500">{quote.customerEmail}</p>
+                        <p className="text-xs text-neutral-600">{quote.customerEmail}</p>
                       </td>
                       <td className="px-4 py-3">
                         <span
@@ -171,7 +171,7 @@ export default async function AdminOrcamentosPage() {
                       <td className="px-4 py-3">
                         <div
                           className={`flex items-center gap-1 text-sm ${
-                            isExpired ? 'text-red-400' : 'text-neutral-400'
+                            isExpired ? 'text-red-400' : 'text-neutral-700'
                           }`}
                         >
                           <Clock className="h-4 w-4" />
@@ -179,7 +179,7 @@ export default async function AdminOrcamentosPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 text-sm text-neutral-400">
+                        <div className="flex items-center gap-1 text-sm text-neutral-700">
                           <Calendar className="h-4 w-4" />
                           {new Date(quote.createdAt).toLocaleDateString('pt-BR')}
                         </div>

@@ -98,14 +98,14 @@ export default function ContatoPage() {
                 {info.link ? (
                   <a
                     href={info.link}
-                    className="text-sm text-neutral-400 hover:text-gold-400"
+                    className="text-sm text-neutral-700 hover:text-gold-400"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     {info.value}
                   </a>
                 ) : (
-                  <p className="text-sm text-neutral-400">{info.value}</p>
+                  <p className="text-sm text-neutral-700">{info.value}</p>
                 )}
               </Card>
             ))}
@@ -178,7 +178,7 @@ export default function ContatoPage() {
 
               {/* Social Media */}
               <div className="mt-8 border-t border-neutral-800 pt-8">
-                <p className="mb-4 text-center text-sm text-neutral-400">
+                <p className="mb-4 text-center text-sm text-neutral-700">
                   Ou nos acompanhe nas redes sociais
                 </p>
                 <div className="flex justify-center gap-4">
@@ -201,7 +201,7 @@ export default function ContatoPage() {
             <div className="overflow-hidden rounded-2xl bg-neutral-800">
               <div className="aspect-square w-full">
                 {/* Replace with actual Google Maps embed */}
-                <div className="flex h-full items-center justify-center text-neutral-500">
+                <div className="flex h-full items-center justify-center text-neutral-600">
                   <div className="text-center">
                     <MapPin className="mx-auto mb-4 h-12 w-12" />
                     <p>Mapa em breve</p>

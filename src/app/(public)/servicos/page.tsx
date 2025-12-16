@@ -211,7 +211,7 @@ export default function ServicosPage() {
             <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
               Como Funciona
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-neutral-400">
+            <p className="mx-auto max-w-2xl text-lg text-neutral-700">
               Nosso processo é simples, transparente e focado na sua satisfação
             </p>
           </div>
@@ -224,7 +224,7 @@ export default function ServicosPage() {
                 <h3 className="mb-3 text-xl font-bold text-white">
                   {item.title}
                 </h3>
-                <p className="text-neutral-400">{item.description}</p>
+                <p className="text-neutral-700">{item.description}</p>
               </Card>
             ))}
           </div>

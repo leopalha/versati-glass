@@ -190,7 +190,7 @@ export default function HomePage() {
             <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
               Produtos em Destaque
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-neutral-400">
+            <p className="mx-auto max-w-2xl text-lg text-neutral-700">
               Conheça nossas soluções mais populares
             </p>
           </div>
@@ -212,7 +212,7 @@ export default function HomePage() {
                   <h3 className="mb-2 text-xl font-bold text-white">
                     {product.name}
                   </h3>
-                  <p className="mb-4 text-sm text-neutral-400">
+                  <p className="mb-4 text-sm text-neutral-700">
                     {product.description}
                   </p>
                   <p className="mb-4 font-semibold text-gold-400">
@@ -243,7 +243,7 @@ export default function HomePage() {
             <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
               Nossos Serviços
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-neutral-400">
+            <p className="mx-auto max-w-2xl text-lg text-neutral-700">
               Soluções completas para cada necessidade
             </p>
           </div>
@@ -253,7 +253,7 @@ export default function HomePage() {
                 <h3 className="mb-3 text-xl font-bold text-white">
                   {service.title}
                 </h3>
-                <p className="text-neutral-400">{service.description}</p>
+                <p className="text-neutral-700">{service.description}</p>
               </Card>
             ))}
           </div>
@@ -277,7 +277,7 @@ export default function HomePage() {
                 <h3 className="mb-2 text-xl font-bold text-white">
                   {item.title}
                 </h3>
-                <p className="text-neutral-400">{item.description}</p>
+                <p className="text-neutral-700">{item.description}</p>
               </div>
             ))}
           </div>
@@ -291,7 +291,7 @@ export default function HomePage() {
             <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
               Projetos Realizados
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-neutral-400">
+            <p className="mx-auto max-w-2xl text-lg text-neutral-700">
               Confira alguns de nossos trabalhos
             </p>
           </div>
@@ -354,7 +354,7 @@ export default function HomePage() {
                 <p className="mb-6 text-neutral-300">{testimonial.content}</p>
                 <div>
                   <p className="font-semibold text-white">{testimonial.name}</p>
-                  <p className="text-sm text-neutral-500">{testimonial.role}</p>
+                  <p className="text-sm text-neutral-600">{testimonial.role}</p>
                 </div>
               </Card>
             ))}

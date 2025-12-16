@@ -10,6 +10,36 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Cores semânticas usando variáveis CSS
+        background: 'var(--bg-primary)',
+        foreground: 'var(--text-primary)',
+
+        // Cores de acento dinâmicas (mudam com o tema)
+        accent: {
+          50: 'var(--accent-50)',
+          100: 'var(--accent-100)',
+          200: 'var(--accent-200)',
+          300: 'var(--accent-300)',
+          400: 'var(--accent-400)',
+          500: 'var(--accent-500)',
+          600: 'var(--accent-600)',
+          700: 'var(--accent-700)',
+          800: 'var(--accent-800)',
+          900: 'var(--accent-900)',
+          950: 'var(--accent-950)',
+          DEFAULT: 'var(--accent-500)',
+        },
+
+        // Cores de texto semânticas
+        muted: {
+          DEFAULT: 'var(--text-muted)',
+          foreground: 'var(--text-secondary)',
+        },
+
+        // Bordas
+        border: 'var(--border-default)',
+
+        // Versati brand colors (mantidas para compatibilidade)
         versati: {
           black: '#0A0A0A',
           gold: '#C9A962',
@@ -17,6 +47,8 @@ const config: Config = {
           copper: '#8B7355',
           white: '#FFFFFF',
         },
+
+        // Gold colors (mantidas para compatibilidade)
         gold: {
           50: '#FDF9F0',
           100: '#F9F0DB',
@@ -30,6 +62,8 @@ const config: Config = {
           900: '#3D3226',
           950: '#1F1A14',
         },
+
+        // Neutral colors com melhor contraste
         neutral: {
           0: '#000000',
           50: '#0A0A0A',
@@ -47,6 +81,8 @@ const config: Config = {
           950: '#F5F5F5',
           1000: '#FFFFFF',
         },
+
+        // Status colors
         success: '#10B981',
         warning: '#F59E0B',
         error: '#EF4444',
@@ -71,11 +107,14 @@ const config: Config = {
         sm: '8px',
       },
       boxShadow: {
+        'glow': '0 0 20px var(--shadow-glow)',
+        'glow-md': '0 0 30px var(--shadow-glow-md)',
+        'glow-lg': '0 0 40px var(--shadow-glow-lg)',
         'glow-gold': '0 0 20px rgba(201, 169, 98, 0.2)',
         'glow-gold-md': '0 0 30px rgba(201, 169, 98, 0.3)',
         'glow-gold-lg': '0 0 40px rgba(201, 169, 98, 0.4)',
         'card': '0 4px 20px rgba(0, 0, 0, 0.3)',
-        'card-hover': '0 8px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(201, 169, 98, 0.1)',
+        'card-hover': '0 8px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-accent)',
         'card-elevated': '0 12px 40px rgba(0, 0, 0, 0.5)',
       },
       keyframes: {
@@ -96,8 +135,8 @@ const config: Config = {
           '100%': { backgroundPosition: '200% 0' },
         },
         glow: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(201, 169, 98, 0.2)' },
-          '50%': { boxShadow: '0 0 30px rgba(201, 169, 98, 0.4)' },
+          '0%, 100%': { boxShadow: '0 0 20px var(--shadow-glow)' },
+          '50%': { boxShadow: '0 0 30px var(--shadow-glow-md)' },
         },
       },
       animation: {

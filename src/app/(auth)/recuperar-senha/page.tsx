@@ -66,7 +66,7 @@ export default function RecuperarSenhaPage() {
         <h1 className="mb-2 font-display text-2xl font-bold text-white">
           Email Enviado!
         </h1>
-        <p className="mb-6 text-neutral-400">
+        <p className="mb-6 text-neutral-700">
           Se o email estiver cadastrado, voce recebera as instrucoes para
           redefinir sua senha.
         </p>
@@ -86,7 +86,7 @@ export default function RecuperarSenhaPage() {
         <h1 className="mb-2 font-display text-3xl font-bold text-white">
           Recuperar Senha
         </h1>
-        <p className="text-neutral-400">
+        <p className="text-neutral-700">
           Digite seu email para receber as instrucoes de recuperacao
         </p>
       </div>
