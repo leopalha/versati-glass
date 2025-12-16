@@ -8,7 +8,10 @@ import Link from 'next/link'
 
 const statusLabels: Record<string, { label: string; color: string }> = {
   ORCAMENTO_ENVIADO: { label: 'Orcamento Enviado', color: 'bg-blue-500/20 text-blue-400' },
-  AGUARDANDO_PAGAMENTO: { label: 'Aguardando Pagamento', color: 'bg-yellow-500/20 text-yellow-400' },
+  AGUARDANDO_PAGAMENTO: {
+    label: 'Aguardando Pagamento',
+    color: 'bg-yellow-500/20 text-yellow-400',
+  },
   APROVADO: { label: 'Aprovado', color: 'bg-green-500/20 text-green-400' },
   EM_PRODUCAO: { label: 'Em Producao', color: 'bg-purple-500/20 text-purple-400' },
   PRONTO_ENTREGA: { label: 'Pronto p/ Entrega', color: 'bg-cyan-500/20 text-cyan-400' },
@@ -48,9 +51,7 @@ export default async function PedidosPage() {
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhum pedido ainda
             </h3>
-            <p className="mb-4 text-neutral-700">
-              Solicite um orcamento para comecar
-            </p>
+            <p className="mb-4 text-neutral-700">Solicite um orcamento para comecar</p>
             <Link
               href="/orcamento"
               className="rounded-lg bg-gold-500 px-6 py-2 font-medium text-black hover:bg-gold-400"
@@ -70,7 +71,7 @@ export default async function PedidosPage() {
                       </h3>
                       <span
                         className={`rounded-full px-2 py-1 text-xs font-medium ${
-                          statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-400'
+                          statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-700'
                         }`}
                       >
                         {statusLabels[order.status]?.label || order.status}
@@ -103,7 +104,7 @@ export default async function PedidosPage() {
                 </div>
 
                 {/* Items preview */}
-                <div className="mt-4 border-t border-neutral-300 pt-4">
+                <div className="mt-4 border-t border-neutral-400 pt-4">
                   <div className="flex flex-wrap gap-2">
                     {order.items.slice(0, 3).map((item) => (
                       <span

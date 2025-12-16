@@ -7,7 +7,11 @@ import { Calendar, Clock, MapPin, CheckCircle, XCircle, AlertCircle } from 'luci
 const statusLabels: Record<string, { label: string; color: string; icon: typeof Clock }> = {
   SCHEDULED: { label: 'Agendado', color: 'bg-blue-500/20 text-blue-400', icon: Clock },
   CONFIRMED: { label: 'Confirmado', color: 'bg-green-500/20 text-green-400', icon: CheckCircle },
-  IN_PROGRESS: { label: 'Em Andamento', color: 'bg-yellow-500/20 text-yellow-400', icon: AlertCircle },
+  IN_PROGRESS: {
+    label: 'Em Andamento',
+    color: 'bg-yellow-500/20 text-yellow-400',
+    icon: AlertCircle,
+  },
   COMPLETED: { label: 'Concluido', color: 'bg-green-500/20 text-green-400', icon: CheckCircle },
   CANCELLED: { label: 'Cancelado', color: 'bg-red-500/20 text-red-400', icon: XCircle },
   RESCHEDULED: { label: 'Reagendado', color: 'bg-purple-500/20 text-purple-400', icon: Calendar },
@@ -70,10 +74,7 @@ export default async function AgendamentosPage() {
 
   return (
     <div>
-      <PortalHeader
-        title="Agendamentos"
-        subtitle={`${totalAppointments} agendamento(s)`}
-      />
+      <PortalHeader title="Agendamentos" subtitle={`${totalAppointments} agendamento(s)`} />
 
       <div className="p-6">
         {totalAppointments === 0 ? (
@@ -82,9 +83,7 @@ export default async function AgendamentosPage() {
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhum agendamento
             </h3>
-            <p className="text-neutral-700">
-              Seus agendamentos aparecerao aqui
-            </p>
+            <p className="text-neutral-700">Seus agendamentos aparecerao aqui</p>
           </Card>
         ) : (
           <div className="space-y-8">
@@ -121,7 +120,7 @@ export default async function AgendamentosPage() {
                         </div>
 
                         <div className="space-y-3">
-                          <div className="flex items-center gap-3 text-neutral-300">
+                          <div className="flex items-center gap-3 text-neutral-800">
                             <Calendar className="h-5 w-5 text-gold-500" />
                             <span>
                               {new Date(appointment.scheduledDate).toLocaleDateString('pt-BR', {
@@ -131,7 +130,7 @@ export default async function AgendamentosPage() {
                               })}
                             </span>
                           </div>
-                          <div className="flex items-center gap-3 text-neutral-300">
+                          <div className="flex items-center gap-3 text-neutral-800">
                             <Clock className="h-5 w-5 text-gold-500" />
                             <span>{appointment.scheduledTime}</span>
                             {appointment.estimatedDuration && (
@@ -140,11 +139,12 @@ export default async function AgendamentosPage() {
                               </span>
                             )}
                           </div>
-                          <div className="flex items-start gap-3 text-neutral-300">
+                          <div className="flex items-start gap-3 text-neutral-800">
                             <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-gold-500" />
                             <span className="text-sm">
                               {appointment.addressStreet}, {appointment.addressNumber}
-                              {appointment.addressComplement && ` - ${appointment.addressComplement}`}
+                              {appointment.addressComplement &&
+                                ` - ${appointment.addressComplement}`}
                               <br />
                               {appointment.addressNeighborhood}, {appointment.addressCity}
                             </span>

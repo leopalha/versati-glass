@@ -28,7 +28,7 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-neutral-300 bg-neutral-150 text-white',
+        default: 'border-neutral-700 bg-neutral-900 text-white',
         success: 'border-success/50 bg-success/10 text-success',
         warning: 'border-warning/50 bg-warning/10 text-warning',
         error: 'border-error/50 bg-error/10 text-error',
@@ -61,7 +61,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      'inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-neutral-300 bg-transparent px-3 text-sm font-medium ring-offset-neutral-50 transition-colors hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-neutral-600 bg-transparent px-3 text-sm font-medium ring-offset-neutral-950 transition-colors hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
       className
     )}
     {...props}
@@ -99,7 +99,11 @@ const ToastDescription = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Description>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description ref={ref} className={cn('text-sm opacity-90', className)} {...props} />
+  <ToastPrimitives.Description
+    ref={ref}
+    className={cn('text-sm opacity-90', className)}
+    {...props}
+  />
 ))
 ToastDescription.displayName = ToastPrimitives.Description.displayName
 

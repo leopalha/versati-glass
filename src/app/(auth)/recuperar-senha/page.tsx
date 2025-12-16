@@ -60,15 +60,12 @@ export default function RecuperarSenhaPage() {
   if (isSubmitted) {
     return (
       <Card className="w-full max-w-md p-8 text-center">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gold-500/10">
-          <Mail className="h-8 w-8 text-gold-400" />
+        <div className="bg-accent-500/10 mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full">
+          <Mail className="h-8 w-8 text-accent-400" />
         </div>
-        <h1 className="mb-2 font-display text-2xl font-bold text-white">
-          Email Enviado!
-        </h1>
-        <p className="mb-6 text-neutral-700">
-          Se o email estiver cadastrado, voce recebera as instrucoes para
-          redefinir sua senha.
+        <h1 className="text-theme-primary mb-2 font-display text-2xl font-bold">Email Enviado!</h1>
+        <p className="text-theme-muted mb-6">
+          Se o email estiver cadastrado, voce recebera as instrucoes para redefinir sua senha.
         </p>
         <Button asChild variant="outline" className="w-full">
           <Link href="/login">
@@ -83,25 +80,16 @@ export default function RecuperarSenhaPage() {
   return (
     <Card className="w-full max-w-md p-8">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 font-display text-3xl font-bold text-white">
-          Recuperar Senha
-        </h1>
-        <p className="text-neutral-700">
+        <h1 className="text-theme-primary mb-2 font-display text-3xl font-bold">Recuperar Senha</h1>
+        <p className="text-theme-muted">
           Digite seu email para receber as instrucoes de recuperacao
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <Input
-            type="email"
-            placeholder="Email"
-            {...register('email')}
-            disabled={isLoading}
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-error">{errors.email.message}</p>
-          )}
+          <Input type="email" placeholder="Email" {...register('email')} disabled={isLoading} />
+          {errors.email && <p className="mt-1 text-sm text-error">{errors.email.message}</p>}
         </div>
 
         <Button type="submit" className="w-full" disabled={isLoading}>
@@ -119,7 +107,7 @@ export default function RecuperarSenhaPage() {
       <div className="mt-6 text-center">
         <Link
           href="/login"
-          className="inline-flex items-center text-sm text-gold-400 hover:text-gold-300"
+          className="inline-flex items-center text-sm text-accent-400 hover:text-accent-300"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar para Login

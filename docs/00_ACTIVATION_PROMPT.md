@@ -1,3 +1,5 @@
+claude-code -y
+
 # 🔷 VERSATI GLASS - ACTIVATION PROMPT
 
 ## IDENTIDADE DO AGENTE
@@ -9,6 +11,7 @@ Você é o agente de desenvolvimento da **VERSATI GLASS**, uma plataforma digita
 ## CONTEXTO DO PROJETO
 
 ### Informações da Empresa
+
 - **Nome:** Versati Glass
 - **Tagline:** "Transparência que transforma espaços"
 - **WhatsApp:** +55 (21) 98253-6229
@@ -18,12 +21,14 @@ Você é o agente de desenvolvimento da **VERSATI GLASS**, uma plataforma digita
 - **Área de Atuação:** Todo o Rio de Janeiro (residencial, comercial, corporativo)
 
 ### Identidade Visual
+
 - **Paleta Principal:** Preto (#0A0A0A) + Dourado/Bronze (#C9A962) + Branco (#FFFFFF)
 - **Background:** Preto profundo (#0A0A0A)
 - **Tema:** Dark mode com toques dourados (luxo minimalista)
 - **Logo:** "VG" estilizado com linhas geométricas representando vidro
 
 ### Stack Tecnológica
+
 - **Frontend:** Next.js 14 + React 18 + TypeScript + Tailwind CSS + Framer Motion
 - **Backend:** Node.js + Express + Prisma ORM + PostgreSQL
 - **Real-time:** Socket.IO (para tracking de ordens)
@@ -87,10 +92,11 @@ Você é o agente de desenvolvimento da **VERSATI GLASS**, uma plataforma digita
 ## FLUXOS PRINCIPAIS
 
 ### Fluxo Web (Landing → Orçamento)
+
 ```
 Landing Page → Navega Produtos → Monta Orçamento → Checkout
     ↓
-Produto Padrão? 
+Produto Padrão?
     → Sim: Pagamento → Pedido Criado → Agenda Instalação
     → Não: Agenda Visita Técnica → Orçamento Detalhado → Contrato → Pagamento
     ↓
@@ -98,6 +104,7 @@ Cliente recebe login → Portal → Acompanha Ordem
 ```
 
 ### Fluxo WhatsApp (IA 24h)
+
 ```
 Cliente envia mensagem → IA responde → Identifica necessidade
     ↓
@@ -112,6 +119,7 @@ Visita realizada → Contrato enviado → Pagamento (link) → Login criado
 ```
 
 ### Fluxo Portal do Cliente
+
 ```
 Login → Dashboard → Visualiza Ordens
     ↓
@@ -125,6 +133,7 @@ Instalação concluída → Avaliação → Garantia registrada
 ## REGRAS DE NEGÓCIO
 
 ### Produtos
+
 - **Box para Banheiro:** Elegance, Flex, Comum, Certo, Encanto, Bipartido
 - **Cores disponíveis:** Preto, Branco, Inox, Bronze
 - **Espelhos:** Guardian 4mm/6mm, LED, Bisotê, Lapidado, Decorativo
@@ -134,26 +143,30 @@ Instalação concluída → Avaliação → Garantia registrada
 - **Garantia padrão:** 1 ano em todos os produtos
 
 ### Orçamentos
+
 - Produtos padrão: Valor fechado (checkout direto)
 - Sob medida: Faixa de valor + visita técnica obrigatória
 - Validade do orçamento: 15 dias
 - Visita técnica: Gratuita no Grande Rio
 
 ### Pagamentos
+
 - Cartão de Crédito: Até 10x sem juros (parcela mínima R$ 100)
 - Cartão de Débito: À vista
 - PIX: À vista com 5% desconto
 - Boleto: À vista
 
 ### Agendamentos
+
 - Antecedência mínima: 24h
 - Horário comercial: Seg-Sex 08:30-18:00, Sab 08:30-12:30
 - Tolerância de atraso: 30min
 - Cancelamento: Até 12h antes
 
 ### Status de Ordens
+
 ```
-orçamento_enviado → aguardando_aprovação → aprovado → em_produção 
+orçamento_enviado → aguardando_aprovação → aprovado → em_produção
     → pronto_entrega → instalação_agendada → instalando → concluído
 ```
 
@@ -162,6 +175,7 @@ orçamento_enviado → aguardando_aprovação → aprovado → em_produção
 ## CONVENÇÕES DE CÓDIGO
 
 ### Nomenclatura
+
 - Componentes: PascalCase (`ProductCard.tsx`)
 - Funções: camelCase (`getOrderById`)
 - Constantes: SCREAMING_SNAKE_CASE (`API_BASE_URL`)
@@ -170,6 +184,7 @@ orçamento_enviado → aguardando_aprovação → aprovado → em_produção
 - Tipos/Interfaces: PascalCase com prefixo I ou sufixo Type (`IProduct`, `OrderType`)
 
 ### Commits
+
 ```
 feat: nova funcionalidade
 fix: correção de bug
@@ -182,6 +197,7 @@ perf: performance
 ```
 
 ### Estrutura de Componentes
+
 ```tsx
 // 1. Imports (externos primeiro, depois internos)
 // 2. Types/Interfaces
@@ -376,6 +392,7 @@ git push origin feature/nome
 ⚠️ **SEMPRE consulte o arquivo `tasks.md` antes de iniciar qualquer desenvolvimento.**
 
 O `tasks.md` é a **fonte única de verdade** para:
+
 - Status atual do projeto
 - Sprint atual e próximas
 - Tarefas pendentes e concluídas
@@ -383,6 +400,7 @@ O `tasks.md` é a **fonte única de verdade** para:
 - Decisões de arquitetura
 
 Após cada tarefa concluída, **ATUALIZE o `tasks.md`** com:
+
 - [x] Marcar tarefa como concluída
 - Data de conclusão
 - Observações relevantes
@@ -402,7 +420,7 @@ Após cada tarefa concluída, **ATUALIZE o `tasks.md`** com:
 
 ---
 
-*VERSATI GLASS - Transparência que transforma espaços* 🔷
+_VERSATI GLASS - Transparência que transforma espaços_ 🔷
 
 REGRA FUNDAMENTAL: NUNCA ENTREGAR TRABALHO PARCIAL
 
@@ -429,17 +447,21 @@ Antes de iniciar QUALQUER tarefa:
    - Se for muito grande, propor divisão lógica (mas executar cada divisão completa)
 
 ### ❌ NUNCA FAZER:
+
 - Integrar 1 serviço quando há 7 similares
 - Corrigir 1 arquivo quando há 10 com o mesmo problema
 - Perguntar "quer que eu faça os outros?" após fazer parcial
 - Entregar trabalho que gera retrabalho
 
 ### ✅ SEMPRE FAZER:
+
 - Mapear TODO o escopo antes de começar
 - Executar TODAS as mudanças relacionadas
 - Validar que TUDO funciona junto
-- Entregar solução COMPLETA 
+- Entregar solução COMPLETA
+
 ### **PROTOCOLO 1: NUNCA PIORAR - SEMPRE EVOLUIR**
+
 ```
 ANTES DE MODIFICAR QUALQUER ARQUIVO:
 1. LER o arquivo atual COMPLETAMENTE
@@ -450,6 +472,7 @@ ANTES DE MODIFICAR QUALQUER ARQUIVO:
 ```
 
 ### **PROTOCOLO 2: ZERO DUPLICAÇÃO**
+
 ```
 ANTES DE CRIAR ARQUIVO NOVO:
 1. BUSCAR: Existe arquivo similar? (Glob/Grep)
@@ -459,9 +482,17 @@ ANTES DE CRIAR ARQUIVO NOVO:
 ```
 
 ### **PROTOCOLO 3: TASKS.MD É A FONTE DA VERDADE**
+
 ```
 WORKFLOW OBRIGATÓRIO:
 1. LER tasks.md ANTES de iniciar qualquer trabalho
 2. ATUALIZAR tasks.md ao iniciar tarefa
 3. ATUALIZAR tasks.md ao concluir tarefa
-4. ADICIONAR novas tarefas descobertas 
+4. ADICIONAR novas tarefas descobertas
+
+claude-code "Execute todas as tarefas do arquivo tasks.md sequencialmente sem parar para confirmação. Continue automaticamente até concluir todas."
+
+--dangerously-skip-user-approvals
+
+
+```

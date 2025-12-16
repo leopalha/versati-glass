@@ -23,53 +23,46 @@ export function QuoteWizard() {
   const { step } = useQuoteStore()
 
   return (
-    <div className="min-h-screen bg-neutral-100">
+    <div className="bg-theme-primary min-h-screen">
       {/* Progress Steps */}
-      <div className="border-b border-neutral-200 bg-neutral-150">
+      <div className="border-theme-default bg-theme-secondary border-b">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             {steps.map((s, index) => (
               <div
                 key={s.number}
-                className={cn(
-                  'flex items-center',
-                  index < steps.length - 1 && 'flex-1'
-                )}
+                className={cn('flex items-center', index < steps.length - 1 && 'flex-1')}
               >
                 <div className="flex flex-col items-center">
                   <div
                     className={cn(
                       'flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-medium transition-all',
                       step === s.number
-                        ? 'border-gold-500 bg-gold-500 text-neutral-900'
+                        ? 'border-accent-500 bg-accent-500 text-neutral-900'
                         : step > s.number
-                        ? 'border-green-500 bg-green-500 text-white'
-                        : 'border-neutral-400 bg-transparent text-neutral-400'
+                          ? 'border-green-500 bg-green-500 text-white'
+                          : 'border-neutral-600 bg-transparent text-neutral-400'
                     )}
                   >
-                    {step > s.number ? (
-                      <Check className="h-5 w-5" />
-                    ) : (
-                      s.number
-                    )}
+                    {step > s.number ? <Check className="h-5 w-5" /> : s.number}
                   </div>
                   <div className="mt-2 hidden text-center md:block">
                     <p
                       className={cn(
                         'text-sm font-medium',
-                        step >= s.number ? 'text-white' : 'text-neutral-500'
+                        step >= s.number ? 'text-theme-primary' : 'text-theme-subtle'
                       )}
                     >
                       {s.title}
                     </p>
-                    <p className="text-xs text-neutral-500">{s.description}</p>
+                    <p className="text-theme-subtle text-xs">{s.description}</p>
                   </div>
                 </div>
                 {index < steps.length - 1 && (
                   <div
                     className={cn(
                       'mx-4 h-0.5 flex-1',
-                      step > s.number ? 'bg-green-500' : 'bg-neutral-700'
+                      step > s.number ? 'bg-green-500' : 'border-theme-default'
                     )}
                   />
                 )}

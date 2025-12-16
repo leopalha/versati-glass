@@ -12,7 +12,6 @@ export const metadata: Metadata = {
     'Conheça nossos projetos realizados em residências e estabelecimentos comerciais de alto padrão.',
 }
 
-
 const projects = [
   {
     id: 1,
@@ -132,8 +131,7 @@ const projects = [
     category: 'comercial',
     location: 'Lagoa, Rio de Janeiro',
     year: '2022',
-    description:
-      'Divisórias de vidro acústico, fachada frontal e portas de entrada automáticas.',
+    description: 'Divisórias de vidro acústico, fachada frontal e portas de entrada automáticas.',
     image: '/images/portfolio/lagoa-1.jpg',
     images: [
       '/images/portfolio/lagoa-1.jpg',
@@ -162,17 +160,16 @@ const projects = [
 
 export default function PortfolioPage() {
   return (
-    <div className="min-h-screen bg-neutral-950">
+    <div className="bg-theme-primary min-h-screen">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-neutral-900 to-neutral-950 px-6 py-24">
+      <section className="from-theme-secondary to-theme-primary relative overflow-hidden bg-gradient-to-b px-6 py-24">
         <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-5" />
         <div className="relative z-10 mx-auto max-w-4xl text-center">
-          <h1 className="mb-6 font-display text-5xl font-bold text-white md:text-6xl lg:text-7xl">
+          <h1 className="text-theme-primary mb-6 font-display text-5xl font-bold md:text-6xl lg:text-7xl">
             Portfólio
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-neutral-300 md:text-xl">
-            Conheça alguns dos nossos projetos realizados com excelência e
-            dedicação
+          <p className="text-theme-muted mx-auto max-w-2xl text-lg md:text-xl">
+            Conheça alguns dos nossos projetos realizados com excelência e dedicação
           </p>
         </div>
       </section>
@@ -181,7 +178,7 @@ export default function PortfolioPage() {
       <section className="px-6 py-12">
         <div className="mx-auto max-w-7xl">
           <div className="flex justify-center">
-            <select className="w-full max-w-xs rounded-md border border-neutral-300 bg-neutral-250 px-4 py-2 text-sm text-white focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20">
+            <select className="border-theme-default bg-theme-elevated text-theme-primary focus:ring-accent-500/20 w-full max-w-xs rounded-md border px-4 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-2">
               <option value="all">Todos os Projetos</option>
               <option value="residencial">Residencial</option>
               <option value="comercial">Comercial</option>
@@ -197,14 +194,14 @@ export default function PortfolioPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
               <Card key={project.id} variant="hover" className="group overflow-hidden">
-                <div className="relative aspect-[4/3] overflow-hidden bg-neutral-800">
+                <div className="bg-theme-elevated relative aspect-[4/3] overflow-hidden">
                   <Image
                     src={project.image}
                     alt={project.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent opacity-60" />
+                  <div className="from-theme-primary absolute inset-0 bg-gradient-to-t via-transparent to-transparent opacity-60" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <Badge variant="gold" className="mb-2">
                       {project.category === 'residencial'
@@ -216,15 +213,11 @@ export default function PortfolioPage() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="mb-2 text-xl font-bold text-white">
-                    {project.title}
-                  </h3>
-                  <p className="mb-1 text-sm text-neutral-600">
+                  <h3 className="text-theme-primary mb-2 text-xl font-bold">{project.title}</h3>
+                  <p className="text-theme-subtle mb-1 text-sm">
                     {project.location} • {project.year}
                   </p>
-                  <p className="mb-4 text-sm text-neutral-700">
-                    {project.description}
-                  </p>
+                  <p className="text-theme-muted mb-4 text-sm">{project.description}</p>
                   <div className="mb-4 flex flex-wrap gap-2">
                     {project.services.map((service, idx) => (
                       <Badge key={idx} variant="outline" className="text-xs">
@@ -233,9 +226,7 @@ export default function PortfolioPage() {
                     ))}
                   </div>
                   <Button asChild variant="outline" className="w-full">
-                    <Link href={`/portfolio/${project.id}`}>
-                      Ver Projeto Completo
-                    </Link>
+                    <Link href={`/portfolio/${project.id}`}>Ver Projeto Completo</Link>
                   </Button>
                 </div>
               </Card>
@@ -246,11 +237,11 @@ export default function PortfolioPage() {
 
       {/* CTA */}
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-4xl rounded-2xl bg-gradient-to-br from-gold-900/20 to-neutral-900 p-12 text-center">
-          <h2 className="mb-4 font-display text-3xl font-bold text-white md:text-4xl">
+        <div className="from-accent-900/20 to-theme-secondary mx-auto max-w-4xl rounded-2xl bg-gradient-to-br p-12 text-center">
+          <h2 className="text-theme-primary mb-4 font-display text-3xl font-bold md:text-4xl">
             Quer Ver Seu Projeto Aqui?
           </h2>
-          <p className="mb-8 text-lg text-neutral-300">
+          <p className="text-theme-secondary mb-8 text-lg">
             Entre em contato e transforme sua ideia em realidade
           </p>
           <Button asChild size="lg">

@@ -251,7 +251,7 @@ export default function AdminConversaDetalhePage() {
 
             {/* Input */}
             {conversation.status !== 'CLOSED' && (
-              <div className="border-t border-neutral-300 p-4">
+              <div className="border-t border-neutral-400 p-4">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault()
@@ -286,33 +286,32 @@ export default function AdminConversaDetalhePage() {
             </h3>
 
             <div className="space-y-3">
-              <div className="flex items-center gap-3 text-neutral-300">
+              <div className="flex items-center gap-3 text-neutral-800">
                 <User className="h-5 w-5 text-neutral-600" />
                 <span>
                   {conversation.customerName || conversation.user?.name || 'Nao identificado'}
                 </span>
               </div>
-              <div className="flex items-center gap-3 text-neutral-300">
+              <div className="flex items-center gap-3 text-neutral-800">
                 <Phone className="h-5 w-5 text-neutral-600" />
                 <span>+{conversation.phoneNumber}</span>
               </div>
               {conversation.user?.email && (
-                <div className="flex items-center gap-3 text-neutral-300">
+                <div className="flex items-center gap-3 text-neutral-800">
                   <Mail className="h-5 w-5 text-neutral-600" />
                   <span>{conversation.user.email}</span>
                 </div>
               )}
-              <div className="flex items-center gap-3 text-neutral-300">
+              <div className="flex items-center gap-3 text-neutral-800">
                 <Clock className="h-5 w-5 text-neutral-600" />
                 <span>
-                  Iniciada em{' '}
-                  {new Date(conversation.createdAt).toLocaleDateString('pt-BR')}
+                  Iniciada em {new Date(conversation.createdAt).toLocaleDateString('pt-BR')}
                 </span>
               </div>
             </div>
 
             {/* Status */}
-            <div className="mt-4 border-t border-neutral-300 pt-4">
+            <div className="mt-4 border-t border-neutral-400 pt-4">
               <p className="text-sm text-neutral-700">Status</p>
               <div className="mt-1 flex items-center gap-2">
                 {conversation.status === 'ACTIVE' ? (
@@ -336,12 +335,12 @@ export default function AdminConversaDetalhePage() {
 
             {/* Quick actions */}
             {conversation.user && (
-              <div className="mt-4 border-t border-neutral-300 pt-4">
+              <div className="mt-4 border-t border-neutral-400 pt-4">
                 <p className="mb-2 text-sm text-neutral-700">Acoes Rapidas</p>
                 <div className="space-y-2">
                   <Link
                     href={`/admin/clientes/${conversation.user.id}`}
-                    className="block rounded-lg border border-neutral-300 p-2 text-center text-sm text-neutral-300 hover:bg-neutral-250"
+                    className="hover:bg-neutral-250 block rounded-lg border border-neutral-400 p-2 text-center text-sm text-neutral-800"
                   >
                     Ver Perfil do Cliente
                   </Link>

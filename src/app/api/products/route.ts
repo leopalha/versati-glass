@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { auth } from '@/lib/auth'
+import { slugify } from '@/lib/utils'
+import { createProductSchema, productQuerySchema } from '@/lib/validations/product'
+import { z } from 'zod'
 
 export async function GET(request: Request) {
   try {
@@ -10,14 +14,19 @@ export async function GET(request: Request) {
 
     const products = await prisma.product.findMany({
       where: {
-        ...(category && { category: category as 'BOX' | 'ESPELHOS' | 'VIDROS' | 'PORTAS_JANELAS' | 'FECHAMENTOS' | 'OUTROS' }),
+        ...(category && {
+          category: category as
+            | 'BOX'
+            | 'ESPELHOS'
+            | 'VIDROS'
+            | 'PORTAS_JANELAS'
+            | 'FECHAMENTOS'
+            | 'OUTROS',
+        }),
         ...(featured === 'true' && { isFeatured: true }),
         ...(active !== 'false' && { isActive: true }),
       },
-      orderBy: [
-        { isFeatured: 'desc' },
-        { name: 'asc' },
-      ],
+      orderBy: [{ isFeatured: 'desc' }, { name: 'asc' }],
       select: {
         id: true,
         name: true,
@@ -53,9 +62,70 @@ export async function GET(request: Request) {
     return NextResponse.json(serializedProducts)
   } catch (error) {
     console.error('Error fetching products:', error)
-    return NextResponse.json(
-      { error: 'Erro ao buscar produtos' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Erro ao buscar produtos' }, { status: 500 })
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    // Verificar autenticação
+    const session = await auth()
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+    }
+
+    // Verificar se é admin
+    if (session.user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Permissão negada. Apenas administradores podem criar produtos.' },
+        { status: 403 }
+      )
+    }
+
+    // Parsear e validar dados
+    const body = await request.json()
+    const validatedData = createProductSchema.parse(body)
+
+    // Gerar slug se não fornecido
+    const slug = validatedData.slug || slugify(validatedData.name)
+
+    // Verificar se slug já existe
+    const existingProduct = await prisma.product.findUnique({
+      where: { slug },
+    })
+
+    if (existingProduct) {
+      return NextResponse.json(
+        { error: 'Já existe um produto com este slug. Tente um nome diferente.' },
+        { status: 409 }
+      )
+    }
+
+    // Criar produto
+    const product = await prisma.product.create({
+      data: {
+        ...validatedData,
+        slug,
+      },
+    })
+
+    // Serializar Decimal para JSON
+    const serializedProduct = {
+      ...product,
+      basePrice: product.basePrice ? Number(product.basePrice) : null,
+      pricePerM2: product.pricePerM2 ? Number(product.pricePerM2) : null,
+      priceRangeMin: product.priceRangeMin ? Number(product.priceRangeMin) : null,
+      priceRangeMax: product.priceRangeMax ? Number(product.priceRangeMax) : null,
+    }
+
+    return NextResponse.json(serializedProduct, { status: 201 })
+  } catch (error) {
+    console.error('Error creating product:', error)
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 })
+    }
+
+    return NextResponse.json({ error: 'Erro ao criar produto' }, { status: 500 })
   }
 }

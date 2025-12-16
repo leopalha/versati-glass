@@ -70,17 +70,16 @@ export default function ContatoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950">
+    <div className="bg-theme-primary min-h-screen">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-neutral-900 to-neutral-950 px-6 py-24">
+      <section className="from-theme-secondary to-theme-primary relative overflow-hidden bg-gradient-to-b px-6 py-24">
         <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-5" />
         <div className="relative z-10 mx-auto max-w-4xl text-center">
-          <h1 className="mb-6 font-display text-5xl font-bold text-white md:text-6xl lg:text-7xl">
+          <h1 className="text-theme-primary mb-6 font-display text-5xl font-bold md:text-6xl lg:text-7xl">
             Entre em Contato
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-neutral-300 md:text-xl">
-            Estamos prontos para atender você e transformar seu projeto em
-            realidade
+          <p className="text-theme-muted mx-auto max-w-2xl text-lg md:text-xl">
+            Estamos prontos para atender você e transformar seu projeto em realidade
           </p>
         </div>
       </section>
@@ -91,21 +90,21 @@ export default function ContatoPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {contactInfo.map((info, idx) => (
               <Card key={idx} className="p-6 text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gold-500/10">
-                  <info.icon className="h-6 w-6 text-gold-400" />
+                <div className="bg-accent-500/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+                  <info.icon className="h-6 w-6 text-accent-400" />
                 </div>
-                <h3 className="mb-2 font-semibold text-white">{info.title}</h3>
+                <h3 className="text-theme-primary mb-2 font-semibold">{info.title}</h3>
                 {info.link ? (
                   <a
                     href={info.link}
-                    className="text-sm text-neutral-700 hover:text-gold-400"
+                    className="text-theme-muted text-sm hover:text-accent-500"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     {info.value}
                   </a>
                 ) : (
-                  <p className="text-sm text-neutral-700">{info.value}</p>
+                  <p className="text-theme-muted text-sm">{info.value}</p>
                 )}
               </Card>
             ))}
@@ -119,17 +118,12 @@ export default function ContatoPage() {
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Form */}
             <Card className="p-8">
-              <h2 className="mb-6 font-display text-2xl font-bold text-white">
+              <h2 className="text-theme-primary mb-6 font-display text-2xl font-bold">
                 Envie uma Mensagem
               </h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid gap-6 md:grid-cols-2">
-                  <Input
-                    name="name"
-                    placeholder="Seu nome"
-                    required
-                    disabled={isSubmitting}
-                  />
+                  <Input name="name" placeholder="Seu nome" required disabled={isSubmitting} />
                   <Input
                     name="phone"
                     type="tel"
@@ -149,7 +143,7 @@ export default function ContatoPage() {
                   name="subject"
                   required
                   disabled={isSubmitting}
-                  className="rounded-md border border-neutral-300 bg-neutral-250 px-4 py-2 text-sm text-white focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="border-theme-default bg-theme-elevated text-theme-primary focus:ring-accent-500/20 w-full rounded-md border px-4 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="">Assunto</option>
                   <option value="orcamento">Solicitar Orçamento</option>
@@ -166,19 +160,14 @@ export default function ContatoPage() {
                   required
                   disabled={isSubmitting}
                 />
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full"
-                  disabled={isSubmitting}
-                >
+                <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
                   {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}
                 </Button>
               </form>
 
               {/* Social Media */}
-              <div className="mt-8 border-t border-neutral-800 pt-8">
-                <p className="mb-4 text-center text-sm text-neutral-700">
+              <div className="border-theme-default mt-8 border-t pt-8">
+                <p className="text-theme-muted mb-4 text-center text-sm">
                   Ou nos acompanhe nas redes sociais
                 </p>
                 <div className="flex justify-center gap-4">
@@ -188,7 +177,7 @@ export default function ContatoPage() {
                       href={social.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-800 text-neutral-400 transition-colors hover:bg-gold-500 hover:text-white"
+                      className="bg-theme-elevated text-theme-muted hover:text-theme-primary flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-accent-500"
                     >
                       <social.icon className="h-5 w-5" />
                     </a>
@@ -198,10 +187,10 @@ export default function ContatoPage() {
             </Card>
 
             {/* Map */}
-            <div className="overflow-hidden rounded-2xl bg-neutral-800">
+            <div className="bg-theme-elevated overflow-hidden rounded-2xl">
               <div className="aspect-square w-full">
                 {/* Replace with actual Google Maps embed */}
-                <div className="flex h-full items-center justify-center text-neutral-600">
+                <div className="text-theme-default flex h-full items-center justify-center">
                   <div className="text-center">
                     <MapPin className="mx-auto mb-4 h-12 w-12" />
                     <p>Mapa em breve</p>
@@ -215,11 +204,11 @@ export default function ContatoPage() {
 
       {/* WhatsApp CTA */}
       <section className="px-6 pb-20">
-        <div className="mx-auto max-w-4xl rounded-2xl bg-gradient-to-br from-green-900/20 to-neutral-900 p-12 text-center">
-          <h2 className="mb-4 font-display text-3xl font-bold text-white md:text-4xl">
+        <div className="to-theme-secondary mx-auto max-w-4xl rounded-2xl bg-gradient-to-br from-green-900/20 p-12 text-center">
+          <h2 className="text-theme-primary mb-4 font-display text-3xl font-bold md:text-4xl">
             Prefere Falar pelo WhatsApp?
           </h2>
-          <p className="mb-8 text-lg text-neutral-300">
+          <p className="text-theme-secondary mb-8 text-lg">
             Atendimento rápido e personalizado direto no seu celular
           </p>
           <Button asChild size="lg" className="bg-[#25D366] hover:bg-[#20BA5A]">

@@ -1,14 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import {
-  Home,
-  Building2,
-  Wrench,
-  FileText,
-  ArrowRight,
-  Check,
-} from 'lucide-react'
+import { Home, Building2, Wrench, FileText, ArrowRight, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
@@ -95,14 +88,12 @@ const process = [
   {
     step: '02',
     title: 'Visita Técnica',
-    description:
-      'Agendamos uma visita gratuita para medições precisas e análise do projeto.',
+    description: 'Agendamos uma visita gratuita para medições precisas e análise do projeto.',
   },
   {
     step: '03',
     title: 'Orçamento Detalhado',
-    description:
-      'Elaboramos um orçamento completo com todas as especificações e prazos.',
+    description: 'Elaboramos um orçamento completo com todas as especificações e prazos.',
   },
   {
     step: '04',
@@ -113,14 +104,12 @@ const process = [
   {
     step: '05',
     title: 'Instalação',
-    description:
-      'Nossa equipe especializada realiza a instalação com precisão e cuidado.',
+    description: 'Nossa equipe especializada realiza a instalação com precisão e cuidado.',
   },
   {
     step: '06',
     title: 'Pós-Venda',
-    description:
-      'Garantia estendida e suporte técnico para qualquer necessidade futura.',
+    description: 'Garantia estendida e suporte técnico para qualquer necessidade futura.',
   },
 ]
 
@@ -135,17 +124,16 @@ const differentials = [
 
 export default function ServicosPage() {
   return (
-    <div className="min-h-screen bg-neutral-950">
+    <div className="bg-theme-primary min-h-screen">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-neutral-900 to-neutral-950 px-6 py-24">
+      <section className="from-theme-secondary to-theme-primary relative overflow-hidden bg-gradient-to-b px-6 py-24">
         <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-5" />
         <div className="relative z-10 mx-auto max-w-4xl text-center">
-          <h1 className="mb-6 font-display text-5xl font-bold text-white md:text-6xl lg:text-7xl">
+          <h1 className="text-theme-primary mb-6 font-display text-5xl font-bold md:text-6xl lg:text-7xl">
             Nossos Serviços
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-neutral-300 md:text-xl">
-            Soluções completas em vidro e esquadrias com excelência em cada
-            detalhe
+          <p className="text-theme-muted mx-auto max-w-2xl text-lg md:text-xl">
+            Soluções completas em vidro e esquadrias com excelência em cada detalhe
           </p>
         </div>
       </section>
@@ -162,20 +150,18 @@ export default function ServicosPage() {
                 }`}
               >
                 <div className={idx % 2 === 1 ? 'lg:order-2' : ''}>
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gold-500/10">
-                    <service.icon className="h-8 w-8 text-gold-400" />
+                  <div className="bg-accent-500/10 mb-6 flex h-16 w-16 items-center justify-center rounded-full">
+                    <service.icon className="h-8 w-8 text-accent-400" />
                   </div>
-                  <h2 className="mb-4 font-display text-3xl font-bold text-white md:text-4xl">
+                  <h2 className="text-theme-primary mb-4 font-display text-3xl font-bold md:text-4xl">
                     {service.title}
                   </h2>
-                  <p className="mb-8 text-lg text-neutral-300">
-                    {service.description}
-                  </p>
+                  <p className="text-theme-muted mb-8 text-lg">{service.description}</p>
                   <ul className="mb-8 space-y-3">
                     {service.features.map((feature, featureIdx) => (
                       <li key={featureIdx} className="flex items-start gap-3">
-                        <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-gold-400" />
-                        <span className="text-neutral-300">{feature}</span>
+                        <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent-400" />
+                        <span className="text-theme-secondary">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -187,16 +173,11 @@ export default function ServicosPage() {
                   </Button>
                 </div>
                 <div
-                  className={`relative aspect-[4/3] overflow-hidden rounded-2xl bg-neutral-800 ${
+                  className={`bg-theme-elevated relative aspect-[4/3] overflow-hidden rounded-2xl ${
                     idx % 2 === 1 ? 'lg:order-1' : ''
                   }`}
                 >
-                  <Image
-                    src={service.image}
-                    alt={service.title}
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={service.image} alt={service.title} fill className="object-cover" />
                 </div>
               </div>
             ))}
@@ -205,26 +186,22 @@ export default function ServicosPage() {
       </section>
 
       {/* Process */}
-      <section className="bg-neutral-900/50 px-6 py-20">
+      <section className="bg-theme-secondary/50 px-6 py-20">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
+            <h2 className="text-theme-primary mb-4 font-display text-4xl font-bold md:text-5xl">
               Como Funciona
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-neutral-700">
+            <p className="text-theme-muted mx-auto max-w-2xl text-lg">
               Nosso processo é simples, transparente e focado na sua satisfação
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {process.map((item, idx) => (
               <Card key={idx} className="p-8">
-                <div className="mb-4 text-5xl font-bold text-gold-400/20">
-                  {item.step}
-                </div>
-                <h3 className="mb-3 text-xl font-bold text-white">
-                  {item.title}
-                </h3>
-                <p className="text-neutral-700">{item.description}</p>
+                <div className="text-accent-400/20 mb-4 text-5xl font-bold">{item.step}</div>
+                <h3 className="text-theme-primary mb-3 text-xl font-bold">{item.title}</h3>
+                <p className="text-theme-muted">{item.description}</p>
               </Card>
             ))}
           </div>
@@ -235,17 +212,17 @@ export default function ServicosPage() {
       <section className="px-6 py-20">
         <div className="mx-auto max-w-5xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
+            <h2 className="text-theme-primary mb-4 font-display text-4xl font-bold md:text-5xl">
               Por Que Escolher a Versati?
             </h2>
           </div>
           <div className="grid gap-6 md:grid-cols-2">
             {differentials.map((item, idx) => (
               <div key={idx} className="flex items-start gap-4">
-                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gold-500/10">
-                  <Check className="h-5 w-5 text-gold-400" />
+                <div className="bg-accent-500/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
+                  <Check className="h-5 w-5 text-accent-400" />
                 </div>
-                <p className="pt-1 text-lg text-neutral-300">{item}</p>
+                <p className="text-theme-secondary pt-1 text-lg">{item}</p>
               </div>
             ))}
           </div>
@@ -254,11 +231,11 @@ export default function ServicosPage() {
 
       {/* CTA */}
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-4xl rounded-2xl bg-gradient-to-br from-gold-900/20 to-neutral-900 p-12 text-center">
-          <h2 className="mb-4 font-display text-3xl font-bold text-white md:text-4xl">
+        <div className="from-accent-900/20 to-theme-secondary mx-auto max-w-4xl rounded-2xl bg-gradient-to-br p-12 text-center">
+          <h2 className="text-theme-primary mb-4 font-display text-3xl font-bold md:text-4xl">
             Pronto Para Começar Seu Projeto?
           </h2>
-          <p className="mb-8 text-lg text-neutral-300">
+          <p className="text-theme-secondary mb-8 text-lg">
             Entre em contato e receba um orçamento personalizado em até 24 horas
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">

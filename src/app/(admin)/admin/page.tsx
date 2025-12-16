@@ -178,9 +178,7 @@ export default async function AdminDashboardPage() {
               <div>
                 <p className="text-sm text-neutral-700">Pedidos (mes)</p>
                 <p className="text-2xl font-bold text-white">{stats.monthlyOrders}</p>
-                <p className="text-xs text-neutral-600">
-                  {stats.pendingOrders} em andamento
-                </p>
+                <p className="text-xs text-neutral-600">{stats.pendingOrders} em andamento</p>
               </div>
             </div>
           </Card>
@@ -193,9 +191,7 @@ export default async function AdminDashboardPage() {
               <div>
                 <p className="text-sm text-neutral-700">Orcamentos</p>
                 <p className="text-2xl font-bold text-white">{stats.totalQuotes}</p>
-                <p className="text-xs text-neutral-600">
-                  {stats.pendingQuotes} pendentes
-                </p>
+                <p className="text-xs text-neutral-600">{stats.pendingQuotes} pendentes</p>
               </div>
             </div>
           </Card>
@@ -256,13 +252,8 @@ export default async function AdminDashboardPage() {
           {/* Recent Orders */}
           <Card className="p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-white">
-                Pedidos Recentes
-              </h2>
-              <Link
-                href="/admin/pedidos"
-                className="text-sm text-gold-500 hover:text-gold-400"
-              >
+              <h2 className="font-display text-lg font-semibold text-white">Pedidos Recentes</h2>
+              <Link href="/admin/pedidos" className="text-sm text-gold-500 hover:text-gold-400">
                 Ver todos
               </Link>
             </div>
@@ -272,16 +263,14 @@ export default async function AdminDashboardPage() {
                 <Link
                   key={order.id}
                   href={`/admin/pedidos/${order.id}`}
-                  className="flex items-center justify-between rounded-lg border border-neutral-300 p-3 transition-colors hover:bg-neutral-200"
+                  className="flex items-center justify-between rounded-lg border border-neutral-400 p-3 transition-colors hover:bg-neutral-200"
                 >
                   <div>
                     <p className="font-medium text-white">#{order.number}</p>
                     <p className="text-sm text-neutral-700">{order.user.name}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium text-white">
-                      {formatCurrency(Number(order.total))}
-                    </p>
+                    <p className="font-medium text-white">{formatCurrency(Number(order.total))}</p>
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                         statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-700'
@@ -301,25 +290,20 @@ export default async function AdminDashboardPage() {
               <h2 className="font-display text-lg font-semibold text-white">
                 Orcamentos Pendentes
               </h2>
-              <Link
-                href="/admin/orcamentos"
-                className="text-sm text-gold-500 hover:text-gold-400"
-              >
+              <Link href="/admin/orcamentos" className="text-sm text-gold-500 hover:text-gold-400">
                 Ver todos
               </Link>
             </div>
 
             <div className="space-y-3">
               {stats.recentQuotes.length === 0 ? (
-                <p className="py-4 text-center text-neutral-600">
-                  Nenhum orcamento pendente
-                </p>
+                <p className="py-4 text-center text-neutral-600">Nenhum orcamento pendente</p>
               ) : (
                 stats.recentQuotes.map((quote) => (
                   <Link
                     key={quote.id}
                     href={`/admin/orcamentos/${quote.id}`}
-                    className="flex items-center justify-between rounded-lg border border-neutral-300 p-3 transition-colors hover:bg-neutral-200"
+                    className="flex items-center justify-between rounded-lg border border-neutral-400 p-3 transition-colors hover:bg-neutral-200"
                   >
                     <div>
                       <p className="font-medium text-white">#{quote.number}</p>

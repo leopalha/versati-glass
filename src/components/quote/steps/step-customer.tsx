@@ -74,9 +74,7 @@ export function StepCustomer() {
       const cleanCep = zipCode?.replace(/\D/g, '')
       if (cleanCep?.length === 8) {
         try {
-          const response = await fetch(
-            `https://viacep.com.br/ws/${cleanCep}/json/`
-          )
+          const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`)
           const data = await response.json()
 
           if (!data.erro) {
@@ -112,24 +110,18 @@ export function StepCustomer() {
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-8 text-center">
-        <h2 className="font-display text-3xl font-bold text-white">
-          Seus dados
-        </h2>
-        <p className="mt-2 text-neutral-400">
+        <h2 className="text-theme-primary font-display text-3xl font-bold">Seus dados</h2>
+        <p className="text-theme-muted mt-2">
           Preencha seus dados de contato e endereco para instalacao
         </p>
       </div>
 
       {session?.user && (
-        <div className="mb-6 flex items-center gap-3 rounded-lg bg-gold-500/10 p-4">
-          <User className="h-5 w-5 text-gold-400" />
+        <div className="bg-accent-500/10 mb-6 flex items-center gap-3 rounded-lg p-4">
+          <User className="h-5 w-5 text-accent-400" />
           <div>
-            <p className="text-sm text-gold-400">
-              Logado como {session.user.name}
-            </p>
-            <p className="text-xs text-neutral-400">
-              Seus dados foram preenchidos automaticamente
-            </p>
+            <p className="text-sm text-accent-400">Logado como {session.user.name}</p>
+            <p className="text-theme-muted text-xs">Seus dados foram preenchidos automaticamente</p>
           </div>
         </div>
       )}
@@ -138,71 +130,47 @@ export function StepCustomer() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Personal Info */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">
-              Dados pessoais
-            </h3>
+            <h3 className="text-theme-primary text-lg font-semibold">Dados pessoais</h3>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm text-neutral-400">
-                  Nome completo *
-                </label>
+                <label className="text-theme-muted mb-1 block text-sm">Nome completo *</label>
                 <Input {...register('name')} placeholder="Seu nome" />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-error">{errors.name.message}</p>
-                )}
+                {errors.name && <p className="mt-1 text-sm text-error">{errors.name.message}</p>}
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-neutral-400">
-                  CPF/CNPJ
-                </label>
+                <label className="text-theme-muted mb-1 block text-sm">CPF/CNPJ</label>
                 <Input {...register('cpfCnpj')} placeholder="Opcional" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm text-neutral-400">
-                  Email *
-                </label>
-                <Input
-                  type="email"
-                  {...register('email')}
-                  placeholder="seu@email.com"
-                />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-error">{errors.email.message}</p>
-                )}
+                <label className="text-theme-muted mb-1 block text-sm">Email *</label>
+                <Input type="email" {...register('email')} placeholder="seu@email.com" />
+                {errors.email && <p className="mt-1 text-sm text-error">{errors.email.message}</p>}
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-neutral-400">
-                  Telefone *
-                </label>
+                <label className="text-theme-muted mb-1 block text-sm">Telefone *</label>
                 <Input
                   {...register('phone')}
                   onChange={handlePhoneChange}
                   placeholder="(21) 98765-4321"
                 />
-                {errors.phone && (
-                  <p className="mt-1 text-sm text-error">{errors.phone.message}</p>
-                )}
+                {errors.phone && <p className="mt-1 text-sm text-error">{errors.phone.message}</p>}
               </div>
             </div>
           </div>
 
           {/* Address */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">
-              Endereco para instalacao
-            </h3>
+            <h3 className="text-theme-primary text-lg font-semibold">Endereco para instalacao</h3>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div>
-                <label className="mb-1 block text-sm text-neutral-400">
-                  CEP *
-                </label>
+                <label className="text-theme-muted mb-1 block text-sm">CEP *</label>
                 <Input
                   {...register('zipCode')}
                   onChange={handleCepChange}
@@ -214,9 +182,7 @@ export function StepCustomer() {
               </div>
 
               <div className="sm:col-span-2">
-                <label className="mb-1 block text-sm text-neutral-400">
-                  Rua *
-                </label>
+                <label className="text-theme-muted mb-1 block text-sm">Rua *</label>
                 <Input {...register('street')} placeholder="Nome da rua" />
                 {errors.street && (
                   <p className="mt-1 text-sm text-error">{errors.street.message}</p>
@@ -226,9 +192,7 @@ export function StepCustomer() {
 
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <div>
-                <label className="mb-1 block text-sm text-neutral-400">
-                  Numero *
-                </label>
+                <label className="text-theme-muted mb-1 block text-sm">Numero *</label>
                 <Input {...register('number')} placeholder="123" />
                 {errors.number && (
                   <p className="mt-1 text-sm text-error">{errors.number.message}</p>
@@ -236,44 +200,30 @@ export function StepCustomer() {
               </div>
 
               <div className="sm:col-span-3">
-                <label className="mb-1 block text-sm text-neutral-400">
-                  Complemento
-                </label>
+                <label className="text-theme-muted mb-1 block text-sm">Complemento</label>
                 <Input {...register('complement')} placeholder="Apto, bloco..." />
               </div>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div>
-                <label className="mb-1 block text-sm text-neutral-400">
-                  Bairro *
-                </label>
+                <label className="text-theme-muted mb-1 block text-sm">Bairro *</label>
                 <Input {...register('neighborhood')} placeholder="Bairro" />
                 {errors.neighborhood && (
-                  <p className="mt-1 text-sm text-error">
-                    {errors.neighborhood.message}
-                  </p>
+                  <p className="mt-1 text-sm text-error">{errors.neighborhood.message}</p>
                 )}
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-neutral-400">
-                  Cidade *
-                </label>
+                <label className="text-theme-muted mb-1 block text-sm">Cidade *</label>
                 <Input {...register('city')} placeholder="Cidade" />
-                {errors.city && (
-                  <p className="mt-1 text-sm text-error">{errors.city.message}</p>
-                )}
+                {errors.city && <p className="mt-1 text-sm text-error">{errors.city.message}</p>}
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-neutral-400">
-                  Estado *
-                </label>
+                <label className="text-theme-muted mb-1 block text-sm">Estado *</label>
                 <Input {...register('state')} placeholder="UF" maxLength={2} />
-                {errors.state && (
-                  <p className="mt-1 text-sm text-error">{errors.state.message}</p>
-                )}
+                {errors.state && <p className="mt-1 text-sm text-error">{errors.state.message}</p>}
               </div>
             </div>
           </div>

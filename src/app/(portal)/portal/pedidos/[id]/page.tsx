@@ -24,7 +24,10 @@ interface PageProps {
 
 const statusLabels: Record<string, { label: string; color: string }> = {
   ORCAMENTO_ENVIADO: { label: 'Orcamento Enviado', color: 'bg-blue-500/20 text-blue-400' },
-  AGUARDANDO_PAGAMENTO: { label: 'Aguardando Pagamento', color: 'bg-yellow-500/20 text-yellow-400' },
+  AGUARDANDO_PAGAMENTO: {
+    label: 'Aguardando Pagamento',
+    color: 'bg-yellow-500/20 text-yellow-400',
+  },
   APROVADO: { label: 'Aprovado', color: 'bg-green-500/20 text-green-400' },
   EM_PRODUCAO: { label: 'Em Producao', color: 'bg-purple-500/20 text-purple-400' },
   PRONTO_ENTREGA: { label: 'Pronto p/ Entrega', color: 'bg-cyan-500/20 text-cyan-400' },
@@ -100,9 +103,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
             {/* Status */}
             <Card className="p-6">
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="font-display text-lg font-semibold text-white">
-                  Status do Pedido
-                </h2>
+                <h2 className="font-display text-lg font-semibold text-white">Status do Pedido</h2>
                 <span
                   className={`rounded-full px-3 py-1 text-sm font-medium ${
                     statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-700'
@@ -172,7 +173,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start justify-between rounded-lg border border-neutral-300 p-4"
+                    className="flex items-start justify-between rounded-lg border border-neutral-400 p-4"
                   >
                     <div className="flex items-start gap-4">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-neutral-200">
@@ -211,9 +212,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
             {/* Timeline */}
             {order.timeline.length > 0 && (
               <Card className="p-6">
-                <h2 className="mb-4 font-display text-lg font-semibold text-white">
-                  Historico
-                </h2>
+                <h2 className="mb-4 font-display text-lg font-semibold text-white">Historico</h2>
 
                 <div className="space-y-4">
                   {order.timeline.map((entry, index) => (
@@ -250,16 +249,12 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
           <div className="space-y-6">
             {/* Order Summary */}
             <Card className="p-6">
-              <h2 className="mb-4 font-display text-lg font-semibold text-white">
-                Resumo
-              </h2>
+              <h2 className="mb-4 font-display text-lg font-semibold text-white">Resumo</h2>
 
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-neutral-700">Subtotal</span>
-                  <span className="text-white">
-                    {formatCurrency(Number(order.subtotal))}
-                  </span>
+                  <span className="text-white">{formatCurrency(Number(order.subtotal))}</span>
                 </div>
                 {Number(order.discount) > 0 && (
                   <div className="flex justify-between text-sm">
@@ -277,7 +272,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                     </span>
                   </div>
                 )}
-                <div className="border-t border-neutral-300 pt-3">
+                <div className="border-t border-neutral-400 pt-3">
                   <div className="flex justify-between">
                     <span className="font-medium text-white">Total</span>
                     <span className="font-display text-xl font-bold text-gold-500">
@@ -292,12 +287,10 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
             <Card className="p-6">
               <div className="mb-4 flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-gold-500" />
-                <h2 className="font-display text-lg font-semibold text-white">
-                  Endereco
-                </h2>
+                <h2 className="font-display text-lg font-semibold text-white">Endereco</h2>
               </div>
 
-              <p className="text-neutral-300">
+              <p className="text-neutral-800">
                 {order.serviceStreet}, {order.serviceNumber}
                 {order.serviceComplement && ` - ${order.serviceComplement}`}
                 <br />
@@ -314,17 +307,12 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
               <Card className="p-6">
                 <div className="mb-4 flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-gold-500" />
-                  <h2 className="font-display text-lg font-semibold text-white">
-                    Agendamentos
-                  </h2>
+                  <h2 className="font-display text-lg font-semibold text-white">Agendamentos</h2>
                 </div>
 
                 <div className="space-y-3">
                   {order.appointments.map((appointment) => (
-                    <div
-                      key={appointment.id}
-                      className="rounded-lg border border-neutral-300 p-3"
-                    >
+                    <div key={appointment.id} className="rounded-lg border border-neutral-400 p-3">
                       <p className="font-medium text-white">
                         {appointment.type === 'VISITA_TECNICA'
                           ? 'Visita Tecnica'
@@ -347,9 +335,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
               <Card className="p-6">
                 <div className="mb-4 flex items-center gap-2">
                   <FileText className="h-5 w-5 text-gold-500" />
-                  <h2 className="font-display text-lg font-semibold text-white">
-                    Documentos
-                  </h2>
+                  <h2 className="font-display text-lg font-semibold text-white">Documentos</h2>
                 </div>
 
                 <div className="space-y-2">
@@ -359,7 +345,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                       href={doc.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 rounded-lg border border-neutral-300 p-3 text-sm text-neutral-300 hover:bg-neutral-200"
+                      className="flex items-center gap-2 rounded-lg border border-neutral-400 p-3 text-sm text-neutral-800 hover:bg-neutral-200"
                     >
                       <FileText className="h-4 w-4" />
                       {doc.name}

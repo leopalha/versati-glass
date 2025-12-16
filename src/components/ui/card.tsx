@@ -3,12 +3,12 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const cardVariants = cva(
-  'rounded-xl border border-neutral-300 bg-neutral-150 text-white shadow-card transition-all duration-300',
+  'rounded-xl border border-theme-default bg-theme-card text-theme-primary shadow-card transition-all duration-300',
   {
     variants: {
       variant: {
         default: '',
-        hover: 'hover:border-gold-500/30 hover:shadow-card-hover cursor-pointer',
+        hover: 'hover:border-accent-500/30 hover:shadow-card-hover cursor-pointer',
       },
     },
     defaultVariants: {
@@ -18,16 +18,11 @@ const cardVariants = cva(
 )
 
 export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(cardVariants({ variant }), className)}
-      {...props}
-    />
+    <div ref={ref} className={cn(cardVariants({ variant }), className)} {...props} />
   )
 )
 Card.displayName = 'Card'
@@ -61,7 +56,7 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn('text-sm text-neutral-700', className)} {...props} />
+  <p ref={ref} className={cn('text-theme-muted text-sm', className)} {...props} />
 ))
 CardDescription.displayName = 'CardDescription'
 

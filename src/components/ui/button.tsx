@@ -4,17 +4,19 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-gold-500 text-neutral-0 hover:bg-gold-600 hover:shadow-glow-gold active:scale-[0.98]',
+        default:
+          'bg-accent-500 text-btn-primary hover:bg-accent-600 hover:shadow-glow active:scale-[0.98]',
         secondary:
-          'border-2 border-gold-500 text-gold-500 bg-transparent hover:bg-gold-500/10 hover:shadow-glow-gold',
-        ghost: 'text-white/80 hover:bg-white/5 hover:text-white',
+          'border-2 border-accent-500 text-accent-500 bg-transparent hover:bg-accent-500/10 hover:shadow-glow',
+        ghost: 'text-theme-secondary hover:bg-theme-elevated hover:text-theme-primary',
         danger: 'bg-error text-white hover:bg-error/90',
-        outline: 'border border-neutral-300 bg-transparent hover:bg-neutral-200',
-        link: 'text-gold-500 underline-offset-4 hover:underline',
+        outline:
+          'border border-theme-default bg-transparent text-theme-primary hover:bg-theme-elevated hover:border-accent-500/50',
+        link: 'text-accent-500 underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-6 py-2',
@@ -31,8 +33,7 @@ const buttonVariants = cva(
 )
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean
   loading?: boolean
 }

@@ -52,58 +52,61 @@ export function StepMeasurements() {
     { value: '10mm', label: '10mm' },
   ]
 
-  const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files || files.length === 0) return
+  const handleImageUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files
+      if (!files || files.length === 0) return
 
-    if (images.length + files.length > 5) {
-      toast({
-        variant: 'error',
-        title: 'Limite de imagens',
-        description: 'Voce pode enviar no maximo 5 imagens',
-      })
-      return
-    }
-
-    setUploadingImages(true)
-
-    try {
-      // For now, we'll use base64 encoding. In production, this should be uploaded to a proper storage service
-      const newImages: string[] = []
-      const fileArray = Array.from(files)
-
-      for (let i = 0; i < fileArray.length; i++) {
-        const file = fileArray[i]
-        if (file.size > 5 * 1024 * 1024) {
-          toast({
-            variant: 'error',
-            title: 'Arquivo muito grande',
-            description: `${file.name} excede o limite de 5MB`,
-          })
-          continue
-        }
-
-        const reader = new FileReader()
-        const base64 = await new Promise<string>((resolve, reject) => {
-          reader.onload = () => resolve(reader.result as string)
-          reader.onerror = reject
-          reader.readAsDataURL(file)
+      if (images.length + files.length > 5) {
+        toast({
+          variant: 'error',
+          title: 'Limite de imagens',
+          description: 'Voce pode enviar no maximo 5 imagens',
         })
-
-        newImages.push(base64)
+        return
       }
 
-      setImages((prev) => [...prev, ...newImages])
-    } catch {
-      toast({
-        variant: 'error',
-        title: 'Erro',
-        description: 'Erro ao fazer upload das imagens',
-      })
-    } finally {
-      setUploadingImages(false)
-    }
-  }, [images.length, toast])
+      setUploadingImages(true)
+
+      try {
+        // For now, we'll use base64 encoding. In production, this should be uploaded to a proper storage service
+        const newImages: string[] = []
+        const fileArray = Array.from(files)
+
+        for (let i = 0; i < fileArray.length; i++) {
+          const file = fileArray[i]
+          if (file.size > 5 * 1024 * 1024) {
+            toast({
+              variant: 'error',
+              title: 'Arquivo muito grande',
+              description: `${file.name} excede o limite de 5MB`,
+            })
+            continue
+          }
+
+          const reader = new FileReader()
+          const base64 = await new Promise<string>((resolve, reject) => {
+            reader.onload = () => resolve(reader.result as string)
+            reader.onerror = reject
+            reader.readAsDataURL(file)
+          })
+
+          newImages.push(base64)
+        }
+
+        setImages((prev) => [...prev, ...newImages])
+      } catch {
+        toast({
+          variant: 'error',
+          title: 'Erro',
+          description: 'Erro ao fazer upload das imagens',
+        })
+      } finally {
+        setUploadingImages(false)
+      }
+    },
+    [images.length, toast]
+  )
 
   const removeImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index))
@@ -149,20 +152,16 @@ export function StepMeasurements() {
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-8 text-center">
-        <h2 className="font-display text-3xl font-bold text-white">
-          Medidas e detalhes
-        </h2>
-        <p className="mt-2 text-neutral-400">
-          Informe as dimensoes e caracteristicas do produto
-        </p>
+        <h2 className="text-theme-primary font-display text-3xl font-bold">Medidas e detalhes</h2>
+        <p className="text-theme-muted mt-2">Informe as dimensoes e caracteristicas do produto</p>
       </div>
 
       <Card className="p-6">
         <div className="space-y-6">
           {/* Product Name */}
-          <div className="rounded-lg bg-neutral-100/5 p-4">
-            <p className="text-sm text-neutral-400">Produto selecionado:</p>
-            <p className="font-display text-lg font-semibold text-white">
+          <div className="bg-theme-elevated rounded-lg p-4">
+            <p className="text-theme-muted text-sm">Produto selecionado:</p>
+            <p className="text-theme-primary font-display text-lg font-semibold">
               {item?.productName}
             </p>
           </div>
@@ -170,9 +169,7 @@ export function StepMeasurements() {
           {/* Measurements */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1 block text-sm text-neutral-400">
-                Largura (metros)
-              </label>
+              <label className="text-theme-muted mb-1 block text-sm">Largura (metros)</label>
               <Input
                 type="number"
                 step="0.01"
@@ -182,9 +179,7 @@ export function StepMeasurements() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-neutral-400">
-                Altura (metros)
-              </label>
+              <label className="text-theme-muted mb-1 block text-sm">Altura (metros)</label>
               <Input
                 type="number"
                 step="0.01"
@@ -197,9 +192,7 @@ export function StepMeasurements() {
 
           {/* Quantity */}
           <div>
-            <label className="mb-1 block text-sm text-neutral-400">
-              Quantidade
-            </label>
+            <label className="text-theme-muted mb-1 block text-sm">Quantidade</label>
             <Input
               type="number"
               min="1"
@@ -211,9 +204,7 @@ export function StepMeasurements() {
           {/* Options */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
-              <label className="mb-1 block text-sm text-neutral-400">
-                Cor da ferragem
-              </label>
+              <label className="text-theme-muted mb-1 block text-sm">Cor da ferragem</label>
               <Select value={color} onValueChange={setColor}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione" />
@@ -228,9 +219,7 @@ export function StepMeasurements() {
               </Select>
             </div>
             <div>
-              <label className="mb-1 block text-sm text-neutral-400">
-                Acabamento
-              </label>
+              <label className="text-theme-muted mb-1 block text-sm">Acabamento</label>
               <Select value={finish} onValueChange={setFinish}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione" />
@@ -245,9 +234,7 @@ export function StepMeasurements() {
               </Select>
             </div>
             <div>
-              <label className="mb-1 block text-sm text-neutral-400">
-                Espessura
-              </label>
+              <label className="text-theme-muted mb-1 block text-sm">Espessura</label>
               <Select value={thickness} onValueChange={setThickness}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione" />
@@ -265,11 +252,9 @@ export function StepMeasurements() {
 
           {/* Description */}
           <div>
-            <label className="mb-1 block text-sm text-neutral-400">
-              Observacoes adicionais
-            </label>
+            <label className="text-theme-muted mb-1 block text-sm">Observacoes adicionais</label>
             <textarea
-              className="w-full rounded-lg border border-neutral-700 bg-neutral-100 px-4 py-3 text-white placeholder:text-neutral-500 focus:border-gold-500 focus:outline-none"
+              className="bg-theme-elevated text-theme-primary placeholder:text-theme-subtle w-full rounded-lg border border-neutral-600 px-4 py-3 focus:border-accent-500 focus:outline-none"
               rows={3}
               placeholder="Descreva detalhes adicionais do seu pedido..."
               value={description}
@@ -279,10 +264,8 @@ export function StepMeasurements() {
 
           {/* Image Upload */}
           <div>
-            <label className="mb-2 block text-sm text-neutral-400">
-              Fotos do local (opcional)
-            </label>
-            <p className="mb-3 text-xs text-neutral-500">
+            <label className="text-theme-muted mb-2 block text-sm">Fotos do local (opcional)</label>
+            <p className="text-theme-subtle mb-3 text-xs">
               Envie fotos para ajudar na avaliacao. Max 5 imagens, 5MB cada.
             </p>
 
@@ -313,7 +296,7 @@ export function StepMeasurements() {
 
             {/* Upload Button */}
             {images.length < 5 && (
-              <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-neutral-700 p-6 transition-colors hover:border-gold-500">
+              <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-neutral-600 p-6 transition-colors hover:border-accent-500">
                 <input
                   type="file"
                   accept="image/*"
@@ -323,13 +306,11 @@ export function StepMeasurements() {
                   disabled={uploadingImages}
                 />
                 {uploadingImages ? (
-                  <span className="text-neutral-400">Enviando...</span>
+                  <span className="text-theme-muted">Enviando...</span>
                 ) : (
                   <>
-                    <Upload className="h-5 w-5 text-neutral-400" />
-                    <span className="text-neutral-400">
-                      Clique para enviar fotos
-                    </span>
+                    <Upload className="text-theme-muted h-5 w-5" />
+                    <span className="text-theme-muted">Clique para enviar fotos</span>
                   </>
                 )}
               </label>

@@ -31,7 +31,11 @@ describe('Button', () => {
 
   it('should be disabled when loading', () => {
     const handleClick = vi.fn()
-    render(<Button loading onClick={handleClick}>Submit</Button>)
+    render(
+      <Button loading onClick={handleClick}>
+        Submit
+      </Button>
+    )
 
     fireEvent.click(screen.getByRole('button'))
     expect(handleClick).not.toHaveBeenCalled()
@@ -41,19 +45,19 @@ describe('Button', () => {
     it('should render default variant', () => {
       render(<Button variant="default">Default</Button>)
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('bg-gold-500')
+      expect(button).toHaveClass('bg-accent-500')
     })
 
     it('should render secondary variant', () => {
       render(<Button variant="secondary">Secondary</Button>)
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('border-gold-500')
+      expect(button).toHaveClass('border-accent-500')
     })
 
     it('should render ghost variant', () => {
       render(<Button variant="ghost">Ghost</Button>)
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('text-white/80')
+      expect(button).toHaveClass('text-theme-secondary')
     })
 
     it('should render danger variant', () => {
@@ -65,13 +69,13 @@ describe('Button', () => {
     it('should render outline variant', () => {
       render(<Button variant="outline">Outline</Button>)
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('border-neutral-300')
+      expect(button).toHaveClass('border-theme-default')
     })
 
     it('should render link variant', () => {
       render(<Button variant="link">Link</Button>)
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('text-gold-500')
+      expect(button).toHaveClass('text-accent-500')
     })
   })
 

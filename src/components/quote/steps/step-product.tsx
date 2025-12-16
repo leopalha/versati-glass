@@ -26,9 +26,7 @@ export function StepProduct() {
   const { items, updateItem, nextStep, prevStep } = useQuoteStore()
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedProduct, setSelectedProduct] = useState<string | null>(
-    items[0]?.productId || null
-  )
+  const [selectedProduct, setSelectedProduct] = useState<string | null>(items[0]?.productId || null)
 
   const category = items[0]?.category
 
@@ -96,19 +94,15 @@ export function StepProduct() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-8 text-center">
-        <h2 className="font-display text-3xl font-bold text-white">
-          Escolha o produto
-        </h2>
-        <p className="mt-2 text-neutral-400">
+        <h2 className="text-theme-primary font-display text-3xl font-bold">Escolha o produto</h2>
+        <p className="text-theme-muted mt-2">
           Selecione o modelo que melhor atende suas necessidades
         </p>
       </div>
 
       {products.length === 0 ? (
         <div className="text-center">
-          <p className="text-neutral-400">
-            Nenhum produto disponivel nesta categoria no momento.
-          </p>
+          <p className="text-theme-muted">Nenhum produto disponivel nesta categoria no momento.</p>
           <Button variant="outline" className="mt-4" onClick={prevStep}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Voltar
@@ -124,8 +118,8 @@ export function StepProduct() {
                 <Card
                   key={product.id}
                   className={cn(
-                    'cursor-pointer overflow-hidden transition-all hover:border-gold-500/50',
-                    isSelected && 'border-gold-500 ring-1 ring-gold-500'
+                    'hover:border-accent-500/50 cursor-pointer overflow-hidden transition-all',
+                    isSelected && 'border-accent-500 ring-1 ring-accent-500'
                   )}
                   onClick={() => handleSelect(product)}
                 >
@@ -138,42 +132,39 @@ export function StepProduct() {
                         className="object-cover"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center bg-neutral-100">
-                        <span className="text-neutral-500">Sem imagem</span>
+                      <div className="bg-theme-elevated flex h-full items-center justify-center">
+                        <span className="text-theme-subtle">Sem imagem</span>
                       </div>
                     )}
                     {isSelected && (
-                      <div className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-gold-500">
+                      <div className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-accent-500">
                         <Check className="h-5 w-5 text-neutral-900" />
                       </div>
                     )}
                   </div>
                   <div className="p-4">
-                    <h3 className="font-display text-lg font-semibold text-white">
+                    <h3 className="text-theme-primary font-display text-lg font-semibold">
                       {product.name}
                     </h3>
                     {product.shortDescription && (
-                      <p className="mt-1 text-sm text-neutral-400 line-clamp-2">
+                      <p className="text-theme-muted mt-1 line-clamp-2 text-sm">
                         {product.shortDescription}
                       </p>
                     )}
-                    <p className="mt-2 text-sm font-medium text-gold-400">
+                    <p className="mt-2 text-sm font-medium text-accent-400">
                       {getPriceDisplay(product)}
                     </p>
                     {product.colors.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1">
                         {product.colors.slice(0, 4).map((color) => (
-                          <span
-                            key={color}
-                            className="text-xs text-neutral-500"
-                          >
+                          <span key={color} className="text-theme-subtle text-xs">
                             {color}
                             {product.colors.indexOf(color) <
                               Math.min(3, product.colors.length - 1) && ', '}
                           </span>
                         ))}
                         {product.colors.length > 4 && (
-                          <span className="text-xs text-neutral-500">
+                          <span className="text-theme-subtle text-xs">
                             +{product.colors.length - 4}
                           </span>
                         )}

@@ -13,11 +13,17 @@ import {
   Plus,
 } from 'lucide-react'
 import Link from 'next/link'
+import { CreateAppointmentDialog } from '@/components/admin/create-appointment-dialog'
+import { AppointmentActions } from '@/components/admin/appointment-actions'
 
 const statusLabels: Record<string, { label: string; color: string; icon: typeof Clock }> = {
   SCHEDULED: { label: 'Agendado', color: 'bg-blue-500/20 text-blue-400', icon: Clock },
   CONFIRMED: { label: 'Confirmado', color: 'bg-green-500/20 text-green-400', icon: CheckCircle },
-  IN_PROGRESS: { label: 'Em Andamento', color: 'bg-yellow-500/20 text-yellow-400', icon: AlertCircle },
+  IN_PROGRESS: {
+    label: 'Em Andamento',
+    color: 'bg-yellow-500/20 text-yellow-400',
+    icon: AlertCircle,
+  },
   COMPLETED: { label: 'Concluido', color: 'bg-green-500/20 text-green-400', icon: CheckCircle },
   CANCELLED: { label: 'Cancelado', color: 'bg-red-500/20 text-red-400', icon: XCircle },
   RESCHEDULED: { label: 'Reagendado', color: 'bg-purple-500/20 text-purple-400', icon: Calendar },
@@ -87,12 +93,7 @@ export default async function AdminAgendamentosPage() {
       <AdminHeader
         title="Agendamentos"
         subtitle={`${todayAppointments.length} agendamento(s) hoje`}
-        actions={
-          <Button size="sm">
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Agendamento
-          </Button>
-        }
+        actions={<CreateAppointmentDialog />}
       />
 
       <div className="p-6">
@@ -159,16 +160,23 @@ export default async function AdminAgendamentosPage() {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {todayAppointments.map((appointment) => {
                 const statusInfo = statusLabels[appointment.status] || statusLabels.SCHEDULED
-                const typeInfo = typeLabels[appointment.type] || { label: appointment.type, color: 'bg-neutral-500/20 text-neutral-700' }
+                const typeInfo = typeLabels[appointment.type] || {
+                  label: appointment.type,
+                  color: 'bg-neutral-500/20 text-neutral-700',
+                }
                 const StatusIcon = statusInfo.icon
 
                 return (
                   <Card key={appointment.id} className="p-4">
                     <div className="mb-3 flex items-start justify-between">
-                      <span className={`rounded-full px-2 py-1 text-xs font-medium ${typeInfo.color}`}>
+                      <span
+                        className={`rounded-full px-2 py-1 text-xs font-medium ${typeInfo.color}`}
+                      >
                         {typeInfo.label}
                       </span>
-                      <span className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${statusInfo.color}`}>
+                      <span
+                        className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${statusInfo.color}`}
+                      >
                         <StatusIcon className="h-3 w-3" />
                         {statusInfo.label}
                       </span>
@@ -177,9 +185,7 @@ export default async function AdminAgendamentosPage() {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <Clock className="h-4 w-4 text-gold-500" />
-                        <span className="font-medium text-white">
-                          {appointment.scheduledTime}
-                        </span>
+                        <span className="font-medium text-white">{appointment.scheduledTime}</span>
                         {appointment.estimatedDuration && (
                           <span className="text-xs text-neutral-600">
                             (~{appointment.estimatedDuration} min)
@@ -187,7 +193,7 @@ export default async function AdminAgendamentosPage() {
                         )}
                       </div>
 
-                      <div className="flex items-center gap-2 text-neutral-300">
+                      <div className="flex items-center gap-2 text-neutral-800">
                         <User className="h-4 w-4 text-neutral-600" />
                         <span>{appointment.user.name}</span>
                       </div>
@@ -216,6 +222,13 @@ export default async function AdminAgendamentosPage() {
                         </p>
                       )}
                     </div>
+
+                    <div className="mt-4 border-t border-neutral-300 pt-4">
+                      <AppointmentActions
+                        appointmentId={appointment.id}
+                        currentStatus={appointment.status}
+                      />
+                    </div>
                   </Card>
                 )
               })}
@@ -233,7 +246,10 @@ export default async function AdminAgendamentosPage() {
             <div className="space-y-3">
               {upcomingAppointments.map((appointment) => {
                 const statusInfo = statusLabels[appointment.status] || statusLabels.SCHEDULED
-                const typeInfo = typeLabels[appointment.type] || { label: appointment.type, color: 'bg-neutral-500/20 text-neutral-700' }
+                const typeInfo = typeLabels[appointment.type] || {
+                  label: appointment.type,
+                  color: 'bg-neutral-500/20 text-neutral-700',
+                }
 
                 return (
                   <Card key={appointment.id} className="p-4">
@@ -251,7 +267,9 @@ export default async function AdminAgendamentosPage() {
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${typeInfo.color}`}>
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-xs font-medium ${typeInfo.color}`}
+                            >
                               {typeInfo.label}
                             </span>
                             <span className="text-sm text-neutral-700">
@@ -264,7 +282,9 @@ export default async function AdminAgendamentosPage() {
                           </p>
                         </div>
                       </div>
-                      <span className={`rounded-full px-2 py-1 text-xs font-medium ${statusInfo.color}`}>
+                      <span
+                        className={`rounded-full px-2 py-1 text-xs font-medium ${statusInfo.color}`}
+                      >
                         {statusInfo.label}
                       </span>
                     </div>

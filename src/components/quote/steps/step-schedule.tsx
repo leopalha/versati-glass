@@ -7,37 +7,17 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { cn } from '@/lib/utils'
-import {
-  Calendar,
-  Clock,
-  CheckCircle,
-  ArrowLeft,
-  Loader2,
-  MessageCircle,
-} from 'lucide-react'
+import { Calendar, Clock, CheckCircle, ArrowLeft, Loader2, MessageCircle } from 'lucide-react'
 
-const timeSlots = [
-  '08:00',
-  '09:00',
-  '10:00',
-  '11:00',
-  '14:00',
-  '15:00',
-  '16:00',
-  '17:00',
-]
+const timeSlots = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00']
 
 export function StepSchedule() {
   const router = useRouter()
   const { scheduleData, setScheduleData, reset, prevStep } = useQuoteStore()
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<string>(
-    scheduleData?.date || ''
-  )
-  const [selectedTime, setSelectedTime] = useState<string>(
-    scheduleData?.time || ''
-  )
+  const [selectedDate, setSelectedDate] = useState<string>(scheduleData?.date || '')
+  const [selectedTime, setSelectedTime] = useState<string>(scheduleData?.time || '')
   const [notes, setNotes] = useState(scheduleData?.notes || '')
   const [isCompleted, setIsCompleted] = useState(false)
 
@@ -132,12 +112,10 @@ export function StepSchedule() {
             <CheckCircle className="h-10 w-10 text-green-500" />
           </div>
 
-          <h2 className="mb-2 font-display text-2xl font-bold text-white">
-            Tudo pronto!
-          </h2>
-          <p className="mb-6 text-neutral-400">
+          <h2 className="text-theme-primary mb-2 font-display text-2xl font-bold">Tudo pronto!</h2>
+          <p className="text-theme-muted mb-6">
             Seu orcamento foi enviado e a visita tecnica foi agendada para{' '}
-            <span className="font-medium text-white">
+            <span className="text-theme-primary font-medium">
               {new Date(selectedDate).toLocaleDateString('pt-BR', {
                 weekday: 'long',
                 day: 'numeric',
@@ -148,12 +126,10 @@ export function StepSchedule() {
           </p>
 
           <div className="space-y-4">
-            <div className="rounded-lg bg-gold-500/10 p-4">
-              <div className="flex items-center justify-center gap-2 text-gold-400">
+            <div className="bg-accent-500/10 rounded-lg p-4">
+              <div className="flex items-center justify-center gap-2 text-accent-400">
                 <MessageCircle className="h-5 w-5" />
-                <span className="text-sm">
-                  Voce recebera uma confirmacao por WhatsApp
-                </span>
+                <span className="text-sm">Voce recebera uma confirmacao por WhatsApp</span>
               </div>
             </div>
 
@@ -169,10 +145,10 @@ export function StepSchedule() {
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-8 text-center">
-        <h2 className="font-display text-3xl font-bold text-white">
+        <h2 className="text-theme-primary font-display text-3xl font-bold">
           Agendar visita tecnica
         </h2>
-        <p className="mt-2 text-neutral-400">
+        <p className="text-theme-muted mt-2">
           Escolha o melhor dia e horario para nossa equipe ir ate voce
         </p>
       </div>
@@ -182,10 +158,8 @@ export function StepSchedule() {
           {/* Date Selection */}
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-gold-400" />
-              <label className="font-medium text-white">
-                Selecione uma data
-              </label>
+              <Calendar className="h-5 w-5 text-accent-400" />
+              <label className="text-theme-primary font-medium">Selecione uma data</label>
             </div>
 
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -197,19 +171,19 @@ export function StepSchedule() {
                   className={cn(
                     'rounded-lg border p-3 text-left transition-colors',
                     selectedDate === date.value
-                      ? 'border-gold-500 bg-gold-500/10'
-                      : 'border-neutral-700 hover:border-neutral-600'
+                      ? 'bg-accent-500/10 border-accent-500'
+                      : 'border-theme-default hover:border-neutral-600'
                   )}
                 >
-                  <p className="text-sm font-medium text-white capitalize">
+                  <p className="text-theme-primary text-sm font-medium capitalize">
                     {new Date(date.value).toLocaleDateString('pt-BR', {
                       weekday: 'short',
                     })}
                   </p>
-                  <p className="text-lg font-bold text-white">
+                  <p className="text-theme-primary text-lg font-bold">
                     {new Date(date.value).getDate()}
                   </p>
-                  <p className="text-xs text-neutral-400 capitalize">
+                  <p className="text-theme-muted text-xs capitalize">
                     {new Date(date.value).toLocaleDateString('pt-BR', {
                       month: 'short',
                     })}
@@ -222,10 +196,8 @@ export function StepSchedule() {
           {/* Time Selection */}
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <Clock className="h-5 w-5 text-gold-400" />
-              <label className="font-medium text-white">
-                Selecione um horario
-              </label>
+              <Clock className="h-5 w-5 text-accent-400" />
+              <label className="text-theme-primary font-medium">Selecione um horario</label>
             </div>
 
             <div className="grid grid-cols-4 gap-2">
@@ -237,11 +209,11 @@ export function StepSchedule() {
                   className={cn(
                     'rounded-lg border p-3 text-center transition-colors',
                     selectedTime === time
-                      ? 'border-gold-500 bg-gold-500/10'
-                      : 'border-neutral-700 hover:border-neutral-600'
+                      ? 'bg-accent-500/10 border-accent-500'
+                      : 'border-theme-default hover:border-neutral-600'
                   )}
                 >
-                  <span className="font-medium text-white">{time}</span>
+                  <span className="text-theme-primary font-medium">{time}</span>
                 </button>
               ))}
             </div>
@@ -249,11 +221,9 @@ export function StepSchedule() {
 
           {/* Notes */}
           <div>
-            <label className="mb-2 block text-sm text-neutral-400">
-              Observacoes (opcional)
-            </label>
+            <label className="text-theme-muted mb-2 block text-sm">Observacoes (opcional)</label>
             <textarea
-              className="w-full rounded-lg border border-neutral-700 bg-neutral-100 px-4 py-3 text-white placeholder:text-neutral-500 focus:border-gold-500 focus:outline-none"
+              className="border-theme-default text-theme-primary placeholder:text-theme-subtle w-full rounded-lg border bg-neutral-100 px-4 py-3 focus:border-accent-500 focus:outline-none"
               rows={3}
               placeholder="Alguma informacao adicional para nossa equipe..."
               value={notes}
@@ -270,11 +240,7 @@ export function StepSchedule() {
         </Button>
 
         <div className="flex gap-2">
-          <Button
-            variant="ghost"
-            onClick={handleSkip}
-            disabled={isSubmitting}
-          >
+          <Button variant="ghost" onClick={handleSkip} disabled={isSubmitting}>
             Pular agendamento
           </Button>
           <Button onClick={handleSchedule} disabled={isSubmitting}>

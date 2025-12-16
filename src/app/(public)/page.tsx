@@ -151,23 +151,20 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 to-neutral-950 px-6 py-24">
+      <section className="from-theme-secondary to-theme-primary relative flex min-h-[90vh] items-center justify-center overflow-hidden bg-gradient-to-b px-6 py-24">
         <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-5" />
         <div className="relative z-10 mx-auto max-w-7xl text-center">
-          <Badge variant="gold" className="mb-6 animate-fadeIn">
+          <Badge variant="gold" className="animate-fadeIn mb-6">
             Excelência em Vidros e Esquadrias
           </Badge>
-          <h1 className="mb-6 font-display text-5xl font-bold leading-tight text-white md:text-7xl lg:text-8xl">
+          <h1 className="text-theme-primary mb-6 font-display text-5xl font-bold leading-tight md:text-7xl lg:text-8xl">
             Transforme Seu Espaço
             <br />
-            <span className="bg-gradient-to-r from-gold-400 to-gold-600 bg-clip-text text-transparent">
-              Com Elegância
-            </span>
+            <span className="text-gradient-accent">Com Elegância</span>
           </h1>
-          <p className="mx-auto mb-10 max-w-2xl text-lg text-neutral-300 md:text-xl">
-            Vidraçaria de alto padrão especializada em projetos residenciais e
-            comerciais. Qualidade premium, instalação impecável e atendimento
-            personalizado.
+          <p className="text-theme-secondary mx-auto mb-10 max-w-2xl text-lg md:text-xl">
+            Vidraçaria de alto padrão especializada em projetos residenciais e comerciais. Qualidade
+            premium, instalação impecável e atendimento personalizado.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button asChild size="lg" className="w-full sm:w-auto">
@@ -184,20 +181,20 @@ export default function HomePage() {
       </section>
 
       {/* Featured Products */}
-      <section className="px-6 py-20 md:py-32">
+      <section className="bg-theme-primary px-6 py-20 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
+            <h2 className="text-theme-primary mb-4 font-display text-4xl font-bold md:text-5xl">
               Produtos em Destaque
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-neutral-700">
+            <p className="text-theme-muted mx-auto max-w-2xl text-lg">
               Conheça nossas soluções mais populares
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {featuredProducts.map((product) => (
               <Card key={product.id} variant="hover" className="group overflow-hidden">
-                <div className="relative aspect-square overflow-hidden bg-neutral-800">
+                <div className="bg-theme-elevated relative aspect-square overflow-hidden">
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -209,15 +206,9 @@ export default function HomePage() {
                   </Badge>
                 </div>
                 <div className="p-6">
-                  <h3 className="mb-2 text-xl font-bold text-white">
-                    {product.name}
-                  </h3>
-                  <p className="mb-4 text-sm text-neutral-700">
-                    {product.description}
-                  </p>
-                  <p className="mb-4 font-semibold text-gold-400">
-                    {product.price}
-                  </p>
+                  <h3 className="text-theme-primary mb-2 text-xl font-bold">{product.name}</h3>
+                  <p className="text-theme-muted mb-4 text-sm">{product.description}</p>
+                  <p className="mb-4 font-semibold text-accent-400">{product.price}</p>
                   <Button asChild variant="outline" className="w-full">
                     <Link href={`/produtos/${product.id}`}>Ver Detalhes</Link>
                   </Button>
@@ -237,23 +228,21 @@ export default function HomePage() {
       </section>
 
       {/* Services */}
-      <section className="bg-neutral-900/50 px-6 py-20 md:py-32">
+      <section className="bg-theme-secondary/50 px-6 py-20 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
+            <h2 className="text-theme-primary mb-4 font-display text-4xl font-bold md:text-5xl">
               Nossos Serviços
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-neutral-700">
+            <p className="text-theme-muted mx-auto max-w-2xl text-lg">
               Soluções completas para cada necessidade
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {services.map((service, index) => (
               <Card key={index} className="p-8 text-center">
-                <h3 className="mb-3 text-xl font-bold text-white">
-                  {service.title}
-                </h3>
-                <p className="text-neutral-700">{service.description}</p>
+                <h3 className="text-theme-primary mb-3 text-xl font-bold">{service.title}</h3>
+                <p className="text-theme-muted">{service.description}</p>
               </Card>
             ))}
           </div>
@@ -261,23 +250,21 @@ export default function HomePage() {
       </section>
 
       {/* Differentials */}
-      <section className="px-6 py-20 md:py-32">
+      <section className="bg-theme-primary px-6 py-20 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
+            <h2 className="text-theme-primary mb-4 font-display text-4xl font-bold md:text-5xl">
               Por Que Escolher a Versati?
             </h2>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {differentials.map((item, index) => (
               <div key={index} className="text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gold-500/10">
-                  <item.icon className="h-8 w-8 text-gold-400" />
+                <div className="bg-accent-500/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+                  <item.icon className="h-8 w-8 text-accent-400" />
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-white">
-                  {item.title}
-                </h3>
-                <p className="text-neutral-700">{item.description}</p>
+                <h3 className="text-theme-primary mb-2 text-xl font-bold">{item.title}</h3>
+                <p className="text-theme-muted">{item.description}</p>
               </div>
             ))}
           </div>
@@ -285,34 +272,32 @@ export default function HomePage() {
       </section>
 
       {/* Portfolio Preview */}
-      <section className="bg-neutral-900/50 px-6 py-20 md:py-32">
+      <section className="bg-theme-secondary/50 px-6 py-20 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
+            <h2 className="text-theme-primary mb-4 font-display text-4xl font-bold md:text-5xl">
               Projetos Realizados
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-neutral-700">
+            <p className="text-theme-muted mx-auto max-w-2xl text-lg">
               Confira alguns de nossos trabalhos
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             {portfolioPreview.map((project, index) => (
               <Card key={index} variant="hover" className="group overflow-hidden">
-                <div className="relative aspect-[4/3] overflow-hidden bg-neutral-800">
+                <div className="bg-theme-elevated relative aspect-[4/3] overflow-hidden">
                   <Image
                     src={project.image}
                     alt={project.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent" />
+                  <div className="from-theme-primary absolute inset-0 bg-gradient-to-t via-transparent to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <Badge variant="gold" className="mb-2">
                       {project.category}
                     </Badge>
-                    <h3 className="text-xl font-bold text-white">
-                      {project.title}
-                    </h3>
+                    <h3 className="text-theme-primary text-xl font-bold">{project.title}</h3>
                   </div>
                 </div>
               </Card>
@@ -330,10 +315,10 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="px-6 py-20 md:py-32">
+      <section className="bg-theme-primary px-6 py-20 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
+            <h2 className="text-theme-primary mb-4 font-display text-4xl font-bold md:text-5xl">
               O Que Dizem Nossos Clientes
             </h2>
           </div>
@@ -342,19 +327,15 @@ export default function HomePage() {
               <Card key={index} className="p-8">
                 <div className="mb-4 flex gap-1">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className="h-5 w-5 fill-gold-400"
-                      viewBox="0 0 20 20"
-                    >
+                    <svg key={i} className="h-5 w-5 fill-accent-400" viewBox="0 0 20 20">
                       <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                     </svg>
                   ))}
                 </div>
-                <p className="mb-6 text-neutral-300">{testimonial.content}</p>
+                <p className="text-theme-secondary mb-6">{testimonial.content}</p>
                 <div>
-                  <p className="font-semibold text-white">{testimonial.name}</p>
-                  <p className="text-sm text-neutral-600">{testimonial.role}</p>
+                  <p className="text-theme-primary font-semibold">{testimonial.name}</p>
+                  <p className="text-theme-subtle text-sm">{testimonial.role}</p>
                 </div>
               </Card>
             ))}
@@ -363,15 +344,15 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gold-900/20 via-neutral-900 to-neutral-950 px-6 py-20 md:py-32">
+      <section className="from-accent-900/20 via-theme-secondary to-theme-primary relative overflow-hidden bg-gradient-to-br px-6 py-20 md:py-32">
         <div className="absolute inset-0 bg-[url('/images/cta-pattern.svg')] opacity-5" />
         <div className="relative z-10 mx-auto max-w-4xl text-center">
-          <h2 className="mb-6 font-display text-4xl font-bold text-white md:text-5xl lg:text-6xl">
+          <h2 className="text-theme-primary mb-6 font-display text-4xl font-bold md:text-5xl lg:text-6xl">
             Pronto Para Transformar
             <br />
             Seu Projeto?
           </h2>
-          <p className="mb-10 text-lg text-neutral-300 md:text-xl">
+          <p className="text-theme-secondary mb-10 text-lg md:text-xl">
             Receba um orçamento personalizado em até 24 horas.
             <br />
             Atendimento especializado e sem compromisso.

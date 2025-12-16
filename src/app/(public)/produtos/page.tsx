@@ -13,7 +13,6 @@ export const metadata: Metadata = {
     'Conheça nossa linha completa de produtos em vidro: box, espelhos, guarda-corpos, divisórias, fachadas e muito mais.',
 }
 
-
 const products = [
   {
     id: 1,
@@ -143,26 +142,22 @@ const products = [
 
 export default function ProdutosPage() {
   return (
-    <div className="min-h-screen bg-neutral-950 px-6 py-20">
+    <div className="bg-theme-primary min-h-screen px-6 py-20">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="mb-4 font-display text-5xl font-bold text-white md:text-6xl">
+          <h1 className="text-theme-primary mb-4 font-display text-5xl font-bold md:text-6xl">
             Nossos Produtos
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-neutral-700">
+          <p className="text-theme-muted mx-auto max-w-2xl text-lg">
             Conheça nossa linha completa de soluções em vidro de alto padrão
           </p>
         </div>
 
         {/* Filters */}
         <div className="mb-12 grid gap-4 md:grid-cols-2">
-          <Input
-            type="search"
-            placeholder="Buscar produtos..."
-            className="w-full"
-          />
-          <select className="rounded-md border border-neutral-300 bg-neutral-250 px-4 py-2 text-sm text-white focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20">
+          <Input type="search" placeholder="Buscar produtos..." className="w-full" />
+          <select className="border-theme-default bg-theme-elevated text-theme-primary focus:ring-accent-500/20 rounded-md border px-4 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-2">
             <option value="all">Todas as Categorias</option>
             <option value="box">Box de Vidro</option>
             <option value="espelhos">Espelhos</option>
@@ -178,7 +173,7 @@ export default function ProdutosPage() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => (
             <Card key={product.id} variant="hover" className="group overflow-hidden">
-              <div className="relative aspect-square overflow-hidden bg-neutral-800">
+              <div className="bg-theme-elevated relative aspect-square overflow-hidden">
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -192,22 +187,16 @@ export default function ProdutosPage() {
                 )}
               </div>
               <div className="p-6">
-                <h3 className="mb-2 text-xl font-bold text-white">
-                  {product.name}
-                </h3>
-                <p className="mb-4 text-sm text-neutral-700">
-                  {product.description}
-                </p>
+                <h3 className="text-theme-primary mb-2 text-xl font-bold">{product.name}</h3>
+                <p className="text-theme-muted mb-4 text-sm">{product.description}</p>
                 <ul className="mb-4 space-y-1">
                   {product.features.map((feature, idx) => (
-                    <li key={idx} className="text-xs text-neutral-600">
+                    <li key={idx} className="text-theme-subtle text-xs">
                       • {feature}
                     </li>
                   ))}
                 </ul>
-                <p className="mb-4 text-lg font-semibold text-gold-400">
-                  {product.price}
-                </p>
+                <p className="mb-4 text-lg font-semibold text-accent-400">{product.price}</p>
                 <div className="grid gap-2">
                   <Button asChild className="w-full">
                     <Link href={`/produtos/${product.slug}`}>
@@ -225,11 +214,11 @@ export default function ProdutosPage() {
         </div>
 
         {/* CTA */}
-        <div className="mt-20 rounded-2xl bg-gradient-to-br from-gold-900/20 to-neutral-900 p-12 text-center">
-          <h2 className="mb-4 font-display text-3xl font-bold text-white md:text-4xl">
+        <div className="from-accent-900/20 to-theme-secondary mt-20 rounded-2xl bg-gradient-to-br p-12 text-center">
+          <h2 className="text-theme-primary mb-4 font-display text-3xl font-bold md:text-4xl">
             Não Encontrou o Que Procura?
           </h2>
-          <p className="mb-8 text-lg text-neutral-300">
+          <p className="text-theme-secondary mb-8 text-lg">
             Trabalhamos com soluções personalizadas para cada projeto
           </p>
           <Button asChild size="lg">

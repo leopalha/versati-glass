@@ -7,12 +7,16 @@ import { FileText, Eye, Calendar, AlertCircle, CheckCircle, XCircle, Clock } fro
 import Link from 'next/link'
 
 const statusLabels: Record<string, { label: string; color: string; icon: typeof Clock }> = {
-  DRAFT: { label: 'Rascunho', color: 'bg-neutral-500/20 text-neutral-400', icon: Clock },
-  SENT: { label: 'Aguardando Resposta', color: 'bg-yellow-500/20 text-yellow-400', icon: AlertCircle },
+  DRAFT: { label: 'Rascunho', color: 'bg-neutral-500/20 text-neutral-700', icon: Clock },
+  SENT: {
+    label: 'Aguardando Resposta',
+    color: 'bg-yellow-500/20 text-yellow-400',
+    icon: AlertCircle,
+  },
   VIEWED: { label: 'Visualizado', color: 'bg-blue-500/20 text-blue-400', icon: Eye },
   ACCEPTED: { label: 'Aceito', color: 'bg-green-500/20 text-green-400', icon: CheckCircle },
   REJECTED: { label: 'Recusado', color: 'bg-red-500/20 text-red-400', icon: XCircle },
-  EXPIRED: { label: 'Expirado', color: 'bg-neutral-500/20 text-neutral-400', icon: Clock },
+  EXPIRED: { label: 'Expirado', color: 'bg-neutral-500/20 text-neutral-700', icon: Clock },
   CONVERTED: { label: 'Convertido', color: 'bg-gold-500/20 text-gold-400', icon: CheckCircle },
 }
 
@@ -42,9 +46,7 @@ export default async function OrcamentosPage() {
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhum orcamento ainda
             </h3>
-            <p className="mb-4 text-neutral-700">
-              Solicite seu primeiro orcamento
-            </p>
+            <p className="mb-4 text-neutral-700">Solicite seu primeiro orcamento</p>
             <Link
               href="/orcamento"
               className="rounded-lg bg-gold-500 px-6 py-2 font-medium text-black hover:bg-gold-400"
@@ -83,8 +85,7 @@ export default async function OrcamentosPage() {
                         </span>
                         <span>{quote.items.length} item(s)</span>
                         <span>
-                          Valido ate:{' '}
-                          {new Date(quote.validUntil).toLocaleDateString('pt-BR')}
+                          Valido ate: {new Date(quote.validUntil).toLocaleDateString('pt-BR')}
                         </span>
                       </div>
                     </div>
@@ -111,7 +112,8 @@ export default async function OrcamentosPage() {
                     <div className="mt-4 rounded-lg bg-yellow-500/10 p-3">
                       <p className="flex items-center gap-2 text-sm text-yellow-400">
                         <AlertCircle className="h-4 w-4" />
-                        Este orcamento aguarda sua aprovacao. Clique em &quot;Ver Detalhes&quot; para aceitar ou recusar.
+                        Este orcamento aguarda sua aprovacao. Clique em &quot;Ver Detalhes&quot;
+                        para aceitar ou recusar.
                       </p>
                     </div>
                   )}

@@ -146,13 +146,7 @@ export default function ProductDetailPage({ params }: Props) {
         <div className="grid gap-12 lg:grid-cols-2">
           {/* Image */}
           <div className="relative aspect-square overflow-hidden rounded-2xl bg-neutral-800">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-              priority
-            />
+            <Image src={product.image} alt={product.name} fill className="object-cover" priority />
             {product.badge && (
               <Badge variant="gold" className="absolute right-6 top-6">
                 {product.badge}
@@ -168,23 +162,17 @@ export default function ProductDetailPage({ params }: Props) {
             <h1 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
               {product.name}
             </h1>
-            <p className="mb-6 text-lg text-neutral-300">
-              {product.description}
-            </p>
-            <p className="mb-8 text-3xl font-bold text-gold-400">
-              {product.price}
-            </p>
+            <p className="mb-6 text-lg text-neutral-800">{product.description}</p>
+            <p className="mb-8 text-3xl font-bold text-gold-400">{product.price}</p>
 
             {/* Features */}
             <div className="mb-8">
-              <h3 className="mb-4 text-xl font-bold text-white">
-                Características
-              </h3>
+              <h3 className="mb-4 text-xl font-bold text-white">Características</h3>
               <ul className="space-y-3">
                 {product.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-gold-400" />
-                    <span className="text-neutral-300">{feature}</span>
+                    <span className="text-neutral-800">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -207,15 +195,15 @@ export default function ProductDetailPage({ params }: Props) {
             <div className="mt-8 grid grid-cols-3 gap-4">
               <div className="text-center">
                 <Shield className="mx-auto mb-2 h-8 w-8 text-gold-400" />
-                <p className="text-xs text-neutral-400">Garantia Estendida</p>
+                <p className="text-xs text-neutral-700">Garantia Estendida</p>
               </div>
               <div className="text-center">
                 <Clock className="mx-auto mb-2 h-8 w-8 text-gold-400" />
-                <p className="text-xs text-neutral-400">Instalação Rápida</p>
+                <p className="text-xs text-neutral-700">Instalação Rápida</p>
               </div>
               <div className="text-center">
                 <Award className="mx-auto mb-2 h-8 w-8 text-gold-400" />
-                <p className="text-xs text-neutral-400">15 Anos de Mercado</p>
+                <p className="text-xs text-neutral-700">15 Anos de Mercado</p>
               </div>
             </div>
           </div>
@@ -244,9 +232,7 @@ export default function ProductDetailPage({ params }: Props) {
           <div className="grid gap-8 md:grid-cols-2">
             {/* Placeholder for related products */}
             <Card variant="hover" className="p-6">
-              <p className="text-center text-neutral-500">
-                Produtos relacionados em breve
-              </p>
+              <p className="text-center text-neutral-500">Produtos relacionados em breve</p>
             </Card>
           </div>
         </div>

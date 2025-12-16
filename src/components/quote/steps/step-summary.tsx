@@ -6,16 +6,7 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { formatCurrency } from '@/lib/utils'
-import {
-  ArrowLeft,
-  Check,
-  Loader2,
-  MapPin,
-  Package,
-  Phone,
-  Mail,
-  Ruler,
-} from 'lucide-react'
+import { ArrowLeft, Check, Loader2, MapPin, Package, Phone, Mail, Ruler } from 'lucide-react'
 
 export function StepSummary() {
   const { items, customerData, prevStep, nextStep } = useQuoteStore()
@@ -109,68 +100,62 @@ export function StepSummary() {
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-8 text-center">
-        <h2 className="font-display text-3xl font-bold text-white">
-          Resumo do orcamento
-        </h2>
-        <p className="mt-2 text-neutral-400">
-          Revise as informacoes antes de enviar
-        </p>
+        <h2 className="text-theme-primary font-display text-3xl font-bold">Resumo do orcamento</h2>
+        <p className="text-theme-muted mt-2">Revise as informacoes antes de enviar</p>
       </div>
 
       <div className="space-y-6">
         {/* Product Summary */}
         <Card className="p-6">
           <div className="mb-4 flex items-center gap-2">
-            <Package className="h-5 w-5 text-gold-400" />
-            <h3 className="font-display text-lg font-semibold text-white">
-              Produto
-            </h3>
+            <Package className="h-5 w-5 text-accent-400" />
+            <h3 className="text-theme-primary font-display text-lg font-semibold">Produto</h3>
           </div>
 
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-neutral-400">Produto</span>
-              <span className="font-medium text-white">{item?.productName}</span>
+              <span className="text-theme-muted">Produto</span>
+              <span className="text-theme-primary font-medium">{item?.productName}</span>
             </div>
 
             {item?.width && item?.height && (
               <div className="flex justify-between">
-                <span className="text-neutral-400">Medidas</span>
-                <span className="font-medium text-white">
+                <span className="text-theme-muted">Medidas</span>
+                <span className="text-theme-primary font-medium">
                   {item.width}m x {item.height}m
                 </span>
               </div>
             )}
 
             <div className="flex justify-between">
-              <span className="text-neutral-400">Quantidade</span>
-              <span className="font-medium text-white">{item?.quantity}</span>
+              <span className="text-theme-muted">Quantidade</span>
+              <span className="text-theme-primary font-medium">{item?.quantity}</span>
             </div>
 
             {item?.color && (
               <div className="flex justify-between">
-                <span className="text-neutral-400">Cor</span>
-                <span className="font-medium text-white">{item.color}</span>
+                <span className="text-theme-muted">Cor</span>
+                <span className="text-theme-primary font-medium">{item.color}</span>
               </div>
             )}
 
             {item?.finish && (
               <div className="flex justify-between">
-                <span className="text-neutral-400">Acabamento</span>
-                <span className="font-medium text-white">{item.finish}</span>
+                <span className="text-theme-muted">Acabamento</span>
+                <span className="text-theme-primary font-medium">{item.finish}</span>
               </div>
             )}
 
             {item?.thickness && (
               <div className="flex justify-between">
-                <span className="text-neutral-400">Espessura</span>
-                <span className="font-medium text-white">{item.thickness}</span>
+                <span className="text-theme-muted">Espessura</span>
+                <span className="text-theme-primary font-medium">{item.thickness}</span>
               </div>
             )}
 
             {item?.images && item.images.length > 0 && (
               <div>
-                <span className="text-neutral-400">Fotos enviadas:</span>
+                <span className="text-theme-muted">Fotos enviadas:</span>
                 <div className="mt-2 flex gap-2">
                   {item.images.map((img, idx) => (
                     <img
@@ -189,21 +174,21 @@ export function StepSummary() {
         {/* Customer Info */}
         <Card className="p-6">
           <div className="mb-4 flex items-center gap-2">
-            <Mail className="h-5 w-5 text-gold-400" />
-            <h3 className="font-display text-lg font-semibold text-white">
+            <Mail className="h-5 w-5 text-accent-400" />
+            <h3 className="text-theme-primary font-display text-lg font-semibold">
               Dados de contato
             </h3>
           </div>
 
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <span className="font-medium text-white">{customerData?.name}</span>
+              <span className="text-theme-primary font-medium">{customerData?.name}</span>
             </div>
-            <div className="flex items-center gap-2 text-neutral-400">
+            <div className="text-theme-muted flex items-center gap-2">
               <Mail className="h-4 w-4" />
               <span>{customerData?.email}</span>
             </div>
-            <div className="flex items-center gap-2 text-neutral-400">
+            <div className="text-theme-muted flex items-center gap-2">
               <Phone className="h-4 w-4" />
               <span>{customerData?.phone}</span>
             </div>
@@ -213,13 +198,13 @@ export function StepSummary() {
         {/* Address */}
         <Card className="p-6">
           <div className="mb-4 flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-gold-400" />
-            <h3 className="font-display text-lg font-semibold text-white">
+            <MapPin className="h-5 w-5 text-accent-400" />
+            <h3 className="text-theme-primary font-display text-lg font-semibold">
               Endereco para instalacao
             </h3>
           </div>
 
-          <p className="text-neutral-300">
+          <p className="text-theme-secondary">
             {customerData?.street}, {customerData?.number}
             {customerData?.complement && ` - ${customerData.complement}`}
             <br />
@@ -232,18 +217,18 @@ export function StepSummary() {
         </Card>
 
         {/* Estimated Price */}
-        <Card className="bg-gold-500/10 p-6">
+        <Card className="bg-accent-500/10 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-neutral-400">Estimativa de valor</p>
-              <p className="font-display text-3xl font-bold text-gold-400">
+              <p className="text-theme-muted text-sm">Estimativa de valor</p>
+              <p className="font-display text-3xl font-bold text-accent-400">
                 {formatCurrency(estimatedTotal)}
               </p>
-              <p className="mt-1 text-xs text-neutral-500">
+              <p className="text-theme-subtle mt-1 text-xs">
                 * Valor estimado. O preco final sera confirmado apos visita tecnica.
               </p>
             </div>
-            <Ruler className="h-12 w-12 text-gold-500/30" />
+            <Ruler className="text-accent-500/30 h-12 w-12" />
           </div>
         </Card>
       </div>

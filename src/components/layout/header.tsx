@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/shared/logo'
+import { ThemeSwitcher } from '@/components/ui/theme-switcher'
 import { cn } from '@/lib/utils'
 import {
   DropdownMenu,
@@ -44,7 +45,7 @@ export function Header() {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-neutral-50/95 backdrop-blur-sm border-b border-neutral-300">
+    <header className="bg-theme-header fixed left-0 right-0 top-0 z-40 border-b border-white/10 backdrop-blur-sm">
       <nav className="container-custom flex items-center justify-between py-4" aria-label="Global">
         {/* Logo */}
         <Link href="/" className="flex items-center">
@@ -57,7 +58,7 @@ export function Header() {
             <Link
               key={item.name}
               href={item.href}
-              className="text-sm font-medium text-neutral-700 hover:text-gold-500 transition-colors"
+              className="text-header-secondary text-sm font-medium transition-colors hover:text-accent-400"
             >
               {item.name}
             </Link>
@@ -66,16 +67,23 @@ export function Header() {
 
         {/* Desktop Actions */}
         <div className="hidden lg:flex lg:items-center lg:gap-x-4">
+          <ThemeSwitcher variant="dropdown" showLabel={false} />
           {isLoading ? (
-            <div className="h-10 w-20 animate-pulse rounded-md bg-neutral-200" />
+            <div className="h-10 w-20 animate-pulse rounded-md bg-white/10" />
           ) : session?.user ? (
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Button
+                    variant="ghost"
+                    className="relative h-10 w-10 rounded-full hover:bg-white/10"
+                  >
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src={session.user.image || undefined} alt={session.user.name || ''} />
-                      <AvatarFallback className="bg-gold-500 text-neutral-950">
+                      <AvatarImage
+                        src={session.user.image || undefined}
+                        alt={session.user.name || ''}
+                      />
+                      <AvatarFallback className="bg-accent-500 text-white">
                         {getInitials(session.user.name)}
                       </AvatarFallback>
                     </Avatar>
@@ -85,10 +93,10 @@ export function Header() {
                   <div className="flex items-center justify-start gap-2 p-2">
                     <div className="flex flex-col space-y-1 leading-none">
                       {session.user.name && (
-                        <p className="font-medium text-white">{session.user.name}</p>
+                        <p className="text-theme-primary font-medium">{session.user.name}</p>
                       )}
                       {session.user.email && (
-                        <p className="text-xs text-neutral-500">{session.user.email}</p>
+                        <p className="text-theme-muted text-xs">{session.user.email}</p>
                       )}
                     </div>
                   </div>
@@ -109,11 +117,15 @@ export function Header() {
             </>
           ) : (
             <>
-              <Button variant="ghost" asChild>
+              <Button
+                variant="ghost"
+                asChild
+                className="text-header-secondary hover:text-header-primary hover:bg-white/10"
+              >
                 <Link href="/login">Entrar</Link>
               </Button>
-              <Button asChild>
-                <Link href="/orcamento">Fazer Orcamento</Link>
+              <Button asChild className="bg-[#C9A962] text-black hover:bg-[#B8944E]">
+                <Link href="/orcamento">Fazer Orçamento</Link>
               </Button>
             </>
           )}
@@ -123,7 +135,7 @@ export function Header() {
         <div className="flex lg:hidden">
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-md p-2.5 text-neutral-700"
+            className="text-header-secondary hover:text-header-primary inline-flex items-center justify-center rounded-md p-2.5"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <span className="sr-only">Menu</span>
@@ -137,49 +149,65 @@ export function Header() {
       </nav>
 
       {/* Mobile menu */}
-      <div className={cn('lg:hidden', !mobileMenuOpen && 'hidden')}>
+      <div className={cn('bg-theme-header lg:hidden', !mobileMenuOpen && 'hidden')}>
         <div className="space-y-1 px-4 pb-3 pt-2">
           {navigation.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="block rounded-md px-3 py-2 text-base font-medium text-neutral-700 hover:bg-neutral-200 hover:text-gold-500"
+              className="text-header-secondary block rounded-md px-3 py-2 text-base font-medium hover:bg-white/10 hover:text-accent-400"
               onClick={() => setMobileMenuOpen(false)}
             >
               {item.name}
             </Link>
           ))}
           <div className="mt-4 space-y-2 px-3">
+            <div className="mb-4 flex items-center justify-between rounded-md bg-white/10 p-3">
+              <span className="text-header-secondary text-sm">Tema</span>
+              <ThemeSwitcher variant="compact" showLabel={false} />
+            </div>
             {session?.user ? (
               <>
-                <div className="mb-4 flex items-center gap-3 rounded-md bg-neutral-200 p-3">
+                <div className="mb-4 flex items-center gap-3 rounded-md bg-white/10 p-3">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={session.user.image || undefined} />
-                    <AvatarFallback className="bg-gold-500 text-neutral-950">
+                    <AvatarFallback className="bg-accent-500 text-white">
                       {getInitials(session.user.name)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium text-white">{session.user.name}</p>
-                    <p className="text-xs text-neutral-500">{session.user.email}</p>
+                    <p className="text-header-primary font-medium">{session.user.name}</p>
+                    <p className="text-header-muted text-xs">{session.user.email}</p>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full" asChild>
+                <Button
+                  variant="outline"
+                  className="text-header-primary w-full border-white/20 hover:bg-white/10"
+                  asChild
+                >
                   <Link href={session.user.role === 'ADMIN' ? '/admin' : '/portal'}>
                     Minha Conta
                   </Link>
                 </Button>
-                <Button variant="ghost" className="w-full text-error" onClick={handleSignOut}>
+                <Button
+                  variant="ghost"
+                  className="w-full text-error hover:bg-error/10"
+                  onClick={handleSignOut}
+                >
                   Sair
                 </Button>
               </>
             ) : (
               <>
-                <Button variant="outline" className="w-full" asChild>
+                <Button
+                  variant="outline"
+                  className="text-header-primary w-full border-white/20 hover:bg-white/10"
+                  asChild
+                >
                   <Link href="/login">Entrar</Link>
                 </Button>
-                <Button className="w-full" asChild>
-                  <Link href="/orcamento">Fazer Orcamento</Link>
+                <Button className="w-full bg-[#C9A962] text-black hover:bg-[#B8944E]" asChild>
+                  <Link href="/orcamento">Fazer Orçamento</Link>
                 </Button>
               </>
             )}

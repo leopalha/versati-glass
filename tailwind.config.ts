@@ -10,9 +10,29 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Cores semânticas usando variáveis CSS
+        // Cores de background temáticas (mudam com o tema)
         background: 'var(--bg-primary)',
         foreground: 'var(--text-primary)',
+
+        // Sistema de backgrounds temáticos
+        'theme-bg': {
+          primary: 'var(--bg-primary)',
+          secondary: 'var(--bg-secondary)',
+          tertiary: 'var(--bg-tertiary)',
+          elevated: 'var(--bg-elevated)',
+          card: 'var(--bg-card)',
+          hover: 'var(--bg-hover)',
+          header: 'var(--bg-header)',
+          footer: 'var(--bg-footer)',
+        },
+
+        // Sistema de texto temático
+        'theme-text': {
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
+          subtle: 'var(--text-subtle)',
+        },
 
         // Cores de acento dinâmicas (mudam com o tema)
         accent: {
@@ -63,23 +83,19 @@ const config: Config = {
           950: '#1F1A14',
         },
 
-        // Neutral colors com melhor contraste
+        // Neutral colors - escala padrão (50=claro, 950=escuro)
         neutral: {
-          0: '#000000',
-          50: '#0A0A0A',
-          100: '#111111',
-          150: '#141414',
-          200: '#1A1A1A',
-          250: '#1F1F1F',
-          300: '#262626',
-          400: '#404040',
-          500: '#666666',
-          600: '#808080',
-          700: '#A1A1A1',
-          800: '#C4C4C4',
-          900: '#E5E5E5',
-          950: '#F5F5F5',
-          1000: '#FFFFFF',
+          50: '#FAFAFA',
+          100: '#F5F5F5',
+          200: '#E5E5E5',
+          300: '#D4D4D4',
+          400: '#A3A3A3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#171717',
+          950: '#0A0A0A',
         },
 
         // Status colors
@@ -94,12 +110,12 @@ const config: Config = {
         body: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        'display': ['72px', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-        'h1': ['48px', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
-        'h2': ['36px', { lineHeight: '1.25', letterSpacing: '-0.01em' }],
-        'h3': ['24px', { lineHeight: '1.3' }],
-        'h4': ['20px', { lineHeight: '1.4' }],
-        'h5': ['18px', { lineHeight: '1.4' }],
+        display: ['72px', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        h1: ['48px', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
+        h2: ['36px', { lineHeight: '1.25', letterSpacing: '-0.01em' }],
+        h3: ['24px', { lineHeight: '1.3' }],
+        h4: ['20px', { lineHeight: '1.4' }],
+        h5: ['18px', { lineHeight: '1.4' }],
       },
       borderRadius: {
         lg: '16px',
@@ -107,13 +123,13 @@ const config: Config = {
         sm: '8px',
       },
       boxShadow: {
-        'glow': '0 0 20px var(--shadow-glow)',
+        glow: '0 0 20px var(--shadow-glow)',
         'glow-md': '0 0 30px var(--shadow-glow-md)',
         'glow-lg': '0 0 40px var(--shadow-glow-lg)',
         'glow-gold': '0 0 20px rgba(201, 169, 98, 0.2)',
         'glow-gold-md': '0 0 30px rgba(201, 169, 98, 0.3)',
         'glow-gold-lg': '0 0 40px rgba(201, 169, 98, 0.4)',
-        'card': '0 4px 20px rgba(0, 0, 0, 0.3)',
+        card: '0 4px 20px rgba(0, 0, 0, 0.3)',
         'card-hover': '0 8px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-accent)',
         'card-elevated': '0 12px 40px rgba(0, 0, 0, 0.5)',
       },
@@ -143,8 +159,8 @@ const config: Config = {
         'fade-in': 'fadeIn 0.3s ease-out',
         'fade-in-up': 'fadeInUp 0.4s ease-out',
         'slide-in-right': 'slideInRight 0.4s ease-out',
-        'shimmer': 'shimmer 2s infinite linear',
-        'glow': 'glow 2s infinite',
+        shimmer: 'shimmer 2s infinite linear',
+        glow: 'glow 2s infinite',
       },
     },
   },

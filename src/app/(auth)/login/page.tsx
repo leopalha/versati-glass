@@ -92,12 +92,8 @@ function LoginForm() {
   return (
     <Card className="w-full max-w-md p-8">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 font-display text-3xl font-bold text-white">
-          Entrar
-        </h1>
-        <p className="text-neutral-700">
-          Acesse sua conta para acompanhar seus pedidos
-        </p>
+        <h1 className="text-theme-primary mb-2 font-display text-3xl font-bold">Entrar</h1>
+        <p className="text-theme-muted">Acesse sua conta para acompanhar seus pedidos</p>
       </div>
 
       {/* Google Sign In */}
@@ -135,25 +131,18 @@ function LoginForm() {
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-neutral-700" />
+          <span className="border-theme-default w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-neutral-150 px-2 text-neutral-600">ou</span>
+          <span className="bg-theme-secondary text-theme-subtle px-2">ou</span>
         </div>
       </div>
 
       {/* Email/Password Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <Input
-            type="email"
-            placeholder="Email"
-            {...register('email')}
-            disabled={isLoading}
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-error">{errors.email.message}</p>
-          )}
+          <Input type="email" placeholder="Email" {...register('email')} disabled={isLoading} />
+          {errors.email && <p className="mt-1 text-sm text-error">{errors.email.message}</p>}
         </div>
 
         <div className="relative">
@@ -165,25 +154,16 @@ function LoginForm() {
           />
           <button
             type="button"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-white"
+            className="hover:text-theme-primary absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600"
             onClick={() => setShowPassword(!showPassword)}
           >
-            {showPassword ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
-          {errors.password && (
-            <p className="mt-1 text-sm text-error">{errors.password.message}</p>
-          )}
+          {errors.password && <p className="mt-1 text-sm text-error">{errors.password.message}</p>}
         </div>
 
         <div className="text-right">
-          <Link
-            href="/recuperar-senha"
-            className="text-sm text-gold-400 hover:text-gold-300"
-          >
+          <Link href="/recuperar-senha" className="text-sm text-accent-400 hover:text-accent-300">
             Esqueceu a senha?
           </Link>
         </div>
@@ -200,9 +180,9 @@ function LoginForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-neutral-700">
+      <p className="text-theme-muted mt-6 text-center text-sm">
         Nao tem uma conta?{' '}
-        <Link href="/registro" className="text-gold-400 hover:text-gold-300">
+        <Link href="/registro" className="text-accent-400 hover:text-accent-300">
           Cadastre-se
         </Link>
       </p>
@@ -214,7 +194,7 @@ function LoginLoading() {
   return (
     <Card className="w-full max-w-md p-8">
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-gold-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent-400" />
       </div>
     </Card>
   )

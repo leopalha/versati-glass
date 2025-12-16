@@ -73,7 +73,10 @@ async function getDashboardData(userId: string) {
 
 const statusLabels: Record<string, { label: string; color: string }> = {
   ORCAMENTO_ENVIADO: { label: 'Orcamento Enviado', color: 'bg-blue-500/20 text-blue-400' },
-  AGUARDANDO_PAGAMENTO: { label: 'Aguardando Pagamento', color: 'bg-yellow-500/20 text-yellow-400' },
+  AGUARDANDO_PAGAMENTO: {
+    label: 'Aguardando Pagamento',
+    color: 'bg-yellow-500/20 text-yellow-400',
+  },
   APROVADO: { label: 'Aprovado', color: 'bg-green-500/20 text-green-400' },
   EM_PRODUCAO: { label: 'Em Producao', color: 'bg-purple-500/20 text-purple-400' },
   PRONTO_ENTREGA: { label: 'Pronto p/ Entrega', color: 'bg-cyan-500/20 text-cyan-400' },
@@ -162,9 +165,7 @@ export default async function PortalDashboardPage() {
           {/* Recent Orders */}
           <Card className="p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-white">
-                Pedidos Recentes
-              </h2>
+              <h2 className="font-display text-lg font-semibold text-white">Pedidos Recentes</h2>
               <Link
                 href="/portal/pedidos"
                 className="flex items-center gap-1 text-sm text-gold-500 hover:text-gold-400"
@@ -177,10 +178,7 @@ export default async function PortalDashboardPage() {
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <Package className="mb-3 h-12 w-12 text-neutral-600" />
                 <p className="text-neutral-700">Nenhum pedido ainda</p>
-                <Link
-                  href="/orcamento"
-                  className="mt-2 text-sm text-gold-500 hover:text-gold-400"
-                >
+                <Link href="/orcamento" className="mt-2 text-sm text-gold-500 hover:text-gold-400">
                   Solicitar orcamento
                 </Link>
               </div>
@@ -190,7 +188,7 @@ export default async function PortalDashboardPage() {
                   <Link
                     key={order.id}
                     href={`/portal/pedidos/${order.id}`}
-                    className="flex items-center justify-between rounded-lg border border-neutral-300 p-3 transition-colors hover:bg-neutral-200"
+                    className="flex items-center justify-between rounded-lg border border-neutral-400 p-3 transition-colors hover:bg-neutral-200"
                   >
                     <div>
                       <p className="font-medium text-white">#{order.number}</p>
@@ -200,7 +198,7 @@ export default async function PortalDashboardPage() {
                     </div>
                     <span
                       className={`rounded-full px-2 py-1 text-xs font-medium ${
-                        statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-400'
+                        statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-700'
                       }`}
                     >
                       {statusLabels[order.status]?.label || order.status}
@@ -214,9 +212,7 @@ export default async function PortalDashboardPage() {
           {/* Pending Quotes */}
           <Card className="p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-white">
-                Orcamentos
-              </h2>
+              <h2 className="font-display text-lg font-semibold text-white">Orcamentos</h2>
               <Link
                 href="/portal/orcamentos"
                 className="flex items-center gap-1 text-sm text-gold-500 hover:text-gold-400"
@@ -229,10 +225,7 @@ export default async function PortalDashboardPage() {
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <FileText className="mb-3 h-12 w-12 text-neutral-600" />
                 <p className="text-neutral-700">Nenhum orcamento</p>
-                <Link
-                  href="/orcamento"
-                  className="mt-2 text-sm text-gold-500 hover:text-gold-400"
-                >
+                <Link href="/orcamento" className="mt-2 text-sm text-gold-500 hover:text-gold-400">
                   Solicitar orcamento
                 </Link>
               </div>
@@ -242,7 +235,7 @@ export default async function PortalDashboardPage() {
                   <Link
                     key={quote.id}
                     href={`/portal/orcamentos/${quote.id}`}
-                    className="flex items-center justify-between rounded-lg border border-neutral-300 p-3 transition-colors hover:bg-neutral-200"
+                    className="flex items-center justify-between rounded-lg border border-neutral-400 p-3 transition-colors hover:bg-neutral-200"
                   >
                     <div>
                       <p className="font-medium text-white">#{quote.number}</p>
@@ -288,10 +281,7 @@ export default async function PortalDashboardPage() {
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {appointments.map((appointment) => (
-                <div
-                  key={appointment.id}
-                  className="rounded-lg border border-neutral-300 p-4"
-                >
+                <div key={appointment.id} className="rounded-lg border border-neutral-400 p-4">
                   <div className="mb-2 flex items-center gap-2">
                     <Calendar className="h-5 w-5 text-gold-500" />
                     <span className="font-medium text-white">

@@ -65,7 +65,7 @@ export function PortalSidebar() {
       {/* Mobile menu button */}
       <button
         onClick={() => setIsMobileOpen(true)}
-        className="fixed left-4 top-4 z-40 rounded-lg bg-neutral-200 p-2 lg:hidden"
+        className="bg-theme-elevated fixed left-4 top-4 z-40 rounded-lg p-2 lg:hidden"
       >
         <Menu className="h-5 w-5 text-white" />
       </button>
@@ -81,37 +81,32 @@ export function PortalSidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-neutral-300 bg-neutral-200 transition-all duration-300',
+          'border-theme-default bg-theme-secondary fixed left-0 top-0 z-50 flex h-screen flex-col border-r transition-all duration-300',
           isCollapsed ? 'w-20' : 'w-64',
           isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
         {/* Logo */}
-        <div className="flex h-16 items-center justify-between border-b border-neutral-300 px-4">
+        <div className="border-theme-default flex h-16 items-center justify-between border-b px-4">
           {!isCollapsed && (
             <Link href="/portal" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold-500">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-500">
                 <span className="font-display text-lg font-bold text-black">V</span>
               </div>
-              <span className="font-display text-lg font-semibold text-white">
-                Portal
-              </span>
+              <span className="text-theme-primary font-display text-lg font-semibold">Portal</span>
             </Link>
           )}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden rounded-lg p-2 text-neutral-400 hover:bg-neutral-250 hover:text-white lg:block"
+            className="text-theme-muted hover:bg-theme-elevated hover:text-theme-primary hidden rounded-lg p-2 lg:block"
           >
             <ChevronLeft
-              className={cn(
-                'h-5 w-5 transition-transform',
-                isCollapsed && 'rotate-180'
-              )}
+              className={cn('h-5 w-5 transition-transform', isCollapsed && 'rotate-180')}
             />
           </button>
           <button
             onClick={() => setIsMobileOpen(false)}
-            className="rounded-lg p-2 text-neutral-400 hover:bg-neutral-250 hover:text-white lg:hidden"
+            className="text-theme-muted hover:bg-theme-elevated hover:text-theme-primary rounded-lg p-2 lg:hidden"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -121,8 +116,7 @@ export function PortalSidebar() {
         <nav className="flex-1 space-y-1 overflow-y-auto p-4">
           {menuItems.map((item) => {
             const isActive =
-              pathname === item.href ||
-              (item.href !== '/portal' && pathname.startsWith(item.href))
+              pathname === item.href || (item.href !== '/portal' && pathname.startsWith(item.href))
 
             return (
               <Link
@@ -132,8 +126,8 @@ export function PortalSidebar() {
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-gold-500/10 text-gold-500'
-                    : 'text-neutral-400 hover:bg-neutral-250 hover:text-white'
+                    ? 'bg-accent-500/10 text-accent-500'
+                    : 'text-theme-muted hover:bg-theme-elevated hover:text-theme-primary'
                 )}
               >
                 <item.icon className="h-5 w-5 flex-shrink-0" />
@@ -144,12 +138,12 @@ export function PortalSidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-neutral-300 p-4">
+        <div className="border-theme-default border-t p-4">
           <Button
             variant="ghost"
             onClick={handleSignOut}
             className={cn(
-              'w-full justify-start text-neutral-400 hover:bg-red-500/10 hover:text-red-500',
+              'text-theme-muted w-full justify-start hover:bg-red-500/10 hover:text-red-500',
               isCollapsed && 'justify-center'
             )}
           >

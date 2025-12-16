@@ -45,15 +45,11 @@ export default async function AdminClientesPage() {
         {customers.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
             <Users className="mb-4 h-16 w-16 text-neutral-600" />
-            <h3 className="mb-2 font-display text-xl font-semibold text-white">
-              Nenhum cliente
-            </h3>
-            <p className="text-neutral-700">
-              Os clientes aparecerao aqui
-            </p>
+            <h3 className="mb-2 font-display text-xl font-semibold text-white">Nenhum cliente</h3>
+            <p className="text-neutral-700">Os clientes aparecerao aqui</p>
           </Card>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-neutral-300">
+          <div className="overflow-hidden rounded-lg border border-neutral-400">
             <table className="w-full">
               <thead className="bg-neutral-200">
                 <tr>
@@ -100,18 +96,16 @@ export default async function AdminClientesPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="text-neutral-300">{customer.phone || '-'}</p>
+                        <p className="text-neutral-800">{customer.phone || '-'}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 text-neutral-300">
+                        <div className="flex items-center gap-1 text-neutral-800">
                           <Package className="h-4 w-4" />
                           {customer._count.orders}
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="font-medium text-white">
-                          {formatCurrency(totalSpent)}
-                        </p>
+                        <p className="font-medium text-white">{formatCurrency(totalSpent)}</p>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1 text-sm text-neutral-700">

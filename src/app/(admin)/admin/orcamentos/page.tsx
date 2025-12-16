@@ -2,8 +2,19 @@ import { prisma } from '@/lib/prisma'
 import { AdminHeader } from '@/components/admin/admin-header'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { SendQuoteButton } from '@/components/admin/send-quote-button'
+import { ConvertQuoteButton } from '@/components/admin/convert-quote-button'
 import { formatCurrency } from '@/lib/utils'
-import { FileText, Eye, Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import {
+  FileText,
+  Eye,
+  Calendar,
+  Clock,
+  Plus,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+} from 'lucide-react'
 import Link from 'next/link'
 
 const statusLabels: Record<string, { label: string; color: string; icon: typeof Clock }> = {
@@ -87,7 +98,7 @@ export default async function AdminOrcamentosPage() {
               <Link
                 key={status}
                 href={`/admin/orcamentos?status=${status}`}
-                className="rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-700 hover:bg-neutral-250 hover:text-white"
+                className="hover:bg-neutral-250 rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-700 hover:text-white"
               >
                 {label} ({count})
               </Link>
@@ -98,15 +109,11 @@ export default async function AdminOrcamentosPage() {
         {quotes.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
             <FileText className="mb-4 h-16 w-16 text-neutral-600" />
-            <h3 className="mb-2 font-display text-xl font-semibold text-white">
-              Nenhum orcamento
-            </h3>
-            <p className="text-neutral-700">
-              Os orcamentos aparecerao aqui
-            </p>
+            <h3 className="mb-2 font-display text-xl font-semibold text-white">Nenhum orcamento</h3>
+            <p className="text-neutral-700">Os orcamentos aparecerao aqui</p>
           </Card>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-neutral-300">
+          <div className="overflow-hidden rounded-lg border border-neutral-400">
             <table className="w-full">
               <thead className="bg-neutral-200">
                 <tr>
@@ -145,9 +152,7 @@ export default async function AdminOrcamentosPage() {
                     <tr key={quote.id} className="hover:bg-neutral-200/50">
                       <td className="px-4 py-3">
                         <p className="font-medium text-white">#{quote.number}</p>
-                        <p className="text-xs text-neutral-600">
-                          {quote.items.length} item(s)
-                        </p>
+                        <p className="text-xs text-neutral-600">{quote.items.length} item(s)</p>
                       </td>
                       <td className="px-4 py-3">
                         <p className="text-white">{quote.customerName}</p>
@@ -184,14 +189,29 @@ export default async function AdminOrcamentosPage() {
                           {new Date(quote.createdAt).toLocaleDateString('pt-BR')}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-right">
-                        <Link
-                          href={`/admin/orcamentos/${quote.id}`}
-                          className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm text-gold-500 hover:bg-gold-500/10"
-                        >
-                          <Eye className="h-4 w-4" />
-                          Ver
-                        </Link>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center justify-end gap-2">
+                          <SendQuoteButton
+                            quoteId={quote.id}
+                            quoteNumber={quote.number}
+                            customerName={quote.customerName}
+                            customerEmail={quote.customerEmail}
+                            status={quote.status}
+                          />
+                          <ConvertQuoteButton
+                            quoteId={quote.id}
+                            quoteNumber={quote.number}
+                            customerName={quote.customerName}
+                            status={quote.status}
+                          />
+                          <Link
+                            href={`/admin/orcamentos/${quote.id}`}
+                            className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm text-gold-500 hover:bg-gold-500/10"
+                          >
+                            <Eye className="h-4 w-4" />
+                            Ver
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   )

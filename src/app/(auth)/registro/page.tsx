@@ -137,12 +137,8 @@ export default function RegisterPage() {
   return (
     <Card className="w-full max-w-md p-8">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 font-display text-3xl font-bold text-white">
-          Criar Conta
-        </h1>
-        <p className="text-neutral-700">
-          Cadastre-se para acompanhar seus pedidos
-        </p>
+        <h1 className="text-theme-primary mb-2 font-display text-3xl font-bold">Criar Conta</h1>
+        <p className="text-theme-muted">Cadastre-se para acompanhar seus pedidos</p>
       </div>
 
       {/* Google Sign In */}
@@ -180,10 +176,10 @@ export default function RegisterPage() {
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-neutral-700" />
+          <span className="border-theme-default w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-neutral-150 px-2 text-neutral-600">ou</span>
+          <span className="bg-theme-secondary text-theme-subtle px-2">ou</span>
         </div>
       </div>
 
@@ -196,21 +192,12 @@ export default function RegisterPage() {
             {...register('name')}
             disabled={isLoading}
           />
-          {errors.name && (
-            <p className="mt-1 text-sm text-error">{errors.name.message}</p>
-          )}
+          {errors.name && <p className="mt-1 text-sm text-error">{errors.name.message}</p>}
         </div>
 
         <div>
-          <Input
-            type="email"
-            placeholder="Email"
-            {...register('email')}
-            disabled={isLoading}
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-error">{errors.email.message}</p>
-          )}
+          <Input type="email" placeholder="Email" {...register('email')} disabled={isLoading} />
+          {errors.email && <p className="mt-1 text-sm text-error">{errors.email.message}</p>}
         </div>
 
         <div>
@@ -232,18 +219,12 @@ export default function RegisterPage() {
           />
           <button
             type="button"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-white"
+            className="hover:text-theme-primary absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600"
             onClick={() => setShowPassword(!showPassword)}
           >
-            {showPassword ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
-          {errors.password && (
-            <p className="mt-1 text-sm text-error">{errors.password.message}</p>
-          )}
+          {errors.password && <p className="mt-1 text-sm text-error">{errors.password.message}</p>}
         </div>
 
         <div className="relative">
@@ -255,19 +236,13 @@ export default function RegisterPage() {
           />
           <button
             type="button"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-white"
+            className="hover:text-theme-primary absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
           >
-            {showConfirmPassword ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
+            {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
           {errors.confirmPassword && (
-            <p className="mt-1 text-sm text-error">
-              {errors.confirmPassword.message}
-            </p>
+            <p className="mt-1 text-sm text-error">{errors.confirmPassword.message}</p>
           )}
         </div>
 
@@ -275,28 +250,21 @@ export default function RegisterPage() {
           <Checkbox
             id="acceptTerms"
             checked={watch('acceptTerms')}
-            onCheckedChange={(checked) =>
-              setValue('acceptTerms', checked as boolean)
-            }
+            onCheckedChange={(checked) => setValue('acceptTerms', checked as boolean)}
             disabled={isLoading}
           />
-          <label htmlFor="acceptTerms" className="text-sm text-neutral-700">
+          <label htmlFor="acceptTerms" className="text-theme-muted text-sm">
             Li e aceito os{' '}
-            <Link href="/termos" className="text-gold-400 hover:text-gold-300">
+            <Link href="/termos" className="text-accent-400 hover:text-accent-300">
               Termos de Uso
             </Link>{' '}
             e a{' '}
-            <Link
-              href="/privacidade"
-              className="text-gold-400 hover:text-gold-300"
-            >
+            <Link href="/privacidade" className="text-accent-400 hover:text-accent-300">
               Politica de Privacidade
             </Link>
           </label>
         </div>
-        {errors.acceptTerms && (
-          <p className="text-sm text-error">{errors.acceptTerms.message}</p>
-        )}
+        {errors.acceptTerms && <p className="text-sm text-error">{errors.acceptTerms.message}</p>}
 
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? (
@@ -310,9 +278,9 @@ export default function RegisterPage() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-neutral-700">
+      <p className="text-theme-muted mt-6 text-center text-sm">
         Ja tem uma conta?{' '}
-        <Link href="/login" className="text-gold-400 hover:text-gold-300">
+        <Link href="/login" className="text-accent-400 hover:text-accent-300">
           Entrar
         </Link>
       </p>

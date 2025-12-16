@@ -5,14 +5,7 @@ import { useQuoteStore } from '@/store/quote-store'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import {
-  Droplets,
-  LayoutGrid,
-  DoorOpen,
-  Square,
-  Grid3x3,
-  Package,
-} from 'lucide-react'
+import { Droplets, LayoutGrid, DoorOpen, Square, Grid3x3, Package } from 'lucide-react'
 
 const categories = [
   {
@@ -89,12 +82,8 @@ export function StepCategory() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-8 text-center">
-        <h2 className="font-display text-3xl font-bold text-white">
-          O que voce precisa?
-        </h2>
-        <p className="mt-2 text-neutral-400">
-          Selecione a categoria do produto ou servico
-        </p>
+        <h2 className="text-theme-primary font-display text-3xl font-bold">O que voce precisa?</h2>
+        <p className="text-theme-muted mt-2">Selecione a categoria do produto ou servico</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -106,24 +95,24 @@ export function StepCategory() {
             <Card
               key={category.id}
               className={cn(
-                'cursor-pointer p-6 transition-all hover:border-gold-500/50',
-                isSelected && 'border-gold-500 bg-gold-500/10'
+                'hover:border-accent-500/50 cursor-pointer p-6 transition-all',
+                isSelected && 'bg-accent-500/10 border-accent-500'
               )}
               onClick={() => setSelectedCategory(category.id)}
             >
               <div className="flex flex-col items-center text-center">
                 <div
                   className={cn(
-                    'mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100/10',
+                    'bg-theme-elevated mb-4 flex h-16 w-16 items-center justify-center rounded-full',
                     category.color
                   )}
                 >
                   <Icon className="h-8 w-8" />
                 </div>
-                <h3 className="mb-1 font-display text-lg font-semibold text-white">
+                <h3 className="text-theme-primary mb-1 font-display text-lg font-semibold">
                   {category.name}
                 </h3>
-                <p className="text-sm text-neutral-400">{category.description}</p>
+                <p className="text-theme-muted text-sm">{category.description}</p>
               </div>
             </Card>
           )
@@ -131,11 +120,7 @@ export function StepCategory() {
       </div>
 
       <div className="mt-8 flex justify-center">
-        <Button
-          size="lg"
-          disabled={!selectedCategory}
-          onClick={handleContinue}
-        >
+        <Button size="lg" disabled={!selectedCategory} onClick={handleContinue}>
           Continuar
         </Button>
       </div>

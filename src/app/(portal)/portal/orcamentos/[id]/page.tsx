@@ -164,10 +164,7 @@ export default function OrcamentoDetalhePage() {
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Orcamento nao encontrado
             </h3>
-            <Link
-              href="/portal/orcamentos"
-              className="mt-4 text-gold-500 hover:text-gold-400"
-            >
+            <Link href="/portal/orcamentos" className="mt-4 text-gold-500 hover:text-gold-400">
               Voltar para orcamentos
             </Link>
           </Card>
@@ -204,9 +201,8 @@ export default function OrcamentoDetalhePage() {
               <div>
                 <p className="font-medium text-red-400">Orcamento Expirado</p>
                 <p className="text-sm text-neutral-700">
-                  Este orcamento expirou em{' '}
-                  {new Date(quote.validUntil).toLocaleDateString('pt-BR')}. Solicite um novo
-                  orcamento.
+                  Este orcamento expirou em {new Date(quote.validUntil).toLocaleDateString('pt-BR')}
+                  . Solicite um novo orcamento.
                 </p>
               </div>
             </div>
@@ -226,7 +222,7 @@ export default function OrcamentoDetalhePage() {
                 {quote.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start justify-between rounded-lg border border-neutral-300 p-4"
+                    className="flex items-start justify-between rounded-lg border border-neutral-400 p-4"
                   >
                     <div className="flex items-start gap-4">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-neutral-200">
@@ -277,10 +273,8 @@ export default function OrcamentoDetalhePage() {
             {/* Notes */}
             {quote.customerNotes && (
               <Card className="p-6">
-                <h2 className="mb-4 font-display text-lg font-semibold text-white">
-                  Observacoes
-                </h2>
-                <p className="text-neutral-300">{quote.customerNotes}</p>
+                <h2 className="mb-4 font-display text-lg font-semibold text-white">Observacoes</h2>
+                <p className="text-neutral-800">{quote.customerNotes}</p>
               </Card>
             )}
           </div>
@@ -289,16 +283,12 @@ export default function OrcamentoDetalhePage() {
           <div className="space-y-6">
             {/* Summary */}
             <Card className="p-6">
-              <h2 className="mb-4 font-display text-lg font-semibold text-white">
-                Resumo
-              </h2>
+              <h2 className="mb-4 font-display text-lg font-semibold text-white">Resumo</h2>
 
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-neutral-700">Subtotal</span>
-                  <span className="text-white">
-                    {formatCurrency(Number(quote.subtotal))}
-                  </span>
+                  <span className="text-white">{formatCurrency(Number(quote.subtotal))}</span>
                 </div>
                 {Number(quote.discount) > 0 && (
                   <div className="flex justify-between text-sm">
@@ -308,7 +298,7 @@ export default function OrcamentoDetalhePage() {
                     </span>
                   </div>
                 )}
-                <div className="border-t border-neutral-300 pt-3">
+                <div className="border-t border-neutral-400 pt-3">
                   <div className="flex justify-between">
                     <span className="font-medium text-white">Total</span>
                     <span className="font-display text-xl font-bold text-gold-500">
@@ -367,7 +357,7 @@ export default function OrcamentoDetalhePage() {
                 </h2>
               </div>
 
-              <p className="text-neutral-300">
+              <p className="text-neutral-800">
                 {quote.serviceStreet}, {quote.serviceNumber}
                 {quote.serviceComplement && ` - ${quote.serviceComplement}`}
                 <br />

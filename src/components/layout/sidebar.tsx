@@ -13,7 +13,7 @@ import {
   LogOut,
   Package,
   Users,
-  MessageSquare
+  MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Logo } from '@/components/shared/logo'
@@ -49,9 +49,9 @@ export function Sidebar({ type = 'portal' }: SidebarProps) {
   const navigation = type === 'admin' ? adminNavigation : portalNavigation
 
   return (
-    <div className="flex h-full w-64 flex-col border-r border-neutral-300 bg-neutral-100">
+    <div className="flex h-full w-64 flex-col border-r border-neutral-400 bg-neutral-100">
       {/* Logo */}
-      <div className="flex h-16 shrink-0 items-center border-b border-neutral-300 px-6">
+      <div className="flex h-16 shrink-0 items-center border-b border-neutral-400 px-6">
         <Logo className="h-8 w-auto" />
       </div>
 
@@ -68,7 +68,7 @@ export function Sidebar({ type = 'portal' }: SidebarProps) {
                     'group flex gap-x-3 rounded-md p-3 text-sm font-medium leading-6 transition-colors',
                     isActive
                       ? 'bg-gold-500/10 text-gold-500'
-                      : 'text-neutral-700 hover:text-gold-500 hover:bg-neutral-200'
+                      : 'text-neutral-700 hover:bg-neutral-200 hover:text-gold-500'
                   )}
                 >
                   <item.icon
@@ -87,13 +87,16 @@ export function Sidebar({ type = 'portal' }: SidebarProps) {
 
         {/* Logout */}
         <button
-          className="group flex w-full gap-x-3 rounded-md p-3 text-sm font-medium leading-6 text-neutral-700 hover:text-error hover:bg-error/10 transition-colors"
+          className="group flex w-full gap-x-3 rounded-md p-3 text-sm font-medium leading-6 text-neutral-700 transition-colors hover:bg-error/10 hover:text-error"
           onClick={() => {
             // Implement logout
             console.log('Logout')
           }}
         >
-          <LogOut className="h-5 w-5 shrink-0 text-neutral-500 group-hover:text-error" aria-hidden="true" />
+          <LogOut
+            className="h-5 w-5 shrink-0 text-neutral-500 group-hover:text-error"
+            aria-hidden="true"
+          />
           Sair
         </button>
       </nav>

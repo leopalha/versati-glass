@@ -14,7 +14,25 @@
       "Bash(npx vercel --yes)",
       "Bash(npx vercel:*)",
       "Bash(git commit:*)",
-      "Bash(powershell -Command:*)"
+      "Bash(powershell -Command:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"D:\\VERSATI GLASS\\fix-contrast.ps1\")",
+      "Bash(del \"D:\\VERSATI GLASS\\fix-contrast.ps1\")",
+      "Bash(npx tsc:*)",
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(if [ -d \"src/lib/validations\" ])",
+      "Bash(then echo \"Pasta existe\")",
+      "Bash(else echo \"Pasta nao existe\")",
+      "Bash(fi)",
+      "Bash(mkdir:*)",
+      "Bash(npx next build)",
+      "Bash(pnpm type-check:*)",
+      "Bash(\"d:\\VERSATI GLASS\\src\\app\\(admin)\\admin\\pedidos\\[id]\\page.tsx\")",
+      "Bash(timeout:*)",
+      "Bash(pnpm dev)",
+      "Bash(npx lighthouse --version)",
+      "Bash(npx husky init)"
     ]
   }
 }
