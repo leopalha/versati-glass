@@ -9,11 +9,11 @@ test.describe('Authentication Flow', () => {
     await page.goto('/registro')
 
     // 2. Fill registration form
-    await page.getByLabel(/nome completo/i).fill('Test User E2E')
-    await page.getByLabel(/email/i).fill(testEmail)
-    await page.getByLabel(/telefone/i).fill('21987654321')
-    await page.getByLabel(/senha/i).first().fill(testPassword)
-    await page.getByLabel(/confirmar senha/i).fill(testPassword)
+    await page.locator('input[id="name"]').fill('Test User E2E')
+    await page.locator('input[id="email"]').fill(testEmail)
+    await page.locator('input[id="phone"]').fill('21987654321')
+    await page.locator('input[id="password"]').fill(testPassword)
+    await page.locator('input[id="confirmPassword"]').fill(testPassword)
 
     // 3. Submit form
     await page.getByRole('button', { name: /criar conta/i }).click()
@@ -27,8 +27,8 @@ test.describe('Authentication Flow', () => {
     await page.goto('/login')
 
     // 2. Fill login form (using seeded admin user)
-    await page.getByLabel(/email/i).fill('admin@versatiglass.com')
-    await page.getByLabel(/senha/i).fill('admin123')
+    await page.locator('input[id="email"]').fill('admin@versatiglass.com')
+    await page.locator('input[id="password"]').fill('admin123')
 
     // 3. Submit form
     await page.getByRole('button', { name: /entrar/i }).click()
@@ -44,8 +44,8 @@ test.describe('Authentication Flow', () => {
     await page.goto('/login')
 
     // Fill with invalid credentials
-    await page.getByLabel(/email/i).fill('invalid@example.com')
-    await page.getByLabel(/senha/i).fill('wrongpassword')
+    await page.locator('input[id="email"]').fill('invalid@example.com')
+    await page.locator('input[id="password"]').fill('wrongpassword')
 
     // Submit
     await page.getByRole('button', { name: /entrar/i }).click()
@@ -61,8 +61,8 @@ test.describe('Authentication Flow', () => {
     await page.goto('/registro')
 
     // Enter invalid email
-    await page.getByLabel(/email/i).fill('invalid-email')
-    await page.getByLabel(/nome/i).click() // Blur email field
+    await page.locator('input[id="email"]').fill('invalid-email')
+    await page.locator('input[id="name"]').click() // Blur email field
 
     // Should show validation error
     await expect(page.getByText(/email.*inválido|formato.*inválido/i)).toBeVisible()
@@ -72,8 +72,8 @@ test.describe('Authentication Flow', () => {
     await page.goto('/registro')
 
     // Enter weak password
-    await page.getByLabel(/senha/i).first().fill('123')
-    await page.getByLabel(/confirmar senha/i).click() // Blur password field
+    await page.locator('input[id="password"]').fill('123')
+    await page.locator('input[id="confirmPassword"]').click() // Blur password field
 
     // Should show validation error
     await expect(page.getByText(/senha.*forte|mínimo.*caracteres/i)).toBeVisible()
@@ -83,9 +83,9 @@ test.describe('Authentication Flow', () => {
     await page.goto('/registro')
 
     // Enter non-matching passwords
-    await page.getByLabel(/senha/i).first().fill('Test123!@#')
-    await page.getByLabel(/confirmar senha/i).fill('Different123!@#')
-    await page.getByLabel(/nome/i).click() // Blur confirm password field
+    await page.locator('input[id="password"]').fill('Test123!@#')
+    await page.locator('input[id="confirmPassword"]').fill('Different123!@#')
+    await page.locator('input[id="name"]').click() // Blur confirm password field
 
     // Should show validation error
     await expect(page.getByText(/senhas.*não.*conferem/i)).toBeVisible()
@@ -94,8 +94,8 @@ test.describe('Authentication Flow', () => {
   test('should logout successfully', async ({ page }) => {
     // 1. Login first
     await page.goto('/login')
-    await page.getByLabel(/email/i).fill('admin@versatiglass.com')
-    await page.getByLabel(/senha/i).fill('admin123')
+    await page.locator('input[id="email"]').fill('admin@versatiglass.com')
+    await page.locator('input[id="password"]').fill('admin123')
     await page.getByRole('button', { name: /entrar/i }).click()
 
     // 2. Wait for redirect
@@ -126,8 +126,8 @@ test.describe('Authentication Flow', () => {
     await page.getByLabel(/lembrar.*de.*mim/i).check()
 
     // Login
-    await page.getByLabel(/email/i).fill('admin@versatiglass.com')
-    await page.getByLabel(/senha/i).fill('admin123')
+    await page.locator('input[id="email"]').fill('admin@versatiglass.com')
+    await page.locator('input[id="password"]').fill('admin123')
     await page.getByRole('button', { name: /entrar/i }).click()
 
     // Wait for redirect
@@ -151,14 +151,14 @@ test.describe('Authentication Flow', () => {
     await expect(page).toHaveURL(/\/recuperar-senha/)
 
     // Should show recovery form
-    await expect(page.getByLabel(/email/i)).toBeVisible()
+    await expect(page.locator('input[id="email"]')).toBeVisible()
   })
 
   test('should request password recovery', async ({ page }) => {
     await page.goto('/recuperar-senha')
 
     // Enter email
-    await page.getByLabel(/email/i).fill('admin@versatiglass.com')
+    await page.locator('input[id="email"]').fill('admin@versatiglass.com')
 
     // Submit
     await page.getByRole('button', { name: /enviar/i }).click()

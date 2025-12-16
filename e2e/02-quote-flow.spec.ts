@@ -26,17 +26,17 @@ test.describe('Quote Flow - End to End', () => {
 
     // 6. Step 3: Enter Measurements
     await expect(page.getByText(/medidas/i)).toBeVisible()
-    await page.getByLabel(/largura/i).fill('100')
-    await page.getByLabel(/altura/i).fill('200')
-    await page.getByLabel(/quantidade/i).fill('2')
+    await page.locator('input[id="width"]').fill('100')
+    await page.locator('input[id="height"]').fill('200')
+    await page.locator('input[id="quantity"]').fill('2')
     await page.getByRole('button', { name: /próximo/i }).click()
 
     // 7. Step 4: Customer Information
     await expect(page.getByText(/dados pessoais/i)).toBeVisible()
-    await page.getByLabel(/nome/i).fill('João Silva E2E Test')
-    await page.getByLabel(/email/i).fill(`test-${Date.now()}@example.com`)
-    await page.getByLabel(/telefone/i).fill('21987654321')
-    await page.getByLabel(/cpf/i).fill('123.456.789-00')
+    await page.locator('input[id="name"]').fill('João Silva E2E Test')
+    await page.locator('input[id="email"]').fill(`test-${Date.now()}@example.com`)
+    await page.locator('input[id="phone"]').fill('21987654321')
+    await page.locator('input[id="cpfCnpj"]').fill('123.456.789-00')
     await page.getByRole('button', { name: /próximo/i }).click()
 
     // 8. Step 5: Schedule (optional)
@@ -84,7 +84,7 @@ test.describe('Quote Flow - End to End', () => {
     await page.getByRole('button', { name: /próximo/i }).click()
 
     // Step 3: Enter measurements
-    await page.getByLabel(/largura/i).fill('100')
+    await page.locator('input[id="width"]').fill('100')
 
     // Go back
     await page.getByRole('button', { name: /voltar/i }).click()
@@ -109,15 +109,15 @@ test.describe('Quote Flow - End to End', () => {
     await page.getByRole('button', { name: /vidro temperado/i }).click()
     await page.getByRole('button', { name: /próximo/i }).click()
 
-    await page.getByLabel(/largura/i).fill('100')
-    await page.getByLabel(/altura/i).fill('200')
-    await page.getByLabel(/quantidade/i).fill('2')
+    await page.locator('input[id="width"]').fill('100')
+    await page.locator('input[id="height"]').fill('200')
+    await page.locator('input[id="quantity"]').fill('2')
     await page.getByRole('button', { name: /próximo/i }).click()
 
-    await page.getByLabel(/nome/i).fill('Test User')
-    await page.getByLabel(/email/i).fill('test@example.com')
-    await page.getByLabel(/telefone/i).fill('21987654321')
-    await page.getByLabel(/cpf/i).fill('123.456.789-00')
+    await page.locator('input[id="name"]').fill('Test User')
+    await page.locator('input[id="email"]').fill('test@example.com')
+    await page.locator('input[id="phone"]').fill('21987654321')
+    await page.locator('input[id="cpfCnpj"]').fill('123.456.789-00')
     await page.getByRole('button', { name: /próximo/i }).click()
 
     await page.getByRole('button', { name: /próximo/i }).click()

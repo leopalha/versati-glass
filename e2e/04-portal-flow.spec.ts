@@ -5,8 +5,8 @@ test.describe('Customer Portal Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Login as customer
     await page.goto('/login')
-    await page.getByLabel(/email/i).fill('customer@versatiglass.com')
-    await page.getByLabel(/senha/i).fill('customer123')
+    await page.locator('input[id="email"]').fill('customer@versatiglass.com')
+    await page.locator('input[id="password"]').fill('customer123')
     await page.getByRole('button', { name: /entrar/i }).click()
 
     // Wait for redirect to portal
@@ -191,9 +191,9 @@ test.describe('Customer Portal Flow', () => {
 
     // Should show profile information
     await expect(page.getByRole('heading', { name: /meu perfil/i })).toBeVisible()
-    await expect(page.getByLabel(/nome/i)).toBeVisible()
-    await expect(page.getByLabel(/email/i)).toBeVisible()
-    await expect(page.getByLabel(/telefone/i)).toBeVisible()
+    await expect(page.locator('input[id="name"]')).toBeVisible()
+    await expect(page.locator('input[id="email"]')).toBeVisible()
+    await expect(page.locator('input[id="phone"]')).toBeVisible()
   })
 
   test('should update profile information', async ({ page }) => {
@@ -201,10 +201,10 @@ test.describe('Customer Portal Flow', () => {
     await page.goto('/portal/perfil')
 
     // Update name
-    await page.getByLabel(/nome/i).fill('Updated Name')
+    await page.locator('input[id="name"]').fill('Updated Name')
 
     // Update phone
-    await page.getByLabel(/telefone/i).fill('21999999999')
+    await page.locator('input[id="phone"]').fill('21999999999')
 
     // Save changes
     await page.getByRole('button', { name: /salvar/i }).click()
@@ -223,9 +223,9 @@ test.describe('Customer Portal Flow', () => {
     await page.getByRole('button', { name: /alterar senha/i }).click()
 
     // Fill password form
-    await page.getByLabel(/senha atual/i).fill('customer123')
-    await page.getByLabel(/nova senha/i).fill('NewPassword123!@#')
-    await page.getByLabel(/confirmar.*senha/i).fill('NewPassword123!@#')
+    await page.locator('input[id="currentPassword"]').fill('customer123')
+    await page.locator('input[id="newPassword"]').fill('NewPassword123!@#')
+    await page.locator('input[id="confirmPassword"]').fill('NewPassword123!@#')
 
     // Submit
     await page.getByRole('button', { name: /salvar|confirmar/i }).click()

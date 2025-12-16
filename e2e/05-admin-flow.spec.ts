@@ -4,8 +4,8 @@ test.describe('Admin Dashboard Flow', () => {
   // Setup: Login as admin before each test
   test.beforeEach(async ({ page }) => {
     await page.goto('/login')
-    await page.getByLabel(/email/i).fill('admin@versatiglass.com')
-    await page.getByLabel(/senha/i).fill('admin123')
+    await page.locator('input[id="email"]').fill('admin@versatiglass.com')
+    await page.locator('input[id="password"]').fill('admin123')
     await page.getByRole('button', { name: /entrar/i }).click()
     await page.waitForURL(/\/admin/, { timeout: 10000 })
   })
@@ -53,10 +53,7 @@ test.describe('Admin Dashboard Flow', () => {
       await expect(page.getByRole('dialog')).toBeVisible()
 
       // Update quantity
-      await page
-        .getByLabel(/quantidade/i)
-        .first()
-        .fill('3')
+      await page.locator('input[id="quantity"]').first().fill('3')
 
       // Save changes
       await page.getByRole('button', { name: /salvar/i }).click()
@@ -151,11 +148,11 @@ test.describe('Admin Dashboard Flow', () => {
     await expect(page.getByRole('dialog')).toBeVisible()
 
     // Fill form
-    await page.getByLabel(/nome/i).fill('Vidro Temperado Test E2E')
-    await page.getByLabel(/descrição/i).fill('Produto de teste E2E')
-    await page.getByLabel(/categoria/i).selectOption('BOX_BANHEIRO')
-    await page.getByLabel(/preço/i).fill('500')
-    await page.getByLabel(/estoque/i).fill('10')
+    await page.locator('input[id="name"]').fill('Vidro Temperado Test E2E')
+    await page.locator('textarea[id="description"]').fill('Produto de teste E2E')
+    await page.locator('select[id="category"]').selectOption('BOX_BANHEIRO')
+    await page.locator('input[id="price"]').fill('500')
+    await page.locator('input[id="stock"]').fill('10')
 
     // Save
     await page.getByRole('button', { name: /salvar|criar/i }).click()
@@ -191,10 +188,10 @@ test.describe('Admin Dashboard Flow', () => {
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
 
-    await page.getByLabel(/cliente/i).fill('Test Customer')
-    await page.getByLabel(/tipo/i).selectOption('INSTALACAO')
-    await page.getByLabel(/data/i).fill(tomorrow.toISOString().split('T')[0])
-    await page.getByLabel(/horário/i).fill('10:00')
+    await page.locator('input[id="customer"]').fill('Test Customer')
+    await page.locator('select[id="type"]').selectOption('INSTALACAO')
+    await page.locator('input[id="date"]').fill(tomorrow.toISOString().split('T')[0])
+    await page.locator('input[id="time"]').fill('10:00')
 
     // Save
     await page.getByRole('button', { name: /criar|salvar/i }).click()
