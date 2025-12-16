@@ -55,8 +55,8 @@ test.describe('Homepage', () => {
   test('should display contact information', async ({ page }) => {
     await page.goto('/')
 
-    // Check phone number
-    const phone = page.getByText(/\+55.*21.*98253-6229/)
+    // Check phone number (use .first() since phone appears in header and footer)
+    const phone = page.getByText(/\+55.*21.*98253-6229/).first()
     await expect(phone).toBeVisible()
 
     // Check WhatsApp button
