@@ -10,7 +10,10 @@
       "Bash(cat:*)",
       "Bash(pnpm test:run:*)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit - Versati Glass Platform\n\nComplete digital platform for premium glass company including:\n- Next.js 14 App Router with TypeScript\n- NextAuth v5 authentication (credentials + Google OAuth)\n- Prisma ORM with PostgreSQL\n- Stripe payments (PIX + Card)\n- Twilio WhatsApp integration with AI chatbot (Groq/Llama)\n- Resend email notifications\n- Customer portal and admin dashboard\n- Quote wizard with 4 steps\n- Responsive landing page with SEO\n\nFeatures:\n- 122 TypeScript files\n- 44+ pages built\n- 58 tests passing\n- 13 API routes\n- Complete design system\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit - Versati Glass Platform\n\nComplete digital platform for premium glass company including:\n- Next.js 14 App Router with TypeScript\n- NextAuth v5 authentication (credentials + Google OAuth)\n- Prisma ORM with PostgreSQL\n- Stripe payments (PIX + Card)\n- Twilio WhatsApp integration with AI chatbot (Groq/Llama)\n- Resend email notifications\n- Customer portal and admin dashboard\n- Quote wizard with 4 steps\n- Responsive landing page with SEO\n\nFeatures:\n- 122 TypeScript files\n- 44+ pages built\n- 58 tests passing\n- 13 API routes\n- Complete design system\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(npx vercel --yes)",
+      "Bash(npx vercel:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
