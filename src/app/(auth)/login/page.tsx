@@ -141,25 +141,50 @@ function LoginForm() {
       {/* Email/Password Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <Input type="email" placeholder="Email" {...register('email')} disabled={isLoading} />
-          {errors.email && <p className="mt-1 text-sm text-error">{errors.email.message}</p>}
+          <label htmlFor="email" className="text-theme-primary mb-1 block text-sm font-medium">
+            Email
+          </label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="Digite seu email"
+            aria-label="Email"
+            {...register('email')}
+            disabled={isLoading}
+          />
+          {errors.email && (
+            <p className="mt-1 text-sm text-error" role="alert">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         <div className="relative">
+          <label htmlFor="password" className="text-theme-primary mb-1 block text-sm font-medium">
+            Senha
+          </label>
           <Input
+            id="password"
             type={showPassword ? 'text' : 'password'}
-            placeholder="Senha"
+            placeholder="Digite sua senha"
+            aria-label="Senha"
             {...register('password')}
             disabled={isLoading}
           />
           <button
             type="button"
-            className="hover:text-theme-primary absolute right-3 top-1/2 -translate-y-1/2 text-neutral-600"
+            className="hover:text-theme-primary absolute right-3 top-[38px] -translate-y-1/2 text-neutral-600"
             onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? 'Ocultar senha digitada' : 'Mostrar senha digitada'}
+            tabIndex={-1}
           >
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
-          {errors.password && <p className="mt-1 text-sm text-error">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="mt-1 text-sm text-error" role="alert">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
         <div className="text-right">

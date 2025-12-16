@@ -134,32 +134,65 @@ export function StepCustomer() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Nome completo *</label>
-                <Input {...register('name')} placeholder="Seu nome" />
-                {errors.name && <p className="mt-1 text-sm text-error">{errors.name.message}</p>}
+                <label htmlFor="name" className="text-theme-muted mb-1 block text-sm">
+                  Nome completo *
+                </label>
+                <Input id="name" aria-label="Nome" {...register('name')} placeholder="Seu nome" />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-error" role="alert">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">CPF/CNPJ</label>
-                <Input {...register('cpfCnpj')} placeholder="Opcional" />
+                <label htmlFor="cpfCnpj" className="text-theme-muted mb-1 block text-sm">
+                  CPF/CNPJ
+                </label>
+                <Input
+                  id="cpfCnpj"
+                  aria-label="CPF ou CNPJ"
+                  {...register('cpfCnpj')}
+                  placeholder="Opcional"
+                />
               </div>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Email *</label>
-                <Input type="email" {...register('email')} placeholder="seu@email.com" />
-                {errors.email && <p className="mt-1 text-sm text-error">{errors.email.message}</p>}
+                <label htmlFor="email" className="text-theme-muted mb-1 block text-sm">
+                  Email *
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  aria-label="Email"
+                  {...register('email')}
+                  placeholder="seu@email.com"
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-error" role="alert">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Telefone *</label>
+                <label htmlFor="phone" className="text-theme-muted mb-1 block text-sm">
+                  Telefone *
+                </label>
                 <Input
+                  id="phone"
+                  aria-label="Telefone"
                   {...register('phone')}
                   onChange={handlePhoneChange}
                   placeholder="(21) 98765-4321"
                 />
-                {errors.phone && <p className="mt-1 text-sm text-error">{errors.phone.message}</p>}
+                {errors.phone && (
+                  <p className="mt-1 text-sm text-error" role="alert">
+                    {errors.phone.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -170,60 +203,113 @@ export function StepCustomer() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">CEP *</label>
+                <label htmlFor="zipCode" className="text-theme-muted mb-1 block text-sm">
+                  CEP *
+                </label>
                 <Input
+                  id="zipCode"
+                  aria-label="CEP"
                   {...register('zipCode')}
                   onChange={handleCepChange}
                   placeholder="00000-000"
                 />
                 {errors.zipCode && (
-                  <p className="mt-1 text-sm text-error">{errors.zipCode.message}</p>
+                  <p className="mt-1 text-sm text-error" role="alert">
+                    {errors.zipCode.message}
+                  </p>
                 )}
               </div>
 
               <div className="sm:col-span-2">
-                <label className="text-theme-muted mb-1 block text-sm">Rua *</label>
-                <Input {...register('street')} placeholder="Nome da rua" />
+                <label htmlFor="street" className="text-theme-muted mb-1 block text-sm">
+                  Rua *
+                </label>
+                <Input
+                  id="street"
+                  aria-label="Rua"
+                  {...register('street')}
+                  placeholder="Nome da rua"
+                />
                 {errors.street && (
-                  <p className="mt-1 text-sm text-error">{errors.street.message}</p>
+                  <p className="mt-1 text-sm text-error" role="alert">
+                    {errors.street.message}
+                  </p>
                 )}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Numero *</label>
-                <Input {...register('number')} placeholder="123" />
+                <label htmlFor="number" className="text-theme-muted mb-1 block text-sm">
+                  Numero *
+                </label>
+                <Input id="number" aria-label="Número" {...register('number')} placeholder="123" />
                 {errors.number && (
-                  <p className="mt-1 text-sm text-error">{errors.number.message}</p>
+                  <p className="mt-1 text-sm text-error" role="alert">
+                    {errors.number.message}
+                  </p>
                 )}
               </div>
 
               <div className="sm:col-span-3">
-                <label className="text-theme-muted mb-1 block text-sm">Complemento</label>
-                <Input {...register('complement')} placeholder="Apto, bloco..." />
+                <label htmlFor="complement" className="text-theme-muted mb-1 block text-sm">
+                  Complemento
+                </label>
+                <Input
+                  id="complement"
+                  aria-label="Complemento"
+                  {...register('complement')}
+                  placeholder="Apto, bloco..."
+                />
               </div>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Bairro *</label>
-                <Input {...register('neighborhood')} placeholder="Bairro" />
+                <label htmlFor="neighborhood" className="text-theme-muted mb-1 block text-sm">
+                  Bairro *
+                </label>
+                <Input
+                  id="neighborhood"
+                  aria-label="Bairro"
+                  {...register('neighborhood')}
+                  placeholder="Bairro"
+                />
                 {errors.neighborhood && (
-                  <p className="mt-1 text-sm text-error">{errors.neighborhood.message}</p>
+                  <p className="mt-1 text-sm text-error" role="alert">
+                    {errors.neighborhood.message}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Cidade *</label>
-                <Input {...register('city')} placeholder="Cidade" />
-                {errors.city && <p className="mt-1 text-sm text-error">{errors.city.message}</p>}
+                <label htmlFor="city" className="text-theme-muted mb-1 block text-sm">
+                  Cidade *
+                </label>
+                <Input id="city" aria-label="Cidade" {...register('city')} placeholder="Cidade" />
+                {errors.city && (
+                  <p className="mt-1 text-sm text-error" role="alert">
+                    {errors.city.message}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Estado *</label>
-                <Input {...register('state')} placeholder="UF" maxLength={2} />
-                {errors.state && <p className="mt-1 text-sm text-error">{errors.state.message}</p>}
+                <label htmlFor="state" className="text-theme-muted mb-1 block text-sm">
+                  Estado *
+                </label>
+                <Input
+                  id="state"
+                  aria-label="Estado"
+                  {...register('state')}
+                  placeholder="UF"
+                  maxLength={2}
+                />
+                {errors.state && (
+                  <p className="mt-1 text-sm text-error" role="alert">
+                    {errors.state.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>

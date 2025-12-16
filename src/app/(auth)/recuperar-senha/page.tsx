@@ -34,7 +34,7 @@ export default function RecuperarSenhaPage() {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/auth/reset-password', {
+      const response = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -88,8 +88,22 @@ export default function RecuperarSenhaPage() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <Input type="email" placeholder="Email" {...register('email')} disabled={isLoading} />
-          {errors.email && <p className="mt-1 text-sm text-error">{errors.email.message}</p>}
+          <label htmlFor="email" className="text-theme-primary mb-1 block text-sm font-medium">
+            Email
+          </label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="Digite seu email"
+            aria-label="Email"
+            {...register('email')}
+            disabled={isLoading}
+          />
+          {errors.email && (
+            <p className="mt-1 text-sm text-error" role="alert">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         <Button type="submit" className="w-full" disabled={isLoading}>

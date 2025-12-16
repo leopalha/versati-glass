@@ -115,13 +115,16 @@ export function StepProduct() {
               const isSelected = selectedProduct === product.id
 
               return (
-                <Card
+                <button
                   key={product.id}
+                  type="button"
+                  onClick={() => handleSelect(product)}
+                  aria-label={product.name}
                   className={cn(
-                    'hover:border-accent-500/50 cursor-pointer overflow-hidden transition-all',
+                    'hover:border-accent-500/50 w-full cursor-pointer overflow-hidden text-left transition-all',
+                    'bg-theme-secondary border-theme-default rounded-lg border',
                     isSelected && 'border-accent-500 ring-1 ring-accent-500'
                   )}
-                  onClick={() => handleSelect(product)}
                 >
                   <div className="relative aspect-[4/3]">
                     {product.thumbnail ? (
@@ -171,7 +174,7 @@ export function StepProduct() {
                       </div>
                     )}
                   </div>
-                </Card>
+                </button>
               )
             })}
           </div>

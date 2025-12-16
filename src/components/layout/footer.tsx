@@ -113,7 +113,12 @@ export function Footer() {
                 <ul role="list" className="mt-6 space-y-4">
                   <li className="flex items-start gap-2">
                     <Phone className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent-400" />
-                    <span className="text-footer-muted text-sm">(21) 98253-6229</span>
+                    <a
+                      href="tel:+5521982536229"
+                      className="text-footer-muted text-sm hover:text-accent-400"
+                    >
+                      +55 21 98253-6229
+                    </a>
                   </li>
                   <li className="flex items-start gap-2">
                     <Mail className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent-400" />

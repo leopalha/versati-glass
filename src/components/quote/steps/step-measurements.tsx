@@ -169,21 +169,29 @@ export function StepMeasurements() {
           {/* Measurements */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-theme-muted mb-1 block text-sm">Largura (metros)</label>
+              <label htmlFor="width" className="text-theme-muted mb-1 block text-sm">
+                Largura (metros)
+              </label>
               <Input
+                id="width"
                 type="number"
                 step="0.01"
                 placeholder="Ex: 1.20"
+                aria-label="Largura"
                 value={width}
                 onChange={(e) => setWidth(e.target.value)}
               />
             </div>
             <div>
-              <label className="text-theme-muted mb-1 block text-sm">Altura (metros)</label>
+              <label htmlFor="height" className="text-theme-muted mb-1 block text-sm">
+                Altura (metros)
+              </label>
               <Input
+                id="height"
                 type="number"
                 step="0.01"
                 placeholder="Ex: 1.90"
+                aria-label="Altura"
                 value={height}
                 onChange={(e) => setHeight(e.target.value)}
               />
@@ -192,10 +200,14 @@ export function StepMeasurements() {
 
           {/* Quantity */}
           <div>
-            <label className="text-theme-muted mb-1 block text-sm">Quantidade</label>
+            <label htmlFor="quantity" className="text-theme-muted mb-1 block text-sm">
+              Quantidade
+            </label>
             <Input
+              id="quantity"
               type="number"
               min="1"
+              aria-label="Quantidade"
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
             />

@@ -92,13 +92,16 @@ export function StepCategory() {
           const isSelected = selectedCategory === category.id
 
           return (
-            <Card
+            <button
               key={category.id}
+              type="button"
+              onClick={() => setSelectedCategory(category.id)}
+              aria-label={category.name}
               className={cn(
-                'hover:border-accent-500/50 cursor-pointer p-6 transition-all',
+                'hover:border-accent-500/50 w-full cursor-pointer p-6 text-left transition-all',
+                'bg-theme-secondary border-theme-default rounded-lg border',
                 isSelected && 'bg-accent-500/10 border-accent-500'
               )}
-              onClick={() => setSelectedCategory(category.id)}
             >
               <div className="flex flex-col items-center text-center">
                 <div
@@ -114,7 +117,7 @@ export function StepCategory() {
                 </h3>
                 <p className="text-theme-muted text-sm">{category.description}</p>
               </div>
-            </Card>
+            </button>
           )
         })}
       </div>
