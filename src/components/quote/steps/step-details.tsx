@@ -34,6 +34,21 @@ import {
   GLASS_CURTAIN_SYSTEMS,
   SERVICE_TYPES,
   SHAPES,
+  GLASS_TEXTURES,
+  MAXIM_AR_HASTE_SIZES,
+  PIVOT_POSITIONS,
+  HANDLE_TYPES,
+  LOCK_TYPES,
+  HANDRAIL_TYPES,
+  PERGOLA_STRUCTURES,
+  PERGOLA_FIXING_SYSTEMS,
+  PERGOLA_SLOPES,
+  SHELF_SUPPORT_TYPES,
+  SHELF_SUPPORT_MATERIALS,
+  PARTITION_SYSTEMS,
+  CLOSING_TYPES,
+  CLOSING_SYSTEMS,
+  SERVICE_URGENCY,
 } from '@/lib/catalog-options'
 
 export function StepDetails() {
@@ -87,6 +102,25 @@ export function StepDetails() {
   const [bisoteWidth, setBisoteWidth] = useState(existingItem?.bisoteWidth || '')
   const [description, setDescription] = useState(existingItem?.description || '')
   const [images, setImages] = useState<string[]>(existingItem?.images || [])
+
+  // Novos campos condicionais (Fase 1)
+  const [glassTexture, setGlassTexture] = useState('')
+  const [hasteSize, setHasteSize] = useState('')
+  const [pivotPosition, setPivotPosition] = useState('')
+  const [handleType, setHandleType] = useState('')
+  const [lockType, setLockType] = useState('')
+  const [hasHandrail, setHasHandrail] = useState(false)
+  const [handrailType, setHandrailType] = useState('')
+  const [pergolaStructure, setPergolaStructure] = useState('')
+  const [pergolaFixing, setPergolaFixing] = useState('')
+  const [pergolaSlope, setPergolaSlope] = useState('')
+  const [shelfType, setShelfType] = useState('')
+  const [shelfSupportType, setShelfSupportType] = useState('')
+  const [shelfSupportMaterial, setShelfSupportMaterial] = useState('')
+  const [partitionSystem, setPartitionSystem] = useState('')
+  const [closingType, setClosingType] = useState('')
+  const [closingSystem, setClosingSystem] = useState('')
+  const [serviceUrgency, setServiceUrgency] = useState('')
 
   // Opções de cor de ferragem baseadas na categoria
   const hardwareColorOptions = useMemo(() => {
@@ -318,6 +352,24 @@ export function StepDetails() {
       bisoteWidth: bisoteWidth || undefined,
       description: description || descParts.filter(Boolean).join(' - '),
       images,
+      // New conditional fields (Phase 1)
+      glassTexture: glassTexture || undefined,
+      hasteSize: hasteSize || undefined,
+      pivotPosition: pivotPosition || undefined,
+      handleType: handleType || undefined,
+      lockType: lockType || undefined,
+      hasHandrail: hasHandrail || undefined,
+      handrailType: handrailType || undefined,
+      pergolaStructure: pergolaStructure || undefined,
+      pergolaFixing: pergolaFixing || undefined,
+      pergolaSlope: pergolaSlope || undefined,
+      shelfType: shelfType || undefined,
+      shelfSupportType: shelfSupportType || undefined,
+      shelfSupportMaterial: shelfSupportMaterial || undefined,
+      partitionSystem: partitionSystem || undefined,
+      closingType: closingType || undefined,
+      closingSystem: closingSystem || undefined,
+      serviceUrgency: serviceUrgency || undefined,
     }
 
     if (isEditing) {
@@ -355,6 +407,24 @@ export function StepDetails() {
         setBisoteWidth('')
         setDescription('')
         setImages([])
+        // Clear new conditional fields
+        setGlassTexture('')
+        setHasteSize('')
+        setPivotPosition('')
+        setHandleType('')
+        setLockType('')
+        setHasHandrail(false)
+        setHandrailType('')
+        setPergolaStructure('')
+        setPergolaFixing('')
+        setPergolaSlope('')
+        setShelfType('')
+        setShelfSupportType('')
+        setShelfSupportMaterial('')
+        setPartitionSystem('')
+        setClosingType('')
+        setClosingSystem('')
+        setServiceUrgency('')
 
         // Stay in Step 3 to detail next product
       }
@@ -504,60 +574,196 @@ export function StepDetails() {
             </div>
           )}
 
-          {/* PORTAS: Tipo de Porta */}
+          {/* PORTAS: Tipo de Porta + Campos Condicionais */}
           {category === 'PORTAS' && (
-            <div>
-              <label className="text-theme-muted mb-1 block text-sm">Tipo de Porta</label>
-              <Select value={model} onValueChange={setModel}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  {DOOR_TYPES.map((opt) => (
-                    <SelectItem key={opt.id} value={opt.id}>
-                      {opt.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="space-y-4">
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Tipo de Porta</label>
+                <Select value={model} onValueChange={setModel}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DOOR_TYPES.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Se for Pivotante, mostrar posição do pivô */}
+              {model === 'PIVOTANTE' && (
+                <div>
+                  <label className="text-theme-muted mb-1 block text-sm">Posição do Pivô</label>
+                  <Select value={pivotPosition} onValueChange={setPivotPosition}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a posição" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PIVOT_POSITIONS.map((opt) => (
+                        <SelectItem key={opt.id} value={opt.id}>
+                          {opt.name} - {opt.description}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Tipo de Puxador (para todas as portas) */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="text-theme-muted mb-1 block text-sm">Tipo de Puxador</label>
+                  <Select value={handleType} onValueChange={setHandleType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o puxador" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {HANDLE_TYPES.map((opt) => (
+                        <SelectItem key={opt.id} value={opt.id}>
+                          {opt.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Tipo de Fechadura (para todas as portas) */}
+                <div>
+                  <label className="text-theme-muted mb-1 block text-sm">Tipo de Fechadura</label>
+                  <Select value={lockType} onValueChange={setLockType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a fechadura" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {LOCK_TYPES.map((opt) => (
+                        <SelectItem key={opt.id} value={opt.id}>
+                          {opt.name}
+                          {opt.description && ` - ${opt.description}`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
           )}
 
-          {/* JANELAS: Tipo de Janela */}
+          {/* JANELAS: Tipo de Janela + Campos Condicionais */}
           {category === 'JANELAS' && (
-            <div>
-              <label className="text-theme-muted mb-1 block text-sm">Tipo de Janela</label>
-              <Select value={model} onValueChange={setModel}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  {WINDOW_TYPES.map((opt) => (
-                    <SelectItem key={opt.id} value={opt.id}>
-                      {opt.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="space-y-4">
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Tipo de Janela</label>
+                <Select value={model} onValueChange={setModel}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {WINDOW_TYPES.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Se for Maxim-Ar, mostrar tamanho da haste */}
+              {model === 'MAXIM_AR' && (
+                <div>
+                  <label className="text-theme-muted mb-1 block text-sm">Tamanho da Haste</label>
+                  <Select value={hasteSize} onValueChange={setHasteSize}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o tamanho" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MAXIM_AR_HASTE_SIZES.map((opt) => (
+                        <SelectItem key={opt.id} value={opt.id}>
+                          {opt.name} - {opt.description}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Se tipo de vidro for Impresso, mostrar textura */}
+              {glassType === 'IMPRESSO' && (
+                <div>
+                  <label className="text-theme-muted mb-1 block text-sm">Textura do Vidro</label>
+                  <Select value={glassTexture} onValueChange={setGlassTexture}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a textura" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {GLASS_TEXTURES.map((opt) => (
+                        <SelectItem key={opt.id} value={opt.id}>
+                          {opt.name} - {opt.description}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
           )}
 
-          {/* GUARDA_CORPO: Sistema de Fixação */}
+          {/* GUARDA_CORPO: Sistema de Fixação + Corrimão */}
           {category === 'GUARDA_CORPO' && (
-            <div>
-              <label className="text-theme-muted mb-1 block text-sm">Sistema de Fixacao</label>
-              <Select value={model} onValueChange={setModel}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o sistema" />
-                </SelectTrigger>
-                <SelectContent>
-                  {GUARD_RAIL_SYSTEMS.map((opt) => (
-                    <SelectItem key={opt.id} value={opt.id}>
-                      {opt.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="space-y-4">
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Sistema de Fixacao</label>
+                <Select value={model} onValueChange={setModel}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o sistema" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GUARD_RAIL_SYSTEMS.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Checkbox para corrimão */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="hasHandrail"
+                  checked={hasHandrail}
+                  onChange={(e) => {
+                    setHasHandrail(e.target.checked)
+                    if (!e.target.checked) setHandrailType('') // Reset se desmarcar
+                  }}
+                  className="h-4 w-4 rounded border-neutral-600 bg-theme-elevated text-accent-500 focus:ring-accent-500"
+                />
+                <label htmlFor="hasHandrail" className="text-theme-primary text-sm">
+                  Incluir Corrimão
+                </label>
+              </div>
+
+              {/* Se tiver corrimão, mostrar tipo */}
+              {hasHandrail && (
+                <div>
+                  <label className="text-theme-muted mb-1 block text-sm">Tipo de Corrimão</label>
+                  <Select value={handrailType} onValueChange={setHandrailType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {HANDRAIL_TYPES.map((opt) => (
+                        <SelectItem key={opt.id} value={opt.id}>
+                          {opt.name} - {opt.description}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
           )}
 
@@ -577,6 +783,57 @@ export function StepDetails() {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+          )}
+
+          {/* PERGOLADOS: Estrutura, Fixação, Inclinação */}
+          {category === 'PERGOLADOS' && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Estrutura</label>
+                <Select value={pergolaStructure} onValueChange={setPergolaStructure}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PERGOLA_STRUCTURES.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Sistema de Fixação</label>
+                <Select value={pergolaFixing} onValueChange={setPergolaFixing}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PERGOLA_FIXING_SYSTEMS.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Inclinação</label>
+                <Select value={pergolaSlope} onValueChange={setPergolaSlope}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PERGOLA_SLOPES.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           )}
 
@@ -650,16 +907,84 @@ export function StepDetails() {
             </div>
           )}
 
-          {/* TAMPOS_PRATELEIRAS: Formato */}
+          {/* TAMPOS_PRATELEIRAS: Tipo, Formato, Suporte */}
           {category === 'TAMPOS_PRATELEIRAS' && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Tipo</label>
+                <Select value={shelfType} onValueChange={setShelfType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="TAMPO">Tampo de Mesa</SelectItem>
+                    <SelectItem value="PRATELEIRA">Prateleira</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Formato</label>
+                <Select value={shape} onValueChange={setShape}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o formato" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SHAPES.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              {/* Se for prateleira, mostrar suporte */}
+              {shelfType === 'PRATELEIRA' && (
+                <>
+                  <div>
+                    <label className="text-theme-muted mb-1 block text-sm">Tipo de Suporte</label>
+                    <Select value={shelfSupportType} onValueChange={setShelfSupportType}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SHELF_SUPPORT_TYPES.map((opt) => (
+                          <SelectItem key={opt.id} value={opt.id}>
+                            {opt.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-theme-muted mb-1 block text-sm">Material do Suporte</label>
+                    <Select value={shelfSupportMaterial} onValueChange={setShelfSupportMaterial}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SHELF_SUPPORT_MATERIALS.map((opt) => (
+                          <SelectItem key={opt.id} value={opt.id}>
+                            {opt.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* DIVISORIAS: Sistema */}
+          {category === 'DIVISORIAS' && (
             <div>
-              <label className="text-theme-muted mb-1 block text-sm">Formato</label>
-              <Select value={shape} onValueChange={setShape}>
+              <label className="text-theme-muted mb-1 block text-sm">Sistema de Divisória</label>
+              <Select value={partitionSystem} onValueChange={setPartitionSystem}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o formato" />
+                  <SelectValue placeholder="Selecione o sistema" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SHAPES.map((opt) => (
+                  {PARTITION_SYSTEMS.map((opt) => (
                     <SelectItem key={opt.id} value={opt.id}>
                       {opt.name}
                     </SelectItem>
@@ -669,22 +994,75 @@ export function StepDetails() {
             </div>
           )}
 
-          {/* SERVICOS: Tipo de Serviço */}
+          {/* FECHAMENTOS: Tipo e Sistema */}
+          {category === 'FECHAMENTOS' && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Tipo de Fechamento</label>
+                <Select value={closingType} onValueChange={setClosingType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CLOSING_TYPES.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Sistema de Fechamento</label>
+                <Select value={closingSystem} onValueChange={setClosingSystem}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o sistema" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CLOSING_SYSTEMS.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+
+          {/* SERVICOS: Tipo de Serviço + Urgência */}
           {category === 'SERVICOS' && (
-            <div>
-              <label className="text-theme-muted mb-1 block text-sm">Tipo de Servico</label>
-              <Select value={model} onValueChange={setModel}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o servico" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SERVICE_TYPES.map((opt) => (
-                    <SelectItem key={opt.id} value={opt.id}>
-                      {opt.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Tipo de Servico</label>
+                <Select value={model} onValueChange={setModel}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o servico" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SERVICE_TYPES.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">Urgência</label>
+                <Select value={serviceUrgency} onValueChange={setServiceUrgency}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SERVICE_URGENCY.map((opt) => (
+                      <SelectItem key={opt.id} value={opt.id}>
+                        {opt.name} - {opt.description}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           )}
 
