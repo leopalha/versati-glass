@@ -20,12 +20,14 @@
 - SEO otimizado
 - Animações suaves (Framer Motion)
 
-### 💬 WhatsApp Bot Inteligente
+### 💬 WhatsApp Bot Inteligente ✅
 
+- ✅ **Configurado**: Twilio +1 820-732-0393
 - IA Conversacional (Groq/Llama - FREE!)
 - Atendimento 24/7
 - Qualificação automática de leads
 - Integração com CRM
+- 📱 [Guia Rápido](WHATSAPP_QUICKSTART.md) | [Setup Completo](docs/WHATSAPP_SETUP_GUIDE.md)
 
 ### 📋 Wizard de Orçamentos
 
@@ -71,43 +73,216 @@
 - **Analytics:** Google Analytics + Meta Pixel
 - **Testing:** Vitest + Testing Library (68 tests passing)
 
-## Início Rápido
+## 🚀 Início Rápido
+
+### Pré-requisitos
+
+- Node.js 20+ instalado
+- pnpm 8+ instalado (`npm install -g pnpm`)
+- PostgreSQL 14+ rodando (local ou Railway)
+- Git configurado
+
+### Instalação
 
 ```bash
-# Instalar dependências
+# 1. Clonar repositório
+git clone https://github.com/versatiglass/platform.git
+cd platform
+
+# 2. Instalar dependências
 pnpm install
 
-# Configurar env
+# 3. Configurar variáveis de ambiente
 cp .env.example .env.local
-# Editar .env.local com suas credenciais
 
-# Rodar migrações
-pnpm db:push
-
-# Seed (opcional)
-pnpm db:seed
-
-# Iniciar desenvolvimento
-pnpm dev
+# Edite .env.local com suas credenciais:
+# - DATABASE_URL (PostgreSQL)
+# - NEXTAUTH_SECRET (gere com: openssl rand -base64 32)
+# - API keys (Groq, OpenAI, Stripe, etc)
 ```
 
-Acessar: http://localhost:3000
-
-## Comandos Disponíveis
+### Setup do Banco de Dados
 
 ```bash
-pnpm dev          # Desenvolvimento
-pnpm build        # Build produção
-pnpm start        # Produção
-pnpm lint         # ESLint
-pnpm type-check   # TypeScript
+# 1. Criar banco PostgreSQL
+createdb versatiglass
 
-# Banco de dados
-pnpm db:push      # Sincronizar schema
-pnpm db:migrate   # Migrar
-pnpm db:generate  # Gerar Prisma Client
-pnpm db:studio    # Prisma Studio
-pnpm db:seed      # Popular banco
+# 2. Sincronizar schema Prisma (cria tabelas + 18 indexes)
+pnpm db:push
+
+# 3. Popular com dados de teste (13 produtos + usuários)
+pnpm db:seed:test
+
+# 4. (Opcional) Abrir Prisma Studio para visualizar dados
+pnpm db:studio
+```
+
+### Rodar em Desenvolvimento
+
+```bash
+# Iniciar servidor de desenvolvimento
+pnpm dev
+
+# Acessar:
+# - Frontend: http://localhost:3000
+# - Admin: http://localhost:3000/admin
+# - Portal: http://localhost:3000/portal
+# - API Health: http://localhost:3000/api/health
+```
+
+### Build de Produção
+
+```bash
+# 1. Validar tipos TypeScript
+pnpm type-check
+
+# 2. Build otimizado
+pnpm build
+
+# 3. Iniciar em produção
+pnpm start
+```
+
+---
+
+## 📱 WhatsApp Integration
+
+### ✅ Status: Configurado e Testado
+
+**Número**: +1 820-732-0393 (Twilio)
+**Credenciais**: ✅ Configuradas
+**Código**: ✅ Implementado
+
+### 🚀 Teste Rápido (5 minutos)
+
+```bash
+# 1. Testar conexão Twilio
+node scripts/test-twilio-whatsapp.mjs
+
+# 2. No WhatsApp do celular:
+# - Adicione: +1 415 523 8886
+# - Envie: "join electricity-about"
+# - Teste: "Quero um orçamento de box"
+
+# 3. Inicie o servidor e veja a conversa:
+pnpm dev
+# Acesse: http://localhost:3000/admin/conversas-ia
+```
+
+### 📚 Documentação
+
+- **[Guia Rápido (1 página)](WHATSAPP_QUICKSTART.md)** - Comece aqui!
+- **[Setup Completo](docs/WHATSAPP_SETUP_GUIDE.md)** - Documentação detalhada
+- **[Status Report](docs/WHATSAPP_STATUS.md)** - Status da integração
+
+### 🔑 Como Funciona
+
+| Cliente        | →   | Sistema     | →   | Admin        |
+| -------------- | --- | ----------- | --- | ------------ |
+| Envia WhatsApp | →   | IA responde | →   | Vê no painel |
+
+**Você NÃO precisa de app no celular!** Gerencia tudo pelo painel web.
+
+---
+
+## 🧪 Testes
+
+### Testes E2E (Playwright)
+
+```bash
+# Pré-requisito: Banco de dados configurado e seedado
+pnpm db:seed:test
+
+# Rodar todos os testes E2E
+pnpm test:e2e
+
+# Rodar em modo UI (debug)
+pnpm test:e2e:ui
+
+# Rodar com browser visível
+pnpm test:e2e:headed
+
+# Ver relatório de testes
+pnpm test:e2e:report
+```
+
+**Cobertura E2E:**
+
+- ✅ Homepage e navegação
+- ✅ Fluxo de cotação (7 steps)
+- ✅ Autenticação (login/registro)
+- ✅ Portal do cliente
+- ✅ Admin dashboard
+
+### Testes Unitários (Vitest)
+
+```bash
+# Rodar todos os testes unitários
+pnpm test
+
+# Rodar apenas uma vez (CI mode)
+pnpm test:run
+
+# Ver cobertura de código
+pnpm test:coverage
+```
+
+### Validação Completa
+
+```bash
+# Script completo de validação (CI)
+pnpm type-check && pnpm lint && pnpm test:run && pnpm build
+```
+
+---
+
+## 📦 Comandos Disponíveis
+
+### Desenvolvimento
+
+```bash
+pnpm dev          # Servidor de desenvolvimento (http://localhost:3000)
+pnpm build        # Build otimizado de produção
+pnpm start        # Rodar build de produção
+pnpm lint         # ESLint (verificar código)
+pnpm lint:fix     # ESLint + auto-fix
+pnpm type-check   # TypeScript type checking
+```
+
+### Banco de Dados
+
+```bash
+pnpm db:push       # Sincronizar schema (dev - sem migrations)
+pnpm db:migrate    # Criar migration (prod)
+pnpm db:generate   # Gerar Prisma Client
+pnpm db:studio     # Abrir Prisma Studio (GUI)
+pnpm db:seed       # Seed produção (dados reais)
+pnpm db:seed:test  # Seed test (13 produtos + users)
+pnpm db:reset      # CUIDADO: Apaga tudo e reseeda
+```
+
+### Testes
+
+```bash
+pnpm test              # Unit tests (watch mode)
+pnpm test:run          # Unit tests (run once)
+pnpm test:coverage     # Unit tests + coverage report
+pnpm test:e2e          # E2E tests (headless)
+pnpm test:e2e:ui       # E2E tests (UI mode - debug)
+pnpm test:e2e:headed   # E2E tests (browser visível)
+pnpm test:e2e:report   # Ver relatório HTML dos testes
+```
+
+### Git Hooks (Husky)
+
+```bash
+# Executam automaticamente antes de commits:
+pnpm prepare      # Instalar hooks (roda no postinstall)
+
+# Pre-commit hook roda:
+# - ESLint --fix
+# - Prettier --write
+# - TypeScript check (arquivos staged)
 ```
 
 ## Estrutura do Projeto
