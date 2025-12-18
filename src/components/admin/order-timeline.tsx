@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import { formatDateTime } from '@/lib/utils'
 import { Check, Clock, Package, Truck, Wrench, X, AlertCircle } from 'lucide-react'
 import type { OrderStatus } from '@prisma/client'
@@ -17,7 +18,10 @@ interface OrderTimelineProps {
   currentStatus: OrderStatus
 }
 
-export function OrderTimeline({ entries, currentStatus }: OrderTimelineProps) {
+export const OrderTimeline = memo(function OrderTimeline({
+  entries,
+  currentStatus,
+}: OrderTimelineProps) {
   const getStatusIcon = (status: string) => {
     const iconClass = 'h-5 w-5'
 
@@ -109,4 +113,4 @@ export function OrderTimeline({ entries, currentStatus }: OrderTimelineProps) {
       })}
     </div>
   )
-}
+})

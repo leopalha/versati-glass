@@ -1,4 +1,5 @@
 import Groq from 'groq-sdk'
+import { logger } from '@/lib/logger'
 
 let groqInstance: Groq | null = null
 
@@ -158,15 +159,51 @@ ${customerContext.lastProduct ? `- Ultimo produto: ${customerContext.lastProduct
       extractedData,
     }
   } catch (error) {
-    console.error('Groq API error:', error)
+    logger.error('Groq API error:', error)
 
-    // Fallback response
+    // Determine appropriate fallback based on user message
+    const fallbackMessage = getFallbackResponse(userMessage)
+
     return {
-      message:
-        'Desculpe, estou com uma pequena dificuldade tecnica. Pode repetir sua mensagem? Se preferir, posso transferir para um atendente humano.',
+      message: fallbackMessage,
       shouldEscalate: false,
     }
   }
+}
+
+// Fallback responses when AI is unavailable
+function getFallbackResponse(userMessage: string): string {
+  const lowerMessage = userMessage.toLowerCase()
+
+  // Greeting
+  if (lowerMessage.match(/^(oi|ola|bom dia|boa tarde|boa noite|opa|eae|hey|hi)/)) {
+    const hour = new Date().getHours()
+    const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'
+    return `${greeting}! 😊 Sou a Ana, assistente da Versati Glass. Estamos com uma pequena instabilidade no sistema, mas posso ajudar! Para orcamentos, acesse nosso site ou fale com um atendente pelo (21) 98253-6229.`
+  }
+
+  // Price/Quote inquiry
+  if (lowerMessage.match(/(preco|valor|quanto custa|orcamento|custo)/)) {
+    return `Para orcamentos precisos, oferecemos visita tecnica gratuita! 📋\n\nVoce pode:\n1. Solicitar pelo site: versatiglass.com.br/orcamento\n2. Ligar: (21) 98253-6229\n\nAssim garantimos o melhor preco para voce!`
+  }
+
+  // Product inquiry
+  if (lowerMessage.match(/(box|banheiro|espelho|vidro|porta|janela)/)) {
+    return `Trabalhamos com:\n\n• Box para banheiro (correr, abrir, Elegance)\n• Espelhos (comum, LED, bisote)\n• Vidros temperados\n• Portas e janelas\n\nPara detalhes e orcamentos, acesse versatiglass.com.br ou ligue (21) 98253-6229 📞`
+  }
+
+  // Schedule/Visit
+  if (lowerMessage.match(/(agendar|visita|marcar|horario)/)) {
+    return `Para agendar uma visita tecnica gratuita:\n\n📞 Ligue: (21) 98253-6229\n🌐 Acesse: versatiglass.com.br/orcamento\n\nAtendemos de Seg-Sex 8h-18h e Sab 8h-12h!`
+  }
+
+  // Location/Service area
+  if (lowerMessage.match(/(atende|regiao|zona|bairro|onde|local)/)) {
+    return `Atendemos todo Rio de Janeiro e Grande Rio:\n\n• Zona Sul, Norte, Oeste e Centro\n• Barra da Tijuca\n• Niteroi e regiao\n\nFale conosco: (21) 98253-6229`
+  }
+
+  // Default fallback
+  return `Desculpe, estou com uma pequena dificuldade tecnica no momento. 😊\n\nPara atendimento imediato:\n📞 (21) 98253-6229\n🌐 versatiglass.com.br\n\nOu aguarde que um atendente entrara em contato!`
 }
 
 // Helper to extract structured data from messages
@@ -177,17 +214,13 @@ function extractDataFromMessage(
   const data: AIResponse['extractedData'] = {}
 
   // Extract phone number
-  const phoneMatch = userMessage.match(
-    /(?:\+?55\s?)?(?:\(?0?\d{2}\)?[\s.-]?)?\d{4,5}[\s.-]?\d{4}/
-  )
+  const phoneMatch = userMessage.match(/(?:\+?55\s?)?(?:\(?0?\d{2}\)?[\s.-]?)?\d{4,5}[\s.-]?\d{4}/)
   if (phoneMatch) {
     data.phone = phoneMatch[0].replace(/\D/g, '')
   }
 
   // Extract email
-  const emailMatch = userMessage.match(
-    /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/
-  )
+  const emailMatch = userMessage.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)
   if (emailMatch) {
     data.email = emailMatch[0]
   }

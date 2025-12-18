@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
+import { logger } from '@/lib/logger'
 
 /**
  * GET /api/users?email=...
@@ -42,7 +43,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ user })
   } catch (error) {
-    console.error('[USERS_GET_ERROR]', error)
+    logger.error('[USERS_GET_ERROR]', error)
     return NextResponse.json({ error: 'Erro ao buscar usuário' }, { status: 500 })
   }
 }

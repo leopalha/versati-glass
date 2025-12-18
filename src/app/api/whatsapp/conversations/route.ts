@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 // Get all conversations (for admin dashboard)
 export async function GET(request: NextRequest) {
@@ -83,10 +84,7 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Get conversations error:', error)
-    return NextResponse.json(
-      { error: 'Failed to get conversations' },
-      { status: 500 }
-    )
+    logger.error('Get conversations error:', error)
+    return NextResponse.json({ error: 'Failed to get conversations' }, { status: 500 })
   }
 }

@@ -1,9 +1,10 @@
 'use client'
 
+import { logger, getErrorMessage } from '@/lib/logger'
 import { Suspense, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { signIn } from 'next-auth/react'
+import { signIn, getSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -28,7 +29,8 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
-  const callbackUrl = searchParams.get('callbackUrl') || '/portal'
+  // Get callbackUrl from query params (used when redirected from protected route)
+  const callbackUrlParam = searchParams.get('callbackUrl')
 
   const {
     register,
@@ -36,40 +38,102 @@ function LoginForm() {
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    mode: 'onBlur',
   })
+
+  // Helper function to get redirect URL based on user role
+  const getRedirectUrl = (role: string, callbackUrl?: string | null): string => {
+    // If there's a specific callbackUrl (user was redirected from a protected page), use it
+    if (callbackUrl && callbackUrl !== '/portal' && callbackUrl !== '/admin') {
+      return callbackUrl
+    }
+
+    // Otherwise, redirect based on role
+    if (role === 'ADMIN' || role === 'STAFF') {
+      return '/admin'
+    }
+    return '/portal'
+  }
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
 
     try {
+      logger.debug('[LOGIN] Attempting login with:', { email: data.email })
+
+      // Validate credentials first
       const result = await signIn('credentials', {
         email: data.email,
         password: data.password,
         redirect: false,
       })
 
-      if (result?.error) {
+      logger.debug('[LOGIN] SignIn result:', result)
+
+      if (result?.error && result?.error !== 'Configuration') {
+        logger.error('[LOGIN] SignIn error:', result.error)
         toast({
           variant: 'error',
           title: 'Erro ao entrar',
           description: 'Email ou senha incorretos',
         })
-      } else {
-        toast({
-          variant: 'success',
-          title: 'Bem-vindo!',
-          description: 'Login realizado com sucesso',
-        })
-        router.push(callbackUrl)
-        router.refresh()
+        setIsLoading(false)
+        return
       }
-    } catch {
+
+      if (result?.ok) {
+        // Login successful - poll for session before redirecting
+        logger.debug('[LOGIN] Login successful, polling for session...')
+
+        let attempts = 0
+        const maxAttempts = 10
+        const pollInterval = 300
+
+        const checkSession = async (): Promise<void> => {
+          attempts++
+          logger.debug(`[LOGIN] Checking session (attempt ${attempts}/${maxAttempts})`)
+
+          const session = await getSession()
+
+          if (session?.user) {
+            // Get the correct redirect URL based on user role
+            const redirectUrl = getRedirectUrl(session.user.role, callbackUrlParam)
+            logger.debug(
+              `[LOGIN] Session confirmed, user role: ${session.user.role}, redirecting to: ${redirectUrl}`
+            )
+
+            toast({
+              variant: 'success',
+              title: 'Login realizado!',
+              description: `Bem-vindo(a), ${session.user.name || 'usuário'}!`,
+            })
+
+            // Small delay to show toast before redirect
+            setTimeout(() => {
+              window.location.href = redirectUrl
+            }, 500)
+            return
+          }
+
+          if (attempts < maxAttempts) {
+            setTimeout(() => checkSession(), pollInterval)
+          } else {
+            logger.error('[LOGIN] Session polling timeout, forcing redirect to /portal')
+            window.location.href = '/portal'
+          }
+        }
+
+        // Start polling
+        await checkSession()
+      }
+    } catch (error) {
+      logger.error('[LOGIN] Login failed:', error)
+
       toast({
         variant: 'error',
         title: 'Erro',
         description: 'Ocorreu um erro ao fazer login',
       })
-    } finally {
       setIsLoading(false)
     }
   }
@@ -77,8 +141,15 @@ function LoginForm() {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
     try {
-      await signIn('google', { callbackUrl })
-    } catch {
+      // For Google OAuth, use callbackUrl if provided, otherwise redirect will be handled by middleware
+      // based on user role after OAuth completes
+      const redirectUrl = callbackUrlParam || '/'
+      await signIn('google', { callbackUrl: redirectUrl })
+    } catch (error) {
+      // ARCH-P1-2: Standardized error handling
+      const errorMsg = getErrorMessage(error)
+      logger.error('[LOGIN] Google sign-in failed:', { error: errorMsg })
+
       toast({
         variant: 'error',
         title: 'Erro',
@@ -149,11 +220,13 @@ function LoginForm() {
             type="email"
             placeholder="Digite seu email"
             aria-label="Email"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'email-error' : undefined}
             {...register('email')}
             disabled={isLoading}
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-error" role="alert">
+            <p id="email-error" className="mt-1 text-sm text-error" role="alert">
               {errors.email.message}
             </p>
           )}
@@ -168,6 +241,8 @@ function LoginForm() {
             type={showPassword ? 'text' : 'password'}
             placeholder="Digite sua senha"
             aria-label="Senha"
+            aria-invalid={!!errors.password}
+            aria-describedby={errors.password ? 'password-error' : undefined}
             {...register('password')}
             disabled={isLoading}
           />
@@ -181,7 +256,7 @@ function LoginForm() {
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
           {errors.password && (
-            <p className="mt-1 text-sm text-error" role="alert">
+            <p id="password-error" className="mt-1 text-sm text-error" role="alert">
               {errors.password.message}
             </p>
           )}

@@ -1,6 +1,7 @@
 'use client'
 
-import { AlertTriangle, Bell, CheckCircle, Info, XCircle } from 'lucide-react'
+import { useMemo } from 'react'
+import { AlertTriangle, Bell, CheckCircle, Info, XCircle, LucideIcon } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -26,9 +27,10 @@ interface AlertsPanelProps {
   onDismiss?: (alertId: string) => void
 }
 
+// ARCH-P1-3: Replace 'any' with proper type
 const alertConfig: Record<
   AlertLevel,
-  { icon: any; bgColor: string; textColor: string; borderColor: string }
+  { icon: LucideIcon; bgColor: string; textColor: string; borderColor: string }
 > = {
   info: {
     icon: Info,
@@ -57,13 +59,15 @@ const alertConfig: Record<
 }
 
 export function AlertsPanel({ alerts, onDismiss }: AlertsPanelProps) {
-  const sortedAlerts = [...alerts].sort((a, b) => {
-    const levelOrder = { error: 0, warning: 1, info: 2, success: 3 }
-    return levelOrder[a.level] - levelOrder[b.level]
-  })
+  const sortedAlerts = useMemo(() => {
+    return [...alerts].sort((a, b) => {
+      const levelOrder = { error: 0, warning: 1, info: 2, success: 3 }
+      return levelOrder[a.level] - levelOrder[b.level]
+    })
+  }, [alerts])
 
-  const criticalCount = alerts.filter((a) => a.level === 'error').length
-  const warningCount = alerts.filter((a) => a.level === 'warning').length
+  const criticalCount = useMemo(() => alerts.filter((a) => a.level === 'error').length, [alerts])
+  const warningCount = useMemo(() => alerts.filter((a) => a.level === 'warning').length, [alerts])
 
   return (
     <Card className="bg-theme-secondary border-theme-default p-6">

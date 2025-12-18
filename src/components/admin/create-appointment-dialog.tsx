@@ -15,6 +15,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog'
+import { logger } from '@/lib/logger'
 
 interface CreateAppointmentDialogProps {
   variant?: 'default' | 'outline' | 'ghost'
@@ -69,7 +70,7 @@ export function CreateAppointmentDialog({
         setAvailableSlots(data.slots || [])
       }
     } catch (err) {
-      console.error('Error loading slots:', err)
+      logger.error('Error loading slots:', err)
     } finally {
       setLoadingSlots(false)
     }

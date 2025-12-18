@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
+import { logger } from '@/lib/logger'
 
 const createDocumentSchema = z.object({
   orderId: z.string().optional(),
@@ -87,7 +88,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ documents })
   } catch (error) {
-    console.error('Erro ao buscar documentos:', error)
+    logger.error('Erro ao buscar documentos:', error)
     return NextResponse.json({ error: 'Erro ao buscar documentos' }, { status: 500 })
   }
 }
@@ -186,7 +187,7 @@ export async function POST(request: Request) {
       { status: 201 }
     )
   } catch (error) {
-    console.error('Erro ao fazer upload:', error)
+    logger.error('Erro ao fazer upload:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 })

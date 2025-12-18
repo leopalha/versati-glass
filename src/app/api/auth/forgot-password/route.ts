@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, generatePasswordResetHtml } from '@/services/email'
 import crypto from 'crypto'
+import { rateLimitSync as rateLimit, getClientIp, RATE_LIMITS } from '@/lib/rate-limit'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/auth/forgot-password
@@ -9,6 +11,19 @@ import crypto from 'crypto'
  */
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting - stricter for password reset
+    const clientIp = getClientIp(request)
+    const rateLimitResult = rateLimit(`forgot-password:${clientIp}`, RATE_LIMITS.passwordReset)
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        {
+          error: `Muitas tentativas. Tente novamente em ${Math.ceil(rateLimitResult.resetIn / 60)} minutos.`,
+        },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const { email } = body
 
@@ -47,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     // URL de reset
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-    const resetUrl = `${baseUrl}/resetar-senha?token=${resetToken}`
+    const resetUrl = `${baseUrl}/redefinir-senha?token=${resetToken}`
 
     // Enviar email
     const emailResult = await sendEmail({
@@ -58,7 +73,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (!emailResult.success) {
-      console.error('Failed to send password reset email:', emailResult.error)
+      logger.error('Failed to send password reset email:', emailResult.error)
       return NextResponse.json({ error: 'Failed to send email' }, { status: 500 })
     }
 
@@ -66,7 +81,7 @@ export async function POST(request: NextRequest) {
       message: 'If this email exists, a password reset link has been sent.',
     })
   } catch (error) {
-    console.error('Forgot password error:', error)
+    logger.error('Forgot password error:', error)
     return NextResponse.json({ error: 'Failed to process request' }, { status: 500 })
   }
 }

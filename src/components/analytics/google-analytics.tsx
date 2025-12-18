@@ -1,12 +1,15 @@
 'use client'
 
+import { memo } from 'react'
 import Script from 'next/script'
 
 interface GoogleAnalyticsProps {
   measurementId: string
 }
 
-export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
+export const GoogleAnalytics = memo(function GoogleAnalytics({
+  measurementId,
+}: GoogleAnalyticsProps) {
   if (!measurementId) {
     return null
   }
@@ -29,4 +32,4 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
       </Script>
     </>
   )
-}
+})

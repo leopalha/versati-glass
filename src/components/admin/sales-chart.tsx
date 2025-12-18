@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import {
   LineChart,
   Line,
@@ -24,7 +24,7 @@ interface SalesChartProps {
   period?: 'week' | 'month' | 'year'
 }
 
-export function SalesChart({ data, period = 'month' }: SalesChartProps) {
+export const SalesChart = memo(function SalesChart({ data, period = 'month' }: SalesChartProps) {
   const chartData = useMemo(() => {
     return data.map((item) => ({
       ...item,
@@ -154,4 +154,4 @@ export function SalesChart({ data, period = 'month' }: SalesChartProps) {
       </ResponsiveContainer>
     </Card>
   )
-}
+})

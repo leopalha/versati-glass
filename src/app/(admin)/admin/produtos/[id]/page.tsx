@@ -26,8 +26,17 @@ async function getProduct(id: string) {
       | 'BOX'
       | 'ESPELHOS'
       | 'VIDROS'
-      | 'PORTAS_JANELAS'
+      | 'PORTAS'
+      | 'JANELAS'
+      | 'GUARDA_CORPO'
+      | 'CORTINAS_VIDRO'
+      | 'PERGOLADOS'
+      | 'TAMPOS_PRATELEIRAS'
+      | 'DIVISORIAS'
       | 'FECHAMENTOS'
+      | 'FERRAGENS'
+      | 'KITS'
+      | 'SERVICOS'
       | 'OUTROS',
     subcategory: product.subcategory ?? undefined,
     images: product.images,

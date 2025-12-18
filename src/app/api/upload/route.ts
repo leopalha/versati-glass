@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/upload
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
       type: file.type,
     })
   } catch (error) {
-    console.error('[UPLOAD_ERROR]', error)
+    logger.error('[UPLOAD_ERROR]', error)
     return NextResponse.json({ error: 'Erro ao fazer upload' }, { status: 500 })
   }
 }

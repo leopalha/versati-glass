@@ -1,12 +1,13 @@
 'use client'
 
+import { memo } from 'react'
 import Script from 'next/script'
 
 interface MetaPixelProps {
   pixelId: string
 }
 
-export function MetaPixel({ pixelId }: MetaPixelProps) {
+export const MetaPixel = memo(function MetaPixel({ pixelId }: MetaPixelProps) {
   if (!pixelId) {
     return null
   }
@@ -38,4 +39,4 @@ export function MetaPixel({ pixelId }: MetaPixelProps) {
       </noscript>
     </>
   )
-}
+})

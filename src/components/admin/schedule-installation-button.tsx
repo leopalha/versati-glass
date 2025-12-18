@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
+import { logger } from '@/lib/logger'
 
 interface ScheduleInstallationButtonProps {
   orderId: string
@@ -76,7 +77,7 @@ export function ScheduleInstallationButton({
         setAvailableSlots(data.slots || [])
       }
     } catch (err) {
-      console.error('Error loading slots:', err)
+      logger.error('Error loading slots:', err)
     } finally {
       setLoadingSlots(false)
     }

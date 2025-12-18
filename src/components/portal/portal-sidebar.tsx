@@ -15,7 +15,7 @@ import {
   ChevronLeft,
   Menu,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 
 const menuItems = [
@@ -56,15 +56,27 @@ export function PortalSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
-  const handleSignOut = () => {
+  const handleSignOut = useCallback(() => {
     signOut({ callbackUrl: '/' })
-  }
+  }, [])
+
+  const toggleCollapse = useCallback(() => {
+    setIsCollapsed((prev) => !prev)
+  }, [])
+
+  const openMobile = useCallback(() => {
+    setIsMobileOpen(true)
+  }, [])
+
+  const closeMobile = useCallback(() => {
+    setIsMobileOpen(false)
+  }, [])
 
   return (
     <>
       {/* Mobile menu button */}
       <button
-        onClick={() => setIsMobileOpen(true)}
+        onClick={openMobile}
         className="bg-theme-elevated fixed left-4 top-4 z-40 rounded-lg p-2 lg:hidden"
       >
         <Menu className="h-5 w-5 text-white" />
@@ -72,10 +84,7 @@ export function PortalSidebar() {
 
       {/* Mobile overlay */}
       {isMobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={() => setIsMobileOpen(false)}
-        />
+        <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={closeMobile} />
       )}
 
       {/* Sidebar */}
@@ -97,7 +106,7 @@ export function PortalSidebar() {
             </Link>
           )}
           <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={toggleCollapse}
             className="text-theme-muted hover:bg-theme-elevated hover:text-theme-primary hidden rounded-lg p-2 lg:block"
           >
             <ChevronLeft
@@ -105,7 +114,7 @@ export function PortalSidebar() {
             />
           </button>
           <button
-            onClick={() => setIsMobileOpen(false)}
+            onClick={closeMobile}
             className="text-theme-muted hover:bg-theme-elevated hover:text-theme-primary rounded-lg p-2 lg:hidden"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -122,7 +131,7 @@ export function PortalSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setIsMobileOpen(false)}
+                onClick={closeMobile}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                   isActive

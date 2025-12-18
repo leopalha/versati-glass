@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { sendTemplateMessage } from '@/services/whatsapp'
 import { startConversation, sendHumanResponse } from '@/services/conversation'
+import { logger } from '@/lib/logger'
 
 // Send a new WhatsApp message
 export async function POST(request: NextRequest) {
@@ -22,19 +23,13 @@ export async function POST(request: NextRequest) {
     const { to, message, conversationId, template, templateVariables } = body
 
     if (!to) {
-      return NextResponse.json(
-        { error: 'Phone number (to) is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Phone number (to) is required' }, { status: 400 })
     }
 
     // If it's a template message
     if (template) {
       if (!templateVariables) {
-        return NextResponse.json(
-          { error: 'Template variables are required' },
-          { status: 400 }
-        )
+        return NextResponse.json({ error: 'Template variables are required' }, { status: 400 })
       }
 
       const result = await sendTemplateMessage(to, template, templateVariables)
@@ -43,19 +38,12 @@ export async function POST(request: NextRequest) {
 
     // Regular message
     if (!message) {
-      return NextResponse.json(
-        { error: 'Message is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Message is required' }, { status: 400 })
     }
 
     // If conversation exists, use human response
     if (conversationId) {
-      const result = await sendHumanResponse(
-        conversationId,
-        message,
-        session.user.id
-      )
+      const result = await sendHumanResponse(conversationId, message, session.user.id)
       return NextResponse.json(result)
     }
 
@@ -63,10 +51,7 @@ export async function POST(request: NextRequest) {
     const conversation = await startConversation(to, message, session.user.id)
 
     if (!conversation) {
-      return NextResponse.json(
-        { error: 'Failed to create conversation' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: 'Failed to create conversation' }, { status: 500 })
     }
 
     return NextResponse.json({
@@ -74,7 +59,7 @@ export async function POST(request: NextRequest) {
       conversationId: conversation.id,
     })
   } catch (error) {
-    console.error('Send message error:', error)
+    logger.error('Send message error:', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to send message' },
       { status: 500 }

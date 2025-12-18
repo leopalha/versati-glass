@@ -1,24 +1,24 @@
 'use client'
 
+import { memo } from 'react'
 import { MessageCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { CONTACT } from '@/lib/constants'
 
 interface WhatsAppButtonProps {
   className?: string
 }
 
-const WHATSAPP_NUMBER = '+5521982536229'
 const DEFAULT_MESSAGE = 'Olá! Gostaria de fazer um orçamento.'
 
-export function WhatsAppButton({ className }: WhatsAppButtonProps) {
-  const handleClick = () => {
-    const url = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}?text=${encodeURIComponent(DEFAULT_MESSAGE)}`
-    window.open(url, '_blank')
-  }
+export const WhatsAppButton = memo(function WhatsAppButton({ className }: WhatsAppButtonProps) {
+  const url = `https://wa.me/${CONTACT.phoneWhatsApp}?text=${encodeURIComponent(DEFAULT_MESSAGE)}`
 
   return (
-    <button
-      onClick={handleClick}
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
       className={cn(
         'fixed bottom-6 right-6 z-50',
         'flex items-center justify-center',
@@ -28,9 +28,10 @@ export function WhatsAppButton({ className }: WhatsAppButtonProps) {
         'animate-pulse',
         className
       )}
-      aria-label="Falar no WhatsApp"
+      aria-label="WhatsApp - Fale conosco"
+      title="Fale conosco no WhatsApp"
     >
       <MessageCircle className="h-6 w-6" />
-    </button>
+    </a>
   )
-}
+})

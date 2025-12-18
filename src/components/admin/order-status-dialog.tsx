@@ -23,6 +23,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import type { OrderStatus } from '@prisma/client'
+import { logger } from '@/lib/logger'
 
 interface OrderStatusDialogProps {
   orderId: string
@@ -100,7 +101,7 @@ export function OrderStatusDialog({ orderId, currentStatus, children }: OrderSta
       setOpen(false)
       router.refresh()
     } catch (error) {
-      console.error('Error updating status:', error)
+      logger.error('Error updating status:', error)
       alert(error instanceof Error ? error.message : 'Erro ao atualizar status')
     } finally {
       setIsLoading(false)

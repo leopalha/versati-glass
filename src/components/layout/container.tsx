@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { cn } from '@/lib/utils'
 
 interface ContainerProps {
@@ -14,10 +15,14 @@ const sizeClasses = {
   full: 'max-w-full',
 }
 
-export function Container({ children, className, size = 'lg' }: ContainerProps) {
+export const Container = memo(function Container({
+  children,
+  className,
+  size = 'lg',
+}: ContainerProps) {
   return (
     <div className={cn('mx-auto w-full px-4 sm:px-6 lg:px-8', sizeClasses[size], className)}>
       {children}
     </div>
   )
-}
+})

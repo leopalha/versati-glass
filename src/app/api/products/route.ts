@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth'
 import { slugify } from '@/lib/utils'
 import { createProductSchema, productQuerySchema } from '@/lib/validations/product'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 export async function GET(request: Request) {
   try {
@@ -12,17 +13,48 @@ export async function GET(request: Request) {
     const featured = searchParams.get('featured')
     const active = searchParams.get('active')
 
+    // Importar tipo ProductCategory do Prisma Client
+    type ProductCategory =
+      | 'BOX'
+      | 'ESPELHOS'
+      | 'VIDROS'
+      | 'PORTAS'
+      | 'JANELAS'
+      | 'GUARDA_CORPO'
+      | 'CORTINAS_VIDRO'
+      | 'PERGOLADOS'
+      | 'TAMPOS_PRATELEIRAS'
+      | 'DIVISORIAS'
+      | 'FECHAMENTOS'
+      | 'FERRAGENS'
+      | 'KITS'
+      | 'SERVICOS'
+      | 'OUTROS'
+
+    const validCategories: ProductCategory[] = [
+      'BOX',
+      'ESPELHOS',
+      'VIDROS',
+      'PORTAS',
+      'JANELAS',
+      'GUARDA_CORPO',
+      'CORTINAS_VIDRO',
+      'PERGOLADOS',
+      'TAMPOS_PRATELEIRAS',
+      'DIVISORIAS',
+      'FECHAMENTOS',
+      'FERRAGENS',
+      'KITS',
+      'SERVICOS',
+      'OUTROS',
+    ]
+
     const products = await prisma.product.findMany({
       where: {
-        ...(category && {
-          category: category as
-            | 'BOX'
-            | 'ESPELHOS'
-            | 'VIDROS'
-            | 'PORTAS_JANELAS'
-            | 'FECHAMENTOS'
-            | 'OUTROS',
-        }),
+        ...(category &&
+          validCategories.includes(category as ProductCategory) && {
+            category: category as ProductCategory,
+          }),
         ...(featured === 'true' && { isFeatured: true }),
         ...(active !== 'false' && { isActive: true }),
       },
@@ -61,7 +93,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(serializedProducts)
   } catch (error) {
-    console.error('Error fetching products:', error)
+    logger.error('Error fetching products:', error)
     return NextResponse.json({ error: 'Erro ao buscar produtos' }, { status: 500 })
   }
 }
@@ -120,7 +152,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(serializedProduct, { status: 201 })
   } catch (error) {
-    console.error('Error creating product:', error)
+    logger.error('Error creating product:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 })

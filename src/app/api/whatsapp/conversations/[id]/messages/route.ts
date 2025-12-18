@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { sendHumanResponse } from '@/services/conversation'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -45,11 +46,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({ messages })
   } catch (error) {
-    console.error('Get messages error:', error)
-    return NextResponse.json(
-      { error: 'Failed to get messages' },
-      { status: 500 }
-    )
+    logger.error('Get messages error:', error)
+    return NextResponse.json({ error: 'Failed to get messages' }, { status: 500 })
   }
 }
 
@@ -71,10 +69,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const { message } = body
 
     if (!message || !message.trim()) {
-      return NextResponse.json(
-        { error: 'Message is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Message is required' }, { status: 400 })
     }
 
     // Verify conversation exists
@@ -83,10 +78,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     })
 
     if (!conversation) {
-      return NextResponse.json(
-        { error: 'Conversation not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Conversation not found' }, { status: 404 })
     }
 
     // Send the message
@@ -94,7 +86,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json(result)
   } catch (error) {
-    console.error('Send message error:', error)
+    logger.error('Send message error:', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to send message' },
       { status: 500 }

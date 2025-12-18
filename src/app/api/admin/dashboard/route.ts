@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 /**
  * GET /api/admin/dashboard
@@ -275,7 +276,7 @@ export async function GET(request: NextRequest) {
       todaySchedule: todaySchedule,
     })
   } catch (error) {
-    console.error('Get dashboard stats error:', error)
+    logger.error('Get dashboard stats error:', error)
     return NextResponse.json({ error: 'Failed to get dashboard stats' }, { status: 500 })
   }
 }

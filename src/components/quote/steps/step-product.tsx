@@ -7,7 +7,9 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn, formatCurrency } from '@/lib/utils'
-import { ArrowLeft, Check } from 'lucide-react'
+import { ArrowLeft, Check, Package } from 'lucide-react'
+import { logger } from '@/lib/logger'
+import { useToast } from '@/components/ui/toast/use-toast'
 
 interface Product {
   id: string
@@ -22,46 +24,153 @@ interface Product {
   colors: string[]
 }
 
+// Nomes das categorias para exibição
+const categoryNames: Record<string, string> = {
+  BOX: 'Box para Banheiro',
+  ESPELHOS: 'Espelho',
+  VIDROS: 'Vidro',
+  PORTAS: 'Porta de Vidro',
+  JANELAS: 'Janela de Vidro',
+  GUARDA_CORPO: 'Guarda-Corpo',
+  CORTINAS_VIDRO: 'Cortina de Vidro',
+  PERGOLADOS: 'Pergolado/Cobertura',
+  TAMPOS_PRATELEIRAS: 'Tampo/Prateleira',
+  DIVISORIAS: 'Divisoria',
+  FECHAMENTOS: 'Fechamento em Vidro',
+  FERRAGENS: 'Ferragem/Acessorio',
+  KITS: 'Kit Completo',
+  SERVICOS: 'Servico',
+  OUTROS: 'Outro',
+}
+
 export function StepProduct() {
-  const { items, updateItem, nextStep, prevStep } = useQuoteStore()
+  const {
+    currentItem,
+    updateCurrentItem,
+    nextStep,
+    prevStep,
+    cancelEditItem,
+    editingIndex,
+    selectedProducts,
+    toggleProductSelection,
+    clearSelectedProducts,
+    selectedCategories,
+    setProductsToDetail,
+  } = useQuoteStore()
+  const { toast } = useToast()
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedProduct, setSelectedProduct] = useState<string | null>(items[0]?.productId || null)
 
-  const category = items[0]?.category
+  const category = currentItem?.category
+  const isEditing = editingIndex !== null
 
+  // Fetch products from ALL selected categories
   useEffect(() => {
     const fetchProducts = async () => {
+      if (selectedCategories.length === 0) {
+        logger.warn('[STEP-PRODUCT] No categories selected')
+        setProducts([])
+        setIsLoading(false)
+        return
+      }
+
+      setIsLoading(true)
       try {
-        const response = await fetch(`/api/products?category=${category}`)
-        if (response.ok) {
-          const data = await response.json()
-          setProducts(data)
-        }
+        logger.info('[STEP-PRODUCT] Fetching products for categories:', selectedCategories)
+
+        // Fetch products from all selected categories in parallel
+        const promises = selectedCategories.map(async (cat) => {
+          logger.debug(`[STEP-PRODUCT] Fetching products for category: ${cat}`)
+          const response = await fetch(`/api/products?category=${cat}`)
+          const products = await response.json()
+          logger.debug(`[STEP-PRODUCT] Received ${products.length} products for category ${cat}`)
+          return products
+        })
+
+        const results = await Promise.all(promises)
+        const allProducts = results.flat()
+
+        logger.info(
+          `[STEP-PRODUCT] Total products fetched: ${allProducts.length} from ${selectedCategories.length} categories`,
+          {
+            byCategory: selectedCategories.map((cat, index) => ({
+              category: cat,
+              count: results[index].length,
+              productIds: results[index].map((p: Product) => p.id),
+            })),
+          }
+        )
+
+        setProducts(allProducts)
       } catch (error) {
-        console.error('Error fetching products:', error)
+        logger.error('[STEP-PRODUCT] Error fetching products:', error)
+        toast({
+          variant: 'error',
+          title: 'Erro ao carregar produtos',
+          description: 'Não foi possível carregar os produtos. Tente novamente.',
+        })
       } finally {
         setIsLoading(false)
       }
     }
 
-    if (category) {
-      fetchProducts()
-    }
-  }, [category])
+    fetchProducts()
+  }, [selectedCategories, toast])
 
   const handleSelect = (product: Product) => {
-    setSelectedProduct(product.id)
-    updateItem(0, {
-      productId: product.id,
-      productName: product.name,
-      productSlug: product.slug,
-    })
+    toggleProductSelection(product.id)
   }
 
-  const handleContinue = () => {
-    if (selectedProduct) {
-      nextStep()
+  const handleContinue = async () => {
+    // FQ.4.3: Validar que pelo menos 1 produto foi selecionado
+    if (selectedProducts.length === 0) {
+      logger.error('No products selected')
+      toast({
+        variant: 'error',
+        title: 'Nenhum produto selecionado',
+        description: 'Selecione pelo menos um produto para continuar',
+      })
+      return
+    }
+
+    // Get full product data for selected products
+    const selectedProductsData = products.filter((p) => selectedProducts.includes(p.id))
+
+    // Save products to detail queue
+    setProductsToDetail(selectedProductsData)
+
+    logger.debug(`Continuing with ${selectedProducts.length} products selected for detailing`)
+    nextStep()
+  }
+
+  const handleContinueWithoutProduct = () => {
+    if (!category) {
+      logger.error('Cannot continue without category')
+      return
+    }
+
+    // Continuar sem produto selecionado - usar categoria como nome
+    const productData = {
+      category,
+      productId: `custom-${category}`,
+      productName: categoryNames[category] || `Produto - ${category}`,
+      productSlug: category.toLowerCase(),
+    }
+
+    logger.debug('Setting currentItem with custom product:', productData)
+    updateCurrentItem(productData)
+
+    logger.debug('Calling nextStep()')
+    nextStep()
+  }
+
+  const handleBack = () => {
+    prevStep()
+  }
+
+  const handleCancel = () => {
+    if (isEditing) {
+      cancelEditItem()
     }
   }
 
@@ -94,25 +203,48 @@ export function StepProduct() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-8 text-center">
-        <h2 className="text-theme-primary font-display text-3xl font-bold">Escolha o produto</h2>
-        <p className="text-theme-muted mt-2">
-          Selecione o modelo que melhor atende suas necessidades
-        </p>
+        <h2 className="text-theme-primary font-display text-3xl font-bold">Escolha os produtos</h2>
+        <p className="text-theme-muted mt-2">Selecione um ou mais produtos para o seu orçamento</p>
+        {selectedCategories.length > 0 && (
+          <p className="mt-2 text-sm font-medium text-accent-400">
+            Mostrando produtos de:{' '}
+            {selectedCategories.map((cat) => categoryNames[cat] || cat).join(', ')}
+          </p>
+        )}
+        {products.length > 0 && (
+          <p className="text-theme-subtle mt-1 text-xs">
+            {products.length} produto(s) disponível(is)
+          </p>
+        )}
       </div>
 
       {products.length === 0 ? (
         <div className="text-center">
-          <p className="text-theme-muted">Nenhum produto disponivel nesta categoria no momento.</p>
-          <Button variant="outline" className="mt-4" onClick={prevStep}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Voltar
-          </Button>
+          <div className="bg-theme-secondary mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full">
+            <Package className="text-theme-muted h-12 w-12" />
+          </div>
+          <p className="text-theme-muted mb-4">Nenhum produto cadastrado nesta categoria ainda.</p>
+          <p className="text-theme-subtle mb-6 text-sm">
+            Voce pode continuar para informar as medidas e detalhes do seu orcamento.
+          </p>
+          <div className="flex justify-center gap-4">
+            <Button variant="outline" onClick={handleBack}>
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Voltar
+            </Button>
+            {isEditing && (
+              <Button variant="outline" onClick={handleCancel}>
+                Cancelar
+              </Button>
+            )}
+            <Button onClick={handleContinueWithoutProduct}>Continuar</Button>
+          </div>
         </div>
       ) : (
         <>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => {
-              const isSelected = selectedProduct === product.id
+              const isSelected = selectedProducts.includes(product.id)
 
               return (
                 <button
@@ -123,7 +255,7 @@ export function StepProduct() {
                   className={cn(
                     'hover:border-accent-500/50 w-full cursor-pointer overflow-hidden text-left transition-all',
                     'bg-theme-secondary border-theme-default rounded-lg border',
-                    isSelected && 'border-accent-500 ring-1 ring-accent-500'
+                    isSelected && 'border-accent-500 ring-2 ring-accent-500'
                   )}
                 >
                   <div className="relative aspect-[4/3]">
@@ -136,12 +268,12 @@ export function StepProduct() {
                       />
                     ) : (
                       <div className="bg-theme-elevated flex h-full items-center justify-center">
-                        <span className="text-theme-subtle">Sem imagem</span>
+                        <Package className="text-theme-subtle h-12 w-12" />
                       </div>
                     )}
                     {isSelected && (
-                      <div className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-accent-500">
-                        <Check className="h-5 w-5 text-neutral-900" />
+                      <div className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-accent-500 ring-2 ring-white">
+                        <Check className="h-5 w-5 stroke-[3] font-bold text-neutral-900" />
                       </div>
                     )}
                   </div>
@@ -179,14 +311,36 @@ export function StepProduct() {
             })}
           </div>
 
-          <div className="mt-8 flex justify-between">
-            <Button variant="outline" onClick={prevStep}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar
-            </Button>
-            <Button disabled={!selectedProduct} onClick={handleContinue}>
-              Continuar
-            </Button>
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-between">
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={handleBack}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Voltar
+              </Button>
+              {isEditing && (
+                <Button variant="outline" onClick={handleCancel}>
+                  Cancelar
+                </Button>
+              )}
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              {selectedProducts.length > 0 && (
+                <div className="flex items-center justify-center sm:justify-start">
+                  <span className="text-theme-muted text-sm">
+                    {selectedProducts.length}{' '}
+                    {selectedProducts.length === 1
+                      ? 'produto selecionado'
+                      : 'produtos selecionados'}
+                  </span>
+                </div>
+              )}
+              <Button variant="ghost" onClick={handleContinueWithoutProduct}>
+                Produto personalizado
+              </Button>
+              <Button disabled={selectedProducts.length === 0} onClick={handleContinue}>
+                Continuar {selectedProducts.length > 0 && `(${selectedProducts.length})`}
+              </Button>
+            </div>
           </div>
         </>
       )}

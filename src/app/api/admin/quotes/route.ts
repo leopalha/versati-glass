@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 import { generateQuoteNumber } from '@/lib/utils'
+import { logger } from '@/lib/logger'
 
 const quoteItemSchema = z.object({
   productId: z.string().optional(),
@@ -119,7 +120,7 @@ export async function POST(request: Request) {
       { status: 201 }
     )
   } catch (error) {
-    console.error('Erro ao criar orçamento:', error)
+    logger.error('Erro ao criar orçamento:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 })

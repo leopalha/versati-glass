@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { logger } from '@/lib/logger'
 
 interface UpdateOrderStatusProps {
   orderId: string
@@ -50,7 +51,7 @@ export function UpdateOrderStatus({ orderId, currentStatus }: UpdateOrderStatusP
 
       router.refresh()
     } catch (error) {
-      console.error('Error updating status:', error)
+      logger.error('Error updating status:', error)
       alert('Erro ao atualizar status do pedido')
     } finally {
       setIsLoading(false)

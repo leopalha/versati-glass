@@ -10,6 +10,7 @@ import {
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { z } from 'zod'
 import { OrderStatus } from '@prisma/client'
+import { logger } from '@/lib/logger'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -259,7 +260,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
         }
       } catch (emailError) {
         // Log erro mas não falha a requisição
-        console.error('Error sending order status notification email:', emailError)
+        logger.error('Error sending order status notification email:', emailError)
         // Continua sem lançar erro - a atualização do status já foi feita com sucesso
       }
     }
@@ -270,7 +271,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       message: 'Status atualizado com sucesso',
     })
   } catch (error) {
-    console.error('Error updating order status:', error)
+    logger.error('Error updating order status:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 })

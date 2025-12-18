@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { logger } from '@/lib/logger'
 
 // Change password
 export async function POST(request: NextRequest) {
@@ -54,10 +55,7 @@ export async function POST(request: NextRequest) {
     // Verify current password
     const isValid = await bcrypt.compare(currentPassword, user.password)
     if (!isValid) {
-      return NextResponse.json(
-        { error: 'Senha atual incorreta' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Senha atual incorreta' }, { status: 400 })
     }
 
     // Hash new password
@@ -71,10 +69,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Change password error:', error)
-    return NextResponse.json(
-      { error: 'Failed to change password' },
-      { status: 500 }
-    )
+    logger.error('Change password error:', error)
+    return NextResponse.json({ error: 'Failed to change password' }, { status: 500 })
   }
 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
+import { logger } from '@/lib/logger'
 
 /**
  * GET /api/appointments/slots
@@ -76,7 +77,7 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Get appointment slots error:', error)
+    logger.error('Get appointment slots error:', error)
     return NextResponse.json({ error: 'Failed to get available slots' }, { status: 500 })
   }
 }

@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { SendQuoteButton } from '@/components/admin/send-quote-button'
 import { ConvertQuoteButton } from '@/components/admin/convert-quote-button'
+import { CancelQuoteButton } from '@/components/admin/cancel-quote-button'
 import { formatCurrency } from '@/lib/utils'
 import {
   FileText,
@@ -14,6 +15,7 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
+  Bot,
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -23,6 +25,7 @@ const statusLabels: Record<string, { label: string; color: string; icon: typeof 
   VIEWED: { label: 'Visualizado', color: 'bg-purple-500/20 text-purple-400', icon: Eye },
   ACCEPTED: { label: 'Aceito', color: 'bg-green-500/20 text-green-400', icon: CheckCircle },
   REJECTED: { label: 'Recusado', color: 'bg-red-500/20 text-red-400', icon: XCircle },
+  CANCELLED: { label: 'Cancelado', color: 'bg-red-500/20 text-red-400', icon: XCircle },
   EXPIRED: { label: 'Expirado', color: 'bg-neutral-500/20 text-neutral-700', icon: Clock },
   CONVERTED: { label: 'Convertido', color: 'bg-gold-500/20 text-gold-400', icon: CheckCircle },
 }
@@ -43,6 +46,18 @@ export default async function AdminOrcamentosPage() {
       },
     },
   })
+
+  // AI-CHAT P2.1: Get AI-generated quotes
+  const aiConversations = await prisma.aiConversation.findMany({
+    where: {
+      quoteId: { in: quotes.map((q) => q.id) },
+    },
+    select: {
+      quoteId: true,
+    },
+  })
+
+  const aiQuoteIds = new Set(aiConversations.map((c) => c.quoteId))
 
   const stats = await prisma.quote.groupBy({
     by: ['status'],
@@ -147,12 +162,26 @@ export default async function AdminOrcamentosPage() {
                   const isExpired =
                     new Date(quote.validUntil) < new Date() &&
                     ['SENT', 'VIEWED'].includes(quote.status)
+                  const isAiGenerated = aiQuoteIds.has(quote.id)
 
                   return (
                     <tr key={quote.id} className="hover:bg-neutral-200/50">
                       <td className="px-4 py-3">
-                        <p className="font-medium text-white">#{quote.number}</p>
-                        <p className="text-xs text-neutral-600">{quote.items.length} item(s)</p>
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <p className="font-medium text-white">#{quote.number}</p>
+                            <p className="text-xs text-neutral-600">{quote.items.length} item(s)</p>
+                          </div>
+                          {isAiGenerated && (
+                            <span
+                              className="flex items-center gap-1 rounded-full bg-purple-500/20 px-2 py-0.5 text-xs font-medium text-purple-400"
+                              title="Gerado via Chat IA"
+                            >
+                              <Bot className="h-3 w-3" />
+                              IA
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         <p className="text-white">{quote.customerName}</p>
@@ -199,6 +228,12 @@ export default async function AdminOrcamentosPage() {
                             status={quote.status}
                           />
                           <ConvertQuoteButton
+                            quoteId={quote.id}
+                            quoteNumber={quote.number}
+                            customerName={quote.customerName}
+                            status={quote.status}
+                          />
+                          <CancelQuoteButton
                             quoteId={quote.id}
                             quoteNumber={quote.number}
                             customerName={quote.customerName}

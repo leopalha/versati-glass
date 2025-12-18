@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { logger, getErrorMessage } from '@/lib/logger'
 
 interface UploadDocumentDialogProps {
   orderId?: string
@@ -97,9 +98,11 @@ export function UploadDocumentDialog({ orderId, quoteId }: UploadDocumentDialogP
       setDescription('')
       setType('OTHER')
       router.refresh()
-    } catch (error: any) {
-      console.error('Erro:', error)
-      alert(error.message || 'Erro ao fazer upload. Tente novamente.')
+    } catch (error) {
+      // ARCH-P1-3: Replace 'any' with proper error handling
+      const errorMsg = getErrorMessage(error)
+      logger.error('[UPLOAD_DOCUMENT] Failed to upload document:', { error: errorMsg })
+      alert(errorMsg || 'Erro ao fazer upload. Tente novamente.')
     } finally {
       setLoading(false)
     }

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { AdminSidebar } from '@/components/admin/admin-sidebar'
+import { ToastProvider } from '@/components/providers/toast-provider'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
@@ -15,9 +16,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="bg-theme-primary min-h-screen">
-      <AdminSidebar />
-      <main className="lg:ml-64">{children}</main>
-    </div>
+    <ToastProvider>
+      <div className="bg-theme-primary min-h-screen">
+        <AdminSidebar />
+        <main className="lg:ml-64">{children}</main>
+      </div>
+    </ToastProvider>
   )
 }

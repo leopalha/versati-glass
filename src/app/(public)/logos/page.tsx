@@ -26,7 +26,7 @@ const fontStyles = [
 
 export default function LogosPage() {
   return (
-    <div className="bg-theme-primary min-h-screen px-6 py-12">
+    <div className="px-6 py-12">
       <div className="mx-auto max-w-6xl">
         <h1 className="text-theme-primary mb-2 text-4xl font-bold">Desenvolvimento de Logos</h1>
         <p className="text-theme-muted mb-12">
@@ -37,34 +37,18 @@ export default function LogosPage() {
         <div className="bg-accent-500/10 mb-12 rounded-xl border-2 border-accent-500 p-8">
           <h2 className="mb-4 text-lg font-semibold text-accent-500">Logo Oficial Selecionado</h2>
           <p className="text-theme-muted mb-4 text-sm">
-            Opção 1 Minimalista + Fonte Uppercase Light
+            Logo Original Gold + Fonte Uppercase Light
           </p>
           <div className="flex items-center gap-4">
-            <svg viewBox="0 0 48 48" fill="none" className="h-16 w-16 text-accent-500">
-              <rect
-                x="2"
-                y="2"
-                width="44"
-                height="44"
-                rx="8"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-              <path
-                d="M8 14L16 34L24 14"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M40 20C40 16 37 14 33 14C29 14 26 17 26 24C26 31 29 34 33 34C37 34 40 32 40 28V24H34"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <img
+              src="/logo-symbol.png"
+              alt="Versati Glass Logo"
+              className="h-16 w-auto"
+              style={{
+                filter:
+                  'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+              }}
+            />
             <span className="font-sans text-2xl font-light uppercase tracking-[0.25em] text-accent-500">
               Versati Glass
             </span>
@@ -90,31 +74,15 @@ export default function LogosPage() {
               )}
               <p className="text-theme-muted mb-3 text-xs">{style.name}</p>
               <div className="flex items-center gap-3 text-accent-500">
-                <svg viewBox="0 0 48 48" fill="none" className="h-10 w-10 flex-shrink-0">
-                  <rect
-                    x="2"
-                    y="2"
-                    width="44"
-                    height="44"
-                    rx="8"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M8 14L16 34L24 14"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M40 20C40 16 37 14 33 14C29 14 26 17 26 24C26 31 29 34 33 34C37 34 40 32 40 28V24H34"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <img
+                  src="/logo-symbol.png"
+                  alt="Versati Glass Logo"
+                  className="h-10 w-10 flex-shrink-0"
+                  style={{
+                    filter:
+                      'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+                  }}
+                />
                 <span className={`${style.font} ${style.weight} text-2xl`}>Versati Glass</span>
               </div>
             </div>
@@ -122,199 +90,128 @@ export default function LogosPage() {
         </div>
 
         {/* Grid de opções de logo */}
-        <h2 className="text-theme-primary mb-6 text-2xl font-bold">Outras Opções de Ícone</h2>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {/* Opção 1: Minimalista - OFICIAL */}
-          <LogoCard
-            title="Opção 1: Minimalista"
-            description="V e G separados com traços limpos"
-            isSelected
-          >
-            <svg viewBox="0 0 48 48" fill="none" className="h-24 w-24">
-              <rect
-                x="2"
-                y="2"
-                width="44"
-                height="44"
-                rx="8"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-              <path
-                d="M8 14L16 34L24 14"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M40 20C40 16 37 14 33 14C29 14 26 17 26 24C26 31 29 34 33 34C37 34 40 32 40 28V24H34"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+        <h2 className="text-theme-primary mb-6 text-2xl font-bold">Logo Oficial</h2>
+        <div className="grid gap-8 md:grid-cols-1">
+          {/* Logo Oficial */}
+          <LogoCard title="Logo Original" description="V + C + folha - Design oficial" isSelected>
+            <img
+              src="/logo-symbol.png"
+              alt="Versati Glass Logo"
+              className="h-24 w-24"
+              style={{
+                filter:
+                  'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+              }}
+            />
           </LogoCard>
+        </div>
 
-          {/* Opção 7: Geométrico - G CORRIGIDO */}
-          <LogoCard
-            title="Opção 7: Geométrico"
-            description="Formas geométricas precisas - G corrigido"
-          >
-            <svg viewBox="0 0 48 48" fill="none" className="h-24 w-24">
-              <rect
-                x="2"
-                y="2"
-                width="44"
-                height="44"
-                rx="0"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-              {/* V geométrico */}
-              <polygon
-                points="8,12 16,36 24,12 20,12 16,28 12,12"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                fill="none"
-              />
-              {/* G geométrico corrigido - formato de G real */}
-              <path
-                d="M26 14H42V18H30V30H42V34H26V14Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                fill="none"
-              />
-              <path d="M36 24H42V30" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            </svg>
-          </LogoCard>
+        {/* Logo Original PNG - Apenas Símbolo */}
+        <h2 className="text-theme-primary mb-6 mt-16 text-2xl font-bold">
+          Logo Original - Símbolo
+        </h2>
+        <p className="text-theme-muted mb-6">
+          Logo original em PNG apenas com o símbolo (V + C + folha), sem texto
+        </p>
 
-          {/* Opção 8: Fluido */}
-          <LogoCard title="Opção 8: Fluido" description="Estilo mais orgânico e fluido">
-            <svg viewBox="0 0 48 48" fill="none" className="h-24 w-24">
-              <rect
-                x="2"
-                y="2"
-                width="44"
-                height="44"
-                rx="12"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-              <path
-                d="M8 12C10 20 14 32 16 36C18 32 22 20 24 12"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M42 16C40 12 36 10 32 12C28 14 26 18 26 24C26 30 28 34 32 36C36 38 40 36 42 32V24C42 24 38 24 36 24"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                fill="none"
-              />
-            </svg>
-          </LogoCard>
+        <div className="bg-theme-card border-theme-default mb-6 rounded-xl border p-8">
+          <h3 className="text-theme-primary mb-4 text-lg font-semibold">Versão Preta (Original)</h3>
+          <div className="grid gap-6 md:grid-cols-3">
+            {/* Fundo escuro */}
+            <div className="rounded-lg bg-neutral-900 p-6">
+              <p className="mb-4 text-xs text-white/60">Fundo Escuro</p>
+              <div className="flex justify-center">
+                <img
+                  src="/logo-symbol.png"
+                  alt="Versati Glass Logo Symbol"
+                  className="h-32 w-auto"
+                />
+              </div>
+            </div>
 
-          {/* Opção 2: Conectado */}
-          <LogoCard title="Opção 2: Conectado" description="V e G com elementos visuais conectados">
-            <svg viewBox="0 0 48 48" fill="none" className="h-24 w-24">
-              <rect
-                x="2"
-                y="2"
-                width="44"
-                height="44"
-                rx="8"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-              <path
-                d="M6 12L14 36L22 12"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M42 16C40 12 36 10 32 12C28 14 26 20 26 24C26 28 28 34 32 36C36 38 40 36 42 32"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-              <path d="M42 24H34" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-            </svg>
-          </LogoCard>
+            {/* Fundo claro */}
+            <div className="rounded-lg border border-neutral-200 bg-white p-6">
+              <p className="mb-4 text-xs text-neutral-400">Fundo Claro</p>
+              <div className="flex justify-center">
+                <img
+                  src="/logo-symbol.png"
+                  alt="Versati Glass Logo Symbol"
+                  className="h-32 w-auto"
+                />
+              </div>
+            </div>
 
-          {/* Opção 5: Bold Moderno */}
-          <LogoCard title="Opção 5: Bold Moderno" description="Traços mais grossos e impactantes">
-            <svg viewBox="0 0 48 48" fill="none" className="h-24 w-24">
-              <rect
-                x="2"
-                y="2"
-                width="44"
-                height="44"
-                rx="6"
-                stroke="currentColor"
-                strokeWidth="3"
-              />
-              <path
-                d="M8 12L16 36L24 12"
-                stroke="currentColor"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M40 18C38 14 35 12 32 12C28 12 25 16 25 24C25 32 28 36 32 36C36 36 40 32 40 28V24H33"
-                stroke="currentColor"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </LogoCard>
+            {/* Fundo dourado */}
+            <div className="rounded-lg bg-[#C9A962] p-6">
+              <p className="mb-4 text-xs text-neutral-900/60">Fundo Gold</p>
+              <div className="flex justify-center">
+                <img
+                  src="/logo-symbol.png"
+                  alt="Versati Glass Logo Symbol"
+                  className="h-32 w-auto invert"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
-          {/* Opção 9: Premium */}
-          <LogoCard title="Opção 9: Premium" description="Visual premium e luxuoso">
-            <svg viewBox="0 0 48 48" fill="none" className="h-24 w-24">
-              <rect
-                x="2"
-                y="2"
-                width="44"
-                height="44"
-                rx="6"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              />
-              <rect
-                x="5"
-                y="5"
-                width="38"
-                height="38"
-                rx="4"
-                stroke="currentColor"
-                strokeWidth="1"
-                opacity="0.5"
-              />
-              <path
-                d="M10 14L17 34L24 14"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M41 18C39 14 36 12 33 12C29 12 26 16 26 24C26 32 29 36 33 36C37 36 41 32 41 28V24H34"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </LogoCard>
+        <div className="bg-theme-card border-theme-default mb-12 rounded-xl border p-8">
+          <h3 className="text-theme-primary mb-4 text-lg font-semibold">Versão Gold (#C9A962)</h3>
+          <div className="grid gap-6 md:grid-cols-3">
+            {/* Fundo escuro */}
+            <div className="rounded-lg bg-neutral-900 p-6">
+              <p className="mb-4 text-xs text-white/60">Fundo Escuro</p>
+              <div className="flex justify-center">
+                <img
+                  src="/logo-symbol.png"
+                  alt="Versati Glass Logo Symbol Gold"
+                  className="h-32 w-auto"
+                  style={{
+                    filter:
+                      'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Fundo claro */}
+            <div className="rounded-lg border border-neutral-200 bg-white p-6">
+              <p className="mb-4 text-xs text-neutral-400">Fundo Claro</p>
+              <div className="flex justify-center">
+                <img
+                  src="/logo-symbol.png"
+                  alt="Versati Glass Logo Symbol Gold"
+                  className="h-32 w-auto"
+                  style={{
+                    filter:
+                      'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Fundo neutro */}
+            <div className="rounded-lg bg-neutral-800 p-6">
+              <p className="mb-4 text-xs text-white/60">Fundo Cinza</p>
+              <div className="flex justify-center">
+                <img
+                  src="/logo-symbol.png"
+                  alt="Versati Glass Logo Symbol Gold"
+                  className="h-32 w-auto"
+                  style={{
+                    filter:
+                      'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="border-theme-default mt-6 border-t pt-4">
+            <p className="text-theme-muted text-sm">
+              ℹ️ Esta é a mesma imagem PNG preta original, colorida para dourado usando filtros CSS
+            </p>
+          </div>
         </div>
 
         {/* Seção de comparação com fundos */}
@@ -327,31 +224,15 @@ export default function LogosPage() {
           <div className="rounded-xl bg-neutral-900 p-8">
             <p className="mb-4 text-sm text-white/60">Fundo Escuro</p>
             <div className="flex items-center gap-4">
-              <svg viewBox="0 0 48 48" fill="none" className="h-16 w-16 text-[#C9A962]">
-                <rect
-                  x="2"
-                  y="2"
-                  width="44"
-                  height="44"
-                  rx="8"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M8 14L16 34L24 14"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M40 20C40 16 37 14 33 14C29 14 26 17 26 24C26 31 29 34 33 34C37 34 40 32 40 28V24H34"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <img
+                src="/logo-symbol.png"
+                alt="Versati Glass Logo"
+                className="h-16 w-auto"
+                style={{
+                  filter:
+                    'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+                }}
+              />
               <span className="font-sans text-xl font-light uppercase tracking-[0.25em] text-[#C9A962]">
                 Versati Glass
               </span>
@@ -362,31 +243,15 @@ export default function LogosPage() {
           <div className="rounded-xl border border-neutral-200 bg-white p-8">
             <p className="mb-4 text-sm text-neutral-400">Fundo Claro</p>
             <div className="flex items-center gap-4">
-              <svg viewBox="0 0 48 48" fill="none" className="h-16 w-16 text-[#C9A962]">
-                <rect
-                  x="2"
-                  y="2"
-                  width="44"
-                  height="44"
-                  rx="8"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M8 14L16 34L24 14"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M40 20C40 16 37 14 33 14C29 14 26 17 26 24C26 31 29 34 33 34C37 34 40 32 40 28V24H34"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <img
+                src="/logo-symbol.png"
+                alt="Versati Glass Logo"
+                className="h-16 w-auto"
+                style={{
+                  filter:
+                    'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+                }}
+              />
               <span className="font-sans text-xl font-light uppercase tracking-[0.25em] text-[#C9A962]">
                 Versati Glass
               </span>
@@ -406,36 +271,16 @@ export default function LogosPage() {
                 className="mb-2 flex items-center justify-center rounded-lg bg-neutral-900"
                 style={{ width: size + 16, height: size + 16 }}
               >
-                <svg
-                  viewBox="0 0 48 48"
-                  fill="none"
-                  className="text-[#C9A962]"
-                  style={{ width: size, height: size }}
-                >
-                  <rect
-                    x="2"
-                    y="2"
-                    width="44"
-                    height="44"
-                    rx="8"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M8 14L16 34L24 14"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M40 20C40 16 37 14 33 14C29 14 26 17 26 24C26 31 29 34 33 34C37 34 40 32 40 28V24H34"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <img
+                  src="/logo-symbol.png"
+                  alt="Versati Glass Logo"
+                  style={{
+                    width: size,
+                    height: size,
+                    filter:
+                      'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+                  }}
+                />
               </div>
               <span className="text-theme-muted text-xs">{size}px</span>
             </div>
@@ -449,13 +294,55 @@ export default function LogosPage() {
 
         <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
           {[
-            { name: 'Gold', bg: '#1A1814', color: '#C9A962' },
-            { name: 'Blue', bg: '#0F172A', color: '#3B82F6' },
-            { name: 'Green', bg: '#0D1912', color: '#22C55E' },
-            { name: 'Gray', bg: '#0F172A', color: '#94A3B8' },
-            { name: 'Wine', bg: '#1C0A0A', color: '#BE123C' },
-            { name: 'Corporate', bg: '#FFFFFF', color: '#1E3A8A' },
-            { name: 'Modern', bg: '#FFFFFF', color: '#7C3AED' },
+            {
+              name: 'Gold',
+              bg: '#1A1814',
+              color: '#C9A962',
+              filter:
+                'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+            },
+            {
+              name: 'Blue',
+              bg: '#0F172A',
+              color: '#3B82F6',
+              filter:
+                'brightness(0) saturate(100%) invert(47%) sepia(96%) saturate(2401%) hue-rotate(200deg) brightness(102%) contrast(93%)',
+            },
+            {
+              name: 'Green',
+              bg: '#0D1912',
+              color: '#22C55E',
+              filter:
+                'brightness(0) saturate(100%) invert(65%) sepia(57%) saturate(511%) hue-rotate(81deg) brightness(95%) contrast(91%)',
+            },
+            {
+              name: 'Gray',
+              bg: '#0F172A',
+              color: '#94A3B8',
+              filter:
+                'brightness(0) saturate(100%) invert(71%) sepia(8%) saturate(698%) hue-rotate(179deg) brightness(92%) contrast(87%)',
+            },
+            {
+              name: 'Wine',
+              bg: '#1C0A0A',
+              color: '#BE123C',
+              filter:
+                'brightness(0) saturate(100%) invert(13%) sepia(97%) saturate(4154%) hue-rotate(337deg) brightness(86%) contrast(95%)',
+            },
+            {
+              name: 'Corporate',
+              bg: '#FFFFFF',
+              color: '#1E3A8A',
+              filter:
+                'brightness(0) saturate(100%) invert(16%) sepia(78%) saturate(2660%) hue-rotate(214deg) brightness(94%) contrast(98%)',
+            },
+            {
+              name: 'Modern',
+              bg: '#FFFFFF',
+              color: '#7C3AED',
+              filter:
+                'brightness(0) saturate(100%) invert(34%) sepia(87%) saturate(3309%) hue-rotate(253deg) brightness(94%) contrast(94%)',
+            },
           ].map((theme) => (
             <div
               key={theme.name}
@@ -466,36 +353,12 @@ export default function LogosPage() {
                 {theme.name}
               </p>
               <div className="flex items-center gap-2">
-                <svg
-                  viewBox="0 0 48 48"
-                  fill="none"
-                  className="h-8 w-8"
-                  style={{ color: theme.color }}
-                >
-                  <rect
-                    x="2"
-                    y="2"
-                    width="44"
-                    height="44"
-                    rx="8"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M8 14L16 34L24 14"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M40 20C40 16 37 14 33 14C29 14 26 17 26 24C26 31 29 34 33 34C37 34 40 32 40 28V24H34"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <img
+                  src="/logo-symbol.png"
+                  alt="Versati Glass Logo"
+                  className="h-8 w-auto"
+                  style={{ filter: theme.filter }}
+                />
                 <span
                   className="font-sans text-sm font-light uppercase tracking-[0.2em]"
                   style={{ color: theme.color }}
@@ -542,7 +405,19 @@ function LogoCard({
       {/* Preview com texto */}
       <div className="border-theme-default mt-4 border-t pt-4">
         <div className="flex items-center gap-2 text-accent-500">
-          <div className="h-8 w-8">{children}</div>
+          {isSelected ? (
+            <img
+              src="/logo-symbol.png"
+              alt="Versati Glass Logo"
+              className="h-8 w-auto"
+              style={{
+                filter:
+                  'brightness(0) saturate(100%) invert(69%) sepia(35%) saturate(556%) hue-rotate(6deg) brightness(91%) contrast(86%)',
+              }}
+            />
+          ) : (
+            <div className="h-8 w-8">{children}</div>
+          )}
           <span className="font-sans text-base font-light uppercase tracking-[0.2em]">
             Versati Glass
           </span>

@@ -34,8 +34,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID || ''
 
   return (
-    <html lang="pt-BR" className={`${cormorant.variable} ${outfit.variable} ${inter.variable}`}>
-      <body className="bg-theme-primary text-theme-primary min-h-screen antialiased">
+    <html
+      lang="pt-BR"
+      className={`${cormorant.variable} ${outfit.variable} ${inter.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#C9A962" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Versati Glass" />
+        <link rel="apple-touch-icon" href="/logo-symbol.png" />
+      </head>
+      <body
+        className="bg-theme-primary text-theme-primary min-h-screen antialiased"
+        suppressHydrationWarning
+      >
         {gtmId && <GoogleTagManager gtmId={gtmId} />}
         <Providers>{children}</Providers>
         {gaId && <GoogleAnalytics measurementId={gaId} />}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 // Get current user profile
 export async function GET() {
@@ -18,6 +19,7 @@ export async function GET() {
         name: true,
         email: true,
         phone: true,
+        role: true,
         cpfCnpj: true,
         street: true,
         number: true,
@@ -36,11 +38,8 @@ export async function GET() {
 
     return NextResponse.json(user)
   } catch (error) {
-    console.error('Get user profile error:', error)
-    return NextResponse.json(
-      { error: 'Failed to get user profile' },
-      { status: 500 }
-    )
+    logger.error('Get user profile error:', error)
+    return NextResponse.json({ error: 'Failed to get user profile' }, { status: 500 })
   }
 }
 
@@ -54,18 +53,8 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json()
-    const {
-      name,
-      phone,
-      cpfCnpj,
-      street,
-      number,
-      complement,
-      neighborhood,
-      city,
-      state,
-      zipCode,
-    } = body
+    const { name, phone, cpfCnpj, street, number, complement, neighborhood, city, state, zipCode } =
+      body
 
     const user = await prisma.user.update({
       where: { id: session.user.id },
@@ -99,10 +88,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(user)
   } catch (error) {
-    console.error('Update user profile error:', error)
-    return NextResponse.json(
-      { error: 'Failed to update user profile' },
-      { status: 500 }
-    )
+    logger.error('Update user profile error:', error)
+    return NextResponse.json({ error: 'Failed to update user profile' }, { status: 500 })
   }
 }

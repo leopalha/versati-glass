@@ -225,8 +225,8 @@ export default function PortfolioPage() {
                       </Badge>
                     ))}
                   </div>
-                  <Button asChild variant="outline" className="w-full">
-                    <Link href={`/portfolio/${project.id}`}>Ver Projeto Completo</Link>
+                  <Button variant="outline" className="w-full" disabled>
+                    Ver Projeto Completo (em breve)
                   </Button>
                 </div>
               </Card>

@@ -1,5 +1,6 @@
 'use client'
 
+import { memo, useCallback } from 'react'
 import { Download, FileText, Image, FileCheck, Calendar } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -58,14 +59,14 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`
 }
 
-export function DocumentsList({
+export const DocumentsList = memo(function DocumentsList({
   documents,
   emptyMessage = 'Nenhum documento disponível',
 }: DocumentsListProps) {
-  const handleDownload = (doc: Document) => {
+  const handleDownload = useCallback((doc: Document) => {
     // Abrir em nova aba para download
     window.open(doc.fileUrl, '_blank')
-  }
+  }, [])
 
   if (documents.length === 0) {
     return (
@@ -138,4 +139,4 @@ export function DocumentsList({
       ))}
     </div>
   )
-}
+})

@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/form'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ImageUpload } from '@/components/admin/image-upload'
+import { logger } from '@/lib/logger'
 
 type ProductFormData = z.infer<typeof createProductSchema>
 
@@ -100,7 +101,7 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
       router.push('/admin/produtos')
       router.refresh()
     } catch (error) {
-      console.error('Error saving product:', error)
+      logger.error('Error saving product:', error)
       alert(error instanceof Error ? error.message : 'Erro ao salvar produto')
     } finally {
       setIsLoading(false)
@@ -152,9 +153,18 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
                     <SelectContent>
                       <SelectItem value="BOX">Box para Banheiro</SelectItem>
                       <SelectItem value="ESPELHOS">Espelhos</SelectItem>
-                      <SelectItem value="VIDROS">Vidros Temperados</SelectItem>
-                      <SelectItem value="PORTAS_JANELAS">Portas e Janelas</SelectItem>
-                      <SelectItem value="FECHAMENTOS">Fechamentos</SelectItem>
+                      <SelectItem value="VIDROS">Vidros</SelectItem>
+                      <SelectItem value="PORTAS">Portas de Vidro</SelectItem>
+                      <SelectItem value="JANELAS">Janelas de Vidro</SelectItem>
+                      <SelectItem value="GUARDA_CORPO">Guarda-Corpo</SelectItem>
+                      <SelectItem value="CORTINAS_VIDRO">Cortinas de Vidro</SelectItem>
+                      <SelectItem value="PERGOLADOS">Pergolados e Coberturas</SelectItem>
+                      <SelectItem value="TAMPOS_PRATELEIRAS">Tampos e Prateleiras</SelectItem>
+                      <SelectItem value="DIVISORIAS">Divisorias e Paineis</SelectItem>
+                      <SelectItem value="FECHAMENTOS">Fechamentos em Vidro</SelectItem>
+                      <SelectItem value="FERRAGENS">Ferragens e Acessorios</SelectItem>
+                      <SelectItem value="KITS">Kits Completos</SelectItem>
+                      <SelectItem value="SERVICOS">Servicos</SelectItem>
                       <SelectItem value="OUTROS">Outros</SelectItem>
                     </SelectContent>
                   </Select>

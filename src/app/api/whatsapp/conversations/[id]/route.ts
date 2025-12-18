@@ -6,6 +6,7 @@ import {
   assignConversation,
 } from '@/services/conversation'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -28,19 +29,13 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const conversation = await getConversationWithMessages(id)
 
     if (!conversation) {
-      return NextResponse.json(
-        { error: 'Conversation not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Conversation not found' }, { status: 404 })
     }
 
     return NextResponse.json(conversation)
   } catch (error) {
-    console.error('Get conversation error:', error)
-    return NextResponse.json(
-      { error: 'Failed to get conversation' },
-      { status: 500 }
-    )
+    logger.error('Get conversation error:', error)
+    return NextResponse.json({ error: 'Failed to get conversation' }, { status: 500 })
   }
 }
 
@@ -67,10 +62,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     })
 
     if (!conversation) {
-      return NextResponse.json(
-        { error: 'Conversation not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Conversation not found' }, { status: 404 })
     }
 
     if (action === 'close') {
@@ -93,10 +85,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   } catch (error) {
-    console.error('Update conversation error:', error)
-    return NextResponse.json(
-      { error: 'Failed to update conversation' },
-      { status: 500 }
-    )
+    logger.error('Update conversation error:', error)
+    return NextResponse.json({ error: 'Failed to update conversation' }, { status: 500 })
   }
 }

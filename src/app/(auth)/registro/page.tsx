@@ -27,7 +27,7 @@ const registerSchema = z
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'As senhas nao coincidem',
+    message: 'As senhas não conferem',
     path: ['confirmPassword'],
   })
 
@@ -49,6 +49,7 @@ export default function RegisterPage() {
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    mode: 'onBlur',
     defaultValues: {
       acceptTerms: false,
     },
@@ -94,12 +95,13 @@ export default function RegisterPage() {
           description: 'Faca login para continuar',
         })
         router.push('/login')
-      } else {
+      } else if (signInResult?.ok) {
         toast({
           variant: 'success',
           title: 'Bem-vindo!',
           description: 'Sua conta foi criada com sucesso',
         })
+        // Redirect to portal (new users are always CUSTOMER role)
         router.push('/portal')
         router.refresh()
       }
@@ -117,7 +119,7 @@ export default function RegisterPage() {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
     try {
-      await signIn('google', { callbackUrl: '/portal' })
+      await signIn('google', { callbackUrl: '/login' })
     } catch {
       toast({
         variant: 'error',
@@ -194,11 +196,13 @@ export default function RegisterPage() {
             type="text"
             placeholder="Digite seu nome completo"
             aria-label="Nome completo"
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? 'name-error' : undefined}
             {...register('name')}
             disabled={isLoading}
           />
           {errors.name && (
-            <p className="mt-1 text-sm text-error" role="alert">
+            <p id="name-error" className="mt-1 text-sm text-error" role="alert">
               {errors.name.message}
             </p>
           )}
@@ -213,11 +217,13 @@ export default function RegisterPage() {
             type="email"
             placeholder="Digite seu email"
             aria-label="Email"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'email-error' : undefined}
             {...register('email')}
             disabled={isLoading}
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-error" role="alert">
+            <p id="email-error" className="mt-1 text-sm text-error" role="alert">
               {errors.email.message}
             </p>
           )}
@@ -247,6 +253,8 @@ export default function RegisterPage() {
             type={showPassword ? 'text' : 'password'}
             placeholder="Mínimo 6 caracteres"
             aria-label="Senha"
+            aria-invalid={!!errors.password}
+            aria-describedby={errors.password ? 'password-error' : undefined}
             {...register('password')}
             disabled={isLoading}
           />
@@ -260,7 +268,7 @@ export default function RegisterPage() {
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
           {errors.password && (
-            <p className="mt-1 text-sm text-error" role="alert">
+            <p id="password-error" className="mt-1 text-sm text-error" role="alert">
               {errors.password.message}
             </p>
           )}
@@ -278,6 +286,8 @@ export default function RegisterPage() {
             type={showConfirmPassword ? 'text' : 'password'}
             placeholder="Digite a senha novamente"
             aria-label="Confirmar senha"
+            aria-invalid={!!errors.confirmPassword}
+            aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
             {...register('confirmPassword')}
             disabled={isLoading}
           />
@@ -293,7 +303,7 @@ export default function RegisterPage() {
             {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
           {errors.confirmPassword && (
-            <p className="mt-1 text-sm text-error" role="alert">
+            <p id="confirmPassword-error" className="mt-1 text-sm text-error" role="alert">
               {errors.confirmPassword.message}
             </p>
           )}

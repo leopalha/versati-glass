@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth'
 import { sendEmail } from '@/services/email'
 import { generateOrderApprovedEmailHtml } from '@/services/email-templates'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { logger } from '@/lib/logger'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -197,7 +198,7 @@ export async function POST(request: Request, { params }: RouteParams) {
           html: emailHtml,
         })
       } catch (emailError) {
-        console.error('Error sending order notification email:', emailError)
+        logger.error('Error sending order notification email:', emailError)
         // Não falha a conversão se o email falhar
       }
     }
@@ -224,7 +225,7 @@ export async function POST(request: Request, { params }: RouteParams) {
       message: `Orçamento convertido em pedido #${order.number}`,
     })
   } catch (error) {
-    console.error('Error converting quote to order:', error)
+    logger.error('Error converting quote to order:', error)
     return NextResponse.json({ error: 'Erro ao converter orçamento em pedido' }, { status: 500 })
   }
 }

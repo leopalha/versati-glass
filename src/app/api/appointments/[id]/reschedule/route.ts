@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 const rescheduleSchema = z.object({
   newDate: z.string(),
@@ -84,14 +85,31 @@ export async function POST(request: Request, { params }: RouteParams) {
       },
     })
 
-    // TODO: Enviar email de confirmação de reagendamento
+    // Enviar email de confirmação de reagendamento
+    const { sendEmail, generateAppointmentRescheduledHtml } = await import('@/services/email')
+
+    await sendEmail({
+      to: updatedAppointment.user.email,
+      subject: 'Agendamento Reagendado - Versati Glass',
+      html: generateAppointmentRescheduledHtml({
+        userName: updatedAppointment.user.name || 'Cliente',
+        appointmentType: updatedAppointment.type,
+        oldDate: appointment.scheduledDate,
+        oldTime: appointment.scheduledTime,
+        newDate: updatedAppointment.scheduledDate,
+        newTime: updatedAppointment.scheduledTime,
+      }),
+      text: `Olá ${updatedAppointment.user.name || 'Cliente'}!\n\nSeu agendamento foi reagendado.\n\nData anterior: ${appointment.scheduledDate.toLocaleDateString('pt-BR')} às ${appointment.scheduledTime}\nNova data: ${updatedAppointment.scheduledDate.toLocaleDateString('pt-BR')} às ${updatedAppointment.scheduledTime}\n\nAté lá!`,
+    }).catch((err) => {
+      logger.error('Failed to send reschedule email:', err)
+    })
 
     return NextResponse.json({
       message: 'Agendamento reagendado com sucesso',
       appointment: updatedAppointment,
     })
   } catch (error) {
-    console.error('Erro ao reagendar:', error)
+    logger.error('Erro ao reagendar:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 })

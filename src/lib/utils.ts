@@ -95,3 +95,105 @@ export function generateQuoteNumber(): string {
     .padStart(4, '0')
   return `ORC-${year}-${random}`
 }
+
+/**
+ * Validate CPF using check digit algorithm
+ * @param cpf - CPF string (with or without formatting)
+ * @returns true if valid, false otherwise
+ */
+export function validateCPF(cpf: string): boolean {
+  const cleaned = cpf.replace(/\D/g, '')
+
+  if (cleaned.length !== 11) return false
+
+  // Check for known invalid CPFs (all same digits)
+  if (/^(\d)\1{10}$/.test(cleaned)) return false
+
+  // Calculate first check digit
+  let sum = 0
+  for (let i = 0; i < 9; i++) {
+    sum += parseInt(cleaned.charAt(i)) * (10 - i)
+  }
+  let remainder = (sum * 10) % 11
+  if (remainder === 10 || remainder === 11) remainder = 0
+  if (remainder !== parseInt(cleaned.charAt(9))) return false
+
+  // Calculate second check digit
+  sum = 0
+  for (let i = 0; i < 10; i++) {
+    sum += parseInt(cleaned.charAt(i)) * (11 - i)
+  }
+  remainder = (sum * 10) % 11
+  if (remainder === 10 || remainder === 11) remainder = 0
+  if (remainder !== parseInt(cleaned.charAt(10))) return false
+
+  return true
+}
+
+/**
+ * Validate CNPJ using check digit algorithm
+ * @param cnpj - CNPJ string (with or without formatting)
+ * @returns true if valid, false otherwise
+ */
+export function validateCNPJ(cnpj: string): boolean {
+  const cleaned = cnpj.replace(/\D/g, '')
+
+  if (cleaned.length !== 14) return false
+
+  // Check for known invalid CNPJs (all same digits)
+  if (/^(\d)\1{13}$/.test(cleaned)) return false
+
+  // Calculate first check digit
+  const weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+  let sum = 0
+  for (let i = 0; i < 12; i++) {
+    sum += parseInt(cleaned.charAt(i)) * weights1[i]
+  }
+  let remainder = sum % 11
+  const digit1 = remainder < 2 ? 0 : 11 - remainder
+  if (digit1 !== parseInt(cleaned.charAt(12))) return false
+
+  // Calculate second check digit
+  const weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+  sum = 0
+  for (let i = 0; i < 13; i++) {
+    sum += parseInt(cleaned.charAt(i)) * weights2[i]
+  }
+  remainder = sum % 11
+  const digit2 = remainder < 2 ? 0 : 11 - remainder
+  if (digit2 !== parseInt(cleaned.charAt(13))) return false
+
+  return true
+}
+
+/**
+ * Validate CPF or CNPJ
+ * @param value - CPF or CNPJ string (with or without formatting)
+ * @returns true if valid CPF or CNPJ, false otherwise
+ */
+export function validateCPFOrCNPJ(value: string): boolean {
+  const cleaned = value.replace(/\D/g, '')
+
+  if (cleaned.length === 11) {
+    return validateCPF(cleaned)
+  } else if (cleaned.length === 14) {
+    return validateCNPJ(cleaned)
+  }
+
+  return false
+}
+
+/**
+ * Format CPF or CNPJ automatically based on length
+ * @param value - CPF or CNPJ string (with or without formatting)
+ * @returns formatted string
+ */
+export function formatCPFOrCNPJ(value: string): string {
+  const cleaned = value.replace(/\D/g, '')
+
+  if (cleaned.length <= 11) {
+    return formatCPF(cleaned)
+  } else {
+    return formatCNPJ(cleaned)
+  }
+}

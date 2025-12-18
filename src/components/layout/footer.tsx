@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Mail, MapPin, Phone, Instagram, Facebook } from 'lucide-react'
 import { Logo } from '@/components/shared/logo'
+import { CONTACT } from '@/lib/constants'
 
 const navigation = {
   produtos: [
@@ -114,10 +115,10 @@ export function Footer() {
                   <li className="flex items-start gap-2">
                     <Phone className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent-400" />
                     <a
-                      href="tel:+5521982536229"
+                      href={`tel:${CONTACT.phoneRaw}`}
                       className="text-footer-muted text-sm hover:text-accent-400"
                     >
-                      +55 21 98253-6229
+                      {CONTACT.phone}
                     </a>
                   </li>
                   <li className="flex items-start gap-2">

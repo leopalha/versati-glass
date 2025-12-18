@@ -3,7 +3,6 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { PortalHeader } from '@/components/portal/portal-header'
 import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { formatCurrency } from '@/lib/utils'
 import {
   Package,
@@ -17,6 +16,7 @@ import {
   CreditCard,
 } from 'lucide-react'
 import Link from 'next/link'
+import { PaymentButton } from '@/components/portal/payment-button'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -157,7 +157,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                         </p>
                       </div>
                     </div>
-                    <Button>Pagar Agora</Button>
+                    <PaymentButton orderId={order.id} />
                   </div>
                 </div>
               )}

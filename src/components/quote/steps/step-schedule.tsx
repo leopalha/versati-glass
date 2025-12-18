@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { cn } from '@/lib/utils'
+import { logger, getErrorMessage } from '@/lib/logger'
 import { Calendar, Clock, CheckCircle, ArrowLeft, Loader2, MessageCircle } from 'lucide-react'
 
 const timeSlots = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00']
@@ -49,11 +50,68 @@ export function StepSchedule() {
   const availableDates = getAvailableDates()
 
   const handleSchedule = async () => {
+    // FQ.4.5: Validação de data e horário
     if (!selectedDate || !selectedTime) {
       toast({
         variant: 'error',
         title: 'Selecione data e horario',
         description: 'Por favor, escolha uma data e horario para a visita',
+      })
+      return
+    }
+
+    // FQ.4.5: Validar que a data está no futuro
+    const scheduledDate = new Date(selectedDate)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    if (scheduledDate < today) {
+      toast({
+        variant: 'error',
+        title: 'Data invalida',
+        description: 'Nao e possivel agendar para datas passadas',
+      })
+      return
+    }
+
+    // FQ.4.5: Validar que a data não é domingo
+    if (scheduledDate.getDay() === 0) {
+      toast({
+        variant: 'error',
+        title: 'Data invalida',
+        description: 'Nao atendemos aos domingos. Por favor, escolha outra data',
+      })
+      return
+    }
+
+    // FQ.4.5: Validar formato do horário
+    const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/
+    if (!timeRegex.test(selectedTime)) {
+      toast({
+        variant: 'error',
+        title: 'Horario invalido',
+        description: 'Formato de horario invalido (use HH:MM)',
+      })
+      return
+    }
+
+    // FQ.4.5: Validar que o horário está dentro do expediente (08:00-18:00)
+    const [hours, minutes] = selectedTime.split(':').map(Number)
+    if (hours < 8 || hours >= 18) {
+      toast({
+        variant: 'error',
+        title: 'Horario fora do expediente',
+        description: 'Nosso horario de atendimento e das 08:00 as 18:00',
+      })
+      return
+    }
+
+    // FQ.4.5: Validar tamanho das observações (máximo 500 caracteres)
+    if (notes && notes.length > 500) {
+      toast({
+        variant: 'error',
+        title: 'Observacoes muito longas',
+        description: 'As observacoes devem ter no maximo 500 caracteres',
       })
       return
     }
@@ -78,7 +136,11 @@ export function StepSchedule() {
         title: 'Agendamento realizado!',
         description: 'Voce recebera uma confirmacao por WhatsApp',
       })
-    } catch {
+    } catch (error) {
+      // ARCH-P1-2: Standardized error handling
+      const errorMsg = getErrorMessage(error)
+      logger.error('[SCHEDULE] Failed to schedule appointment:', { error: errorMsg })
+
       toast({
         variant: 'error',
         title: 'Erro',
@@ -221,13 +283,21 @@ export function StepSchedule() {
 
           {/* Notes */}
           <div>
-            <label className="text-theme-muted mb-2 block text-sm">Observacoes (opcional)</label>
+            <div className="mb-2 flex items-center justify-between">
+              <label className="text-theme-muted text-sm">Observacoes (opcional)</label>
+              <span
+                className={cn('text-xs', notes.length > 500 ? 'text-error' : 'text-theme-subtle')}
+              >
+                {notes.length}/500
+              </span>
+            </div>
             <textarea
-              className="border-theme-default text-theme-primary placeholder:text-theme-subtle w-full rounded-lg border bg-neutral-100 px-4 py-3 focus:border-accent-500 focus:outline-none"
+              className="bg-theme-elevated border-theme-default text-theme-primary placeholder:text-theme-subtle w-full rounded-lg border px-4 py-3 focus:border-accent-500 focus:outline-none"
               rows={3}
               placeholder="Alguma informacao adicional para nossa equipe..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
+              maxLength={500}
             />
           </div>
         </div>

@@ -7,6 +7,7 @@ import {
   generateAppointmentReminderHtml,
 } from './email'
 import { sendTemplateMessage } from './whatsapp'
+import { logger } from '@/lib/logger'
 
 const PORTAL_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://versatiglass.com.br'
 
@@ -45,17 +46,13 @@ export async function sendQuoteNotification(quoteId: string) {
   })
 
   // Send WhatsApp
-  const whatsappResult = await sendTemplateMessage(
-    quote.customerPhone,
-    'quote_sent',
-    {
-      customerName: quote.customerName.split(' ')[0],
-      quoteNumber: quote.number,
-      total: formatCurrency(Number(quote.total)),
-      validUntil: new Date(quote.validUntil).toLocaleDateString('pt-BR'),
-      portalUrl,
-    }
-  )
+  const whatsappResult = await sendTemplateMessage(quote.customerPhone, 'quote_sent', {
+    customerName: quote.customerName.split(' ')[0],
+    quoteNumber: quote.number,
+    total: formatCurrency(Number(quote.total)),
+    validUntil: new Date(quote.validUntil).toLocaleDateString('pt-BR'),
+    portalUrl,
+  })
 
   // Update quote status
   await prisma.quote.update({
@@ -100,18 +97,14 @@ export async function sendOrderConfirmationNotification(orderId: string) {
   })
 
   // Send WhatsApp
-  const whatsappResult = await sendTemplateMessage(
-    order.user.phone || '',
-    'order_approved',
-    {
-      customerName: order.user.name.split(' ')[0],
-      orderNumber: order.number,
-      estimatedDelivery: order.estimatedDelivery
-        ? new Date(order.estimatedDelivery).toLocaleDateString('pt-BR')
-        : 'A definir',
-      portalUrl,
-    }
-  )
+  const whatsappResult = await sendTemplateMessage(order.user.phone || '', 'order_approved', {
+    customerName: order.user.name.split(' ')[0],
+    orderNumber: order.number,
+    estimatedDelivery: order.estimatedDelivery
+      ? new Date(order.estimatedDelivery).toLocaleDateString('pt-BR')
+      : 'A definir',
+    portalUrl,
+  })
 
   return {
     email: emailResult,
@@ -239,7 +232,7 @@ export async function sendDailyAppointmentReminders() {
     },
   })
 
-  console.log(`Sending reminders for ${appointments.length} appointments`)
+  logger.debug(`Sending reminders for ${appointments.length} appointments`)
 
   const results = []
   for (const appointment of appointments) {
@@ -247,7 +240,7 @@ export async function sendDailyAppointmentReminders() {
       const result = await sendAppointmentReminderNotification(appointment.id)
       results.push({ appointmentId: appointment.id, success: true, result })
     } catch (error) {
-      console.error(`Failed to send reminder for appointment ${appointment.id}:`, error)
+      logger.error(`Failed to send reminder for appointment ${appointment.id}:`, error)
       results.push({ appointmentId: appointment.id, success: false, error })
     }
   }

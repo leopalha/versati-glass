@@ -53,8 +53,17 @@ export default async function ProdutosPage() {
     BOX: 'Box',
     ESPELHOS: 'Espelhos',
     VIDROS: 'Vidros',
-    PORTAS_JANELAS: 'Portas/Janelas',
+    PORTAS: 'Portas',
+    JANELAS: 'Janelas',
+    GUARDA_CORPO: 'Guarda-Corpo',
+    CORTINAS_VIDRO: 'Cortinas de Vidro',
+    PERGOLADOS: 'Pergolados',
+    TAMPOS_PRATELEIRAS: 'Tampos/Prateleiras',
+    DIVISORIAS: 'Divisorias',
     FECHAMENTOS: 'Fechamentos',
+    FERRAGENS: 'Ferragens',
+    KITS: 'Kits',
+    SERVICOS: 'Servicos',
     OUTROS: 'Outros',
   }
 

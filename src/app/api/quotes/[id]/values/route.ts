@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 const itemUpdateSchema = z.object({
   id: z.string(),
@@ -101,7 +102,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       quote: updatedQuote,
     })
   } catch (error) {
-    console.error('Erro ao atualizar valores:', error)
+    logger.error('Erro ao atualizar valores:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 })

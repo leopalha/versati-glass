@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 // Get orders for current user (or all orders if admin)
 export async function GET(request: NextRequest) {
@@ -128,7 +129,7 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Get orders error:', error)
+    logger.error('Get orders error:', error)
     return NextResponse.json({ error: 'Failed to get orders' }, { status: 500 })
   }
 }

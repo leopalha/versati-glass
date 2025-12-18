@@ -1,8 +1,18 @@
 'use client'
 
+import { useMemo, memo } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { FileText, ShoppingCart, Calendar, MessageSquare, User, Package, Clock } from 'lucide-react'
+import {
+  FileText,
+  ShoppingCart,
+  Calendar,
+  MessageSquare,
+  User,
+  Package,
+  Clock,
+  LucideIcon,
+} from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
@@ -16,6 +26,13 @@ type ActivityType =
   | 'CUSTOMER_REGISTERED'
   | 'MESSAGE_RECEIVED'
 
+// ARCH-P1-3: Define proper metadata type
+interface ActivityMetadata {
+  status?: string
+  value?: number
+  [key: string]: string | number | undefined
+}
+
 interface Activity {
   id: string
   type: ActivityType
@@ -26,7 +43,7 @@ interface Activity {
   userName?: string
   entityId?: string
   entityType?: 'order' | 'quote' | 'appointment'
-  metadata?: Record<string, any>
+  metadata?: ActivityMetadata
 }
 
 interface ActivityFeedProps {
@@ -34,7 +51,8 @@ interface ActivityFeedProps {
   maxItems?: number
 }
 
-const activityIcons: Record<ActivityType, any> = {
+// ARCH-P1-3: Replace 'any' with LucideIcon type
+const activityIcons: Record<ActivityType, LucideIcon> = {
   QUOTE_CREATED: FileText,
   QUOTE_SENT: FileText,
   ORDER_CREATED: ShoppingCart,
@@ -54,8 +72,82 @@ const activityColors: Record<ActivityType, string> = {
   MESSAGE_RECEIVED: 'text-pink-400',
 }
 
+// ARCH-P1-4: Memoize individual activity item to prevent re-renders
+const ActivityItem = memo(
+  ({
+    activity,
+    getActivityLink,
+  }: {
+    activity: Activity
+    getActivityLink: (activity: Activity) => string | null
+  }) => {
+    const Icon = activityIcons[activity.type]
+    const color = activityColors[activity.type]
+    const link = getActivityLink(activity)
+
+    const content = (
+      <div className="hover:bg-theme-elevated flex gap-4 rounded-lg p-3 transition-colors">
+        <div className={`flex-shrink-0 ${color}`}>
+          <div className="bg-theme-elevated flex h-10 w-10 items-center justify-center rounded-full">
+            <Icon className="h-5 w-5" />
+          </div>
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1">
+              <p className="text-theme-primary text-sm font-medium">{activity.title}</p>
+              <p className="text-theme-secondary mt-1 text-sm">{activity.description}</p>
+              {activity.userName && (
+                <p className="text-theme-secondary mt-1 text-xs">por {activity.userName}</p>
+              )}
+            </div>
+            <span className="text-theme-secondary whitespace-nowrap text-xs">
+              {formatDistanceToNow(new Date(activity.timestamp), {
+                addSuffix: true,
+                locale: ptBR,
+              })}
+            </span>
+          </div>
+
+          {activity.metadata && (
+            <div className="mt-2 flex gap-2">
+              {activity.metadata.status && (
+                <Badge variant="secondary" className="text-xs">
+                  {activity.metadata.status}
+                </Badge>
+              )}
+              {activity.metadata.value && (
+                <Badge variant="secondary" className="text-xs">
+                  {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  }).format(activity.metadata.value)}
+                </Badge>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+
+    if (link) {
+      return (
+        <Link href={link} className="block">
+          {content}
+        </Link>
+      )
+    }
+
+    return <div>{content}</div>
+  }
+)
+
+ActivityItem.displayName = 'ActivityItem'
+
 export function ActivityFeed({ activities, maxItems = 10 }: ActivityFeedProps) {
-  const displayedActivities = activities.slice(0, maxItems)
+  // ARCH-P1-4: Memoize displayed activities
+  const displayedActivities = useMemo(() => activities.slice(0, maxItems), [activities, maxItems])
 
   const getActivityLink = (activity: Activity): string | null => {
     if (!activity.entityId) return null
@@ -91,67 +183,9 @@ export function ActivityFeed({ activities, maxItems = 10 }: ActivityFeedProps) {
             <p className="text-theme-secondary">Nenhuma atividade recente</p>
           </div>
         ) : (
-          displayedActivities.map((activity) => {
-            const Icon = activityIcons[activity.type]
-            const color = activityColors[activity.type]
-            const link = getActivityLink(activity)
-
-            const content = (
-              <div className="hover:bg-theme-elevated flex gap-4 rounded-lg p-3 transition-colors">
-                <div className={`flex-shrink-0 ${color}`}>
-                  <div className="bg-theme-elevated flex h-10 w-10 items-center justify-center rounded-full">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1">
-                      <p className="text-theme-primary text-sm font-medium">{activity.title}</p>
-                      <p className="text-theme-secondary mt-1 text-sm">{activity.description}</p>
-                      {activity.userName && (
-                        <p className="text-theme-secondary mt-1 text-xs">por {activity.userName}</p>
-                      )}
-                    </div>
-                    <span className="text-theme-secondary whitespace-nowrap text-xs">
-                      {formatDistanceToNow(new Date(activity.timestamp), {
-                        addSuffix: true,
-                        locale: ptBR,
-                      })}
-                    </span>
-                  </div>
-
-                  {activity.metadata && (
-                    <div className="mt-2 flex gap-2">
-                      {activity.metadata.status && (
-                        <Badge variant="secondary" className="text-xs">
-                          {activity.metadata.status}
-                        </Badge>
-                      )}
-                      {activity.metadata.value && (
-                        <Badge variant="secondary" className="text-xs">
-                          {new Intl.NumberFormat('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL',
-                          }).format(activity.metadata.value)}
-                        </Badge>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )
-
-            if (link) {
-              return (
-                <Link key={activity.id} href={link} className="block">
-                  {content}
-                </Link>
-              )
-            }
-
-            return <div key={activity.id}>{content}</div>
-          })
+          displayedActivities.map((activity) => (
+            <ActivityItem key={activity.id} activity={activity} getActivityLink={getActivityLink} />
+          ))
         )}
       </div>
 

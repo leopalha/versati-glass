@@ -1,4 +1,5 @@
 import twilio from 'twilio'
+import { logger } from '@/lib/logger'
 
 let twilioClient: twilio.Twilio | null = null
 
@@ -81,14 +82,14 @@ export async function sendWhatsAppMessage(
 
     const message = await client.messages.create(messageOptions)
 
-    console.log(`WhatsApp message sent: ${message.sid}`)
+    logger.debug(`WhatsApp message sent: ${message.sid}`)
 
     return {
       success: true,
       messageSid: message.sid,
     }
   } catch (error) {
-    console.error('Error sending WhatsApp message:', error)
+    logger.error('Error sending WhatsApp message:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -200,7 +201,7 @@ export function validateTwilioSignature(
 ): boolean {
   const authToken = process.env.TWILIO_AUTH_TOKEN
   if (!authToken) {
-    console.error('Missing TWILIO_AUTH_TOKEN for signature validation')
+    logger.error('Missing TWILIO_AUTH_TOKEN for signature validation')
     return false
   }
 

@@ -33,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { logger } from '@/lib/logger'
 
 const quoteItemSchema = z.object({
   productId: z.string().optional(),
@@ -98,7 +99,7 @@ export function CreateQuoteDialog() {
         setCustomerFound(null)
       }
     } catch (error) {
-      console.error('Erro ao buscar cliente:', error)
+      logger.error('Erro ao buscar cliente:', error)
       setCustomerFound(null)
     } finally {
       setSearchingCustomer(false)
@@ -120,7 +121,12 @@ export function CreateQuoteDialog() {
     setItems(items.filter((_, i) => i !== index))
   }
 
-  const updateItem = (index: number, field: keyof QuoteItem, value: any) => {
+  // ARCH-P1-3: Replace 'any' with proper type (allow undefined for optional fields)
+  const updateItem = (
+    index: number,
+    field: keyof QuoteItem,
+    value: string | number | undefined
+  ) => {
     const newItems = [...items]
     newItems[index] = { ...newItems[index], [field]: value }
     setItems(newItems)
@@ -174,7 +180,7 @@ export function CreateQuoteDialog() {
       router.push(`/admin/orcamentos/${result.quote.id}`)
       router.refresh()
     } catch (error) {
-      console.error('Erro:', error)
+      logger.error('Erro:', error)
       alert('Erro ao criar orçamento. Tente novamente.')
     } finally {
       setLoading(false)

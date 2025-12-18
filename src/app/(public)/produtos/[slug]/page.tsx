@@ -6,6 +6,7 @@ import { ArrowRight, Check, Shield, Clock, Award } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { ShareButtons } from '@/components/shared/share-buttons'
 
 type Props = {
   params: { slug: string }
@@ -156,13 +157,14 @@ export default function ProductDetailPage({ params }: Props) {
 
           {/* Info */}
           <div>
-            <Badge variant="outline" className="mb-4">
-              {product.category}
-            </Badge>
+            <div className="mb-4 flex items-center justify-between">
+              <Badge variant="outline">{product.category}</Badge>
+              <ShareButtons title={product.name} description={product.description} />
+            </div>
             <h1 className="mb-4 font-display text-4xl font-bold text-white md:text-5xl">
               {product.name}
             </h1>
-            <p className="mb-6 text-lg text-neutral-800">{product.description}</p>
+            <p className="mb-6 text-lg text-neutral-400">{product.description}</p>
             <p className="mb-8 text-3xl font-bold text-gold-400">{product.price}</p>
 
             {/* Features */}
@@ -172,7 +174,7 @@ export default function ProductDetailPage({ params }: Props) {
                 {product.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-gold-400" />
-                    <span className="text-neutral-800">{feature}</span>
+                    <span className="text-neutral-400">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -195,15 +197,15 @@ export default function ProductDetailPage({ params }: Props) {
             <div className="mt-8 grid grid-cols-3 gap-4">
               <div className="text-center">
                 <Shield className="mx-auto mb-2 h-8 w-8 text-gold-400" />
-                <p className="text-xs text-neutral-700">Garantia Estendida</p>
+                <p className="text-xs text-neutral-400">Garantia Estendida</p>
               </div>
               <div className="text-center">
                 <Clock className="mx-auto mb-2 h-8 w-8 text-gold-400" />
-                <p className="text-xs text-neutral-700">Instalação Rápida</p>
+                <p className="text-xs text-neutral-400">Instalação Rápida</p>
               </div>
               <div className="text-center">
                 <Award className="mx-auto mb-2 h-8 w-8 text-gold-400" />
-                <p className="text-xs text-neutral-700">15 Anos de Mercado</p>
+                <p className="text-xs text-neutral-400">15 Anos de Mercado</p>
               </div>
             </div>
           </div>

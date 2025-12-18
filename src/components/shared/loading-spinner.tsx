@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { cn } from '@/lib/utils'
 
 interface LoadingSpinnerProps {
@@ -11,7 +12,10 @@ const sizeClasses = {
   lg: 'h-12 w-12',
 }
 
-export function LoadingSpinner({ size = 'md', className }: LoadingSpinnerProps) {
+export const LoadingSpinner = memo(function LoadingSpinner({
+  size = 'md',
+  className,
+}: LoadingSpinnerProps) {
   return (
     <div className={cn('flex items-center justify-center', className)}>
       <svg
@@ -36,4 +40,4 @@ export function LoadingSpinner({ size = 'md', className }: LoadingSpinnerProps) 
       </svg>
     </div>
   )
-}
+})

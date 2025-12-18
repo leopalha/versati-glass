@@ -210,7 +210,7 @@ export default function HomePage() {
                   <p className="text-theme-muted mb-4 text-sm">{product.description}</p>
                   <p className="mb-4 font-semibold text-accent-400">{product.price}</p>
                   <Button asChild variant="outline" className="w-full">
-                    <Link href={`/produtos/${product.id}`}>Ver Detalhes</Link>
+                    <Link href="/produtos">Ver Detalhes</Link>
                   </Button>
                 </div>
               </Card>

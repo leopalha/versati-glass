@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useThemeStore } from '@/stores/themeStore'
 import { applyTheme } from '@/lib/theme'
 
@@ -9,12 +9,21 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
+  const [mounted, setMounted] = useState(false)
   const theme = useThemeStore((state) => state.theme)
 
+  // Avoid hydration mismatch by only applying theme after mount
   useEffect(() => {
-    // Apply theme on mount and when theme changes
-    applyTheme(theme)
-  }, [theme])
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    // Only apply theme after hydration is complete
+    // This handles both initial mount and theme changes
+    if (mounted) {
+      applyTheme(theme)
+    }
+  }, [theme, mounted])
 
   return <>{children}</>
 }

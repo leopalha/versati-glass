@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -71,17 +72,45 @@ export async function PUT(request: Request, { params }: RouteParams) {
       },
     })
 
-    // TODO: Enviar notificação por email ao cliente quando status mudar
-    // if (validatedData.status && validatedData.status !== existingAppointment.status) {
-    //   await sendAppointmentStatusEmail(updatedAppointment)
-    // }
+    // Enviar notificação por email ao cliente quando status mudar
+    if (validatedData.status && validatedData.status !== existingAppointment.status) {
+      try {
+        const { sendEmail, generateAppointmentStatusChangeHtml } = await import('@/services/email')
+
+        const scheduledDate = new Date(updatedAppointment.scheduledDate).toLocaleDateString('pt-BR')
+        const portalUrl = `${process.env.NEXTAUTH_URL}/portal/pedidos/${updatedAppointment.orderId}`
+
+        await sendEmail({
+          to: updatedAppointment.user.email,
+          subject: `Agendamento ${validatedData.status === 'CONFIRMED' ? 'Confirmado' : 'Atualizado'} - Versati Glass`,
+          html: generateAppointmentStatusChangeHtml({
+            userName: updatedAppointment.user.name || 'Cliente',
+            orderNumber: updatedAppointment.order?.number || 'N/A',
+            appointmentType: updatedAppointment.type,
+            status: updatedAppointment.status,
+            scheduledDate,
+            scheduledTime: updatedAppointment.scheduledTime,
+            portalUrl,
+          }),
+        })
+
+        logger.debug('Appointment status change notification sent', {
+          appointmentId: id,
+          oldStatus: existingAppointment.status,
+          newStatus: updatedAppointment.status,
+        })
+      } catch (emailError) {
+        // Não falhar a atualização se o email não for enviado
+        logger.error('Failed to send appointment status email', emailError)
+      }
+    }
 
     return NextResponse.json({
       appointment: updatedAppointment,
       message: 'Agendamento atualizado com sucesso',
     })
   } catch (error) {
-    console.error('[APPOINTMENT_UPDATE_ERROR]', error)
+    logger.error('[APPOINTMENT_UPDATE_ERROR]', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 })
@@ -124,7 +153,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     return NextResponse.json({ appointment })
   } catch (error) {
-    console.error('[APPOINTMENT_GET_ERROR]', error)
+    logger.error('[APPOINTMENT_GET_ERROR]', error)
     return NextResponse.json({ error: 'Erro ao buscar agendamento' }, { status: 500 })
   }
 }
@@ -165,7 +194,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       message: 'Agendamento deletado com sucesso',
     })
   } catch (error) {
-    console.error('[APPOINTMENT_DELETE_ERROR]', error)
+    logger.error('[APPOINTMENT_DELETE_ERROR]', error)
     return NextResponse.json({ error: 'Erro ao deletar agendamento' }, { status: 500 })
   }
 }

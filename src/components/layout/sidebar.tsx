@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Logo } from '@/components/shared/logo'
+import { logger } from '@/lib/logger'
 
 // Navegação do Portal do Cliente
 const portalNavigation = [
@@ -90,7 +91,7 @@ export function Sidebar({ type = 'portal' }: SidebarProps) {
           className="group flex w-full gap-x-3 rounded-md p-3 text-sm font-medium leading-6 text-neutral-700 transition-colors hover:bg-error/10 hover:text-error"
           onClick={() => {
             // Implement logout
-            console.log('Logout')
+            logger.debug('Logout')
           }}
         >
           <LogOut

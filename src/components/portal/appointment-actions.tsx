@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { logger } from '@/lib/logger'
 
 interface AppointmentActionsProps {
   appointmentId: string
@@ -74,7 +75,7 @@ export function AppointmentActions({
       setRescheduleReason('')
       router.refresh()
     } catch (error) {
-      console.error('Erro:', error)
+      logger.error('Erro:', error)
       alert('Erro ao reagendar agendamento. Tente novamente.')
     } finally {
       setLoading(false)
@@ -106,7 +107,7 @@ export function AppointmentActions({
       setCancelReason('')
       router.refresh()
     } catch (error) {
-      console.error('Erro:', error)
+      logger.error('Erro:', error)
       alert('Erro ao cancelar agendamento. Tente novamente.')
     } finally {
       setLoading(false)

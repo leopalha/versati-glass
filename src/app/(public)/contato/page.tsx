@@ -1,6 +1,6 @@
 'use client'
 
-import { MapPin, Phone, Mail, Clock, Instagram, Facebook } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, Instagram, Facebook, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -24,13 +24,13 @@ const contactInfo = [
   {
     icon: MapPin,
     title: 'Endereço',
-    value: 'Rua Exemplo, 123 - Barra da Tijuca, Rio de Janeiro - RJ',
-    link: 'https://maps.google.com',
+    value: 'Estrada Três Rios, 1156 - Freguesia, Rio de Janeiro - RJ',
+    link: 'https://maps.google.com/?q=Estrada+Três+Rios+1156+Freguesia+Rio+de+Janeiro',
   },
   {
     icon: Clock,
     title: 'Horário',
-    value: 'Seg - Sex: 8h às 18h | Sáb: 8h às 13h',
+    value: 'Seg - Sex: 8h30 às 18h | Sáb: 8h30 às 12h30',
     link: null,
   },
 ]
@@ -56,17 +56,43 @@ export default function ContatoPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    const formData = new FormData(e.currentTarget)
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      subject: formData.get('subject') as string,
+      message: formData.get('message') as string,
+    }
 
-    toast({
-      variant: 'success',
-      title: 'Mensagem enviada!',
-      description: 'Entraremos em contato em breve.',
-    })
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
 
-    setIsSubmitting(false)
-    ;(e.target as HTMLFormElement).reset()
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao enviar mensagem')
+      }
+
+      toast({
+        variant: 'success',
+        title: 'Mensagem enviada!',
+        description: 'Entraremos em contato em breve. Verifique seu email para confirmação.',
+      })
+      ;(e.target as HTMLFormElement).reset()
+    } catch (error) {
+      toast({
+        variant: 'error',
+        title: 'Erro ao enviar',
+        description: error instanceof Error ? error.message : 'Tente novamente mais tarde.',
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -161,7 +187,14 @@ export default function ContatoPage() {
                   disabled={isSubmitting}
                 />
                 <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando...
+                    </>
+                  ) : (
+                    'Enviar Mensagem'
+                  )}
                 </Button>
               </form>
 

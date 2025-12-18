@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
+import { logger } from '@/lib/logger'
+import { sendWhatsAppMessage } from '@/services/whatsapp'
+import {
+  quoteApprovedTemplate,
+  sanitizeCustomerName,
+  formatCurrency,
+} from '@/lib/whatsapp-templates'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -45,10 +52,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
     })
 
     if (!quote) {
-      return NextResponse.json(
-        { error: 'Orcamento nao encontrado' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Orcamento nao encontrado' }, { status: 404 })
     }
 
     // Check ownership
@@ -58,18 +62,12 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
     // Check if quote is still valid
     if (quote.validUntil < new Date()) {
-      return NextResponse.json(
-        { error: 'Orcamento expirado' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Orcamento expirado' }, { status: 400 })
     }
 
     // Check if quote can be accepted
     if (!['SENT', 'VIEWED'].includes(quote.status)) {
-      return NextResponse.json(
-        { error: 'Este orcamento nao pode ser aceito' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Este orcamento nao pode ser aceito' }, { status: 400 })
     }
 
     // Generate order number
@@ -159,18 +157,70 @@ export async function PUT(request: Request, { params }: RouteParams) {
       return newOrder
     })
 
+    logger.info('[API /quotes/:id/accept PUT] Quote accepted and order created', {
+      quoteId: quote.id,
+      quoteNumber: quote.number,
+      orderId: order.id,
+      orderNumber: order.number,
+      userId: session.user.id,
+    })
+
+    // NOTIF.1: Enviar notificação WhatsApp de confirmação para cliente
+    if (process.env.TWILIO_WHATSAPP_NUMBER && quote.customerPhone) {
+      const message = quoteApprovedTemplate({
+        customerName: sanitizeCustomerName(quote.customerName),
+        quoteNumber: quote.number,
+        totalValue: Number(quote.total),
+        nextSteps: 'aguardando pagamento. Acesse o portal para realizar o pagamento.',
+      })
+
+      // Fire and forget
+      sendWhatsAppMessage({
+        to: quote.customerPhone,
+        message,
+      })
+        .then((result) => {
+          if (result.success) {
+            logger.info('[WhatsApp Notification] Quote approved notification sent to customer', {
+              quoteNumber: quote.number,
+              orderNumber: order.number,
+              customerPhone: quote.customerPhone,
+              messageSid: result.messageSid,
+            })
+          } else {
+            logger.error('[WhatsApp Notification] Failed to send quote approved notification', {
+              quoteNumber: quote.number,
+              customerPhone: quote.customerPhone,
+              error: result.error,
+            })
+          }
+        })
+        .catch((error) => {
+          logger.error(
+            '[WhatsApp Notification] Unexpected error sending quote approved notification',
+            {
+              quoteNumber: quote.number,
+              error: error.message,
+            }
+          )
+        })
+    }
+
     return NextResponse.json({
       id: order.id,
+      orderId: order.id, // Alias for client compatibility
       number: order.number,
       status: order.status,
       total: Number(order.total),
       message: 'Orcamento aceito! Prossiga para o pagamento.',
     })
   } catch (error) {
-    console.error('Error accepting quote:', error)
-    return NextResponse.json(
-      { error: 'Erro ao aceitar orcamento' },
-      { status: 500 }
-    )
+    logger.error('Error accepting quote:', error)
+    return NextResponse.json({ error: 'Erro ao aceitar orcamento' }, { status: 500 })
   }
+}
+
+// Also support POST method for client compatibility
+export async function POST(request: Request, { params }: RouteParams) {
+  return PUT(request, { params })
 }

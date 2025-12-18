@@ -9,21 +9,41 @@ import { useQuoteStore } from '@/store/quote-store'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { formatPhone, formatCEP } from '@/lib/utils'
+import { formatPhone, formatCEP, formatCPFOrCNPJ, validateCPFOrCNPJ } from '@/lib/utils'
 import { ArrowLeft, User } from 'lucide-react'
+import { logger, getErrorMessage } from '@/lib/logger'
+import { BUSINESS_RULES } from '@/lib/constants'
 
+// FQ.4.4: Schema de validação robusto para dados do cliente
 const customerSchema = z.object({
-  name: z.string().min(2, 'Nome deve ter no minimo 2 caracteres'),
-  email: z.string().email('Email invalido'),
-  phone: z.string().min(14, 'Telefone invalido'),
-  cpfCnpj: z.string().optional(),
-  street: z.string().min(1, 'Endereco obrigatorio'),
-  number: z.string().min(1, 'Numero obrigatorio'),
-  complement: z.string().optional(),
-  neighborhood: z.string().min(1, 'Bairro obrigatorio'),
-  city: z.string().min(1, 'Cidade obrigatoria'),
-  state: z.string().min(2, 'Estado obrigatorio'),
-  zipCode: z.string().min(9, 'CEP invalido'),
+  name: z
+    .string()
+    .min(2, 'Nome deve ter no minimo 2 caracteres')
+    .max(100, 'Nome muito longo')
+    .regex(/^[a-zA-ZÀ-ÿ\s]+$/, 'Nome deve conter apenas letras'),
+  email: z.string().email('Email invalido').max(100, 'Email muito longo'),
+  phone: z
+    .string()
+    .regex(BUSINESS_RULES.phoneRegex, 'Telefone invalido (formato: (XX) XXXXX-XXXX)'),
+  cpfCnpj: z
+    .string()
+    .optional()
+    .refine((val) => {
+      // Se vazio, aceitar (campo opcional)
+      if (!val || val.length === 0) return true
+      // Validar CPF ou CNPJ com algoritmo de digitos verificadores
+      return validateCPFOrCNPJ(val)
+    }, 'CPF ou CNPJ invalido'),
+  street: z.string().min(1, 'Endereco obrigatorio').max(200, 'Endereco muito longo'),
+  number: z.string().min(1, 'Numero obrigatorio').max(10, 'Numero muito longo'),
+  complement: z.string().max(100, 'Complemento muito longo').optional(),
+  neighborhood: z.string().min(1, 'Bairro obrigatorio').max(100, 'Bairro muito longo'),
+  city: z.string().min(1, 'Cidade obrigatoria').max(100, 'Cidade muito longa'),
+  state: z
+    .string()
+    .length(2, 'Estado deve ter 2 letras (ex: RJ)')
+    .regex(/^[A-Z]{2}$/, 'Estado invalido (use sigla: RJ, SP, MG, etc)'),
+  zipCode: z.string().min(9, 'CEP invalido (formato: XXXXX-XXX)').max(9, 'CEP invalido'),
 })
 
 type CustomerFormData = z.infer<typeof customerSchema>
@@ -83,8 +103,13 @@ export function StepCustomer() {
             setValue('city', data.localidade || '')
             setValue('state', data.uf || '')
           }
-        } catch {
-          console.error('Error fetching address')
+        } catch (error) {
+          // ARCH-P1-2: Standardized error handling
+          const errorMsg = getErrorMessage(error)
+          logger.error('[CUSTOMER] Error fetching address from ViaCEP:', {
+            error: errorMsg,
+            zipCode,
+          })
         }
       }
     }
@@ -100,6 +125,11 @@ export function StepCustomer() {
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatCEP(e.target.value)
     setValue('zipCode', formatted)
+  }
+
+  const handleCpfCnpjChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatCPFOrCNPJ(e.target.value)
+    setValue('cpfCnpj', formatted)
   }
 
   const onSubmit = (data: CustomerFormData) => {
@@ -153,8 +183,15 @@ export function StepCustomer() {
                   id="cpfCnpj"
                   aria-label="CPF ou CNPJ"
                   {...register('cpfCnpj')}
-                  placeholder="Opcional"
+                  onChange={handleCpfCnpjChange}
+                  placeholder="000.000.000-00 ou 00.000.000/0000-00"
+                  maxLength={18}
                 />
+                {errors.cpfCnpj && (
+                  <p className="mt-1 text-sm text-error" role="alert">
+                    {errors.cpfCnpj.message}
+                  </p>
+                )}
               </div>
             </div>
 

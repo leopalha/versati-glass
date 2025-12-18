@@ -15,9 +15,28 @@ export const createProductSchema = z
     description: z.string().min(10, 'Descrição deve ter no mínimo 10 caracteres'),
     shortDescription: z.string().optional(),
 
-    category: z.enum(['BOX', 'ESPELHOS', 'VIDROS', 'PORTAS_JANELAS', 'FECHAMENTOS', 'OUTROS'], {
-      errorMap: () => ({ message: 'Categoria inválida' }),
-    }),
+    category: z.enum(
+      [
+        'BOX',
+        'ESPELHOS',
+        'VIDROS',
+        'PORTAS',
+        'JANELAS',
+        'GUARDA_CORPO',
+        'CORTINAS_VIDRO',
+        'PERGOLADOS',
+        'TAMPOS_PRATELEIRAS',
+        'DIVISORIAS',
+        'FECHAMENTOS',
+        'FERRAGENS',
+        'KITS',
+        'SERVICOS',
+        'OUTROS',
+      ],
+      {
+        errorMap: () => ({ message: 'Categoria inválida' }),
+      }
+    ),
     subcategory: z.string().optional(),
 
     images: z.array(z.string().url('URL de imagem inválida')).default([]),
@@ -118,7 +137,23 @@ const productBaseSchema = z.object({
   description: z.string().min(10, 'Descrição deve ter no mínimo 10 caracteres'),
   shortDescription: z.string().optional(),
   category: z
-    .enum(['BOX', 'ESPELHOS', 'VIDROS', 'PORTAS_JANELAS', 'FECHAMENTOS', 'OUTROS'])
+    .enum([
+      'BOX',
+      'ESPELHOS',
+      'VIDROS',
+      'PORTAS',
+      'JANELAS',
+      'GUARDA_CORPO',
+      'CORTINAS_VIDRO',
+      'PERGOLADOS',
+      'TAMPOS_PRATELEIRAS',
+      'DIVISORIAS',
+      'FECHAMENTOS',
+      'FERRAGENS',
+      'KITS',
+      'SERVICOS',
+      'OUTROS',
+    ])
     .optional(),
   subcategory: z.string().optional(),
   images: z.array(z.string().url('URL de imagem inválida')).optional(),
@@ -150,7 +185,23 @@ export const updateProductSchema = productBaseSchema.extend({
  */
 export const productQuerySchema = z.object({
   category: z
-    .enum(['BOX', 'ESPELHOS', 'VIDROS', 'PORTAS_JANELAS', 'FECHAMENTOS', 'OUTROS'])
+    .enum([
+      'BOX',
+      'ESPELHOS',
+      'VIDROS',
+      'PORTAS',
+      'JANELAS',
+      'GUARDA_CORPO',
+      'CORTINAS_VIDRO',
+      'PERGOLADOS',
+      'TAMPOS_PRATELEIRAS',
+      'DIVISORIAS',
+      'FECHAMENTOS',
+      'FERRAGENS',
+      'KITS',
+      'SERVICOS',
+      'OUTROS',
+    ])
     .optional(),
   featured: z
     .enum(['true', 'false'])

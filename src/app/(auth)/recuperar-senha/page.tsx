@@ -28,6 +28,7 @@ export default function RecuperarSenhaPage() {
     formState: { errors },
   } = useForm<ResetFormData>({
     resolver: zodResolver(resetSchema),
+    mode: 'onBlur',
   })
 
   const onSubmit = async (data: ResetFormData) => {
@@ -96,11 +97,13 @@ export default function RecuperarSenhaPage() {
             type="email"
             placeholder="Digite seu email"
             aria-label="Email"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'email-error' : undefined}
             {...register('email')}
             disabled={isLoading}
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-error" role="alert">
+            <p id="email-error" className="mt-1 text-sm text-error" role="alert">
               {errors.email.message}
             </p>
           )}

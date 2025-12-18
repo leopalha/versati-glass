@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { constructWebhookEvent } from '@/lib/stripe'
 import type Stripe from 'stripe'
+import { logger } from '@/lib/logger'
+import { sendOrderStatusUpdateEmail } from '@/services/email'
+import { sendTemplateMessage } from '@/services/whatsapp'
+import { formatCurrency } from '@/lib/utils'
+
+const PORTAL_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://versatiglass.com.br'
 
 export async function POST(request: Request) {
   try {
@@ -9,10 +15,7 @@ export async function POST(request: Request) {
     const signature = request.headers.get('stripe-signature')
 
     if (!signature) {
-      return NextResponse.json(
-        { error: 'Missing stripe-signature header' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Missing stripe-signature header' }, { status: 400 })
     }
 
     let event: Stripe.Event
@@ -20,11 +23,8 @@ export async function POST(request: Request) {
     try {
       event = await constructWebhookEvent(body, signature)
     } catch (err) {
-      console.error('Webhook signature verification failed:', err)
-      return NextResponse.json(
-        { error: 'Webhook signature verification failed' },
-        { status: 400 }
-      )
+      logger.error('Webhook signature verification failed:', err)
+      return NextResponse.json({ error: 'Webhook signature verification failed' }, { status: 400 })
     }
 
     // Handle the event
@@ -35,37 +35,80 @@ export async function POST(request: Request) {
         const orderId = session.client_reference_id || session.metadata?.orderId
 
         if (!orderId) {
-          console.error('No orderId found in session')
+          logger.error('No orderId found in session')
           break
         }
 
         const paymentIntent = session.payment_intent as Stripe.PaymentIntent | string
-        const paymentIntentId = typeof paymentIntent === 'string' ? paymentIntent : paymentIntent?.id
+        const paymentIntentId =
+          typeof paymentIntent === 'string' ? paymentIntent : paymentIntent?.id
+        const paidAmount = session.amount_total ? session.amount_total / 100 : 0
+        const paymentMethod = session.payment_method_types?.[0] === 'pix' ? 'PIX' : 'Cartão'
 
-        // Update order
-        await prisma.$transaction(async (tx) => {
-          const order = await tx.order.update({
+        // Update order and get user info
+        const order = await prisma.$transaction(async (tx) => {
+          const updatedOrder = await tx.order.update({
             where: { id: orderId },
             data: {
               paymentStatus: 'PAID',
-              paidAmount: session.amount_total ? session.amount_total / 100 : 0,
+              paidAmount,
               stripePaymentIntentId: paymentIntentId,
               status: 'APROVADO',
+            },
+            include: {
+              user: true,
             },
           })
 
           // Add timeline entry
           await tx.orderTimelineEntry.create({
             data: {
-              orderId: order.id,
+              orderId: updatedOrder.id,
               status: 'APROVADO',
-              description: `Pagamento de R$ ${((session.amount_total || 0) / 100).toFixed(2)} confirmado via ${session.payment_method_types?.[0] === 'pix' ? 'PIX' : 'Cartao'}`,
+              description: `Pagamento de ${formatCurrency(paidAmount)} confirmado via ${paymentMethod}`,
               createdBy: 'system',
             },
           })
+
+          return updatedOrder
         })
 
-        console.log(`Payment completed for order ${orderId}`)
+        // Send notifications to customer
+        try {
+          // Send email notification
+          await sendOrderStatusUpdateEmail({
+            customerName: order.user.name,
+            customerEmail: order.user.email,
+            orderNumber: order.number,
+            status: 'PAID',
+            statusMessage: `Pagamento de ${formatCurrency(paidAmount)} confirmado via ${paymentMethod}. Seu pedido está em processamento.`,
+            orderUrl: `${PORTAL_BASE_URL}/portal/pedidos/${order.id}`,
+          })
+          logger.debug(`Payment confirmation email sent for order ${order.number}`)
+        } catch (emailError) {
+          logger.error(`Failed to send payment email for order ${order.number}:`, emailError)
+        }
+
+        try {
+          // Send WhatsApp notification
+          if (order.user.phone) {
+            await sendTemplateMessage(order.user.phone, 'payment_confirmed', {
+              customerName: order.user.name.split(' ')[0],
+              orderNumber: order.number,
+              amount: formatCurrency(paidAmount),
+              paymentMethod,
+              portalUrl: `${PORTAL_BASE_URL}/portal/pedidos/${order.id}`,
+            })
+            logger.debug(`Payment WhatsApp notification sent for order ${order.number}`)
+          }
+        } catch (whatsappError) {
+          logger.error(
+            `Failed to send WhatsApp notification for order ${order.number}:`,
+            whatsappError
+          )
+        }
+
+        logger.debug(`Payment completed for order ${orderId}`)
         break
       }
 
@@ -82,7 +125,7 @@ export async function POST(request: Request) {
             },
           })
 
-          console.log(`Checkout session expired for order ${orderId}`)
+          logger.debug(`Checkout session expired for order ${orderId}`)
         }
         break
       }
@@ -101,7 +144,7 @@ export async function POST(request: Request) {
             },
           })
 
-          console.log(`Payment failed for order ${orderId}`)
+          logger.debug(`Payment failed for order ${orderId}`)
         }
         break
       }
@@ -134,22 +177,19 @@ export async function POST(request: Request) {
               })
             })
 
-            console.log(`Refund processed for order ${order.id}`)
+            logger.debug(`Refund processed for order ${order.id}`)
           }
         }
         break
       }
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        logger.debug(`Unhandled event type: ${event.type}`)
     }
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error('Webhook error:', error)
-    return NextResponse.json(
-      { error: 'Webhook handler failed' },
-      { status: 500 }
-    )
+    logger.error('Webhook error:', error)
+    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
   }
 }

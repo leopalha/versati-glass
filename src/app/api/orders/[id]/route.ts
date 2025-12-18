@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -52,10 +53,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json(order)
   } catch (error) {
-    console.error('Get order error:', error)
-    return NextResponse.json(
-      { error: 'Failed to get order' },
-      { status: 500 }
-    )
+    logger.error('Get order error:', error)
+    return NextResponse.json({ error: 'Failed to get order' }, { status: 500 })
   }
 }

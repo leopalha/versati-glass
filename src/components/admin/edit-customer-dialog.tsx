@@ -25,12 +25,20 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { logger, getErrorMessage } from '@/lib/logger'
+import { validateCPFOrCNPJ, formatCPFOrCNPJ, formatPhone } from '@/lib/utils'
 
 const editCustomerSchema = z.object({
   name: z.string().min(3, 'Nome muito curto'),
   email: z.string().email('Email inválido'),
   phone: z.string().optional(),
-  document: z.string().optional(),
+  document: z
+    .string()
+    .optional()
+    .refine((val) => {
+      if (!val || val.length === 0) return true
+      return validateCPFOrCNPJ(val)
+    }, 'CPF ou CNPJ invalido'),
 })
 
 type EditCustomerInput = z.infer<typeof editCustomerSchema>
@@ -76,9 +84,11 @@ export function EditCustomerDialog({ customer }: EditCustomerDialogProps) {
 
       setOpen(false)
       router.refresh()
-    } catch (error: any) {
-      console.error('Erro:', error)
-      alert(error.message || 'Erro ao atualizar cliente. Tente novamente.')
+    } catch (error) {
+      // ARCH-P1-3: Replace 'any' with proper error handling
+      const errorMsg = getErrorMessage(error)
+      logger.error('[EDIT_CUSTOMER] Failed to update customer:', { error: errorMsg })
+      alert(errorMsg || 'Erro ao atualizar cliente. Tente novamente.')
     } finally {
       setLoading(false)
     }
@@ -150,7 +160,15 @@ export function EditCustomerDialog({ customer }: EditCustomerDialogProps) {
                 <FormItem>
                   <FormLabel>CPF/CNPJ</FormLabel>
                   <FormControl>
-                    <Input placeholder="000.000.000-00" {...field} />
+                    <Input
+                      placeholder="000.000.000-00 ou 00.000.000/0000-00"
+                      {...field}
+                      onChange={(e) => {
+                        const formatted = formatCPFOrCNPJ(e.target.value)
+                        field.onChange(formatted)
+                      }}
+                      maxLength={18}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
+import { logger } from '@/lib/logger'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -39,10 +40,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     })
 
     if (!quote) {
-      return NextResponse.json(
-        { error: 'Orcamento nao encontrado' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Orcamento nao encontrado' }, { status: 404 })
     }
 
     // Check if user can access this quote
@@ -83,10 +81,71 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     return NextResponse.json(serializedQuote)
   } catch (error) {
-    console.error('Error fetching quote:', error)
-    return NextResponse.json(
-      { error: 'Erro ao buscar orcamento' },
-      { status: 500 }
-    )
+    logger.error('Error fetching quote:', error)
+    return NextResponse.json({ error: 'Erro ao buscar orcamento' }, { status: 500 })
+  }
+}
+
+export async function PATCH(request: Request, { params }: RouteParams) {
+  try {
+    const session = await auth()
+    const { id } = await params
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 })
+    }
+
+    const body = await request.json()
+    const { status: newStatus } = body
+
+    const quote = await prisma.quote.findUnique({
+      where: { id },
+    })
+
+    if (!quote) {
+      return NextResponse.json({ error: 'Orcamento nao encontrado' }, { status: 404 })
+    }
+
+    // Check ownership
+    const isOwner = session.user.id === quote.userId
+    const isAdmin = session.user.role === 'ADMIN' || session.user.role === 'STAFF'
+
+    if (!isOwner && !isAdmin) {
+      return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 })
+    }
+
+    // Only allow certain status transitions
+    const allowedStatuses = ['REJECTED', 'CANCELLED']
+    if (!allowedStatuses.includes(newStatus)) {
+      return NextResponse.json({ error: 'Status invalido' }, { status: 400 })
+    }
+
+    // Can only reject/cancel quotes that haven't been accepted/converted
+    if (['ACCEPTED', 'CONVERTED'].includes(quote.status)) {
+      return NextResponse.json(
+        { error: 'Este orcamento ja foi aceito e nao pode ser alterado' },
+        { status: 400 }
+      )
+    }
+
+    const updatedQuote = await prisma.quote.update({
+      where: { id },
+      data: {
+        status: newStatus,
+        ...(newStatus === 'REJECTED' && { rejectedAt: new Date() }),
+      },
+    })
+
+    return NextResponse.json({
+      id: updatedQuote.id,
+      status: updatedQuote.status,
+      message:
+        newStatus === 'REJECTED'
+          ? 'Orcamento recusado com sucesso'
+          : 'Orcamento cancelado com sucesso',
+    })
+  } catch (error) {
+    logger.error('Error updating quote:', error)
+    return NextResponse.json({ error: 'Erro ao atualizar orcamento' }, { status: 500 })
   }
 }

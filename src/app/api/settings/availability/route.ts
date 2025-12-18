@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { readFile, writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
+import { logger } from '@/lib/logger'
 
 const SETTINGS_DIR = join(process.cwd(), 'data')
 const SETTINGS_FILE = join(SETTINGS_DIR, 'availability.json')
@@ -37,7 +38,7 @@ export async function GET() {
       },
     })
   } catch (error) {
-    console.error('Erro ao carregar configuração:', error)
+    logger.error('Erro ao carregar configuração:', error)
     return NextResponse.json({ error: 'Erro ao carregar configuração' }, { status: 500 })
   }
 }
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
       config,
     })
   } catch (error) {
-    console.error('Erro ao salvar configuração:', error)
+    logger.error('Erro ao salvar configuração:', error)
     return NextResponse.json({ error: 'Erro ao salvar configuração' }, { status: 500 })
   }
 }

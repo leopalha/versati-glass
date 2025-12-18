@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 const updateUserSchema = z.object({
   name: z.string().min(3).optional(),
@@ -56,7 +57,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     return NextResponse.json({ user })
   } catch (error) {
-    console.error('Erro ao buscar usuário:', error)
+    logger.error('Erro ao buscar usuário:', error)
     return NextResponse.json({ error: 'Erro ao buscar usuário' }, { status: 500 })
   }
 }
@@ -108,7 +109,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       user: updatedUser,
     })
   } catch (error) {
-    console.error('Erro ao atualizar usuário:', error)
+    logger.error('Erro ao atualizar usuário:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 })
@@ -145,7 +146,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       message: 'Usuário deletado com sucesso',
     })
   } catch (error) {
-    console.error('Erro ao deletar usuário:', error)
+    logger.error('Erro ao deletar usuário:', error)
     return NextResponse.json({ error: 'Erro ao deletar usuário' }, { status: 500 })
   }
 }

@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
+import { logger } from '@/lib/logger'
 
 interface DayAvailability {
   enabled: boolean
@@ -68,7 +69,7 @@ export function AvailabilitySettings() {
         }
       }
     } catch (error) {
-      console.error('Erro ao carregar configuração:', error)
+      logger.error('Erro ao carregar configuração:', error)
     } finally {
       setLoading(false)
     }
@@ -89,14 +90,19 @@ export function AvailabilitySettings() {
 
       alert('Configuração salva com sucesso!')
     } catch (error) {
-      console.error('Erro:', error)
+      logger.error('Erro:', error)
       alert('Erro ao salvar configuração. Tente novamente.')
     } finally {
       setSaving(false)
     }
   }
 
-  const updateDay = (day: keyof typeof config, field: keyof DayAvailability, value: any) => {
+  // ARCH-P1-3: Replace 'any' with proper union type
+  const updateDay = (
+    day: keyof typeof config,
+    field: keyof DayAvailability,
+    value: boolean | string
+  ) => {
     if (field === 'enabled') {
       setConfig((prev) => ({
         ...prev,

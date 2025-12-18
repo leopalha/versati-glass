@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { type ThemeType, applyTheme } from '@/lib/theme'
+import { type ThemeType } from '@/lib/theme'
 
 interface ThemeState {
   theme: ThemeType
@@ -12,18 +12,13 @@ export const useThemeStore = create<ThemeState>()(
     (set) => ({
       theme: 'gold',
       setTheme: (theme) => {
-        applyTheme(theme)
+        // Theme application is handled by ThemeProvider to avoid hydration mismatch
         set({ theme })
       },
     }),
     {
       name: 'versati-theme',
-      onRehydrateStorage: () => (state) => {
-        // Apply theme on hydration
-        if (state?.theme) {
-          applyTheme(state.theme)
-        }
-      },
+      // Theme is applied via ThemeProvider useEffect after mount
     }
   )
 )

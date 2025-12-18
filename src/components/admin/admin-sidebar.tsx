@@ -16,9 +16,13 @@ import {
   ChevronLeft,
   Menu,
   Settings,
+  BookOpen,
+  Bot,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { useWhatsAppUnread } from '@/hooks/use-whatsapp-unread'
 
 const menuItems = [
   {
@@ -48,7 +52,12 @@ const menuItems = [
   },
   {
     href: '/admin/conversas',
-    label: 'Conversas',
+    label: 'Chat IA (Site)',
+    icon: Bot,
+  },
+  {
+    href: '/admin/whatsapp',
+    label: 'WhatsApp',
     icon: MessageSquare,
   },
   {
@@ -62,16 +71,29 @@ export function AdminSidebar() {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const { unreadCount } = useWhatsAppUnread()
 
-  const handleSignOut = () => {
+  const handleSignOut = useCallback(() => {
     signOut({ callbackUrl: '/' })
-  }
+  }, [])
+
+  const toggleCollapse = useCallback(() => {
+    setIsCollapsed((prev) => !prev)
+  }, [])
+
+  const openMobile = useCallback(() => {
+    setIsMobileOpen(true)
+  }, [])
+
+  const closeMobile = useCallback(() => {
+    setIsMobileOpen(false)
+  }, [])
 
   return (
     <>
       {/* Mobile menu button */}
       <button
-        onClick={() => setIsMobileOpen(true)}
+        onClick={openMobile}
         className="bg-theme-elevated fixed left-4 top-4 z-40 rounded-lg p-2 lg:hidden"
       >
         <Menu className="h-5 w-5 text-white" />
@@ -79,10 +101,7 @@ export function AdminSidebar() {
 
       {/* Mobile overlay */}
       {isMobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={() => setIsMobileOpen(false)}
-        />
+        <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={closeMobile} />
       )}
 
       {/* Sidebar */}
@@ -104,7 +123,7 @@ export function AdminSidebar() {
             </Link>
           )}
           <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={toggleCollapse}
             className="text-theme-muted hover:bg-theme-elevated hover:text-theme-primary hidden rounded-lg p-2 lg:block"
           >
             <ChevronLeft
@@ -112,7 +131,7 @@ export function AdminSidebar() {
             />
           </button>
           <button
-            onClick={() => setIsMobileOpen(false)}
+            onClick={closeMobile}
             className="text-theme-muted hover:bg-theme-elevated hover:text-theme-primary rounded-lg p-2 lg:hidden"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -124,21 +143,33 @@ export function AdminSidebar() {
           {menuItems.map((item) => {
             const isActive =
               pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
+            const isWhatsApp = item.href === '/admin/whatsapp'
+            const showBadge = isWhatsApp && unreadCount > 0
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setIsMobileOpen(false)}
+                onClick={closeMobile}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                  'relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                   isActive
                     ? 'bg-accent-500/10 text-accent-500'
                     : 'text-theme-muted hover:bg-theme-elevated hover:text-theme-primary'
                 )}
               >
                 <item.icon className="h-5 w-5 flex-shrink-0" />
-                {!isCollapsed && <span>{item.label}</span>}
+                {!isCollapsed && <span className="flex-1">{item.label}</span>}
+                {showBadge && !isCollapsed && (
+                  <Badge variant="error" className="ml-auto">
+                    {unreadCount}
+                  </Badge>
+                )}
+                {showBadge && isCollapsed && (
+                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
               </Link>
             )
           })}
@@ -146,6 +177,16 @@ export function AdminSidebar() {
 
         {/* Footer */}
         <div className="border-theme-default border-t p-4">
+          <Link
+            href="/admin/manual"
+            className={cn(
+              'text-theme-muted hover:bg-theme-elevated hover:text-theme-primary mb-2 flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium',
+              isCollapsed && 'justify-center'
+            )}
+          >
+            <BookOpen className="h-5 w-5" />
+            {!isCollapsed && <span>Manual</span>}
+          </Link>
           <Link
             href="/admin/configuracoes"
             className={cn(

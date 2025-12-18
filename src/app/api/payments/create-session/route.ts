@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { createCheckoutSession } from '@/lib/stripe'
+import { logger } from '@/lib/logger'
 
 const createSessionSchema = z.object({
   orderId: z.string(),
@@ -49,10 +50,7 @@ export async function POST(request: Request) {
     })
 
     if (!order) {
-      return NextResponse.json(
-        { error: 'Pedido nao encontrado' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Pedido nao encontrado' }, { status: 404 })
     }
 
     // Check ownership
@@ -62,10 +60,7 @@ export async function POST(request: Request) {
 
     // Check if order can be paid
     if (order.paymentStatus === 'PAID') {
-      return NextResponse.json(
-        { error: 'Este pedido ja foi pago' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Este pedido ja foi pago' }, { status: 400 })
     }
 
     // Create description from items
@@ -103,10 +98,7 @@ export async function POST(request: Request) {
       url: checkoutSession.url,
     })
   } catch (error) {
-    console.error('Error creating payment session:', error)
-    return NextResponse.json(
-      { error: 'Erro ao criar sessao de pagamento' },
-      { status: 500 }
-    )
+    logger.error('Error creating payment session:', error)
+    return NextResponse.json({ error: 'Erro ao criar sessao de pagamento' }, { status: 500 })
   }
 }

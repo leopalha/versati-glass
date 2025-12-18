@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { logger } from '@/lib/logger'
 
 interface QuoteItem {
   id: string
@@ -86,7 +87,7 @@ export function EditQuoteValues({
       setOpen(false)
       router.refresh()
     } catch (error) {
-      console.error('Erro:', error)
+      logger.error('Erro:', error)
       alert('Erro ao atualizar valores. Tente novamente.')
     } finally {
       setLoading(false)

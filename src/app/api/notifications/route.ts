@@ -6,6 +6,7 @@ import {
   sendAppointmentReminderNotification,
   sendInstallationCompleteNotification,
 } from '@/services/notifications'
+import { logger } from '@/lib/logger'
 
 // Send a notification
 export async function POST(request: NextRequest) {
@@ -26,10 +27,7 @@ export async function POST(request: NextRequest) {
     const { type, id } = body
 
     if (!type || !id) {
-      return NextResponse.json(
-        { error: 'Type and ID are required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Type and ID are required' }, { status: 400 })
     }
 
     let result
@@ -52,10 +50,7 @@ export async function POST(request: NextRequest) {
         break
 
       default:
-        return NextResponse.json(
-          { error: `Unknown notification type: ${type}` },
-          { status: 400 }
-        )
+        return NextResponse.json({ error: `Unknown notification type: ${type}` }, { status: 400 })
     }
 
     return NextResponse.json({
@@ -63,7 +58,7 @@ export async function POST(request: NextRequest) {
       result,
     })
   } catch (error) {
-    console.error('Notification error:', error)
+    logger.error('Notification error:', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to send notification' },
       { status: 500 }

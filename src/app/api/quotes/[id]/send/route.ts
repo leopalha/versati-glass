@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth'
 import { sendEmail } from '@/services/email'
 import { generateQuoteSentEmailHtml } from '@/services/email-templates'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { logger } from '@/lib/logger'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -142,7 +143,7 @@ export async function POST(request: Request, { params }: RouteParams) {
         html: emailHtml,
       })
     } catch (emailError) {
-      console.error('Error sending quote email:', emailError)
+      logger.error('Error sending quote email:', emailError)
       // Se falhou o envio do email, reverter status
       await prisma.quote.update({
         where: { id },
@@ -175,7 +176,7 @@ export async function POST(request: Request, { params }: RouteParams) {
       message: `Orçamento enviado com sucesso para ${quote.user.email}`,
     })
   } catch (error) {
-    console.error('Error sending quote:', error)
+    logger.error('Error sending quote:', error)
     return NextResponse.json({ error: 'Erro ao enviar orçamento' }, { status: 500 })
   }
 }

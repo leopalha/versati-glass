@@ -1,0 +1,897 @@
+'use client'
+
+import { useState, useRef, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+import {
+  MessageCircle,
+  X,
+  Send,
+  Loader2,
+  Bot,
+  User,
+  Minimize2,
+  Maximize2,
+  Image as ImageIcon,
+  X as XIcon,
+  Sparkles,
+  CheckCircle2,
+  ArrowRight,
+  Package,
+  Ruler,
+  UserCircle,
+  Circle,
+} from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useQuoteStore } from '@/store/quote-store'
+import type { AiQuoteData } from '@/store/quote-store'
+import { getQuoteContextCompletion } from '@/lib/ai-quote-transformer'
+import { VoiceChatButton } from '@/components/chat/voice-chat-button'
+import { useVoice } from '@/hooks/use-voice'
+import { useCrossChannelUpdates } from '@/hooks/use-cross-channel-updates'
+import { showCrossChannelNotification } from '@/components/chat/cross-channel-notification'
+
+interface Message {
+  id: string
+  role: 'USER' | 'ASSISTANT'
+  content: string
+  createdAt: string
+  imageUrl?: string
+}
+
+interface ChatAssistidoProps {
+  className?: string
+  initialOpen?: boolean
+  position?: 'bottom-right' | 'bottom-left'
+  onClose?: () => void
+  showInitially?: boolean
+}
+
+export function ChatAssistido({
+  className,
+  initialOpen = false,
+  position = 'bottom-right',
+  onClose,
+  showInitially = false,
+}: ChatAssistidoProps) {
+  const router = useRouter()
+  const importFromAI = useQuoteStore((state) => state.importFromAI)
+
+  const [isOpen, setIsOpen] = useState(initialOpen || showInitially)
+  const [isMinimized, setIsMinimized] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [conversationId, setConversationId] = useState<string | null>(null)
+  const [sessionId] = useState(
+    () => `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+  )
+  const [selectedImage, setSelectedImage] = useState<{
+    file: File
+    preview: string
+    base64: string
+  } | null>(null)
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
+
+  // AI-CHAT Sprint P1.6: Quote export state
+  const [canExportQuote, setCanExportQuote] = useState(false)
+  const [isExportingQuote, setIsExportingQuote] = useState(false)
+
+  // AI-CHAT Sprint P3.2: Progress tracking state
+  const [quoteProgress, setQuoteProgress] = useState(0)
+  const [quoteContext, setQuoteContext] = useState<any>(null)
+
+  // Voice feature state
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(false)
+  const { speak, stopSpeaking, isSpeaking } = useVoice({ language: 'pt-BR' })
+
+  // OMNICHANNEL Sprint 1 - Task 4: Cross-channel notifications
+  useCrossChannelUpdates({
+    conversationId: conversationId || undefined,
+    enabled: isOpen && !!conversationId,
+    onUpdate: (message) => {
+      // Exibir notificação toast
+      showCrossChannelNotification({
+        content: message.content,
+        senderType: message.senderType
+      })
+
+      // Adicionar mensagem à timeline do chat
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: message.id,
+          role: 'ASSISTANT',
+          content: `📱 *Resposta via WhatsApp:*\n\n${message.content}`,
+          createdAt: message.timestamp
+        }
+      ])
+    },
+    pollingInterval: 10000 // 10 segundos
+  })
+
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Auto-scroll para ultima mensagem
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, scrollToBottom])
+
+  // Focus no input quando abre
+  useEffect(() => {
+    if (isOpen && !isMinimized) {
+      inputRef.current?.focus()
+    }
+  }, [isOpen, isMinimized])
+
+  // Mensagem inicial de boas-vindas
+  useEffect(() => {
+    if (isOpen && messages.length === 0) {
+      setMessages([
+        {
+          id: 'welcome',
+          role: 'ASSISTANT',
+          content:
+            'Ola! Sou o assistente virtual da Versati Glass. Como posso ajudar voce hoje? Posso tirar duvidas sobre nossos produtos ou ajudar a fazer um orcamento.',
+          createdAt: new Date().toISOString(),
+        },
+      ])
+    }
+  }, [isOpen, messages.length])
+
+  // Auto-speak AI responses when voice is enabled
+  useEffect(() => {
+    if (!isVoiceEnabled || !messages.length) return
+
+    const lastMessage = messages[messages.length - 1]
+    if (lastMessage.role === 'ASSISTANT' && !isSpeaking && !isLoading) {
+      // Speak the last AI response
+      speak(lastMessage.content, {
+        rate: 1.0,
+        pitch: 1.0,
+        volume: 1.0,
+      })
+    }
+  }, [messages, isVoiceEnabled, speak, isSpeaking, isLoading])
+
+  // Stop speaking when voice is disabled
+  useEffect(() => {
+    if (!isVoiceEnabled && isSpeaking) {
+      stopSpeaking()
+    }
+  }, [isVoiceEnabled, isSpeaking, stopSpeaking])
+
+  // Handler para selecionar imagem
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validar tipo
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+    if (!allowedTypes.includes(file.type)) {
+      alert('Formato nao suportado. Use JPG, PNG, WebP ou GIF.')
+      return
+    }
+
+    // Validar tamanho (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Imagem muito grande. Maximo 10MB.')
+      return
+    }
+
+    setIsUploadingImage(true)
+
+    try {
+      // Converter para base64
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        const base64 = reader.result as string
+        setSelectedImage({
+          file,
+          preview: URL.createObjectURL(file),
+          base64,
+        })
+        setIsUploadingImage(false)
+      }
+      reader.readAsDataURL(file)
+    } catch {
+      alert('Erro ao processar imagem.')
+      setIsUploadingImage(false)
+    }
+
+    // Limpar input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  // Remover imagem selecionada
+  const removeSelectedImage = () => {
+    if (selectedImage?.preview) {
+      URL.revokeObjectURL(selectedImage.preview)
+    }
+    setSelectedImage(null)
+  }
+
+  // AI-CHAT Sprint P1.6 + P3.2: Check export status and update progress
+  const checkExportStatus = useCallback(async () => {
+    if (!conversationId && !sessionId) return
+
+    try {
+      const params = new URLSearchParams()
+      if (conversationId) {
+        params.set('conversationId', conversationId)
+      } else {
+        params.set('sessionId', sessionId)
+      }
+
+      const response = await fetch(`/api/ai/chat/export-quote?${params}`)
+      if (response.ok) {
+        const data = await response.json()
+        setCanExportQuote(data.canExport || false)
+
+        // AI-CHAT Sprint P3.2: Update progress tracking
+        if (data.quoteContext) {
+          setQuoteContext(data.quoteContext)
+          const completion = getQuoteContextCompletion(data.quoteContext)
+          setQuoteProgress(completion)
+        }
+      }
+    } catch (error) {
+      console.error('Error checking export status:', error)
+    }
+  }, [conversationId, sessionId])
+
+  // AI-CHAT Sprint P1.6: Check export status after each AI response
+  useEffect(() => {
+    if (messages.length > 1) {
+      // Check 2 seconds after last message (give time for quoteContext to update)
+      const timer = setTimeout(checkExportStatus, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [messages, checkExportStatus])
+
+  // AI-CHAT Sprint P1.6 + P2.1: Handle quote finalization
+  const handleFinalizeQuote = async () => {
+    if (!conversationId && !sessionId) {
+      alert('Erro: Nenhuma conversa ativa')
+      return
+    }
+
+    setIsExportingQuote(true)
+
+    try {
+      // Step 1: Export quote data for wizard
+      const exportResponse = await fetch('/api/ai/chat/export-quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          conversationId,
+          sessionId,
+        }),
+      })
+
+      if (!exportResponse.ok) {
+        const error = await exportResponse.json()
+        throw new Error(error.message || 'Erro ao exportar orçamento')
+      }
+
+      const { data } = await exportResponse.json()
+      const quoteData = data as AiQuoteData
+
+      // Step 2: Auto-create Quote in database (P2.1)
+      try {
+        const autoQuoteResponse = await fetch('/api/quotes/from-ai', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            conversationId,
+            sessionId,
+          }),
+        })
+
+        if (autoQuoteResponse.ok) {
+          const autoQuoteData = await autoQuoteResponse.json()
+          console.log('Quote auto-created:', autoQuoteData.quote)
+        } else {
+          // Don't block user flow if auto-quote fails
+          console.warn('Failed to auto-create quote, but continuing...')
+        }
+      } catch (autoQuoteError) {
+        // Don't block user flow if auto-quote fails
+        console.warn('Auto-quote creation error:', autoQuoteError)
+      }
+
+      // Step 3: Import data into quote store
+      importFromAI(quoteData)
+
+      // Step 4: Close chat
+      if (onClose) {
+        onClose()
+      } else {
+        setIsOpen(false)
+      }
+
+      // Step 5: Navigate to quote wizard (Step 4 - Item Review)
+      router.push('/orcamento')
+    } catch (error) {
+      console.error('Error finalizing quote:', error)
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'Erro ao finalizar orçamento. Por favor, tente novamente.'
+      )
+    } finally {
+      setIsExportingQuote(false)
+    }
+  }
+
+  const sendMessage = async () => {
+    if ((!input.trim() && !selectedImage) || isLoading) return
+
+    const messageContent =
+      input.trim() || (selectedImage ? 'Analise esta imagem do meu espaco, por favor.' : '')
+
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      role: 'USER',
+      content: messageContent,
+      createdAt: new Date().toISOString(),
+      imageUrl: selectedImage?.preview,
+    }
+
+    setMessages((prev) => [...prev, userMessage])
+    setInput('')
+    const imageToSend = selectedImage
+    setSelectedImage(null)
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: messageContent,
+          conversationId,
+          sessionId,
+          imageBase64: imageToSend?.base64 || null,
+          imageUrl: imageToSend?.preview || null,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Erro ao enviar mensagem')
+      }
+
+      const data = await response.json()
+
+      // Atualizar conversationId se for nova conversa
+      if (data.conversationId && !conversationId) {
+        setConversationId(data.conversationId)
+      }
+
+      const assistantMessage: Message = {
+        id: `assistant-${Date.now()}`,
+        role: 'ASSISTANT',
+        content: data.message,
+        createdAt: new Date().toISOString(),
+      }
+
+      setMessages((prev) => [...prev, assistantMessage])
+    } catch {
+      // Adicionar mensagem de erro
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `error-${Date.now()}`,
+          role: 'ASSISTANT',
+          content:
+            'Desculpe, ocorreu um erro. Por favor, tente novamente ou entre em contato pelo WhatsApp.',
+          createdAt: new Date().toISOString(),
+        },
+      ])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      sendMessage()
+    }
+  }
+
+  const positionClasses = {
+    'bottom-right': 'right-4 sm:right-6',
+    'bottom-left': 'left-4 sm:left-6',
+  }
+
+  // Botao flutuante quando fechado
+  if (!isOpen) {
+    return (
+      <motion.button
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0, opacity: 0 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setIsOpen(true)}
+        className={cn(
+          'fixed bottom-20 z-40 flex items-center gap-2 rounded-full bg-accent-500 px-4 py-3 text-neutral-900 shadow-lg',
+          positionClasses[position],
+          className
+        )}
+        aria-label="Abrir chat assistido"
+      >
+        <Sparkles className="h-5 w-5 animate-pulse" />
+        <span className="hidden font-medium sm:inline">Precisa de ajuda?</span>
+      </motion.button>
+    )
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 20, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Card
+        className={cn(
+          'fixed z-50 flex flex-col shadow-2xl transition-all duration-300',
+          positionClasses[position],
+          // Responsivo: fullscreen no mobile, fixed size no desktop
+          isMinimized
+            ? 'bottom-4 h-14 w-72'
+            : 'bottom-0 left-0 right-0 h-[100dvh] w-full sm:bottom-4 sm:left-auto sm:right-4 sm:h-[500px] sm:max-h-[80vh] sm:w-[380px] sm:rounded-lg',
+          // Remover border radius no mobile fullscreen
+          !isMinimized && 'rounded-none sm:rounded-lg',
+          className
+        )}
+      >
+        {/* Header */}
+        <div
+          className={cn(
+            'flex items-center justify-between bg-accent-500 px-4 py-3',
+            isMinimized ? 'rounded-t-lg' : 'rounded-none sm:rounded-t-lg'
+          )}
+        >
+          <div className="flex items-center gap-2">
+            <Bot className="h-5 w-5 text-neutral-900" />
+            <span className="font-medium text-neutral-900">Assistente Versati</span>
+          </div>
+          <div className="flex items-center gap-1">
+            {/* Minimizar - esconder no mobile quando fullscreen */}
+            <button
+              onClick={() => setIsMinimized(!isMinimized)}
+              className="hidden rounded p-1 text-neutral-900 transition-colors hover:bg-accent-400 sm:block"
+              aria-label={isMinimized ? 'Expandir chat' : 'Minimizar chat'}
+            >
+              {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+            </button>
+            <button
+              onClick={() => {
+                if (onClose) {
+                  onClose()
+                } else {
+                  setIsOpen(false)
+                }
+              }}
+              className="rounded p-2 text-neutral-900 transition-colors hover:bg-accent-400 sm:p-1"
+              aria-label="Fechar chat"
+            >
+              <X className="h-5 w-5 sm:h-4 sm:w-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Conteudo (escondido quando minimizado) */}
+        {!isMinimized && (
+          <>
+            {/* AI-CHAT Sprint P3.2: Progress Indicator */}
+            {quoteProgress > 0 && (
+              <div className="border-theme-default bg-theme-secondary border-b p-3">
+                <div className="space-y-2">
+                  {/* Progress Bar */}
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-theme-subtle font-medium">Progresso do Orçamento</span>
+                    <span className="font-bold text-accent-500">{quoteProgress}%</span>
+                  </div>
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-600">
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-accent-500 to-gold-500"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${quoteProgress}%` }}
+                      transition={{ duration: 0.5, ease: 'easeOut' }}
+                    />
+                  </div>
+
+                  {/* Checklist */}
+                  <div className="mt-3 grid grid-cols-3 gap-2">
+                    {/* Items Check */}
+                    <div
+                      className={cn(
+                        'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
+                        quoteContext?.items && quoteContext.items.length > 0
+                          ? 'bg-green-500/10 text-green-400'
+                          : 'bg-neutral-600/20 text-neutral-600'
+                      )}
+                    >
+                      {quoteContext?.items && quoteContext.items.length > 0 ? (
+                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
+                      ) : (
+                        <Circle className="h-3.5 w-3.5 flex-shrink-0" />
+                      )}
+                      <span className="truncate">Produto</span>
+                    </div>
+
+                    {/* Dimensions Check */}
+                    <div
+                      className={cn(
+                        'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
+                        quoteContext?.items?.some((item: any) => item.width || item.height)
+                          ? 'bg-green-500/10 text-green-400'
+                          : 'bg-neutral-600/20 text-neutral-600'
+                      )}
+                    >
+                      {quoteContext?.items?.some((item: any) => item.width || item.height) ? (
+                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
+                      ) : (
+                        <Circle className="h-3.5 w-3.5 flex-shrink-0" />
+                      )}
+                      <span className="truncate">Medidas</span>
+                    </div>
+
+                    {/* Contact Check */}
+                    <div
+                      className={cn(
+                        'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
+                        quoteContext?.customerData?.name || quoteContext?.customerData?.phone
+                          ? 'bg-green-500/10 text-green-400'
+                          : 'bg-neutral-600/20 text-neutral-600'
+                      )}
+                    >
+                      {quoteContext?.customerData?.name || quoteContext?.customerData?.phone ? (
+                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
+                      ) : (
+                        <Circle className="h-3.5 w-3.5 flex-shrink-0" />
+                      )}
+                      <span className="truncate">Contato</span>
+                    </div>
+                  </div>
+
+                  {/* Next Steps Hint */}
+                  {quoteProgress > 0 && quoteProgress < 100 && (
+                    <p className="text-theme-subtle mt-2 text-xs">
+                      {quoteProgress < 40 && '💡 Próximo: Especifique produto e medidas'}
+                      {quoteProgress >= 40 &&
+                        quoteProgress < 80 &&
+                        '💡 Próximo: Forneça seus dados de contato'}
+                      {quoteProgress >= 80 &&
+                        quoteProgress < 100 &&
+                        '💡 Quase lá! Verifique se falta algo'}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Mensagens */}
+            <div className="bg-theme-primary flex-1 space-y-4 overflow-y-auto p-4">
+              <AnimatePresence mode="popLayout">
+                {messages.map((msg, index) => (
+                  <motion.div
+                    key={msg.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2, delay: index === messages.length - 1 ? 0 : 0 }}
+                    className={cn(
+                      'flex gap-2',
+                      msg.role === 'USER' ? 'justify-end' : 'justify-start'
+                    )}
+                  >
+                    {msg.role === 'ASSISTANT' && (
+                      <div className="bg-accent-500/20 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
+                        <Bot className="h-4 w-4 text-accent-500" />
+                      </div>
+                    )}
+                    <div
+                      className={cn(
+                        'max-w-[80%] rounded-lg px-3 py-2 text-sm',
+                        msg.role === 'USER'
+                          ? 'bg-accent-500 text-neutral-900'
+                          : 'bg-theme-secondary text-theme-primary'
+                      )}
+                    >
+                      {msg.imageUrl && (
+                        <img
+                          src={msg.imageUrl}
+                          alt="Imagem enviada"
+                          className="mb-2 h-auto max-w-full rounded-md"
+                          style={{ maxHeight: '150px' }}
+                        />
+                      )}
+                      {msg.content}
+                    </div>
+                    {msg.role === 'USER' && (
+                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-neutral-600">
+                        <User className="h-4 w-4 text-neutral-300" />
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+
+              {isLoading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex justify-start gap-2"
+                >
+                  <div className="bg-accent-500/20 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
+                    <Bot className="h-4 w-4 text-accent-500" />
+                  </div>
+                  <div className="bg-theme-secondary rounded-lg px-4 py-3">
+                    <div className="flex items-center gap-1">
+                      <motion.span
+                        className="h-2 w-2 rounded-full bg-accent-500"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                      />
+                      <motion.span
+                        className="h-2 w-2 rounded-full bg-accent-500"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                      />
+                      <motion.span
+                        className="h-2 w-2 rounded-full bg-accent-500"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* AI-CHAT Sprint P2.2: Progress Indicator */}
+            {quoteProgress > 0 && quoteProgress < 100 && (
+              <div className="border-theme-default bg-theme-elevated border-t p-3">
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-2"
+                >
+                  {/* Progress Bar */}
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-theme-muted">Progresso do orçamento</span>
+                    <span className="text-accent-500 font-medium">{quoteProgress}%</span>
+                  </div>
+                  <div className="bg-theme-default h-2 overflow-hidden rounded-full">
+                    <motion.div
+                      className="bg-accent-500 h-full"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${quoteProgress}%` }}
+                      transition={{ duration: 0.5, ease: 'easeOut' }}
+                    />
+                  </div>
+
+                  {/* Completion Checklist */}
+                  <div className="mt-3 space-y-1.5">
+                    <div className="flex items-center gap-2 text-xs">
+                      {quoteContext?.items?.length > 0 &&
+                      quoteContext.items.some((i: any) => i.category) ? (
+                        <CheckCircle2 className="text-accent-500 h-3.5 w-3.5 flex-shrink-0" />
+                      ) : (
+                        <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
+                      )}
+                      <span
+                        className={
+                          quoteContext?.items?.length > 0 &&
+                          quoteContext.items.some((i: any) => i.category)
+                            ? 'text-theme-primary'
+                            : 'text-theme-muted'
+                        }
+                      >
+                        <Package className="mr-1 inline h-3 w-3" />
+                        Produto selecionado
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs">
+                      {quoteContext?.items?.length > 0 &&
+                      quoteContext.items.some(
+                        (i: any) => (i.width && i.width > 0) || (i.height && i.height > 0)
+                      ) ? (
+                        <CheckCircle2 className="text-accent-500 h-3.5 w-3.5 flex-shrink-0" />
+                      ) : (
+                        <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
+                      )}
+                      <span
+                        className={
+                          quoteContext?.items?.length > 0 &&
+                          quoteContext.items.some(
+                            (i: any) => (i.width && i.width > 0) || (i.height && i.height > 0)
+                          )
+                            ? 'text-theme-primary'
+                            : 'text-theme-muted'
+                        }
+                      >
+                        <Ruler className="mr-1 inline h-3 w-3" />
+                        Medidas informadas
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs">
+                      {quoteContext?.customerData &&
+                      (quoteContext.customerData.name || quoteContext.customerData.phone) ? (
+                        <CheckCircle2 className="text-accent-500 h-3.5 w-3.5 flex-shrink-0" />
+                      ) : (
+                        <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
+                      )}
+                      <span
+                        className={
+                          quoteContext?.customerData &&
+                          (quoteContext.customerData.name || quoteContext.customerData.phone)
+                            ? 'text-theme-primary'
+                            : 'text-theme-muted'
+                        }
+                      >
+                        <UserCircle className="mr-1 inline h-3 w-3" />
+                        Dados de contato
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Hint message */}
+                  {quoteProgress < 70 && (
+                    <p className="text-theme-subtle mt-2 text-xs">
+                      Continue conversando para completar seu orçamento...
+                    </p>
+                  )}
+                </motion.div>
+              </div>
+            )}
+
+            {/* AI-CHAT Sprint P1.6: Finalize Quote Button */}
+            {canExportQuote && (
+              <div className="border-theme-default bg-accent-500/5 border-t p-3">
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <Button
+                    onClick={handleFinalizeQuote}
+                    disabled={isExportingQuote}
+                    className="w-full bg-accent-500 py-2.5 font-medium text-neutral-900 hover:bg-accent-600"
+                  >
+                    {isExportingQuote ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Preparando orçamento...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="mr-2 h-4 w-4" />
+                        Finalizar Orçamento
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-theme-subtle mt-2 text-center text-xs">
+                    Revise os itens coletados e prossiga com o orçamento
+                  </p>
+                </motion.div>
+              </div>
+            )}
+
+            {/* Input */}
+            <div className="border-theme-default bg-theme-secondary rounded-b-lg border-t p-3">
+              {/* Preview da imagem selecionada */}
+              {selectedImage && (
+                <div className="relative mb-2 inline-block">
+                  <img
+                    src={selectedImage.preview}
+                    alt="Imagem selecionada"
+                    className="h-20 w-auto rounded-md border border-neutral-600"
+                  />
+                  <button
+                    onClick={removeSelectedImage}
+                    className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white transition-colors hover:bg-red-600"
+                    aria-label="Remover imagem"
+                  >
+                    <XIcon className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                {/* Input de arquivo oculto */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                  aria-label="Selecionar imagem"
+                />
+
+                {/* Botao de anexar imagem */}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isLoading || isUploadingImage}
+                  className="bg-theme-elevated text-theme-subtle rounded-lg border border-neutral-600 px-3 py-2 transition-colors hover:border-accent-500 hover:text-accent-500 disabled:opacity-50"
+                  aria-label="Anexar imagem"
+                  title="Enviar foto do espaco para analise"
+                >
+                  {isUploadingImage ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <ImageIcon className="h-4 w-4" />
+                  )}
+                </button>
+
+                {/* Voice Chat Button */}
+                <VoiceChatButton
+                  onTranscript={(text) => {
+                    setInput(text)
+                    // Auto-send voice messages
+                    setTimeout(() => {
+                      if (text.trim()) {
+                        sendMessage()
+                      }
+                    }, 500)
+                  }}
+                  onVoiceStateChange={setIsVoiceEnabled}
+                  className="shrink-0"
+                />
+
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={
+                    selectedImage ? 'Descreva o que precisa...' : 'Digite sua mensagem...'
+                  }
+                  disabled={isLoading}
+                  className="bg-theme-elevated text-theme-primary placeholder:text-theme-subtle flex-1 rounded-lg border border-neutral-600 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none disabled:opacity-50"
+                />
+                <Button
+                  size="sm"
+                  onClick={sendMessage}
+                  disabled={(!input.trim() && !selectedImage) || isLoading}
+                  className="px-3"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+              <p className="text-theme-subtle mt-2 text-center text-xs">
+                Powered by Groq AI + GPT-4 Vision
+              </p>
+            </div>
+          </>
+        )}
+      </Card>
+    </motion.div>
+  )
+}

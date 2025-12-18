@@ -8,6 +8,8 @@ import {
 } from '@prisma/client'
 import { generateAIResponse, generateGreeting, type ConversationMessage } from './ai'
 import { sendWhatsAppMessage } from './whatsapp'
+import { getUnifiedCustomerContext, generateContextSummary } from './unified-context'
+import { autoSyncAfterWhatsAppMessage } from './context-sync'
 
 export interface ConversationContext {
   customerName?: string
@@ -153,17 +155,32 @@ export async function processIncomingMessage(
     }
   }
 
-  // Get customer context for AI
+  // FASE-5: Get unified context across channels
+  const unifiedContext = await getUnifiedCustomerContext({
+    userId: conversation.user?.id,
+    phoneNumber: phoneNumber,
+  })
+
+  const unifiedContextSummary = generateContextSummary(unifiedContext)
+
+  // Get customer context for AI (enhanced with unified data)
   const customerContext = conversation.user
     ? {
         name: conversation.user.name,
         previousOrders: await prisma.order.count({
           where: { userId: conversation.user.id },
         }),
+        // FASE-5: Include cross-channel context
+        additionalContext: unifiedContextSummary,
       }
     : context.customerName
-      ? { name: context.customerName }
-      : undefined
+      ? {
+          name: context.customerName,
+          additionalContext: unifiedContextSummary,
+        }
+      : unifiedContextSummary
+        ? { additionalContext: unifiedContextSummary }
+        : undefined
 
   // Get conversation history
   const history = getConversationHistoryForAI(conversation.messages)
@@ -228,6 +245,12 @@ export async function processIncomingMessage(
     message: aiResponse.message,
   })
 
+  // OMNICHANNEL: Auto-sync context if linked to web chat
+  autoSyncAfterWhatsAppMessage(conversation.id).catch((error) => {
+    // Log but don't fail - sync is best-effort
+    console.error('[CONVERSATION] Auto-sync failed:', error)
+  })
+
   return {
     response: aiResponse.message,
     conversation: {
@@ -238,11 +261,7 @@ export async function processIncomingMessage(
 }
 
 // Send message from human agent
-export async function sendHumanResponse(
-  conversationId: string,
-  message: string,
-  senderId: string
-) {
+export async function sendHumanResponse(conversationId: string, message: string, senderId: string) {
   const conversation = await prisma.conversation.findUnique({
     where: { id: conversationId },
   })
@@ -353,16 +372,10 @@ export async function startConversation(
   const messageToSend = initialMessage || generateGreeting()
 
   // Store message
-  await addMessage(
-    conversation.id,
-    'OUTBOUND',
-    messageToSend,
-    senderId ? 'HUMAN' : 'AI',
-    {
-      senderId,
-      status: 'SENT',
-    }
-  )
+  await addMessage(conversation.id, 'OUTBOUND', messageToSend, senderId ? 'HUMAN' : 'AI', {
+    senderId,
+    status: 'SENT',
+  })
 
   // Send via WhatsApp
   await sendWhatsAppMessage({

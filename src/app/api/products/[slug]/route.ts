@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth'
 import { slugify } from '@/lib/utils'
 import { updateProductSchema } from '@/lib/validations/product'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 interface RouteParams {
   params: Promise<{ slug: string }>
@@ -55,7 +56,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     return NextResponse.json(serializedProduct)
   } catch (error) {
-    console.error('Error fetching product:', error)
+    logger.error('Error fetching product:', error)
     return NextResponse.json({ error: 'Erro ao buscar produto' }, { status: 500 })
   }
 }
@@ -137,7 +138,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
     return NextResponse.json(serializedProduct)
   } catch (error) {
-    console.error('Error updating product:', error)
+    logger.error('Error updating product:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Dados inválidos', details: error.errors }, { status: 400 })
@@ -220,7 +221,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       softDelete: false,
     })
   } catch (error) {
-    console.error('Error deleting product:', error)
+    logger.error('Error deleting product:', error)
     return NextResponse.json({ error: 'Erro ao deletar produto' }, { status: 500 })
   }
 }
