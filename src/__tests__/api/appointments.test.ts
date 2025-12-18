@@ -64,15 +64,32 @@ describe('Appointments API Integration Tests', () => {
   })
 
   afterAll(async () => {
-    // Cleanup
+    // Cleanup - order matters! Delete appointments first, then order
     await prisma.appointment.deleteMany({
       where: { userId: testUserId },
     })
-    await prisma.order
-      .delete({
-        where: { id: testOrderId },
-      })
-      .catch(() => {})
+
+    // Then delete order (only if it exists)
+    if (testOrderId) {
+      await prisma.order
+        .delete({
+          where: { id: testOrderId },
+        })
+        .catch(() => {
+          // Order might have been deleted by another test
+        })
+    }
+
+    // Finally delete user
+    if (testUserId) {
+      await prisma.user
+        .delete({
+          where: { id: testUserId },
+        })
+        .catch(() => {
+          // User might have been deleted by another test
+        })
+    }
   })
 
   describe('POST /api/appointments', () => {
@@ -293,7 +310,8 @@ describe('Appointments API Integration Tests', () => {
     })
 
     it('should skip weekends', () => {
-      const testDate = new Date('2024-12-21') // Saturday
+      // Use ISO format with time to avoid timezone issues
+      const testDate = new Date('2024-12-21T00:00:00') // Saturday
       const dayOfWeek = testDate.getDay()
 
       expect(dayOfWeek === 0 || dayOfWeek === 6).toBe(true)
