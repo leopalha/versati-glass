@@ -63,12 +63,27 @@ export function StepProduct() {
 
   const category = currentItem?.category
   const isEditing = editingIndex !== null
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  // Aguarda hidratação do Zustand antes de fazer fetch
+  useEffect(() => {
+    // Pequeno delay para garantir que o Zustand foi hidratado do localStorage
+    const timer = setTimeout(() => {
+      setIsHydrated(true)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
 
   // Fetch products from ALL selected categories
   useEffect(() => {
+    // Aguarda hidratação antes de verificar categorias
+    if (!isHydrated) {
+      return
+    }
+
     const fetchProducts = async () => {
       if (selectedCategories.length === 0) {
-        logger.warn('[STEP-PRODUCT] No categories selected')
+        logger.warn('[STEP-PRODUCT] No categories selected after hydration')
         setProducts([])
         setIsLoading(false)
         return
@@ -81,27 +96,48 @@ export function StepProduct() {
         // Fetch products from all selected categories in parallel
         const promises = selectedCategories.map(async (cat) => {
           logger.debug(`[STEP-PRODUCT] Fetching products for category: ${cat}`)
-          const response = await fetch(`/api/products?category=${cat}`)
-          const products = await response.json()
-          logger.debug(`[STEP-PRODUCT] Received ${products.length} products for category ${cat}`)
-          return products
+          try {
+            const response = await fetch(`/api/products?category=${cat}`)
+            if (!response.ok) {
+              logger.warn(`[STEP-PRODUCT] Failed to fetch category ${cat}: ${response.status}`)
+              return [] // Return empty array on error for this category
+            }
+            const data = await response.json()
+            // Ensure we always have an array
+            const products = Array.isArray(data) ? data : []
+            logger.debug(`[STEP-PRODUCT] Received ${products.length} products for category ${cat}`)
+            return products
+          } catch (err) {
+            logger.error(`[STEP-PRODUCT] Error fetching category ${cat}:`, err)
+            return [] // Return empty array on error
+          }
         })
 
         const results = await Promise.all(promises)
-        const allProducts = results.flat()
+
+        // Filter out any non-arrays and flatten
+        const validResults = results.filter(Array.isArray)
+        const allProducts = validResults.flat()
+
+        // Remove duplicates by ID (in case same product appears in multiple categories)
+        const uniqueProducts = allProducts.reduce((acc: Product[], product: Product) => {
+          if (!acc.find((p) => p.id === product.id)) {
+            acc.push(product)
+          }
+          return acc
+        }, [])
 
         logger.info(
-          `[STEP-PRODUCT] Total products fetched: ${allProducts.length} from ${selectedCategories.length} categories`,
+          `[STEP-PRODUCT] Total unique products fetched: ${uniqueProducts.length} from ${selectedCategories.length} categories`,
           {
             byCategory: selectedCategories.map((cat, index) => ({
               category: cat,
-              count: results[index].length,
-              productIds: results[index].map((p: Product) => p.id),
+              count: validResults[index]?.length || 0,
             })),
           }
         )
 
-        setProducts(allProducts)
+        setProducts(uniqueProducts)
       } catch (error) {
         logger.error('[STEP-PRODUCT] Error fetching products:', error)
         toast({
@@ -109,13 +145,14 @@ export function StepProduct() {
           title: 'Erro ao carregar produtos',
           description: 'Não foi possível carregar os produtos. Tente novamente.',
         })
+        setProducts([])
       } finally {
         setIsLoading(false)
       }
     }
 
     fetchProducts()
-  }, [selectedCategories, toast])
+  }, [selectedCategories, toast, isHydrated])
 
   const handleSelect = (product: Product) => {
     toggleProductSelection(product.id)
@@ -144,17 +181,25 @@ export function StepProduct() {
   }
 
   const handleContinueWithoutProduct = () => {
-    if (!category) {
+    // Use first selected category if no currentItem.category
+    const cat = category || selectedCategories[0]
+
+    if (!cat) {
       logger.error('Cannot continue without category')
+      toast({
+        variant: 'error',
+        title: 'Erro',
+        description: 'Nenhuma categoria selecionada. Volte e selecione uma categoria.',
+      })
       return
     }
 
     // Continuar sem produto selecionado - usar categoria como nome
     const productData = {
-      category,
-      productId: `custom-${category}`,
-      productName: categoryNames[category] || `Produto - ${category}`,
-      productSlug: category.toLowerCase(),
+      category: cat,
+      productId: `custom-${cat}`,
+      productName: categoryNames[cat] || `Produto - ${cat}`,
+      productSlug: cat.toLowerCase(),
     }
 
     logger.debug('Setting currentItem with custom product:', productData)

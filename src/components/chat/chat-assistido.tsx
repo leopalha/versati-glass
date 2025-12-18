@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { useToast } from '@/components/ui/toast/use-toast'
 import { cn } from '@/lib/utils'
 import {
   MessageCircle,
@@ -23,7 +24,60 @@ import {
   Ruler,
   UserCircle,
   Circle,
+  Trash2,
 } from 'lucide-react'
+
+// LocalStorage key for chat persistence
+const CHAT_STORAGE_KEY = 'versati-chat-session'
+
+// Interface for persisted chat data
+interface PersistedChatData {
+  messages: Message[]
+  conversationId: string | null
+  quoteContext: any
+  quoteProgress: number
+  timestamp: number
+}
+
+// Helper: Save chat to localStorage
+function saveChatToStorage(data: PersistedChatData) {
+  try {
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(data))
+  } catch (error) {
+    console.warn('Failed to save chat to localStorage:', error)
+  }
+}
+
+// Helper: Load chat from localStorage
+function loadChatFromStorage(): PersistedChatData | null {
+  try {
+    const stored = localStorage.getItem(CHAT_STORAGE_KEY)
+    if (!stored) return null
+
+    const data = JSON.parse(stored) as PersistedChatData
+
+    // Expire after 24 hours
+    const EXPIRATION_MS = 24 * 60 * 60 * 1000
+    if (Date.now() - data.timestamp > EXPIRATION_MS) {
+      localStorage.removeItem(CHAT_STORAGE_KEY)
+      return null
+    }
+
+    return data
+  } catch (error) {
+    console.warn('Failed to load chat from localStorage:', error)
+    return null
+  }
+}
+
+// Helper: Clear chat from localStorage
+function clearChatStorage() {
+  try {
+    localStorage.removeItem(CHAT_STORAGE_KEY)
+  } catch (error) {
+    console.warn('Failed to clear chat from localStorage:', error)
+  }
+}
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQuoteStore } from '@/store/quote-store'
 import type { AiQuoteData } from '@/store/quote-store'
@@ -32,6 +86,11 @@ import { VoiceChatButton } from '@/components/chat/voice-chat-button'
 import { useVoice } from '@/hooks/use-voice'
 import { useCrossChannelUpdates } from '@/hooks/use-cross-channel-updates'
 import { showCrossChannelNotification } from '@/components/chat/cross-channel-notification'
+import { QuoteTransitionModal } from '@/components/chat/quote-transition-modal'
+import {
+  ProductSuggestions,
+  type ProductSuggestion,
+} from '@/components/chat/product-suggestion-card'
 
 interface Message {
   id: string
@@ -57,6 +116,7 @@ export function ChatAssistido({
   showInitially = false,
 }: ChatAssistidoProps) {
   const router = useRouter()
+  const { toast } = useToast()
   const importFromAI = useQuoteStore((state) => state.importFromAI)
 
   const [isOpen, setIsOpen] = useState(initialOpen || showInitially)
@@ -83,6 +143,15 @@ export function ChatAssistido({
   const [quoteProgress, setQuoteProgress] = useState(0)
   const [quoteContext, setQuoteContext] = useState<any>(null)
 
+  // AI-CHAT Sprint P2.3: Transition modal state
+  const [showTransitionModal, setShowTransitionModal] = useState(false)
+  const [pendingQuoteData, setPendingQuoteData] = useState<AiQuoteData | null>(null)
+
+  // AI-CHAT Sprint P2.4: Product suggestions state
+  const [productSuggestions, setProductSuggestions] = useState<ProductSuggestion[]>([])
+  const [suggestedCategory, setSuggestedCategory] = useState<string | null>(null)
+  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([])
+
   // Voice feature state
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false)
   const { speak, stopSpeaking, isSpeaking } = useVoice({ language: 'pt-BR' })
@@ -95,7 +164,7 @@ export function ChatAssistido({
       // Exibir notificação toast
       showCrossChannelNotification({
         content: message.content,
-        senderType: message.senderType
+        senderType: message.senderType,
       })
 
       // Adicionar mensagem à timeline do chat
@@ -105,16 +174,79 @@ export function ChatAssistido({
           id: message.id,
           role: 'ASSISTANT',
           content: `📱 *Resposta via WhatsApp:*\n\n${message.content}`,
-          createdAt: message.timestamp
-        }
+          createdAt: message.timestamp,
+        },
       ])
     },
-    pollingInterval: 10000 // 10 segundos
+    pollingInterval: 10000, // 10 segundos
   })
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const hasRestoredRef = useRef(false)
+
+  // GAP.6: Restore chat from localStorage on mount
+  useEffect(() => {
+    if (hasRestoredRef.current) return
+    hasRestoredRef.current = true
+
+    const savedData = loadChatFromStorage()
+    if (savedData && savedData.messages.length > 0) {
+      // Filter out imageUrl from messages (blob URLs don't persist)
+      const cleanMessages = savedData.messages.map((msg) => ({
+        ...msg,
+        imageUrl: undefined,
+      }))
+      setMessages(cleanMessages)
+      if (savedData.conversationId) {
+        setConversationId(savedData.conversationId)
+      }
+      if (savedData.quoteContext) {
+        setQuoteContext(savedData.quoteContext)
+      }
+      if (savedData.quoteProgress) {
+        setQuoteProgress(savedData.quoteProgress)
+      }
+    }
+  }, [])
+
+  // GAP.6: Save chat to localStorage when state changes
+  useEffect(() => {
+    // Don't save if no messages or only welcome message
+    if (messages.length <= 1) return
+
+    saveChatToStorage({
+      messages,
+      conversationId,
+      quoteContext,
+      quoteProgress,
+      timestamp: Date.now(),
+    })
+  }, [messages, conversationId, quoteContext, quoteProgress])
+
+  // GAP.6: Clear chat history function
+  const handleClearHistory = useCallback(() => {
+    clearChatStorage()
+    setMessages([])
+    setConversationId(null)
+    setQuoteContext(null)
+    setQuoteProgress(0)
+    setCanExportQuote(false)
+    setProductSuggestions([])
+    setSuggestedCategory(null)
+    setSelectedProductIds([])
+    // Re-show welcome message
+    setMessages([
+      {
+        id: 'welcome',
+        role: 'ASSISTANT',
+        content:
+          'Ola! Sou o assistente virtual da Versati Glass. Como posso ajudar voce hoje? Posso tirar duvidas sobre nossos produtos ou ajudar a fazer um orcamento.',
+        createdAt: new Date().toISOString(),
+      },
+    ])
+  }, [])
 
   // Auto-scroll para ultima mensagem
   const scrollToBottom = useCallback(() => {
@@ -132,9 +264,10 @@ export function ChatAssistido({
     }
   }, [isOpen, isMinimized])
 
-  // Mensagem inicial de boas-vindas
+  // Mensagem inicial de boas-vindas (only if no restored messages)
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
+    // Wait for restoration to complete before showing welcome
+    if (isOpen && messages.length === 0 && hasRestoredRef.current) {
       setMessages([
         {
           id: 'welcome',
@@ -221,6 +354,42 @@ export function ChatAssistido({
     setSelectedImage(null)
   }
 
+  // AI-CHAT Sprint P2.4: Fetch product suggestions based on category
+  const fetchProductSuggestions = useCallback(async (category: string) => {
+    try {
+      const response = await fetch(`/api/ai/products/suggestions?category=${category}&limit=3`)
+
+      if (response.ok) {
+        const data = await response.json()
+
+        if (data.success && data.products.length > 0) {
+          setProductSuggestions(data.products)
+          setSuggestedCategory(category)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching product suggestions:', error)
+    }
+  }, [])
+
+  // AI-CHAT Sprint P2.4: Handle product selection
+  const handleSelectProduct = useCallback((product: ProductSuggestion) => {
+    // Toggle selection
+    setSelectedProductIds((prev) => {
+      if (prev.includes(product.id)) {
+        return prev.filter((id) => id !== product.id)
+      }
+      return [...prev, product.id]
+    })
+
+    // Set input with selection message (user can press Enter to send)
+    const selectionMessage = `Selecionei o produto: ${product.name}`
+    setInput(selectionMessage)
+
+    // Focus input for user to send
+    inputRef.current?.focus()
+  }, [])
+
   // AI-CHAT Sprint P1.6 + P3.2: Check export status and update progress
   const checkExportStatus = useCallback(async () => {
     if (!conversationId && !sessionId) return
@@ -243,12 +412,26 @@ export function ChatAssistido({
           setQuoteContext(data.quoteContext)
           const completion = getQuoteContextCompletion(data.quoteContext)
           setQuoteProgress(completion)
+
+          // AI-CHAT Sprint P2.4: Fetch product suggestions if category detected
+          if (
+            data.quoteContext.items &&
+            data.quoteContext.items.length > 0 &&
+            data.quoteContext.items[0].category
+          ) {
+            const category = data.quoteContext.items[0].category
+
+            // Only fetch if it's a new category
+            if (category !== suggestedCategory) {
+              fetchProductSuggestions(category)
+            }
+          }
         }
       }
     } catch (error) {
       console.error('Error checking export status:', error)
     }
-  }, [conversationId, sessionId])
+  }, [conversationId, sessionId, suggestedCategory, fetchProductSuggestions])
 
   // AI-CHAT Sprint P1.6: Check export status after each AI response
   useEffect(() => {
@@ -259,7 +442,7 @@ export function ChatAssistido({
     }
   }, [messages, checkExportStatus])
 
-  // AI-CHAT Sprint P1.6 + P2.1: Handle quote finalization
+  // AI-CHAT Sprint P1.6 + P2.1 + P2.3: Handle quote finalization
   const handleFinalizeQuote = async () => {
     if (!conversationId && !sessionId) {
       alert('Erro: Nenhuma conversa ativa')
@@ -287,7 +470,31 @@ export function ChatAssistido({
       const { data } = await exportResponse.json()
       const quoteData = data as AiQuoteData
 
-      // Step 2: Auto-create Quote in database (P2.1)
+      // Step 2: Show transition modal (P2.3)
+      setPendingQuoteData(quoteData)
+      setShowTransitionModal(true)
+      setIsExportingQuote(false)
+    } catch (error) {
+      console.error('Error finalizing quote:', error)
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'Erro ao finalizar orçamento. Por favor, tente novamente.'
+      )
+      setIsExportingQuote(false)
+    }
+  }
+
+  // AI-CHAT Sprint P2.3: Confirm transition and proceed to wizard
+  const handleConfirmTransition = async () => {
+    if (!pendingQuoteData) return
+
+    setIsExportingQuote(true)
+
+    try {
+      // Step 1: Auto-create Quote in database (P2.1)
+      let quoteCreated = false
+      let quoteNumber = ''
       try {
         const autoQuoteResponse = await fetch('/api/quotes/from-ai', {
           method: 'POST',
@@ -300,38 +507,83 @@ export function ChatAssistido({
 
         if (autoQuoteResponse.ok) {
           const autoQuoteData = await autoQuoteResponse.json()
+          quoteCreated = true
+          quoteNumber = autoQuoteData.quote?.number || ''
           console.log('Quote auto-created:', autoQuoteData.quote)
         } else {
-          // Don't block user flow if auto-quote fails
-          console.warn('Failed to auto-create quote, but continuing...')
+          const errorData = await autoQuoteResponse.json().catch(() => ({}))
+          console.warn('Failed to auto-create quote:', errorData)
         }
       } catch (autoQuoteError) {
-        // Don't block user flow if auto-quote fails
         console.warn('Auto-quote creation error:', autoQuoteError)
       }
 
-      // Step 3: Import data into quote store
-      importFromAI(quoteData)
+      // Step 2: Import data into quote store
+      importFromAI(pendingQuoteData)
 
-      // Step 4: Close chat
+      // Step 3: Close modal and chat
+      setShowTransitionModal(false)
+      setPendingQuoteData(null)
+
       if (onClose) {
         onClose()
       } else {
         setIsOpen(false)
       }
 
+      // Step 4: Show success feedback via toast/alert
+      if (quoteCreated) {
+        // Success - show feedback before navigation
+        toast({
+          title: 'Orcamento enviado com sucesso!',
+          description: quoteNumber
+            ? `Numero do orcamento: ${quoteNumber}. Voce recebera uma resposta em breve.`
+            : 'Nossa equipe entrara em contato em breve.',
+          variant: 'success',
+        })
+      }
+
       // Step 5: Navigate to quote wizard (Step 4 - Item Review)
       router.push('/orcamento')
     } catch (error) {
-      console.error('Error finalizing quote:', error)
-      alert(
-        error instanceof Error
-          ? error.message
-          : 'Erro ao finalizar orçamento. Por favor, tente novamente.'
-      )
+      console.error('Error proceeding to wizard:', error)
+      toast({
+        title: 'Erro ao enviar orcamento',
+        description: 'Por favor, tente novamente ou entre em contato pelo WhatsApp.',
+        variant: 'error',
+      })
     } finally {
       setIsExportingQuote(false)
     }
+  }
+
+  // AI-CHAT Sprint P2.3: Cancel transition and return to chat
+  const handleCancelTransition = () => {
+    setShowTransitionModal(false)
+    setPendingQuoteData(null)
+    setIsExportingQuote(false)
+  }
+
+  // Handle "add more items" - close modal and return to chat
+  const handleAddMoreItems = () => {
+    setShowTransitionModal(false)
+    setPendingQuoteData(null)
+    setIsExportingQuote(false)
+    // Add a message indicating the user wants to add more
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `user-addmore-${Date.now()}`,
+        role: 'USER',
+        content: 'Quero adicionar mais itens ao meu orcamento.',
+        createdAt: new Date().toISOString(),
+      },
+    ])
+    // The AI will respond naturally to this request
+    setInput('')
+    setTimeout(() => {
+      inputRef.current?.focus()
+    }, 100)
   }
 
   const sendMessage = async () => {
@@ -470,6 +722,17 @@ export function ChatAssistido({
             <span className="font-medium text-neutral-900">Assistente Versati</span>
           </div>
           <div className="flex items-center gap-1">
+            {/* GAP.6: Clear history button - only show when there are messages */}
+            {messages.length > 1 && (
+              <button
+                onClick={handleClearHistory}
+                className="rounded p-1 text-neutral-900 transition-colors hover:bg-accent-400"
+                aria-label="Limpar histórico"
+                title="Limpar conversa"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            )}
             {/* Minimizar - esconder no mobile quando fullscreen */}
             <button
               onClick={() => setIsMinimized(!isMinimized)}
@@ -607,7 +870,7 @@ export function ChatAssistido({
                     )}
                     <div
                       className={cn(
-                        'max-w-[80%] rounded-lg px-3 py-2 text-sm',
+                        'max-w-[80%] overflow-hidden rounded-lg px-3 py-2 text-sm',
                         msg.role === 'USER'
                           ? 'bg-accent-500 text-neutral-900'
                           : 'bg-theme-secondary text-theme-primary'
@@ -621,7 +884,7 @@ export function ChatAssistido({
                           style={{ maxHeight: '150px' }}
                         />
                       )}
-                      {msg.content}
+                      <p className="whitespace-pre-wrap break-words">{msg.content}</p>
                     </div>
                     {msg.role === 'USER' && (
                       <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-neutral-600">
@@ -663,6 +926,16 @@ export function ChatAssistido({
                 </motion.div>
               )}
 
+              {/* AI-CHAT Sprint P2.4: Product Suggestions */}
+              {productSuggestions.length > 0 && suggestedCategory && (
+                <ProductSuggestions
+                  products={productSuggestions}
+                  onSelectProduct={handleSelectProduct}
+                  selectedProductIds={selectedProductIds}
+                  category={suggestedCategory}
+                />
+              )}
+
               <div ref={messagesEndRef} />
             </div>
 
@@ -678,11 +951,11 @@ export function ChatAssistido({
                   {/* Progress Bar */}
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-theme-muted">Progresso do orçamento</span>
-                    <span className="text-accent-500 font-medium">{quoteProgress}%</span>
+                    <span className="font-medium text-accent-500">{quoteProgress}%</span>
                   </div>
                   <div className="bg-theme-default h-2 overflow-hidden rounded-full">
                     <motion.div
-                      className="bg-accent-500 h-full"
+                      className="h-full bg-accent-500"
                       initial={{ width: 0 }}
                       animate={{ width: `${quoteProgress}%` }}
                       transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -694,7 +967,7 @@ export function ChatAssistido({
                     <div className="flex items-center gap-2 text-xs">
                       {quoteContext?.items?.length > 0 &&
                       quoteContext.items.some((i: any) => i.category) ? (
-                        <CheckCircle2 className="text-accent-500 h-3.5 w-3.5 flex-shrink-0" />
+                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
                       ) : (
                         <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
                       )}
@@ -716,7 +989,7 @@ export function ChatAssistido({
                       quoteContext.items.some(
                         (i: any) => (i.width && i.width > 0) || (i.height && i.height > 0)
                       ) ? (
-                        <CheckCircle2 className="text-accent-500 h-3.5 w-3.5 flex-shrink-0" />
+                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
                       ) : (
                         <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
                       )}
@@ -738,7 +1011,7 @@ export function ChatAssistido({
                     <div className="flex items-center gap-2 text-xs">
                       {quoteContext?.customerData &&
                       (quoteContext.customerData.name || quoteContext.customerData.phone) ? (
-                        <CheckCircle2 className="text-accent-500 h-3.5 w-3.5 flex-shrink-0" />
+                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
                       ) : (
                         <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
                       )}
@@ -892,6 +1165,16 @@ export function ChatAssistido({
           </>
         )}
       </Card>
+
+      {/* AI-CHAT Sprint P2.3: Transition Modal */}
+      <QuoteTransitionModal
+        isOpen={showTransitionModal}
+        quoteData={pendingQuoteData}
+        onConfirm={handleConfirmTransition}
+        onCancel={handleCancelTransition}
+        onAddMore={handleAddMoreItems}
+        isLoading={isExportingQuote}
+      />
     </motion.div>
   )
 }

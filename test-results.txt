@@ -1,0 +1,1078 @@
+[dotenv@17.2.3] injecting env (29) from .env.test -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+
+Running 64 tests using 4 workers
+
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/leblon.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/ipanema.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/barra.jpg received [1mnull[22m
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok  4 [chromium-public] › e2e\01-homepage.spec.ts:4:7 › Homepage › should load successfully (28.0s)
+  ok  2 [chromium-public] › e2e\01-homepage.spec.ts:10:7 › Homepage › should display hero section (30.3s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/leblon.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/barra.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/ipanema.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/leblon.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/barra.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/ipanema.jpg received [1mnull[22m
+  ok  3 [setup] › e2e\auth.setup.ts:53:6 › authenticate as admin (43.0s)
+  ok  1 [setup] › e2e\auth.setup.ts:16:6 › authenticate as customer (43.2s)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  ok  5 [chromium-public] › e2e\01-homepage.spec.ts:24:7 › Homepage › should navigate to products page (25.4s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/leblon.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/barra.jpg received [1mnull[22m
+  ok  6 [chromium-public] › e2e\01-homepage.spec.ts:47:7 › Homepage › should navigate to services page (25.0s)
+  ok  8 [chromium-public] › e2e\01-homepage.spec.ts:86:7 › Homepage › should be responsive on mobile (10.1s)
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/ipanema.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/services/residencial.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/services/comercial.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/services/manutencao.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/services/consultoria.jpg received [1mnull[22m
+  ok  7 [chromium-public] › e2e\01-homepage.spec.ts:70:7 › Homepage › should display contact information (22.3s)
+  ok 10 [chromium-public] › e2e\02-quote-flow.spec.ts:47:7 › Quote Flow - End to End › should validate category selection (18.8s)
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/products/box-abrir-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/products/box-frontal-incolor.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/products/box-canto-fume.jpg received [1mnull[22m
+  ok 11 [chromium-public] › e2e\02-quote-flow.spec.ts:65:7 › Quote Flow - End to End › should allow navigation back and forth (24.7s)
+  ok 12 [chromium-public] › e2e\02-quote-flow.spec.ts:98:7 › Quote Flow - End to End › should show cart with items (13.1s)
+  ok  9 [chromium-public] › e2e\02-quote-flow.spec.ts:4:7 › Quote Flow - End to End › should complete full quote request flow (32.0s)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok 15 [chromium-auth] › e2e\03-auth-flow.spec.ts:50:7 › Authentication Flow › should show error with invalid credentials (8.1s)
+[2m[WebServer] [22m[31m[auth][error][0m MissingCSRF: CSRF token was missing during an action callback. Read more at https://errors.authjs.dev#missingcsrf
+[2m[WebServer] [22m    at validateCSRF (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.41.0/node_modules/@auth/core/lib/actions/callback/oauth/csrf-token.js:45:11)
+[2m[WebServer] [22m    at AuthInternal (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.41.0/node_modules/@auth/core/lib/index.js:69:104)
+[2m[WebServer] [22m    at async Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.41.0/node_modules/@auth/core/index.js:130:34)
+[2m[WebServer] [22m    at async D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57228
+[2m[WebServer] [22m    at async eT.execute (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46851)
+[2m[WebServer] [22m    at async eT.handle (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:58760)
+[2m[WebServer] [22m    at async doRender (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\base-server.js:1366:42)
+[2m[WebServer] [22m    at async cacheEntry.responseCache.get.routeKind (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\base-server.js:1576:40)
+[2m[WebServer] [22m    at async DevServer.renderToResponseWithComponentsImpl (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\base-server.js:1496:28)
+[2m[WebServer] [22m    at async DevServer.renderPageComponent (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\base-server.js:1924:24)
+[2m[WebServer] [22m    at async DevServer.renderToResponseImpl (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\base-server.js:1962:32)
+[2m[WebServer] [22m    at async DevServer.pipeImpl (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\base-server.js:922:25)
+[2m[WebServer] [22m    at async NextNodeServer.handleCatchallRenderRequest (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\next-server.js:272:17)
+[2m[WebServer] [22m    at async DevServer.handleRequestImpl (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\base-server.js:818:17)
+[2m[WebServer] [22m    at async D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+[2m[WebServer] [22m    at async Span.traceAsyncFn (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\trace\trace.js:154:20)
+[2m[WebServer] [22m    at async DevServer.handleRequest (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+[2m[WebServer] [22m    at async invokeRender (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\lib\router-server.js:179:21)
+[2m[WebServer] [22m    at async handleRequest (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\lib\router-server.js:359:24)
+[2m[WebServer] [22m    at async requestHandlerImpl (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\lib\router-server.js:383:13)
+[2m[WebServer] [22m    at async Server.requestListener (D:\VERSATI GLASS\node_modules\.pnpm\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\next\dist\server\lib\start-server.js:141:13)
+  ok 13 [chromium-auth] › e2e\03-auth-flow.spec.ts:4:7 › Authentication Flow › should register new user (17.7s)
+  ok 14 [chromium-auth] › e2e\03-auth-flow.spec.ts:33:7 › Authentication Flow › should login with valid credentials (13.3s)
+  ok 16 [chromium-auth] › e2e\03-auth-flow.spec.ts:69:7 › Authentication Flow › should validate email format (12.7s)
+  ok 17 [chromium-auth] › e2e\03-auth-flow.spec.ts:91:7 › Authentication Flow › should validate password minimum length (6.7s)
+  ok 20 [chromium-auth] › e2e\03-auth-flow.spec.ts:176:7 › Authentication Flow › should redirect to login when accessing protected route (2.1s)
+  ok 18 [chromium-auth] › e2e\03-auth-flow.spec.ts:118:7 › Authentication Flow › should validate password confirmation match (4.5s)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok 21 [chromium-auth] › e2e\03-auth-flow.spec.ts:187:7 › Authentication Flow › should navigate to password recovery (6.8s)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  ok 22 [chromium-auth] › e2e\03-auth-flow.spec.ts:202:7 › Authentication Flow › should request password recovery (13.2s)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[2m[WebServer] [22m[ERROR] 2025-12-17T18:08:31.090Z - Forgot password error: SyntaxError: Unexpected end of JSON input
+[2m[WebServer] [22m    at JSON.parse (<anonymous>)
+[2m[WebServer] [22m[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:5738:19)[39m
+[2m[WebServer] [22m[90m    at successSteps (node:internal/deps/undici/undici:5719:27)[39m
+[2m[WebServer] [22m[90m    at consumeBody (node:internal/deps/undici/undici:5725:9)[39m
+[2m[WebServer] [22m[90m    at NextRequest.json (node:internal/deps/undici/undici:5665:18)[39m
+[2m[WebServer] [22m    at POST (webpack-internal:///(rsc)/./src/app/api/auth/forgot-password/route.ts:33:36)
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:57234
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\lib\trace\tracer.js:140:36
+[2m[WebServer] [22m    at NoopContextManager.with [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\@opentelemetry\api\index.js:1:7062[90m)[39m
+[2m[WebServer] [22m    at ContextAPI.with [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\@opentelemetry\api\index.js:1:518[90m)[39m
+[2m[WebServer] [22m    at NoopTracer.startActiveSpan [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\@opentelemetry\api\index.js:1:18093[90m)[39m
+[2m[WebServer] [22m    at ProxyTracer.startActiveSpan [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\@opentelemetry\api\index.js:1:18854[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\lib\trace\tracer.js:122:103
+[2m[WebServer] [22m    at NoopContextManager.with [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\@opentelemetry\api\index.js:1:7062[90m)[39m
+[2m[WebServer] [22m    at ContextAPI.with [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\@opentelemetry\api\index.js:1:518[90m)[39m
+[2m[WebServer] [22m    at NextTracerImpl.trace [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\lib\trace\tracer.js:122:28[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:48896
+[2m[WebServer] [22m[90m    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)[39m
+[2m[WebServer] [22m    at Object.wrap [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:40958[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:47472
+[2m[WebServer] [22m[90m    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)[39m
+[2m[WebServer] [22m    at Object.wrap [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:38293[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:47434
+[2m[WebServer] [22m[90m    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)[39m
+[2m[WebServer] [22m    at eT.execute [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:46881[90m)[39m
+[2m[WebServer] [22m    at eT.handle [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:58771[90m)[39m
+[2m[WebServer] [22m    at doRender [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\base-server.js:1366:60[90m)[39m
+[2m[WebServer] [22m    at cacheEntry.responseCache.get.routeKind [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\base-server.js:1588:34[90m)[39m
+[2m[WebServer] [22m    at ResponseCache.get [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\response-cache\index.js:49:26[90m)[39m
+[2m[WebServer] [22m    at DevServer.renderToResponseWithComponentsImpl [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\base-server.js:1496:53[90m)[39m
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok 23 [firefox] › e2e\01-homepage.spec.ts:4:7 › Homepage › should load successfully (47.9s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok 24 [firefox] › e2e\01-homepage.spec.ts:10:7 › Homepage › should display hero section (45.0s)
+  x  19 [chromium-auth] › e2e\03-auth-flow.spec.ts:137:7 › Authentication Flow › should logout successfully (1.2m)
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+  ok 25 [firefox] › e2e\01-homepage.spec.ts:24:7 › Homepage › should navigate to products page (56.2s)
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok 27 [firefox] › e2e\01-homepage.spec.ts:70:7 › Homepage › should display contact information (46.7s)
+  ok 26 [firefox] › e2e\01-homepage.spec.ts:47:7 › Homepage › should navigate to services page (55.5s)
+  ok 29 [firefox] › e2e\01-homepage.spec.ts:86:7 › Homepage › should be responsive on mobile (29.3s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/services/residencial.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/services/comercial.jpg received [1mnull[22m
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+  ok 30 [Mobile Chrome] › e2e\01-homepage.spec.ts:4:7 › Homepage › should load successfully (7.9s)
+  ok 32 [Mobile Chrome] › e2e\01-homepage.spec.ts:10:7 › Homepage › should display hero section (8.5s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/leblon.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/barra.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/ipanema.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+  ok 31 [Mobile Chrome] › e2e\01-homepage.spec.ts:24:7 › Homepage › should navigate to products page (10.6s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/leblon.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/barra.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/portfolio/ipanema.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+  ok 34 [Mobile Chrome] › e2e\01-homepage.spec.ts:70:7 › Homepage › should display contact information (7.8s)
+  ok 35 [Mobile Chrome] › e2e\01-homepage.spec.ts:86:7 › Homepage › should be responsive on mobile (7.2s)
+  x  28 [chromium-auth] › e2e\03-auth-flow.spec.ts:137:7 › Authentication Flow › should logout successfully (retry #1) (1.4m)
+  x  33 [Mobile Chrome] › e2e\01-homepage.spec.ts:47:7 › Homepage › should navigate to services page (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/box-premium.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/guarda-corpo.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/espelho.jpg received [1mnull[22m
+[2m[WebServer] [22m [31m[1m⨯[22m[39m The requested resource isn't a valid image for /images/fachada.jpg received [1mnull[22m
+  x  36 [Mobile Chrome] › e2e\01-homepage.spec.ts:47:7 › Homepage › should navigate to services page (retry #1) (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok 39 [chromium-portal] › e2e\04-portal-flow.spec.ts:61:7 › Customer Portal Flow › should approve quote (8.7s)
+  x  40 [chromium-portal] › e2e\04-portal-flow.spec.ts:7:7 › Customer Portal Flow › should display portal dashboard (8.9s)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok 38 [chromium-portal] › e2e\04-portal-flow.spec.ts:21:7 › Customer Portal Flow › should navigate to quotes page (17.9s)
+  ok 37 [chromium-portal] › e2e\04-portal-flow.spec.ts:36:7 › Customer Portal Flow › should view quote details (19.5s)
+  ok 41 [chromium-portal] › e2e\04-portal-flow.spec.ts:92:7 › Customer Portal Flow › should view orders (10.9s)
+  x  42 [chromium-portal] › e2e\04-portal-flow.spec.ts:7:7 › Customer Portal Flow › should display portal dashboard (retry #1) (8.1s)
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  ok 43 [chromium-portal] › e2e\04-portal-flow.spec.ts:110:7 › Customer Portal Flow › should view order details and tracking (9.4s)
+  ok 45 [chromium-portal] › e2e\04-portal-flow.spec.ts:139:7 › Customer Portal Flow › should schedule installation (7.6s)
+  ok 44 [chromium-portal] › e2e\04-portal-flow.spec.ts:129:7 › Customer Portal Flow › should view appointments (8.1s)
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok 46 [chromium-portal] › e2e\04-portal-flow.spec.ts:180:7 › Customer Portal Flow › should reschedule appointment (6.4s)
+  ok 47 [chromium-portal] › e2e\04-portal-flow.spec.ts:216:7 › Customer Portal Flow › should view profile (10.4s)
+  ok 49 [chromium-portal] › e2e\04-portal-flow.spec.ts:249:7 › Customer Portal Flow › should change password (12.8s)
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m[ERROR] 2025-12-17T18:13:17.833Z - Change password error: SyntaxError: Unexpected end of JSON input
+[2m[WebServer] [22m    at JSON.parse (<anonymous>)
+[2m[WebServer] [22m[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:5738:19)[39m
+[2m[WebServer] [22m[90m    at successSteps (node:internal/deps/undici/undici:5719:27)[39m
+[2m[WebServer] [22m[90m    at consumeBody (node:internal/deps/undici/undici:5725:9)[39m
+[2m[WebServer] [22m[90m    at NextRequest.json (node:internal/deps/undici/undici:5665:18)[39m
+[2m[WebServer] [22m    at POST (webpack-internal:///(rsc)/./src/app/api/users/me/password/route.ts:27:36)
+[2m[WebServer] [22m    at async [90mD:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:57228
+[2m[WebServer] [22m    at async eT.execute [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:46851[90m)[39m
+[2m[WebServer] [22m    at async eT.handle [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\compiled\next-server\app-route.runtime.dev.js:6:58760[90m)[39m
+[2m[WebServer] [22m    at async doRender [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\base-server.js:1366:42[90m)[39m
+[2m[WebServer] [22m    at async cacheEntry.responseCache.get.routeKind [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\base-server.js:1588:28[90m)[39m
+[2m[WebServer] [22m    at async DevServer.renderToResponseWithComponentsImpl [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\base-server.js:1496:28[90m)[39m
+[2m[WebServer] [22m    at async DevServer.renderPageComponent [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\base-server.js:1924:24[90m)[39m
+[2m[WebServer] [22m    at async DevServer.renderToResponseImpl [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\base-server.js:1962:32[90m)[39m
+[2m[WebServer] [22m    at async DevServer.pipeImpl [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\base-server.js:922:25[90m)[39m
+[2m[WebServer] [22m    at async NextNodeServer.handleCatchallRenderRequest [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\next-server.js:272:17[90m)[39m
+[2m[WebServer] [22m    at async DevServer.handleRequestImpl [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\base-server.js:818:17[90m)[39m
+[2m[WebServer] [22m    at async [90mD:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\dev\next-dev-server.js:339:20
+[2m[WebServer] [22m    at async Span.traceAsyncFn [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\trace\trace.js:154:20[90m)[39m
+[2m[WebServer] [22m    at async DevServer.handleRequest [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\dev\next-dev-server.js:336:24[90m)[39m
+[2m[WebServer] [22m    at async invokeRender [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\lib\router-server.js:179:21[90m)[39m
+[2m[WebServer] [22m    at async handleRequest [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\lib\router-server.js:359:24[90m)[39m
+[2m[WebServer] [22m    at async requestHandlerImpl [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\lib\router-server.js:383:13[90m)[39m
+[2m[WebServer] [22m    at async Server.requestListener [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\lib\start-server.js:141:13[90m)[39m
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x  48 [chromium-portal] › e2e\04-portal-flow.spec.ts:229:7 › Customer Portal Flow › should update profile information (16.8s)
+  ok 51 [chromium-portal] › e2e\04-portal-flow.spec.ts:287:7 › Customer Portal Flow › should download document (9.6s)
+  ok 50 [chromium-portal] › e2e\04-portal-flow.spec.ts:272:7 › Customer Portal Flow › should view documents (15.0s)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }
+[2m[WebServer] [22m [31m[1m⨯[22m[39m Failed to generate static paths for /api/auth/[...nextauth]:
+[2m[WebServer] [22mError [PageNotFoundError]: Cannot find module for page: /api/auth/[...nextauth]/route
+[2m[WebServer] [22m    at getPagePath [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\require.js:94:15[90m)[39m
+[2m[WebServer] [22m    at requirePage [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\require.js:99:22[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\load-components.js:103:84
+[2m[WebServer] [22m[90m    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+[2m[WebServer] [22m    at async loadComponentsImpl [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\load-components.js:103:26[90m)[39m
+[2m[WebServer] [22m    at async Object.loadStaticPaths [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\dev\static-paths-worker.js:23:24[90m)[39m {
+[2m[WebServer] [22m  type: [32m'PageNotFoundError'[39m,
+[2m[WebServer] [22m  code: [32m'ENOENT'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m Failed to generate static paths for /api/auth/[...nextauth]:
+[2m[WebServer] [22mError [PageNotFoundError]: Cannot find module for page: /api/auth/[...nextauth]/route
+[2m[WebServer] [22m    at getPagePath [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\require.js:94:15[90m)[39m
+[2m[WebServer] [22m    at requirePage [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\require.js:99:22[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\load-components.js:103:84
+[2m[WebServer] [22m[90m    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+[2m[WebServer] [22m    at async loadComponentsImpl [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\load-components.js:103:26[90m)[39m
+[2m[WebServer] [22m    at async Object.loadStaticPaths [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\dev\static-paths-worker.js:23:24[90m)[39m {
+[2m[WebServer] [22m  type: [32m'PageNotFoundError'[39m,
+[2m[WebServer] [22m  code: [32m'ENOENT'[39m
+[2m[WebServer] [22m}
+  ok 52 [chromium-admin] › e2e\05-admin-flow.spec.ts:7:7 › Admin Dashboard Flow › should display admin dashboard with KPIs (11.5s)
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:10:121)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at __webpack_exec__ [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:142:39[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:498
+[2m[WebServer] [22m    at __webpack_require__.X [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:168:21[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:47
+[2m[WebServer] [22m    at Object.<anonymous> [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:146:3[90m)[39m
+[2m[WebServer] [22m[90m    at Module._compile (node:internal/modules/cjs/loader:1554:14)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:10:121)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at __webpack_exec__ [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:142:39[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:498
+[2m[WebServer] [22m    at __webpack_require__.X [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:168:21[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:47
+[2m[WebServer] [22m    at Object.<anonymous> [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:146:3[90m)[39m
+[2m[WebServer] [22m[90m    at Module._compile (node:internal/modules/cjs/loader:1554:14)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+  x  53 [chromium-portal] › e2e\04-portal-flow.spec.ts:229:7 › Customer Portal Flow › should update profile information (retry #1) (19.6s)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  ok 56 [chromium-admin] › e2e\05-admin-flow.spec.ts:59:7 › Admin Dashboard Flow › should approve quote (19.2s)
+  ok 55 [chromium-admin] › e2e\05-admin-flow.spec.ts:30:7 › Admin Dashboard Flow › should view and edit quote values (24.1s)
+  ok 54 [chromium-admin] › e2e\05-admin-flow.spec.ts:20:7 › Admin Dashboard Flow › should manage quotes (24.2s)
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok 60 [chromium-admin] › e2e\05-admin-flow.spec.ts:126:7 › Admin Dashboard Flow › should create new product (21.7s)
+  ok 58 [chromium-admin] › e2e\05-admin-flow.spec.ts:97:7 › Admin Dashboard Flow › should update order status (22.3s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:10:121)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at __webpack_exec__ [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:142:39[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:498
+[2m[WebServer] [22m    at __webpack_require__.X [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:168:21[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:47
+[2m[WebServer] [22m    at Object.<anonymous> [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:146:3[90m)[39m
+[2m[WebServer] [22m[90m    at Module._compile (node:internal/modules/cjs/loader:1554:14)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:10:121)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at __webpack_exec__ [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:142:39[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:498
+[2m[WebServer] [22m    at __webpack_require__.X [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:168:21[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:47
+[2m[WebServer] [22m    at Object.<anonymous> [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:146:3[90m)[39m
+[2m[WebServer] [22m[90m    at Module._compile (node:internal/modules/cjs/loader:1554:14)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:10:121)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at __webpack_exec__ [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:142:39[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:498
+[2m[WebServer] [22m    at __webpack_require__.X [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:168:21[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:47
+[2m[WebServer] [22m    at Object.<anonymous> [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:146:3[90m)[39m
+[2m[WebServer] [22m[90m    at Module._compile (node:internal/modules/cjs/loader:1554:14)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:10:121)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at __webpack_exec__ [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:142:39[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:498
+[2m[WebServer] [22m    at __webpack_require__.X [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:168:21[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:47
+[2m[WebServer] [22m    at Object.<anonymous> [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:146:3[90m)[39m
+[2m[WebServer] [22m[90m    at Module._compile (node:internal/modules/cjs/loader:1554:14)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:10:121)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at __webpack_exec__ [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:142:39[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:498
+[2m[WebServer] [22m    at __webpack_require__.X [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:168:21[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:47
+[2m[WebServer] [22m    at Object.<anonymous> [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:146:3[90m)[39m
+[2m[WebServer] [22m[90m    at Module._compile (node:internal/modules/cjs/loader:1554:14)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:10:121)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at __webpack_exec__ [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:142:39[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:498
+[2m[WebServer] [22m    at __webpack_require__.X [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:168:21[90m)[39m
+[2m[WebServer] [22m    at [90mD:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:143:47
+[2m[WebServer] [22m    at Object.<anonymous> [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:146:3[90m)[39m
+[2m[WebServer] [22m[90m    at Module._compile (node:internal/modules/cjs/loader:1554:14)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+  ok 61 [chromium-admin] › e2e\05-admin-flow.spec.ts:143:7 › Admin Dashboard Flow › should manage appointments (11.8s)
+  ok 62 [chromium-admin] › e2e\05-admin-flow.spec.ts:153:7 › Admin Dashboard Flow › should create appointment (11.8s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+  ok 63 [chromium-admin] › e2e\05-admin-flow.spec.ts:173:7 › Admin Dashboard Flow › should manage customers (6.3s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\(admin)\admin\clientes\[id]\page.js:709:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/(admin)/layout.tsx:8:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/(admin)/layout.tsx [90m(D:\VERSATI GLASS\[39m.next\server\app\(admin)\admin\clientes\[id]\page.js:454:1[90m)[39m
+[2m[WebServer] [22m    at Function.__webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m[90m    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+[2m[WebServer] [22m    at async collectGenerateParams [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\build\utils.js:921:21[90m)[39m
+[2m[WebServer] [22m    at async Object.loadStaticPaths [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\dev\static-paths-worker.js:47:13[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/admin/clientes/8943959e-32d8-44a1-ba5f-c009de172800'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\(admin)\admin\clientes\[id]\page.js:709:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/(admin)/layout.tsx:8:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/(admin)/layout.tsx [90m(D:\VERSATI GLASS\[39m.next\server\app\(admin)\admin\clientes\[id]\page.js:454:1[90m)[39m
+[2m[WebServer] [22m    at Function.__webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m[90m    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+[2m[WebServer] [22m    at async collectGenerateParams [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\build\utils.js:921:21[90m)[39m
+[2m[WebServer] [22m    at async Object.loadStaticPaths [90m(D:\VERSATI GLASS\[39mnode_modules\[4m.pnpm[24m\next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437\node_modules\[4mnext[24m\dist\server\dev\static-paths-worker.js:47:13[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/admin/clientes/8943959e-32d8-44a1-ba5f-c009de172800'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+  ok 65 [chromium-admin] › e2e\05-admin-flow.spec.ts:205:7 › Admin Dashboard Flow › should view conversations (9.3s)
+  ok 64 [chromium-admin] › e2e\05-admin-flow.spec.ts:186:7 › Admin Dashboard Flow › should view customer profile (15.9s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+  x  59 [chromium-admin] › e2e\05-admin-flow.spec.ts:113:7 › Admin Dashboard Flow › should manage products (51.8s)
+  x  57 [chromium-admin] › e2e\05-admin-flow.spec.ts:87:7 › Admin Dashboard Flow › should manage orders (53.1s)
+[2m[WebServer] [22m[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+  ok 66 [chromium-admin] › e2e\05-admin-flow.spec.ts:215:7 › Admin Dashboard Flow › should view conversation details (5.5s)
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.test -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+  ok 67 [chromium-admin] › e2e\05-admin-flow.spec.ts:232:7 › Admin Dashboard Flow › should view manual creation page (7.9s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+  ok 68 [chromium-admin] › e2e\05-admin-flow.spec.ts:242:7 › Admin Dashboard Flow › should upload document to order (6.8s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+  ok 69 [chromium-admin] › e2e\05-admin-flow.spec.ts:87:7 › Admin Dashboard Flow › should manage orders (retry #1) (9.7s)
+  ok 70 [chromium-admin] › e2e\05-admin-flow.spec.ts:113:7 › Admin Dashboard Flow › should manage products (retry #1) (9.7s)
+[2m[WebServer] [22m [31m[1m⨯[22m[39m TypeError: Cannot read properties of undefined (reading 'call')
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/lib/auth.ts:9:67)
+[2m[WebServer] [22m    at (rsc)/./src/lib/auth.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:112:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./src/app/api/auth/[...nextauth]/route.ts:6:67)
+[2m[WebServer] [22m    at (rsc)/./src/app/api/auth/[...nextauth]/route.ts [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:102:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m
+[2m[WebServer] [22m    at eval (webpack-internal:///(rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!:15:108)
+[2m[WebServer] [22m    at (rsc)/./node_modules/[4m.pnpm[24m/next@14.2.33_@babel+core@7._7ed58a22f15b2f2041835ab71b63c437/node_modules/[4mnext[24m/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&page=%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fauth%2F%5B...nextauth%5D%2Froute.ts&appDir=D%3A%5CVERSATI%20GLASS%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CVERSATI%20GLASS&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! [90m(D:\VERSATI GLASS\[39m.next\server\app\api\auth\[...nextauth]\route.js:92:1[90m)[39m
+[2m[WebServer] [22m    at __webpack_require__ [90m(D:\VERSATI GLASS\[39m.next\server\webpack-runtime.js:33:43[90m)[39m {
+[2m[WebServer] [22m  type: [32m'TypeError'[39m,
+[2m[WebServer] [22m  page: [32m'/api/auth/session'[39m
+[2m[WebServer] [22m}
+
+
+  1) [chromium-auth] › e2e\03-auth-flow.spec.ts:137:7 › Authentication Flow › should logout successfully 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('#email')
+    Expected: visible
+    Timeout: 30000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 30000ms[22m
+    [2m  - waiting for locator('#email')[22m
+
+
+      171 |
+      172 |     // Should show login form
+    > 173 |     await expect(page.locator('#email')).toBeVisible()
+          |                                          ^
+      174 |   })
+      175 |
+      176 |   test('should redirect to login when accessing protected route', async ({ page }) => {
+        at d:\VERSATI GLASS\e2e\03-auth-flow.spec.ts:173:42
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\03-auth-flow-Authentication-Flow-should-logout-successfully-chromium-auth\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\03-auth-flow-Authentication-Flow-should-logout-successfully-chromium-auth\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('#email')
+    Expected: visible
+    Timeout: 30000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 30000ms[22m
+    [2m  - waiting for locator('#email')[22m
+
+
+      171 |
+      172 |     // Should show login form
+    > 173 |     await expect(page.locator('#email')).toBeVisible()
+          |                                          ^
+      174 |   })
+      175 |
+      176 |   test('should redirect to login when accessing protected route', async ({ page }) => {
+        at d:\VERSATI GLASS\e2e\03-auth-flow.spec.ts:173:42
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\03-auth-flow-Authentication-Flow-should-logout-successfully-chromium-auth-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\03-auth-flow-Authentication-Flow-should-logout-successfully-chromium-auth-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\03-auth-flow-Authentication-Flow-should-logout-successfully-chromium-auth-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\03-auth-flow-Authentication-Flow-should-logout-successfully-chromium-auth-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium-portal] › e2e\04-portal-flow.spec.ts:7:7 › Customer Portal Flow › should display portal dashboard 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/bem.*vindo|ola|ol[áa]/i)
+    Expected: visible
+    Error: strict mode violation: getByText(/bem.*vindo|ola|ol[áa]/i) resolved to 2 elements:
+        1) <h1 class="font-display text-xl font-bold text-white">Ola, Customer!</h1> aka getByRole('heading', { name: 'Ola, Customer!' })
+        2) <p class="text-sm text-neutral-400">Bem-vindo ao seu portal</p> aka getByText('Bem-vindo ao seu portal')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for getByText(/bem.*vindo|ola|ol[áa]/i)[22m
+
+
+      11 |
+      12 |     // Should show welcome message
+    > 13 |     await expect(page.getByText(/bem.*vindo|ola|ol[áa]/i)).toBeVisible({ timeout: 15000 })
+         |                                                            ^
+      14 |
+      15 |     // Should show statistics cards (allow accented or unaccented)
+      16 |     await expect(page.getByText(/or[cç]amentos/i)).toBeVisible()
+        at d:\VERSATI GLASS\e2e\04-portal-flow.spec.ts:13:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\04-portal-flow-Customer-Po-d199d-ld-display-portal-dashboard-chromium-portal\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\04-portal-flow-Customer-Po-d199d-ld-display-portal-dashboard-chromium-portal\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/bem.*vindo|ola|ol[áa]/i)
+    Expected: visible
+    Error: strict mode violation: getByText(/bem.*vindo|ola|ol[áa]/i) resolved to 2 elements:
+        1) <h1 class="font-display text-xl font-bold text-white">Ola, Customer!</h1> aka getByRole('heading', { name: 'Ola, Customer!' })
+        2) <p class="text-sm text-neutral-400">Bem-vindo ao seu portal</p> aka getByText('Bem-vindo ao seu portal')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for getByText(/bem.*vindo|ola|ol[áa]/i)[22m
+
+
+      11 |
+      12 |     // Should show welcome message
+    > 13 |     await expect(page.getByText(/bem.*vindo|ola|ol[áa]/i)).toBeVisible({ timeout: 15000 })
+         |                                                            ^
+      14 |
+      15 |     // Should show statistics cards (allow accented or unaccented)
+      16 |     await expect(page.getByText(/or[cç]amentos/i)).toBeVisible()
+        at d:\VERSATI GLASS\e2e\04-portal-flow.spec.ts:13:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\04-portal-flow-Customer-Po-d199d-ld-display-portal-dashboard-chromium-portal-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\04-portal-flow-Customer-Po-d199d-ld-display-portal-dashboard-chromium-portal-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\04-portal-flow-Customer-Po-d199d-ld-display-portal-dashboard-chromium-portal-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\04-portal-flow-Customer-Po-d199d-ld-display-portal-dashboard-chromium-portal-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium-portal] › e2e\04-portal-flow.spec.ts:229:7 › Customer Portal Flow › should update profile information 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/atualizado|sucesso/i)
+    Expected: visible
+    Error: strict mode violation: getByText(/atualizado|sucesso/i) resolved to 2 elements:
+        1) <div class="text-sm font-semibold">Perfil atualizado</div> aka getByText('Perfil atualizado', { exact: true })
+        2) <span role="status" aria-live="assertive">Notification Perfil atualizadoSuas informacoes fo…</span> aka getByText('Notification Perfil')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByText(/atualizado|sucesso/i)[22m
+
+
+      242 |
+      243 |     // Should show success message
+    > 244 |     await expect(page.getByText(/atualizado|sucesso/i)).toBeVisible({
+          |                                                         ^
+      245 |       timeout: 10000,
+      246 |     })
+      247 |   })
+        at d:\VERSATI GLASS\e2e\04-portal-flow.spec.ts:244:57
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\04-portal-flow-Customer-Po-54c03--update-profile-information-chromium-portal\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\04-portal-flow-Customer-Po-54c03--update-profile-information-chromium-portal\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/atualizado|sucesso/i)
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByText(/atualizado|sucesso/i)[22m
+
+
+      242 |
+      243 |     // Should show success message
+    > 244 |     await expect(page.getByText(/atualizado|sucesso/i)).toBeVisible({
+          |                                                         ^
+      245 |       timeout: 10000,
+      246 |     })
+      247 |   })
+        at d:\VERSATI GLASS\e2e\04-portal-flow.spec.ts:244:57
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\04-portal-flow-Customer-Po-54c03--update-profile-information-chromium-portal-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\04-portal-flow-Customer-Po-54c03--update-profile-information-chromium-portal-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\04-portal-flow-Customer-Po-54c03--update-profile-information-chromium-portal-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\04-portal-flow-Customer-Po-54c03--update-profile-information-chromium-portal-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [Mobile Chrome] › e2e\01-homepage.spec.ts:47:7 › Homepage › should navigate to services page ──
+
+    TimeoutError: locator.click: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('link', { name: /serviços/i }).first()[22m
+
+
+      56 |     } else {
+      57 |       // Fallback to text-based search
+    > 58 |       await page.getByRole('link', { name: /serviços/i }).first().click()
+         |                                                                   ^
+      59 |     }
+      60 |
+      61 |     // Wait for navigation
+        at d:\VERSATI GLASS\e2e\01-homepage.spec.ts:58:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\01-homepage-Homepage-should-navigate-to-services-page-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\01-homepage-Homepage-should-navigate-to-services-page-Mobile-Chrome\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.click: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('link', { name: /serviços/i }).first()[22m
+
+
+      56 |     } else {
+      57 |       // Fallback to text-based search
+    > 58 |       await page.getByRole('link', { name: /serviços/i }).first().click()
+         |                                                                   ^
+      59 |     }
+      60 |
+      61 |     // Wait for navigation
+        at d:\VERSATI GLASS\e2e\01-homepage.spec.ts:58:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\01-homepage-Homepage-should-navigate-to-services-page-Mobile-Chrome-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\01-homepage-Homepage-should-navigate-to-services-page-Mobile-Chrome-retry1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\01-homepage-Homepage-should-navigate-to-services-page-Mobile-Chrome-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\01-homepage-Homepage-should-navigate-to-services-page-Mobile-Chrome-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [chromium-admin] › e2e\05-admin-flow.spec.ts:87:7 › Admin Dashboard Flow › should manage orders 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: /pedidos/i })
+    Expected: visible
+    Timeout: 30000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 30000ms[22m
+    [2m  - waiting for getByRole('heading', { name: /pedidos/i })[22m
+
+
+      92 |
+      93 |     // Should show orders list
+    > 94 |     await expect(page.getByRole('heading', { name: /pedidos/i })).toBeVisible()
+         |                                                                   ^
+      95 |   })
+      96 |
+      97 |   test('should update order status', async ({ page }) => {
+        at d:\VERSATI GLASS\e2e\05-admin-flow.spec.ts:94:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\05-admin-flow-Admin-Dashboard-Flow-should-manage-orders-chromium-admin\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\05-admin-flow-Admin-Dashboard-Flow-should-manage-orders-chromium-admin\error-context.md
+
+  6) [chromium-admin] › e2e\05-admin-flow.spec.ts:113:7 › Admin Dashboard Flow › should manage products 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: /produtos/i }).first()
+    Expected: visible
+    Timeout: 30000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 30000ms[22m
+    [2m  - waiting for getByRole('heading', { name: /produtos/i }).first()[22m
+
+
+      118 |
+      119 |     // Should show products heading
+    > 120 |     await expect(page.getByRole('heading', { name: /produtos/i }).first()).toBeVisible()
+          |                                                                            ^
+      121 |
+      122 |     // Should have "Novo Produto" link/button (it's actually a Link wrapping Button)
+      123 |     await expect(page.getByRole('link', { name: /novo produto/i })).toBeVisible()
+        at d:\VERSATI GLASS\e2e\05-admin-flow.spec.ts:120:76
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\05-admin-flow-Admin-Dashboard-Flow-should-manage-products-chromium-admin\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\05-admin-flow-Admin-Dashboard-Flow-should-manage-products-chromium-admin\error-context.md
+
+  4 failed
+    [chromium-auth] › e2e\03-auth-flow.spec.ts:137:7 › Authentication Flow › should logout successfully 
+    [chromium-portal] › e2e\04-portal-flow.spec.ts:7:7 › Customer Portal Flow › should display portal dashboard 
+    [chromium-portal] › e2e\04-portal-flow.spec.ts:229:7 › Customer Portal Flow › should update profile information 
+    [Mobile Chrome] › e2e\01-homepage.spec.ts:47:7 › Homepage › should navigate to services page ───
+  2 flaky
+    [chromium-admin] › e2e\05-admin-flow.spec.ts:87:7 › Admin Dashboard Flow › should manage orders 
+    [chromium-admin] › e2e\05-admin-flow.spec.ts:113:7 › Admin Dashboard Flow › should manage products 
+  58 passed (8.9m)

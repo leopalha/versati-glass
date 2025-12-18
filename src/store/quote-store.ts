@@ -4,14 +4,27 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 // Steps:
+// 0 = Localização (CEP) - primeiro passo para calcular preços por região
 // 1 = Categoria
 // 2 = Produto (lista produtos da categoria)
 // 3 = Medidas/Opções
 // 4 = Revisão do Item (permite adicionar mais ou continuar)
-// 5 = Dados do Cliente
+// 5 = Dados do Cliente (login/cadastro integrado)
 // 6 = Resumo Final
 // 7 = Agendamento
-export type QuoteStep = 1 | 2 | 3 | 4 | 5 | 6 | 7
+export type QuoteStep = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+
+// Location data from CEP (Step 0)
+export interface LocationData {
+  zipCode: string
+  street?: string
+  neighborhood?: string
+  city?: string
+  state?: string
+  region: string // Zone code (ZONA_SUL, ZONA_NORTE, etc)
+  regionName: string // Human readable name
+  priceMultiplier: number // Price adjustment for this region
+}
 
 export interface QuoteItem {
   id: string // ID único para cada item no carrinho
@@ -83,6 +96,7 @@ interface QuoteState {
   currentItem: TempItem | null // Item sendo criado/editado
   editingIndex: number | null // Índice do item sendo editado (null = novo item)
   selectedProducts: string[] // IDs dos produtos selecionados no Step 2
+  locationData: LocationData | null // CEP/região do cliente (Step 0)
   customerData: CustomerData | null
   scheduleData: ScheduleData | null
   source: 'WEBSITE' | 'WHATSAPP' | 'PHONE' | 'WALKIN'
@@ -97,6 +111,9 @@ interface QuoteState {
   setStep: (step: QuoteStep) => void
   nextStep: () => void
   prevStep: () => void
+
+  // Location (Step 0)
+  setLocationData: (data: LocationData) => void
 
   // Gerenciamento do item atual (em edição)
   setCurrentItem: (item: TempItem) => void
@@ -146,11 +163,12 @@ interface QuoteState {
 }
 
 const initialState = {
-  step: 1 as QuoteStep,
+  step: 0 as QuoteStep, // Start at Step 0 (CEP/Location)
   items: [] as QuoteItem[],
   currentItem: null as TempItem | null,
   editingIndex: null as number | null,
   selectedProducts: [] as string[],
+  locationData: null as LocationData | null,
   customerData: null,
   scheduleData: null,
   source: 'WEBSITE' as const,
@@ -182,10 +200,13 @@ export const useQuoteStore = create<QuoteState>()(
 
       prevStep: () => {
         const currentStep = get().step
-        if (currentStep > 1) {
+        if (currentStep > 0) {
           set({ step: (currentStep - 1) as QuoteStep, ...updateActivity() })
         }
       },
+
+      // Location (Step 0)
+      setLocationData: (data) => set({ locationData: data, ...updateActivity() }),
 
       // Gerenciamento do item atual (em criação/edição)
       setCurrentItem: (item) => set({ currentItem: item }),
@@ -382,6 +403,7 @@ export const useQuoteStore = create<QuoteState>()(
         currentItem: state.currentItem,
         editingIndex: state.editingIndex, // FQ.6: Persistir índice de edição
         selectedProducts: state.selectedProducts, // FQ.6: Persistir produtos selecionados (E2E fix)
+        locationData: state.locationData, // CEP/região do cliente
         customerData: state.customerData,
         scheduleData: state.scheduleData,
         source: state.source,

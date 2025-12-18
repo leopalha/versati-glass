@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Quote Store - Versati Glass</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #ffffff;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #d4af37 0%, #f4e5b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      color: #999;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: #d4af37;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button {
+      background: linear-gradient(135deg, #d4af37 0%, #b89530 100%);
+      color: #000;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    button.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    button.danger {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      color: #fff;
+    }
+    pre {
+      background: #0a0a0a;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .log {
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+    .log.success { background: rgba(74, 222, 128, 0.1); color: #4ade80; border-left: 3px solid #4ade80; }
+    .log.error { background: rgba(248, 113, 113, 0.1); color: #f87171; border-left: 3px solid #f87171; }
+    .log.warning { background: rgba(251, 191, 36, 0.1); color: #fbbf24; border-left: 3px solid #fbbf24; }
+    .log.info { background: rgba(96, 165, 250, 0.1); color: #60a5fa; border-left: 3px solid #60a5fa; }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+    .badge.success { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+    .badge.error { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+    .badge.warning { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Debug Quote Store</h1>
+    <p class="subtitle">Ferramenta de diagnóstico para problemas de criação de orçamento</p>
+
+    <div class="card">
+      <h2>🎯 Ações</h2>
+      <button onclick="loadStore()">📊 Carregar Estado do Store</button>
+      <button onclick="validateStore()">✅ Validar Dados</button>
+      <button onclick="simulateSubmit()" class="secondary">🧪 Simular Envio</button>
+      <button onclick="clearLogs()" class="secondary">🧹 Limpar Logs</button>
+      <button onclick="exportStore()" class="secondary">📥 Exportar JSON</button>
+    </div>
+
+    <div id="issues" class="card" style="display:none;">
+      <h2>⚠️ Problemas Encontrados</h2>
+      <div id="issuesList"></div>
+    </div>
+
+    <div id="storeInfo" class="card" style="display:none;">
+      <h2>📦 Estado do Store</h2>
+      <div id="storeContent"></div>
+    </div>
+
+    <div class="card">
+      <h2>📝 Logs</h2>
+      <div id="logs"></div>
+    </div>
+  </div>
+
+  <script>
+    let store = null;
+
+    function log(message, type = 'info') {
+      const logsDiv = document.getElementById('logs');
+      const timestamp = new Date().toLocaleTimeString('pt-BR');
+      const div = document.createElement('div');
+      div.className = `log ${type}`;
+      div.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+      logsDiv.appendChild(div);
+      logsDiv.scrollTop = logsDiv.scrollHeight;
+    }
+
+    function clearLogs() {
+      document.getElementById('logs').innerHTML = '<div class="empty">Nenhum log ainda...</div>';
+    }
+
+    function loadStore() {
+      try {
+        const storeData = localStorage.getItem('versati-quote');
+        if (!storeData) {
+          log('❌ Nenhum dado encontrado no localStorage', 'error');
+          return;
+        }
+
+        store = JSON.parse(storeData);
+        log('✅ Store carregado com sucesso', 'success');
+        displayStore();
+      } catch (error) {
+        log(`❌ Erro ao carregar store: ${error.message}`, 'error');
+      }
+    }
+
+    function displayStore() {
+      const storeDiv = document.getElementById('storeInfo');
+      const contentDiv = document.getElementById('storeContent');
+
+      if (!store) {
+        contentDiv.innerHTML = '<div class="empty">Carregue o store primeiro</div>';
+        return;
+      }
+
+      const state = store.state || {};
+
+      let html = `
+        <p><strong>Step atual:</strong> ${state.step || 'N/A'}</p>
+        <p><strong>Items no carrinho:</strong> ${state.items?.length || 0}</p>
+        <p><strong>Cliente cadastrado:</strong> ${state.customerData ? '✅ Sim' : '❌ Não'}</p>
+        <hr style="margin: 16px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+        <details>
+          <summary style="cursor: pointer; font-weight: 600; margin-bottom: 8px;">Ver JSON Completo</summary>
+          <pre>${JSON.stringify(state, null, 2)}</pre>
+        </details>
+      `;
+
+      contentDiv.innerHTML = html;
+      storeDiv.style.display = 'block';
+    }
+
+    function validateStore() {
+      if (!store) {
+        log('⚠️ Carregue o store primeiro', 'warning');
+        loadStore();
+        return;
+      }
+
+      const state = store.state || {};
+      const issues = [];
+
+      log('🔍 Iniciando validação...', 'info');
+
+      // Validar items
+      if (!state.items || state.items.length === 0) {
+        issues.push('Nenhum item no carrinho');
+        log('❌ Nenhum item no carrinho', 'error');
+      } else {
+        log(`✅ ${state.items.length} item(s) no carrinho`, 'success');
+
+        state.items.forEach((item, i) => {
+          log(`   📦 Item ${i + 1}: ${item.productName}`, 'info');
+
+          if (!item.width && item.category !== 'SERVICOS') {
+            issues.push(`Item ${i + 1}: Largura não definida`);
+            log(`   ❌ Item ${i + 1}: Largura ausente`, 'error');
+          }
+
+          if (!item.height && item.category !== 'SERVICOS') {
+            issues.push(`Item ${i + 1}: Altura não definida`);
+            log(`   ❌ Item ${i + 1}: Altura ausente`, 'error');
+          }
+
+          if (!item.quantity || item.quantity < 1) {
+            issues.push(`Item ${i + 1}: Quantidade inválida (${item.quantity})`);
+            log(`   ❌ Item ${i + 1}: Quantidade inválida`, 'error');
+          }
+
+          if (!item.productId || !item.productName) {
+            issues.push(`Item ${i + 1}: Produto não identificado`);
+            log(`   ❌ Item ${i + 1}: Produto inválido`, 'error');
+          }
+
+          // Calcular estimate
+          const area = (item.width || 0) * (item.height || 0);
+          if (isNaN(area) || !isFinite(area)) {
+            issues.push(`Item ${i + 1}: Cálculo de área inválido`);
+            log(`   ❌ Item ${i + 1}: Área = NaN`, 'error');
+          }
+        });
+      }
+
+      // Validar customerData
+      if (!state.customerData) {
+        issues.push('Dados do cliente não preenchidos');
+        log('❌ Dados do cliente ausentes', 'error');
+      } else {
+        const required = ['name', 'email', 'phone', 'street', 'number', 'neighborhood', 'city', 'state', 'zipCode'];
+        let customerOk = true;
+
+        required.forEach(field => {
+          if (!state.customerData[field] || state.customerData[field].trim() === '') {
+            issues.push(`Cliente: Campo "${field}" obrigatório vazio`);
+            log(`   ❌ Cliente: "${field}" vazio`, 'error');
+            customerOk = false;
+          }
+        });
+
+        if (customerOk) {
+          log('✅ Dados do cliente completos', 'success');
+        }
+
+        // Validar formato de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(state.customerData.email)) {
+          issues.push('Email em formato inválido');
+          log(`   ❌ Email inválido: ${state.customerData.email}`, 'error');
+        }
+
+        // Validar estado (deve ter 2 caracteres)
+        if (state.customerData.state && state.customerData.state.length !== 2) {
+          issues.push(`Estado deve ter 2 letras (ex: RJ), encontrado: "${state.customerData.state}"`);
+          log(`   ❌ Estado inválido: "${state.customerData.state}" (deve ter 2 letras)`, 'error');
+        }
+      }
+
+      // Mostrar resultado
+      const issuesDiv = document.getElementById('issues');
+      const issuesList = document.getElementById('issuesList');
+
+      if (issues.length === 0) {
+        log('🎉 VALIDAÇÃO PASSOU! Nenhum problema encontrado', 'success');
+        issuesDiv.style.display = 'none';
+      } else {
+        log(`⚠️ ${issues.length} problema(s) encontrado(s)`, 'warning');
+        issuesList.innerHTML = issues.map(issue =>
+          `<div class="log error">❌ ${issue}</div>`
+        ).join('');
+        issuesDiv.style.display = 'block';
+      }
+    }
+
+    async function simulateSubmit() {
+      if (!store) {
+        log('⚠️ Carregue e valide o store primeiro', 'warning');
+        return;
+      }
+
+      const state = store.state || {};
+
+      if (!state.customerData || !state.items || state.items.length === 0) {
+        log('❌ Dados incompletos para simular envio', 'error');
+        return;
+      }
+
+      log('🚀 Simulando envio de orçamento...', 'info');
+
+      // Construir payload exatamente como step-final-summary.tsx faz
+      const basePrices = {
+        BOX: 1500, ESPELHOS: 300, VIDROS: 200, PORTAS: 2000,
+        JANELAS: 1200, GUARDA_CORPO: 800, CORTINAS_VIDRO: 600,
+        PERGOLADOS: 500, TAMPOS_PRATELEIRAS: 250, DIVISORIAS: 400,
+        FECHAMENTOS: 450, SERVICOS: 500
+      };
+
+      const calculateItemEstimate = (item) => {
+        if (!item.width || !item.height) return 0;
+        const area = item.width * item.height;
+        const basePrice = basePrices[item.category] || 500;
+        return (basePrice + area * 300) * item.quantity;
+      };
+
+      const payload = {
+        customerName: state.customerData.name,
+        customerEmail: state.customerData.email,
+        customerPhone: state.customerData.phone,
+        serviceStreet: state.customerData.street,
+        serviceNumber: state.customerData.number,
+        serviceComplement: state.customerData.complement,
+        serviceNeighborhood: state.customerData.neighborhood,
+        serviceCity: state.customerData.city,
+        serviceState: state.customerData.state,
+        serviceZipCode: state.customerData.zipCode,
+        items: state.items.map((item) => {
+          const estimate = calculateItemEstimate(item);
+          const baseItem = {
+            description: item.description || `${item.productName} - ${item.width}m x ${item.height}m`,
+            specifications: `${item.width}m x ${item.height}m${item.color ? ` - ${item.color}` : ''}${item.thickness ? ` - ${item.thickness}` : ''}`,
+            width: item.width,
+            height: item.height,
+            quantity: item.quantity,
+            unitPrice: estimate / item.quantity,
+            totalPrice: estimate,
+            customerImages: item.images || [],
+          };
+
+          if (item.productId && !item.productId.startsWith('custom-')) {
+            baseItem.productId = item.productId;
+          }
+
+          if (item.color) baseItem.color = item.color;
+          if (item.finish) baseItem.finish = item.finish;
+          if (item.thickness) baseItem.thickness = item.thickness;
+          if (item.glassType) baseItem.glassType = item.glassType;
+          if (item.glassColor) baseItem.glassColor = item.glassColor;
+          if (item.model) baseItem.model = item.model;
+
+          return baseItem;
+        }),
+        source: 'WEBSITE'
+      };
+
+      log('📦 Payload construído:', 'info');
+      log(`<pre>${JSON.stringify(payload, null, 2)}</pre>`, 'info');
+
+      try {
+        log('📤 Enviando para /api/quotes...', 'info');
+
+        const response = await fetch('/api/quotes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        log(`📊 Status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+
+        const contentType = response.headers.get('content-type');
+        if (contentType?.includes('application/json')) {
+          const text = await response.text();
+          if (text && text.trim().length > 0) {
+            const data = JSON.parse(text);
+
+            if (response.ok) {
+              log(`🎉 SUCESSO! Orçamento criado: ${data.number}`, 'success');
+              log(`<pre>${JSON.stringify(data, null, 2)}</pre>`, 'success');
+            } else {
+              log(`❌ ERRO: ${data.error || data.message}`, 'error');
+              if (data.details) {
+                log(`📋 Detalhes da validação:`, 'error');
+                log(`<pre>${JSON.stringify(data.details, null, 2)}</pre>`, 'error');
+              }
+            }
+          }
+        } else {
+          const text = await response.text();
+          log(`📄 Resposta não-JSON: ${text}`, 'warning');
+        }
+      } catch (error) {
+        log(`💥 Erro na requisição: ${error.message}`, 'error');
+        console.error(error);
+      }
+    }
+
+    function exportStore() {
+      if (!store) {
+        log('⚠️ Carregue o store primeiro', 'warning');
+        loadStore();
+        return;
+      }
+
+      const dataStr = JSON.stringify(store, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `quote-store-${new Date().toISOString().slice(0,10)}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+
+      log('✅ Store exportado para arquivo JSON', 'success');
+    }
+
+    // Auto-load on page load
+    window.addEventListener('load', () => {
+      clearLogs();
+      log('👋 Ferramenta de debug carregada. Clique em "Carregar Estado do Store" para começar.', 'info');
+    });
+  </script>
+</body>
+</html>

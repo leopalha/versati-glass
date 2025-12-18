@@ -20,14 +20,14 @@ import {
 import Link from 'next/link'
 
 const statusLabels: Record<string, { label: string; color: string; icon: typeof Clock }> = {
-  DRAFT: { label: 'Rascunho', color: 'bg-neutral-500/20 text-neutral-700', icon: Clock },
+  DRAFT: { label: 'Rascunho', color: 'bg-neutral-500/20 text-neutral-400', icon: Clock },
   SENT: { label: 'Enviado', color: 'bg-blue-500/20 text-blue-400', icon: AlertCircle },
   VIEWED: { label: 'Visualizado', color: 'bg-purple-500/20 text-purple-400', icon: Eye },
   ACCEPTED: { label: 'Aceito', color: 'bg-green-500/20 text-green-400', icon: CheckCircle },
   REJECTED: { label: 'Recusado', color: 'bg-red-500/20 text-red-400', icon: XCircle },
   CANCELLED: { label: 'Cancelado', color: 'bg-red-500/20 text-red-400', icon: XCircle },
-  EXPIRED: { label: 'Expirado', color: 'bg-neutral-500/20 text-neutral-700', icon: Clock },
-  CONVERTED: { label: 'Convertido', color: 'bg-gold-500/20 text-gold-400', icon: CheckCircle },
+  EXPIRED: { label: 'Expirado', color: 'bg-neutral-500/20 text-neutral-400', icon: Clock },
+  CONVERTED: { label: 'Convertido', color: 'bg-accent-500/20 text-accent-500', icon: CheckCircle },
 }
 
 export default async function AdminOrcamentosPage() {
@@ -92,16 +92,16 @@ export default async function AdminOrcamentosPage() {
         <div className="mb-6 flex flex-wrap gap-2">
           <Link
             href="/admin/orcamentos"
-            className="rounded-lg bg-gold-500/10 px-3 py-1.5 text-sm font-medium text-gold-500"
+            className="bg-accent-500/10 hover:bg-accent-500/20 rounded-lg px-3 py-1.5 text-sm font-medium text-accent-500 transition-colors"
           >
             Todos ({quotes.length})
           </Link>
           <Link
             href="/admin/orcamentos?status=pending"
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+            className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
               pendingCount > 0
-                ? 'bg-yellow-500/10 text-yellow-400'
-                : 'bg-neutral-200 text-neutral-700'
+                ? 'bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20'
+                : 'bg-neutral-700/50 text-neutral-400 hover:bg-neutral-700'
             }`}
           >
             Pendentes ({pendingCount})
@@ -113,7 +113,7 @@ export default async function AdminOrcamentosPage() {
               <Link
                 key={status}
                 href={`/admin/orcamentos?status=${status}`}
-                className="hover:bg-neutral-250 rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-700 hover:text-white"
+                className="rounded-lg bg-neutral-700/50 px-3 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-neutral-600 hover:text-white"
               >
                 {label} ({count})
               </Link>
@@ -123,39 +123,39 @@ export default async function AdminOrcamentosPage() {
 
         {quotes.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <FileText className="mb-4 h-16 w-16 text-neutral-600" />
+            <FileText className="mb-4 h-16 w-16 text-neutral-500" />
             <h3 className="mb-2 font-display text-xl font-semibold text-white">Nenhum orcamento</h3>
-            <p className="text-neutral-700">Os orcamentos aparecerao aqui</p>
+            <p className="text-neutral-400">Os orcamentos aparecerao aqui</p>
           </Card>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-neutral-400">
+          <div className="overflow-hidden rounded-lg border border-neutral-700">
             <table className="w-full">
-              <thead className="bg-neutral-200">
+              <thead className="bg-neutral-800/80">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
                     Orcamento
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
                     Cliente
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
                     Status
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
                     Total
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
                     Validade
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-400">
                     Criado
                   </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-right text-sm font-medium text-neutral-400">
                     Acoes
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-300">
+              <tbody className="divide-y divide-neutral-700/50">
                 {quotes.map((quote) => {
                   const statusInfo = statusLabels[quote.status] || statusLabels.DRAFT
                   const StatusIcon = statusInfo.icon
@@ -165,12 +165,17 @@ export default async function AdminOrcamentosPage() {
                   const isAiGenerated = aiQuoteIds.has(quote.id)
 
                   return (
-                    <tr key={quote.id} className="hover:bg-neutral-200/50">
+                    <tr key={quote.id} className="transition-colors hover:bg-neutral-800/50">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <div>
-                            <p className="font-medium text-white">#{quote.number}</p>
-                            <p className="text-xs text-neutral-600">{quote.items.length} item(s)</p>
+                            <Link
+                              href={`/admin/orcamentos/${quote.id}`}
+                              className="font-medium text-white transition-colors hover:text-accent-500"
+                            >
+                              #{quote.number}
+                            </Link>
+                            <p className="text-xs text-neutral-500">{quote.items.length} item(s)</p>
                           </div>
                           {isAiGenerated && (
                             <span
@@ -185,11 +190,11 @@ export default async function AdminOrcamentosPage() {
                       </td>
                       <td className="px-4 py-3">
                         <p className="text-white">{quote.customerName}</p>
-                        <p className="text-xs text-neutral-600">{quote.customerEmail}</p>
+                        <p className="text-xs text-neutral-500">{quote.customerEmail}</p>
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`flex w-fit items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${
+                          className={`flex w-fit items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${
                             isExpired ? 'bg-red-500/20 text-red-400' : statusInfo.color
                           }`}
                         >
@@ -198,14 +203,14 @@ export default async function AdminOrcamentosPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="font-medium text-white">
+                        <p className="font-medium text-accent-500">
                           {formatCurrency(Number(quote.total))}
                         </p>
                       </td>
                       <td className="px-4 py-3">
                         <div
-                          className={`flex items-center gap-1 text-sm ${
-                            isExpired ? 'text-red-400' : 'text-neutral-700'
+                          className={`flex items-center gap-1.5 text-sm ${
+                            isExpired ? 'text-red-400' : 'text-neutral-400'
                           }`}
                         >
                           <Clock className="h-4 w-4" />
@@ -213,7 +218,7 @@ export default async function AdminOrcamentosPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 text-sm text-neutral-700">
+                        <div className="flex items-center gap-1.5 text-sm text-neutral-400">
                           <Calendar className="h-4 w-4" />
                           {new Date(quote.createdAt).toLocaleDateString('pt-BR')}
                         </div>
@@ -241,7 +246,7 @@ export default async function AdminOrcamentosPage() {
                           />
                           <Link
                             href={`/admin/orcamentos/${quote.id}`}
-                            className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm text-gold-500 hover:bg-gold-500/10"
+                            className="hover:bg-accent-500/10 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-accent-500 transition-colors"
                           >
                             <Eye className="h-4 w-4" />
                             Ver

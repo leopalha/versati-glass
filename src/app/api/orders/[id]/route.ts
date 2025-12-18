@@ -51,7 +51,33 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    return NextResponse.json(order)
+    // Serialize Decimal fields to numbers for JSON
+    const serializedOrder = {
+      ...order,
+      subtotal: Number(order.subtotal),
+      discount: Number(order.discount),
+      installationFee: Number(order.installationFee),
+      total: Number(order.total),
+      paidAmount: Number(order.paidAmount),
+      items: order.items.map((item) => ({
+        ...item,
+        width: item.width ? Number(item.width) : null,
+        height: item.height ? Number(item.height) : null,
+        unitPrice: Number(item.unitPrice),
+        totalPrice: Number(item.totalPrice),
+        product: item.product
+          ? {
+              ...item.product,
+              basePrice: item.product.basePrice ? Number(item.product.basePrice) : null,
+              pricePerM2: item.product.pricePerM2 ? Number(item.product.pricePerM2) : null,
+              priceRangeMin: item.product.priceRangeMin ? Number(item.product.priceRangeMin) : null,
+              priceRangeMax: item.product.priceRangeMax ? Number(item.product.priceRangeMax) : null,
+            }
+          : null,
+      })),
+    }
+
+    return NextResponse.json(serializedOrder)
   } catch (error) {
     logger.error('Get order error:', error)
     return NextResponse.json({ error: 'Failed to get order' }, { status: 500 })

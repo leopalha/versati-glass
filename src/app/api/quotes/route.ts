@@ -320,6 +320,19 @@ export async function POST(request: Request) {
       stack: error instanceof Error ? error.stack : undefined,
     })
 
+    // TEMP: Em desenvolvimento, retornar erro detalhado
+    if (process.env.NODE_ENV === 'development') {
+      return NextResponse.json(
+        {
+          error: 'Erro ao criar orcamento',
+          message: errorMessage,
+          stack: error instanceof Error ? error.stack : undefined,
+          details: error,
+        },
+        { status: 500 }
+      )
+    }
+
     return NextResponse.json(
       {
         error: 'Erro ao criar orcamento',

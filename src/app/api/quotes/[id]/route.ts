@@ -69,6 +69,9 @@ export async function GET(request: Request, { params }: RouteParams) {
       ...quote,
       subtotal: Number(quote.subtotal),
       discount: Number(quote.discount),
+      shippingFee: Number(quote.shippingFee),
+      laborFee: Number(quote.laborFee),
+      materialFee: Number(quote.materialFee),
       total: Number(quote.total),
       items: quote.items.map((item) => ({
         ...item,
@@ -132,7 +135,6 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       where: { id },
       data: {
         status: newStatus,
-        ...(newStatus === 'REJECTED' && { rejectedAt: new Date() }),
       },
     })
 

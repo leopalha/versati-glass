@@ -1,0 +1,52 @@
+# Changes to make in schema.prisma:
+
+1. Add indexes to Account model (after @@unique([provider, providerAccountId]))
+   @@index([userId])
+
+2. Add index to Session model
+   @@index([userId])
+
+3. Add indexes to QuoteItem model (before @@map)
+   @@index([quoteId])
+   @@index([productId])
+
+4. Add EMAIL to QuoteSource enum
+
+5. Add CANCELLED to QuoteStatus enum
+
+6. Add indexes to OrderItem model
+   @@index([orderId])
+   @@index([productId])
+   @@index([status])
+
+7. Add indexes to OrderTimelineEntry model
+   @@index([orderId])
+   @@index([createdAt])
+
+8. Add indexes to Document model
+   @@index([userId])
+   @@index([orderId])
+   @@index([quoteId])
+   @@index([status])
+
+9. Add indexes to Message model
+   @@index([conversationId])
+   @@index([createdAt])
+
+10. Add indexes to AiConversation model
+    @@index([sessionId])
+    @@index([status])
+    @@index([userId])
+
+11. Add indexes to AiMessage model
+    @@index([conversationId])
+    @@index([createdAt])
+
+12. Add index to Quote model for validUntil
+    @@index([validUntil])
+
+13. Add index to Appointment model for quoteId
+    @@index([quoteId])
+
+14. Add index to Conversation for userId
+    @@index([userId])

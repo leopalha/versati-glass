@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { sendEmail } from '@/services/email'
 import { generateQuoteSentEmailHtml } from '@/services/email-templates'
+import { sendWhatsAppMessage } from '@/services/whatsapp'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { logger } from '@/lib/logger'
 
@@ -12,28 +13,37 @@ interface RouteParams {
 
 /**
  * POST /api/quotes/:id/send
- * Envia orçamento ao cliente por email (apenas ADMIN)
+ * Envia orcamento ao cliente por email e opcionalmente WhatsApp
  * Atualiza status para SENT e define sentAt
  */
 export async function POST(request: Request, { params }: RouteParams) {
   try {
-    // Verificar autenticação
+    // Verificar autenticacao
     const session = await auth()
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+      return NextResponse.json({ error: 'Nao autenticado' }, { status: 401 })
     }
 
-    // Verificar se é admin ou staff
+    // Verificar se e admin ou staff
     if (session.user.role !== 'ADMIN' && session.user.role !== 'STAFF') {
       return NextResponse.json(
-        { error: 'Permissão negada. Apenas administradores podem enviar orçamentos.' },
+        { error: 'Permissao negada. Apenas administradores podem enviar orcamentos.' },
         { status: 403 }
       )
     }
 
     const { id } = await params
 
-    // Buscar orçamento com todos os dados necessários
+    // Ler body para opcoes de envio
+    let sendWhatsApp = true
+    try {
+      const body = await request.json()
+      sendWhatsApp = body.sendWhatsApp !== false
+    } catch {
+      // Body vazio, usar padrao
+    }
+
+    // Buscar orcamento com todos os dados necessarios
     const quote = await prisma.quote.findUnique({
       where: { id },
       include: {
@@ -42,6 +52,7 @@ export async function POST(request: Request, { params }: RouteParams) {
             id: true,
             name: true,
             email: true,
+            phone: true,
           },
         },
         items: {
@@ -58,44 +69,44 @@ export async function POST(request: Request, { params }: RouteParams) {
     })
 
     if (!quote) {
-      return NextResponse.json({ error: 'Orçamento não encontrado' }, { status: 404 })
+      return NextResponse.json({ error: 'Orcamento nao encontrado' }, { status: 404 })
     }
 
-    // Verificar se o orçamento pode ser enviado
+    // Verificar se o orcamento pode ser enviado
     if (quote.status === 'ACCEPTED') {
-      return NextResponse.json({ error: 'Orçamento já foi aceito pelo cliente' }, { status: 400 })
+      return NextResponse.json({ error: 'Orcamento ja foi aceito pelo cliente' }, { status: 400 })
     }
 
     if (quote.status === 'REJECTED') {
-      return NextResponse.json({ error: 'Orçamento foi recusado pelo cliente' }, { status: 400 })
+      return NextResponse.json({ error: 'Orcamento foi recusado pelo cliente' }, { status: 400 })
     }
 
     if (quote.status === 'EXPIRED') {
       return NextResponse.json(
-        { error: 'Orçamento expirado. Crie um novo orçamento.' },
+        { error: 'Orcamento expirado. Crie um novo orcamento.' },
         { status: 400 }
       )
     }
 
     if (quote.status === 'CONVERTED') {
-      return NextResponse.json({ error: 'Orçamento já foi convertido em pedido' }, { status: 400 })
+      return NextResponse.json({ error: 'Orcamento ja foi convertido em pedido' }, { status: 400 })
     }
 
     if (!quote.user.email) {
-      return NextResponse.json({ error: 'Cliente não possui email cadastrado' }, { status: 400 })
+      return NextResponse.json({ error: 'Cliente nao possui email cadastrado' }, { status: 400 })
     }
 
-    // Verificar se orçamento tem validade
+    // Verificar se orcamento tem validade
     if (!quote.validUntil) {
       return NextResponse.json(
-        { error: 'Orçamento não possui data de validade definida' },
+        { error: 'Orcamento nao possui data de validade definida' },
         { status: 400 }
       )
     }
 
-    // Verificar se orçamento tem itens
+    // Verificar se orcamento tem itens
     if (quote.items.length === 0) {
-      return NextResponse.json({ error: 'Orçamento não possui itens' }, { status: 400 })
+      return NextResponse.json({ error: 'Orcamento nao possui itens' }, { status: 400 })
     }
 
     // Preparar dados do email
@@ -116,7 +127,7 @@ export async function POST(request: Request, { params }: RouteParams) {
       items: emailItems,
     })
 
-    // Atualizar status do orçamento para SENT
+    // Atualizar status do orcamento para SENT
     const updatedQuote = await prisma.quote.update({
       where: { id },
       data: {
@@ -129,6 +140,7 @@ export async function POST(request: Request, { params }: RouteParams) {
             id: true,
             name: true,
             email: true,
+            phone: true,
           },
         },
         items: true,
@@ -136,12 +148,14 @@ export async function POST(request: Request, { params }: RouteParams) {
     })
 
     // Enviar email
+    let emailSent = false
     try {
       await sendEmail({
         to: quote.user.email,
-        subject: `Orçamento #${quote.number} - Versati Glass`,
+        subject: `Orcamento #${quote.number} - Versati Glass`,
         html: emailHtml,
       })
+      emailSent = true
     } catch (emailError) {
       logger.error('Error sending quote email:', emailError)
       // Se falhou o envio do email, reverter status
@@ -156,11 +170,72 @@ export async function POST(request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Erro ao enviar email. Tente novamente.' }, { status: 500 })
     }
 
+    // Enviar WhatsApp se solicitado e cliente tiver telefone
+    let whatsappSent = false
+    const customerPhone = quote.customerPhone || quote.user.phone
+    if (sendWhatsApp && customerPhone) {
+      try {
+        // Preparar mensagem WhatsApp
+        const itemsList = quote.items
+          .slice(0, 3)
+          .map((item) => `- ${item.description || item.product?.name}: ${item.quantity}x`)
+          .join('\n')
+
+        const moreItems =
+          quote.items.length > 3 ? `\n... e mais ${quote.items.length - 3} itens` : ''
+
+        const whatsappMessage = `Ola, ${quote.customerName}!
+
+Seu orcamento *#${quote.number}* da Versati Glass esta pronto!
+
+*Itens:*
+${itemsList}${moreItems}
+
+*Total: ${formatCurrency(Number(quote.total))}*
+*Valido ate: ${formatDate(new Date(quote.validUntil))}*
+
+Acesse o link abaixo para ver os detalhes e aceitar:
+${portalUrl}
+
+Qualquer duvida, estamos a disposicao!
+Versati Glass`
+
+        const result = await sendWhatsAppMessage({
+          to: customerPhone,
+          message: whatsappMessage,
+        })
+
+        if (result.success) {
+          whatsappSent = true
+
+          // Registrar mensagem enviada no banco
+          await prisma.whatsAppMessage.create({
+            data: {
+              messageId: result.messageSid || `quote_${quote.id}_${Date.now()}`,
+              from: process.env.TWILIO_WHATSAPP_NUMBER?.replace('whatsapp:', '') || '',
+              to: customerPhone.replace(/\D/g, ''),
+              body: whatsappMessage,
+              direction: 'OUTBOUND',
+              status: 'SENT',
+              quoteId: quote.id,
+              userId: quote.userId,
+            },
+          })
+        }
+      } catch (whatsappError) {
+        logger.error('Error sending quote WhatsApp:', whatsappError)
+        // Nao reverter o status, email ja foi enviado
+      }
+    }
+
     // Serializar Decimal para JSON
     const serializedQuote = {
       ...updatedQuote,
       subtotal: Number(updatedQuote.subtotal),
       discount: Number(updatedQuote.discount),
+      shippingFee: Number((updatedQuote as any).shippingFee || 0),
+      laborFee: Number((updatedQuote as any).laborFee || 0),
+      materialFee: Number((updatedQuote as any).materialFee || 0),
       total: Number(updatedQuote.total),
       items: updatedQuote.items.map((item) => ({
         ...item,
@@ -171,12 +246,24 @@ export async function POST(request: Request, { params }: RouteParams) {
       })),
     }
 
+    // Construir mensagem de sucesso
+    let successMessage = `Orcamento enviado com sucesso para ${quote.user.email}`
+    if (whatsappSent) {
+      successMessage += ` e WhatsApp (${customerPhone})`
+    } else if (sendWhatsApp && !customerPhone) {
+      successMessage += ' (WhatsApp nao enviado: telefone nao informado)'
+    } else if (sendWhatsApp && !whatsappSent) {
+      successMessage += ' (WhatsApp nao enviado: erro no envio)'
+    }
+
     return NextResponse.json({
       quote: serializedQuote,
-      message: `Orçamento enviado com sucesso para ${quote.user.email}`,
+      message: successMessage,
+      emailSent,
+      whatsappSent,
     })
   } catch (error) {
     logger.error('Error sending quote:', error)
-    return NextResponse.json({ error: 'Erro ao enviar orçamento' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao enviar orcamento' }, { status: 500 })
   }
 }

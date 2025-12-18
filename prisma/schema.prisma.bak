@@ -1,0 +1,819 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ====================
+// AUTH & USERS
+// ====================
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String?
+  name          String
+  phone         String?
+  cpfCnpj       String?
+
+  // Endereço principal
+  street        String?
+  number        String?
+  complement    String?
+  neighborhood  String?
+  city          String?
+  state         String?
+  zipCode       String?
+
+  // Auth
+  role          Role      @default(CUSTOMER)
+  emailVerified DateTime?
+  phoneVerified Boolean   @default(false)
+  authProvider  AuthProvider @default(EMAIL)
+  googleId      String?   @unique
+
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+
+  // Relações
+  accounts      Account[]
+  sessions      Session[]
+  orders        Order[]
+  quotes        Quote[]
+  appointments  Appointment[]
+  documents     Document[]
+  conversations Conversation[]
+  messages      Message[]
+  assignedAppointments Appointment[] @relation("AssignedTo")
+  assignedConversations Conversation[] @relation("AssignedConversations")
+  aiConversations      AiConversation[]
+  whatsappMessages     WhatsAppMessage[]
+
+  @@index([email])
+  @@index([role])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  STAFF
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+}
+
+// ====================
+// PRODUCTS
+// ====================
+
+model Product {
+  id                 String   @id @default(uuid())
+
+  // Básico
+  name               String
+  slug               String   @unique
+  description        String
+  shortDescription   String?
+
+  // Categorização
+  category           ProductCategory
+  subcategory        String?
+
+  // Mídia
+  images             String[]
+  thumbnail          String?
+
+  // Preço
+  priceType          PriceType
+  basePrice          Decimal?
+  pricePerM2         Decimal?
+  priceRangeMin      Decimal?
+  priceRangeMax      Decimal?
+
+  // Opções
+  colors             String[]
+  finishes           String[]
+  thicknesses        String[]
+
+  // Status
+  isActive           Boolean  @default(true)
+  isFeatured         Boolean  @default(false)
+
+  // SEO
+  metaTitle          String?
+  metaDescription    String?
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Relações
+  quoteItems         QuoteItem[]
+  orderItems         OrderItem[]
+
+  @@index([category, isActive])
+  @@index([slug])
+  @@index([isFeatured])
+  @@map("products")
+}
+
+enum ProductCategory {
+  // Principais categorias do catálogo VERSATI
+  BOX                    // Box para Banheiro
+  ESPELHOS               // Espelhos (lapidados, bisotados, LED, decorativos)
+  VIDROS                 // Tipos de Vidros (temperado, laminado, jateado, etc)
+  PORTAS                 // Portas de Vidro (pivotante, abrir, correr, camarão)
+  JANELAS                // Janelas de Vidro (maxim-ar, basculante, correr, guilhotina)
+  GUARDA_CORPO           // Guarda-Corpo (autoportante, torres, bottons, spider)
+  CORTINAS_VIDRO         // Cortinas de Vidro / Envidraçamento de Sacadas
+  PERGOLADOS             // Pergolados e Coberturas
+  TAMPOS_PRATELEIRAS     // Tampos de Mesa e Prateleiras
+  DIVISORIAS             // Divisórias e Painéis
+  FECHAMENTOS            // Fechamentos em Vidro (varanda, área gourmet, piscina)
+  FERRAGENS              // Ferragens e Acessórios avulsos
+  KITS                   // Kits Completos
+  SERVICOS               // Serviços (manutenção, instalação, medição)
+  OUTROS                 // Outros produtos/serviços
+}
+
+enum PriceType {
+  FIXED
+  PER_M2
+  QUOTE_ONLY
+}
+
+// ====================
+// QUOTES
+// ====================
+
+model Quote {
+  id                 String   @id @default(uuid())
+  number             String   @unique
+
+  // Cliente
+  userId             String
+  customerName       String
+  customerEmail      String
+  customerPhone      String
+
+  // Endereço do serviço
+  serviceStreet      String
+  serviceNumber      String
+  serviceComplement  String?
+  serviceNeighborhood String
+  serviceCity        String
+  serviceState       String
+  serviceZipCode     String
+
+  // Valores
+  subtotal           Decimal
+  discount           Decimal  @default(0)
+  shippingFee        Decimal  @default(0)  // Frete
+  laborFee           Decimal  @default(0)  // Mão de obra
+  materialFee        Decimal  @default(0)  // Material adicional
+  total              Decimal
+
+  // Status
+  status             QuoteStatus @default(DRAFT)
+
+  // Validade
+  validUntil         DateTime
+
+  // Notas
+  internalNotes      String?
+  customerNotes      String?
+
+  // Origem
+  source             QuoteSource
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  sentAt             DateTime?
+  viewedAt           DateTime?
+  acceptedAt         DateTime?
+
+  // Relações
+  user               User     @relation(fields: [userId], references: [id])
+  items              QuoteItem[]
+  orders             Order[]
+  conversations      Conversation[]
+  appointments       Appointment[]
+  documents          Document[]
+  whatsappMessages   WhatsAppMessage[]
+
+  @@index([userId, status])
+  @@index([status])
+  @@index([createdAt])
+  @@index([number])
+  @@map("quotes")
+}
+
+model QuoteItem {
+  id                 String   @id @default(uuid())
+  quoteId            String
+  productId          String?
+
+  // Descrição
+  description        String
+  specifications     String?
+
+  // Medidas
+  width              Decimal?
+  height             Decimal?
+  quantity           Int      @default(1)
+
+  // Opções
+  color              String?
+  finish             String?
+  thickness          String?
+
+  // Valores
+  unitPrice          Decimal
+  totalPrice         Decimal
+
+  // Imagens do cliente
+  customerImages     String[]
+
+  // Relações
+  quote              Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  product            Product? @relation(fields: [productId], references: [id])
+
+  @@map("quote_items")
+}
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  VIEWED
+  ACCEPTED
+  REJECTED
+  EXPIRED
+  CONVERTED
+}
+
+enum QuoteSource {
+  WEBSITE
+  WHATSAPP
+  PHONE
+  WALKIN
+}
+
+// ====================
+// ORDERS
+// ====================
+
+model Order {
+  id                 String   @id @default(uuid())
+  number             String   @unique
+
+  // Origem
+  quoteId            String?
+
+  // Cliente
+  userId             String
+
+  // Endereço
+  serviceStreet      String
+  serviceNumber      String
+  serviceComplement  String?
+  serviceNeighborhood String
+  serviceCity        String
+  serviceState       String
+  serviceZipCode     String
+
+  // Valores
+  subtotal           Decimal
+  discount           Decimal  @default(0)
+  installationFee    Decimal  @default(0)
+  total              Decimal
+
+  // Pagamento
+  paymentStatus      PaymentStatus @default(PENDING)
+  paymentMethod      PaymentMethod?
+  paidAmount         Decimal  @default(0)
+  stripeSessionId    String?
+  stripePaymentIntentId String?
+
+  // Status
+  status             OrderStatus @default(ORCAMENTO_ENVIADO)
+
+  // Datas
+  estimatedDelivery  DateTime?
+  installedAt        DateTime?
+  completedAt        DateTime?
+
+  // Garantia
+  warrantyUntil      DateTime?
+
+  // Notas
+  internalNotes      String?
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Relações
+  user               User     @relation(fields: [userId], references: [id])
+  quote              Quote?   @relation(fields: [quoteId], references: [id])
+  items              OrderItem[]
+  timeline           OrderTimelineEntry[]
+  appointments       Appointment[]
+  documents          Document[]
+  whatsappMessages   WhatsAppMessage[]
+
+  @@index([userId, status])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([createdAt])
+  @@index([number])
+  @@map("orders")
+}
+
+model OrderItem {
+  id                 String   @id @default(uuid())
+  orderId            String
+  productId          String?
+
+  description        String
+  specifications     String?
+
+  width              Decimal?
+  height             Decimal?
+  quantity           Int      @default(1)
+
+  color              String?
+  finish             String?
+  thickness          String?
+
+  unitPrice          Decimal
+  totalPrice         Decimal
+
+  status             OrderItemStatus @default(PENDING)
+
+  // Relações
+  order              Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product            Product? @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model OrderTimelineEntry {
+  id                 String   @id @default(uuid())
+  orderId            String
+
+  status             String
+  description        String
+  createdBy          String   // userId ou 'system'
+  createdAt          DateTime @default(now())
+
+  // Relações
+  order              Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_timeline")
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+  REFUNDED
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT_CARD
+  DEBIT_CARD
+  BOLETO
+  CASH
+}
+
+enum OrderStatus {
+  ORCAMENTO_ENVIADO
+  AGUARDANDO_PAGAMENTO
+  APROVADO
+  EM_PRODUCAO
+  PRONTO_ENTREGA
+  INSTALACAO_AGENDADA
+  INSTALANDO
+  CONCLUIDO
+  CANCELADO
+  AGUARDANDO_CLIENTE
+  EM_REVISAO
+}
+
+enum OrderItemStatus {
+  PENDING
+  IN_PRODUCTION
+  READY
+  INSTALLED
+}
+
+// ====================
+// APPOINTMENTS
+// ====================
+
+model Appointment {
+  id                 String   @id @default(uuid())
+
+  // Referência
+  userId             String
+  orderId            String?
+  quoteId            String?
+
+  // Tipo
+  type               AppointmentType
+
+  // Data/Hora
+  scheduledDate      DateTime
+  scheduledTime      String   // HH:MM format
+  estimatedDuration  Int      // minutos
+
+  // Endereço
+  addressStreet      String
+  addressNumber      String
+  addressComplement  String?
+  addressNeighborhood String
+  addressCity        String
+  addressState       String
+  addressZipCode     String
+
+  // Status
+  status             AppointmentStatus @default(SCHEDULED)
+
+  // Técnico
+  assignedToId       String?
+
+  // Notas
+  notes              String?
+  completionNotes    String?
+
+  // Lembretes
+  reminderSentAt     DateTime?
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  completedAt        DateTime?
+
+  // Relações
+  user               User     @relation(fields: [userId], references: [id])
+  order              Order?   @relation(fields: [orderId], references: [id])
+  quote              Quote?   @relation(fields: [quoteId], references: [id])
+  assignedTo         User?    @relation("AssignedTo", fields: [assignedToId], references: [id])
+
+  @@index([userId, status])
+  @@index([scheduledDate, status])
+  @@index([assignedToId])
+  @@map("appointments")
+}
+
+enum AppointmentType {
+  VISITA_TECNICA
+  INSTALACAO
+  MANUTENCAO
+  REVISAO
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+  NO_SHOW
+}
+
+// ====================
+// DOCUMENTS
+// ====================
+
+model Document {
+  id                 String   @id @default(uuid())
+
+  // Referência
+  userId             String
+  orderId            String?
+  quoteId            String?
+
+  // Tipo
+  type               DocumentType
+
+  // Arquivo
+  name               String
+  url                String
+  mimeType           String
+  size               Int      // bytes
+
+  // Status
+  status             DocumentStatus @default(PENDING)
+
+  // Assinatura
+  signedAt           DateTime?
+  signedBy           String?
+  signatureUrl       String?
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Relações
+  user               User     @relation(fields: [userId], references: [id])
+  order              Order?   @relation(fields: [orderId], references: [id])
+  quote              Quote?   @relation(fields: [quoteId], references: [id])
+
+  @@map("documents")
+}
+
+enum DocumentType {
+  CONTRATO
+  GARANTIA
+  NOTA_FISCAL
+  ORCAMENTO_PDF
+  FOTO
+  OUTRO
+}
+
+enum DocumentStatus {
+  PENDING
+  SIGNED
+  ACTIVE
+  EXPIRED
+}
+
+// ====================
+// WHATSAPP
+// ====================
+
+model Conversation {
+  id                 String   @id @default(uuid())
+
+  // Cliente
+  userId             String?
+  phoneNumber        String
+  customerName       String?
+
+  // Status
+  status             ConversationStatus @default(ACTIVE)
+  assignedToId       String?
+
+  // Contexto (JSON)
+  context            Json?
+
+  // Resultado
+  quoteId            String?
+  appointmentId      String?
+
+  // FASE-5: Cross-channel linking
+  websiteChatId      String?  // Link para AiConversation (Web)
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  lastMessageAt      DateTime @default(now())
+
+  // Relações
+  user               User?    @relation(fields: [userId], references: [id])
+  assignedTo         User?    @relation("AssignedConversations", fields: [assignedToId], references: [id])
+  quote              Quote?   @relation(fields: [quoteId], references: [id])
+  messages           Message[]
+
+  @@index([phoneNumber])
+  @@index([status])
+  @@index([lastMessageAt])
+  @@index([websiteChatId])
+  @@map("conversations")
+}
+
+model Message {
+  id                 String   @id @default(uuid())
+  conversationId     String
+
+  // Direção
+  direction          MessageDirection
+
+  // Conteúdo
+  type               MessageType
+  content            String
+  mediaUrl           String?
+
+  // Remetente
+  senderType         SenderType
+  senderId           String?
+
+  // Status (outbound)
+  status             MessageStatus?
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+
+  // Relações
+  conversation       Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender             User?        @relation(fields: [senderId], references: [id])
+
+  @@map("messages")
+}
+
+enum ConversationStatus {
+  ACTIVE
+  WAITING_HUMAN
+  CLOSED
+}
+
+enum MessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  DOCUMENT
+  AUDIO
+  LOCATION
+}
+
+enum SenderType {
+  CUSTOMER
+  AI
+  HUMAN
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
+
+// ====================
+// AI CHAT (Site)
+// ====================
+
+model AiConversation {
+  id                 String   @id @default(uuid())
+
+  // Cliente (pode ser anônimo)
+  userId             String?
+  sessionId          String   // Para visitantes não logados
+
+  // Contexto do orçamento
+  quoteContext       Json?    // Categoria, produtos, medidas coletadas
+
+  // Status
+  status             AiConversationStatus @default(ACTIVE)
+
+  // Resultado (se gerou orçamento)
+  quoteId            String?
+
+  // FASE-5: Cross-channel linking
+  linkedPhone            String?  // Telefone fornecido pelo usuario
+  whatsappConversationId String?  // Link para Conversation (WhatsApp)
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Relações
+  user               User?    @relation(fields: [userId], references: [id])
+  messages           AiMessage[]
+
+  @@index([linkedPhone])
+  @@map("ai_conversations")
+}
+
+model AiMessage {
+  id                 String   @id @default(uuid())
+  conversationId     String
+
+  // Conteúdo
+  role               AiMessageRole
+  content            String
+  imageUrl           String?
+
+  // Metadados (para debug/análise)
+  metadata           Json?    // tokens usados, modelo, tempo de resposta
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+
+  // Relações
+  conversation       AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("ai_messages")
+}
+
+enum AiConversationStatus {
+  ACTIVE
+  QUOTE_GENERATED
+  ABANDONED
+  CLOSED
+}
+
+enum AiMessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+// WhatsApp Integration - Bidirectional Sync
+model WhatsAppMessage {
+  id          String   @id @default(cuid())
+  messageId   String   @unique // Twilio MessageSid (SMxxxx)
+  from        String   // Número remetente (+5521999999999)
+  to          String   // Número destinatário
+  body        String   @db.Text
+  direction   WhatsAppDirection // INBOUND ou OUTBOUND
+  status      WhatsAppStatus // sent, delivered, read, failed
+
+  // Relacionamentos opcionais
+  quoteId     String?
+  userId      String?
+  orderId     String?
+
+  // Metadata
+  mediaUrl    String?  // URL de imagem/vídeo enviado
+  errorCode   String?  // Código de erro Twilio (se falhou)
+  errorMessage String? @db.Text
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  quote       Quote?   @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  order       Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  @@index([from])
+  @@index([to])
+  @@index([createdAt])
+  @@index([direction])
+  @@map("whatsapp_messages")
+}
+
+enum WhatsAppDirection {
+  INBOUND  // Cliente enviou para empresa
+  OUTBOUND // Empresa enviou para cliente
+}
+
+enum WhatsAppStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  READ
+  FAILED
+  UNDELIVERED
+}

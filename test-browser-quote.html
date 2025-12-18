@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Quote Submission</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .card {
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    button {
+      background: #d4af37;
+      color: #000;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #b89530;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    pre {
+      background: #1a1a1a;
+      padding: 16px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+    .success { color: #4ade80; }
+    .error { color: #f87171; }
+    .info { color: #60a5fa; }
+    .warning { color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Test Quote Submission (Browser Environment)</h1>
+
+  <div class="card">
+    <h2>Test Scenario</h2>
+    <p>This simulates the exact quote submission from step-final-summary.tsx</p>
+    <button id="testBtn" onclick="testQuoteSubmission()">▶️ Run Test</button>
+  </div>
+
+  <div class="card">
+    <h2>📊 Results</h2>
+    <div id="results"></div>
+  </div>
+
+  <script>
+    const testData = {
+      customerName: "João da Silva",
+      customerEmail: "joao@test.com",
+      customerPhone: "(21) 99988-7766",
+      serviceStreet: "Rua Teste",
+      serviceNumber: "123",
+      serviceComplement: "Apto 101",
+      serviceNeighborhood: "Centro",
+      serviceCity: "Rio de Janeiro",
+      serviceState: "RJ",
+      serviceZipCode: "20000-000",
+      items: [
+        {
+          description: "Box para Banheiro - 2.0m x 2.0m",
+          specifications: "2.0m x 2.0m - Cristal - 8mm",
+          width: 2.0,
+          height: 2.0,
+          quantity: 1,
+          color: "Cristal",
+          thickness: "8mm",
+          unitPrice: 1500.00,
+          totalPrice: 1500.00,
+          customerImages: []
+        }
+      ],
+      source: "WEBSITE"
+    };
+
+    function log(message, type = 'info') {
+      const resultsDiv = document.getElementById('results');
+      const className = type;
+      const timestamp = new Date().toLocaleTimeString();
+      resultsDiv.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+    }
+
+    async function testQuoteSubmission() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      const btn = document.getElementById('testBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Testing...';
+
+      try {
+        log('🚀 Starting quote submission test...', 'info');
+        log('📦 Payload:', 'info');
+        log('<pre>' + JSON.stringify(testData, null, 2) + '</pre>', 'info');
+
+        log('📤 Sending POST to /api/quotes', 'info');
+
+        const response = await fetch('/api/quotes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(testData),
+        });
+
+        log(`📊 Response Status: ${response.status} ${response.statusText}`,
+            response.ok ? 'success' : 'error');
+
+        // Log headers
+        const headers = {};
+        response.headers.forEach((value, key) => {
+          headers[key] = value;
+        });
+        log('📋 Response Headers:', 'info');
+        log('<pre>' + JSON.stringify(headers, null, 2) + '</pre>', 'info');
+
+        // Try to read response
+        const contentType = response.headers.get('content-type');
+
+        if (contentType?.includes('application/json')) {
+          const text = await response.text();
+          log('📄 Response Body (raw text):', 'info');
+          log('<pre>' + text + '</pre>', 'info');
+
+          if (text && text.trim().length > 0) {
+            try {
+              const data = JSON.parse(text);
+              log('✅ Parsed JSON:', 'success');
+              log('<pre>' + JSON.stringify(data, null, 2) + '</pre>', 'success');
+
+              if (response.ok) {
+                log(`🎉 SUCCESS! Quote created: ${data.number}`, 'success');
+              } else {
+                log(`❌ FAILED! Error: ${data.error || data.message}`, 'error');
+                if (data.details) {
+                  log('📋 Validation Details:', 'error');
+                  log('<pre>' + JSON.stringify(data.details, null, 2) + '</pre>', 'error');
+                }
+              }
+            } catch (parseError) {
+              log('⚠️ Failed to parse JSON: ' + parseError.message, 'warning');
+            }
+          } else {
+            log('⚠️ Empty response body', 'warning');
+          }
+        } else {
+          const text = await response.text();
+          log('📄 Response Body (non-JSON):', 'warning');
+          log('<pre>' + text + '</pre>', 'warning');
+        }
+
+      } catch (error) {
+        log('💥 ERROR:', 'error');
+        log(error.message, 'error');
+        log('<pre>' + error.stack + '</pre>', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '▶️ Run Test';
+      }
+    }
+  </script>
+</body>
+</html>

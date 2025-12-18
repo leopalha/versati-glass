@@ -82,49 +82,49 @@
 
 ### 2.1 Frontend
 
-| Tecnologia | Versão | Uso |
-|------------|--------|-----|
-| **Next.js** | 14.x | Framework React (App Router) |
-| **React** | 18.x | UI Library |
-| **TypeScript** | 5.x | Tipagem estática |
-| **Tailwind CSS** | 3.x | Styling utility-first |
-| **Framer Motion** | 10.x | Animações |
-| **Zustand** | 4.x | State management |
-| **React Query** | 5.x | Server state / caching |
-| **React Hook Form** | 7.x | Formulários |
-| **Zod** | 3.x | Validação de schemas |
-| **Lucide React** | - | Ícones |
-| **Radix UI** | - | Primitivos acessíveis |
+| Tecnologia          | Versão | Uso                          |
+| ------------------- | ------ | ---------------------------- |
+| **Next.js**         | 14.x   | Framework React (App Router) |
+| **React**           | 18.x   | UI Library                   |
+| **TypeScript**      | 5.x    | Tipagem estática             |
+| **Tailwind CSS**    | 3.x    | Styling utility-first        |
+| **Framer Motion**   | 10.x   | Animações                    |
+| **Zustand**         | 4.x    | State management             |
+| **React Query**     | 5.x    | Server state / caching       |
+| **React Hook Form** | 7.x    | Formulários                  |
+| **Zod**             | 3.x    | Validação de schemas         |
+| **Lucide React**    | -      | Ícones                       |
+| **Radix UI**        | -      | Primitivos acessíveis        |
 
 ### 2.2 Backend
 
-| Tecnologia | Versão | Uso |
-|------------|--------|-----|
-| **Node.js** | 20.x LTS | Runtime |
-| **Express** | 4.x | API framework (webhooks) |
-| **Prisma** | 5.x | ORM |
-| **PostgreSQL** | 15.x | Banco de dados |
-| **NextAuth.js** | 5.x | Autenticação |
-| **Socket.IO** | 4.x | Real-time (futuro) |
+| Tecnologia      | Versão   | Uso                      |
+| --------------- | -------- | ------------------------ |
+| **Node.js**     | 20.x LTS | Runtime                  |
+| **Express**     | 4.x      | API framework (webhooks) |
+| **Prisma**      | 5.x      | ORM                      |
+| **PostgreSQL**  | 15.x     | Banco de dados           |
+| **NextAuth.js** | 5.x      | Autenticação             |
+| **Socket.IO**   | 4.x      | Real-time (futuro)       |
 
 ### 2.3 Integrações
 
-| Serviço | Uso |
-|---------|-----|
-| **Twilio** | WhatsApp Business API |
-| **Anthropic Claude** | IA conversacional + Vision |
-| **Stripe** | Pagamentos (PIX, Cartão) |
-| **Cloudflare R2** | Storage de arquivos |
-| **Resend** | Envio de emails |
-| **Cal.com** | Agendamentos (ou Google Calendar) |
+| Serviço              | Uso                               |
+| -------------------- | --------------------------------- |
+| **Twilio**           | WhatsApp Business API             |
+| **Anthropic Claude** | IA conversacional + Vision        |
+| **Stripe**           | Pagamentos (PIX, Cartão)          |
+| **Cloudflare R2**    | Storage de arquivos               |
+| **Resend**           | Envio de emails                   |
+| **Cal.com**          | Agendamentos (ou Google Calendar) |
 
 ### 2.4 Infraestrutura
 
-| Serviço | Uso |
-|---------|-----|
-| **Vercel** | Frontend hosting + Edge |
-| **Railway** | Backend + PostgreSQL |
-| **Cloudflare** | DNS + R2 Storage |
+| Serviço        | Uso                     |
+| -------------- | ----------------------- |
+| **Vercel**     | Frontend hosting + Edge |
+| **Railway**    | Backend + PostgreSQL    |
+| **Cloudflare** | DNS + R2 Storage        |
 
 ---
 
@@ -450,7 +450,7 @@ model User {
   name          String
   phone         String?
   cpfCnpj       String?
-  
+
   // Endereço
   street        String?
   number        String?
@@ -459,26 +459,26 @@ model User {
   city          String?
   state         String?
   zipCode       String?
-  
+
   // Auth
   role          UserRole  @default(customer)
   emailVerified Boolean   @default(false)
   phoneVerified Boolean   @default(false)
   authProvider  AuthProvider @default(email)
   googleId      String?   @unique
-  
+
   // Timestamps
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   lastLoginAt   DateTime?
-  
+
   // Relations
   quotes        Quote[]
   orders        Order[]
   appointments  Appointment[]
   documents     Document[]
   conversations Conversation[]
-  
+
   @@map("users")
 }
 
@@ -488,57 +488,57 @@ model Product {
   slug             String          @unique
   description      String
   shortDescription String?
-  
+
   // Categorização
   category         ProductCategory
   subcategory      String?
-  
+
   // Mídia
   images           String[]        @default([])
   thumbnail        String?
-  
+
   // Preço
   priceType        ProductPriceType @default(quote_only)
   basePrice        Decimal?        @db.Decimal(10, 2)
   pricePerM2       Decimal?        @db.Decimal(10, 2)
   priceRangeMin    Decimal?        @db.Decimal(10, 2)
   priceRangeMax    Decimal?        @db.Decimal(10, 2)
-  
+
   // Opções
   colors           String[]        @default([])
   finishes         String[]        @default([])
   thicknesses      String[]        @default([])
-  
+
   // Status
   isActive         Boolean         @default(true)
   isFeatured       Boolean         @default(false)
-  
+
   // SEO
   metaTitle        String?
   metaDescription  String?
-  
+
   // Timestamps
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  
+
   // Relations
   quoteItems       QuoteItem[]
   orderItems       OrderItem[]
-  
+
   @@map("products")
 }
 
 model Quote {
   id            String      @id @default(cuid())
   number        String      @unique
-  
+
   // Cliente
   userId        String?
   user          User?       @relation(fields: [userId], references: [id])
   customerName  String
   customerEmail String
   customerPhone String
-  
+
   // Endereço do serviço
   street        String?
   number        String?
@@ -547,37 +547,37 @@ model Quote {
   city          String?
   state         String?
   zipCode       String?
-  
+
   // Valores
   subtotal      Decimal     @db.Decimal(10, 2)
   discount      Decimal     @default(0) @db.Decimal(10, 2)
   total         Decimal     @db.Decimal(10, 2)
-  
+
   // Status
   status        QuoteStatus @default(draft)
   validUntil    DateTime?
-  
+
   // Notas
   internalNotes String?
   customerNotes String?
-  
+
   // Origem
   source        QuoteSource @default(website)
-  
+
   // Timestamps
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   sentAt        DateTime?
   viewedAt      DateTime?
   acceptedAt    DateTime?
-  
+
   // Relations
   items         QuoteItem[]
   order         Order?
   appointments  Appointment[]
   documents     Document[]
   conversation  Conversation?
-  
+
   @@map("quotes")
 }
 
@@ -587,43 +587,43 @@ model QuoteItem {
   quote          Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
   productId      String?
   product        Product? @relation(fields: [productId], references: [id])
-  
+
   // Descrição
   description    String
   specifications String?
-  
+
   // Medidas
   width          Decimal? @db.Decimal(10, 2)
   height         Decimal? @db.Decimal(10, 2)
   quantity       Int      @default(1)
-  
+
   // Opções
   color          String?
   finish         String?
   thickness      String?
-  
+
   // Valores
   unitPrice      Decimal  @db.Decimal(10, 2)
   totalPrice     Decimal  @db.Decimal(10, 2)
-  
+
   // Imagens do cliente
   customerImages String[] @default([])
-  
+
   @@map("quote_items")
 }
 
 model Order {
   id              String        @id @default(cuid())
   number          String        @unique
-  
+
   // Origem
   quoteId         String?       @unique
   quote           Quote?        @relation(fields: [quoteId], references: [id])
-  
+
   // Cliente
   userId          String
   user            User          @relation(fields: [userId], references: [id])
-  
+
   // Endereço
   street          String
   number          String
@@ -632,41 +632,41 @@ model Order {
   city            String
   state           String
   zipCode         String
-  
+
   // Valores
   subtotal        Decimal       @db.Decimal(10, 2)
   discount        Decimal       @default(0) @db.Decimal(10, 2)
   installationFee Decimal       @default(0) @db.Decimal(10, 2)
   total           Decimal       @db.Decimal(10, 2)
-  
+
   // Pagamento
   paymentStatus   PaymentStatus @default(pending)
   paymentMethod   PaymentMethod?
   paidAmount      Decimal       @default(0) @db.Decimal(10, 2)
-  
+
   // Status
   status          OrderStatus   @default(orcamento_enviado)
-  
+
   // Datas
   estimatedDelivery DateTime?
   installedAt       DateTime?
   completedAt       DateTime?
   warrantyUntil     DateTime?
-  
+
   // Notas
   internalNotes   String?
-  
+
   // Timestamps
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  
+
   // Relations
   items           OrderItem[]
   timeline        OrderTimeline[]
   appointments    Appointment[]
   documents       Document[]
   payments        Payment[]
-  
+
   @@map("orders")
 }
 
@@ -676,23 +676,23 @@ model OrderItem {
   order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId      String?
   product        Product? @relation(fields: [productId], references: [id])
-  
+
   description    String
   specifications String?
-  
+
   width          Decimal? @db.Decimal(10, 2)
   height         Decimal? @db.Decimal(10, 2)
   quantity       Int      @default(1)
-  
+
   color          String?
   finish         String?
   thickness      String?
-  
+
   unitPrice      Decimal  @db.Decimal(10, 2)
   totalPrice     Decimal  @db.Decimal(10, 2)
-  
+
   status         String   @default("pending")
-  
+
   @@map("order_items")
 }
 
@@ -700,18 +700,18 @@ model OrderTimeline {
   id          String   @id @default(cuid())
   orderId     String
   order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  
+
   status      String
   description String
   createdBy   String   // userId or 'system'
   createdAt   DateTime @default(now())
-  
+
   @@map("order_timeline")
 }
 
 model Appointment {
   id                String            @id @default(cuid())
-  
+
   // Referências
   userId            String
   user              User              @relation(fields: [userId], references: [id])
@@ -719,15 +719,15 @@ model Appointment {
   order             Order?            @relation(fields: [orderId], references: [id])
   quoteId           String?
   quote             Quote?            @relation(fields: [quoteId], references: [id])
-  
+
   // Tipo
   type              AppointmentType
-  
+
   // Data/Hora
   scheduledDate     DateTime          @db.Date
   scheduledTime     String            // "14:00"
   estimatedDuration Int               @default(60) // minutos
-  
+
   // Endereço
   street            String
   number            String
@@ -736,25 +736,25 @@ model Appointment {
   city              String
   state             String
   zipCode           String
-  
+
   // Status
   status            AppointmentStatus @default(scheduled)
-  
+
   // Técnico
   assignedTo        String?
-  
+
   // Notas
   notes             String?
   completionNotes   String?
-  
+
   // Lembretes
   reminderSentAt    DateTime?
-  
+
   // Timestamps
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
   completedAt       DateTime?
-  
+
   @@map("appointments")
 }
 
@@ -762,26 +762,26 @@ model Payment {
   id              String        @id @default(cuid())
   orderId         String
   order           Order         @relation(fields: [orderId], references: [id])
-  
+
   // Stripe
   stripePaymentId String?       @unique
   stripeSessionId String?
-  
+
   amount          Decimal       @db.Decimal(10, 2)
   method          PaymentMethod
   status          PaymentStatus @default(pending)
-  
+
   paidAt          DateTime?
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  
+
   @@map("payments")
 }
 
 model Document {
   id           String       @id @default(cuid())
-  
+
   // Referências
   userId       String
   user         User         @relation(fields: [userId], references: [id])
@@ -789,59 +789,59 @@ model Document {
   order        Order?       @relation(fields: [orderId], references: [id])
   quoteId      String?
   quote        Quote?       @relation(fields: [quoteId], references: [id])
-  
+
   // Tipo
   type         DocumentType
-  
+
   // Arquivo
   name         String
   url          String
   mimeType     String
   size         Int          // bytes
-  
+
   // Status
   status       String       @default("active")
-  
+
   // Assinatura
   signedAt     DateTime?
   signedBy     String?
   signatureUrl String?
-  
+
   // Timestamps
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-  
+
   @@map("documents")
 }
 
 model Conversation {
   id           String             @id @default(cuid())
-  
+
   // Cliente
   userId       String?
   user         User?              @relation(fields: [userId], references: [id])
   phoneNumber  String
   customerName String?
-  
+
   // Status
   status       ConversationStatus @default(active)
   assignedTo   String?            // userId do admin
-  
+
   // Contexto (dados coletados pela IA)
   context      Json?
-  
+
   // Resultado
   quoteId      String?            @unique
   quote        Quote?             @relation(fields: [quoteId], references: [id])
-  
+
   // Timestamps
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
   lastMessageAt DateTime          @default(now())
-  
+
   // Relations
   messages     Message[]
-  
+
   @@map("conversations")
 }
 
@@ -849,25 +849,25 @@ model Message {
   id             String            @id @default(cuid())
   conversationId String
   conversation   Conversation      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  
+
   // Direção
   direction      MessageDirection
-  
+
   // Conteúdo
   type           MessageType       @default(text)
   content        String
   mediaUrl       String?
-  
+
   // Remetente
   senderType     MessageSenderType
   senderId       String?
-  
+
   // Status (outbound)
   status         String            @default("sent")
-  
+
   // Timestamps
   createdAt      DateTime          @default(now())
-  
+
   @@map("messages")
 }
 
@@ -876,27 +876,27 @@ model PortfolioProject {
   title       String
   slug        String   @unique
   description String
-  
+
   // Categorias
   category    String
   tags        String[] @default([])
-  
+
   // Mídia
   images      String[] @default([])
   thumbnail   String?
-  
+
   // Detalhes
   location    String?
   completedAt DateTime?
-  
+
   // Status
   isPublished Boolean  @default(true)
   isFeatured  Boolean  @default(false)
-  
+
   // Timestamps
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
+
   @@map("portfolio_projects")
 }
 
@@ -904,9 +904,9 @@ model SiteConfig {
   id    String @id @default(cuid())
   key   String @unique
   value Json
-  
+
   updatedAt DateTime @updatedAt
-  
+
   @@map("site_config")
 }
 ```
@@ -920,38 +920,38 @@ model SiteConfig {
 ```typescript
 // POST /api/auth/register
 interface RegisterRequest {
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
+  name: string
+  email: string
+  phone: string
+  password: string
 }
 
 interface RegisterResponse {
-  user: User;
-  token: string;
+  user: User
+  token: string
 }
 
 // POST /api/auth/login
 interface LoginRequest {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 interface LoginResponse {
-  user: User;
-  token: string;
+  user: User
+  token: string
 }
 
 // GET /api/auth/me
 interface MeResponse {
-  user: User;
+  user: User
 }
 
 // PUT /api/auth/me
 interface UpdateProfileRequest {
-  name?: string;
-  phone?: string;
-  address?: Address;
+  name?: string
+  phone?: string
+  address?: Address
 }
 ```
 
@@ -960,23 +960,23 @@ interface UpdateProfileRequest {
 ```typescript
 // GET /api/products
 interface ProductsQuery {
-  category?: ProductCategory;
-  featured?: boolean;
-  page?: number;
-  limit?: number;
+  category?: ProductCategory
+  featured?: boolean
+  page?: number
+  limit?: number
 }
 
 interface ProductsResponse {
-  products: Product[];
-  total: number;
-  page: number;
-  pages: number;
+  products: Product[]
+  total: number
+  page: number
+  pages: number
 }
 
 // GET /api/products/:slug
 interface ProductResponse {
-  product: Product;
-  related: Product[];
+  product: Product
+  related: Product[]
 }
 ```
 
@@ -985,29 +985,29 @@ interface ProductResponse {
 ```typescript
 // POST /api/quotes
 interface CreateQuoteRequest {
-  customerName: string;
-  customerEmail: string;
-  customerPhone: string;
-  serviceAddress: Address;
-  items: QuoteItemInput[];
-  source?: QuoteSource;
+  customerName: string
+  customerEmail: string
+  customerPhone: string
+  serviceAddress: Address
+  items: QuoteItemInput[]
+  source?: QuoteSource
 }
 
 interface QuoteItemInput {
-  productId?: string;
-  description: string;
-  specifications?: string;
-  width?: number;
-  height?: number;
-  quantity: number;
-  color?: string;
-  customerImages?: string[];
+  productId?: string
+  description: string
+  specifications?: string
+  width?: number
+  height?: number
+  quantity: number
+  color?: string
+  customerImages?: string[]
 }
 
 // PUT /api/quotes/:id/accept
 interface AcceptQuoteResponse {
-  order: Order;
-  paymentUrl?: string;
+  order: Order
+  paymentUrl?: string
 }
 ```
 
@@ -1016,22 +1016,22 @@ interface AcceptQuoteResponse {
 ```typescript
 // GET /api/orders
 interface OrdersResponse {
-  orders: Order[];
+  orders: Order[]
 }
 
 // GET /api/orders/:id
 interface OrderDetailResponse {
-  order: Order;
-  items: OrderItem[];
-  timeline: OrderTimeline[];
-  documents: Document[];
+  order: Order
+  items: OrderItem[]
+  timeline: OrderTimeline[]
+  documents: Document[]
 }
 
 // PUT /api/admin/orders/:id/status
 interface UpdateOrderStatusRequest {
-  status: OrderStatus;
-  notify?: boolean;
-  note?: string;
+  status: OrderStatus
+  notify?: boolean
+  note?: string
 }
 ```
 
@@ -1040,26 +1040,26 @@ interface UpdateOrderStatusRequest {
 ```typescript
 // GET /api/appointments/slots
 interface SlotsQuery {
-  date?: string; // YYYY-MM-DD
-  type: AppointmentType;
+  date?: string // YYYY-MM-DD
+  type: AppointmentType
 }
 
 interface SlotsResponse {
   slots: {
-    date: string;
-    times: string[];
-  }[];
+    date: string
+    times: string[]
+  }[]
 }
 
 // POST /api/appointments
 interface CreateAppointmentRequest {
-  quoteId?: string;
-  orderId?: string;
-  type: AppointmentType;
-  scheduledDate: string;
-  scheduledTime: string;
-  address: Address;
-  notes?: string;
+  quoteId?: string
+  orderId?: string
+  type: AppointmentType
+  scheduledDate: string
+  scheduledTime: string
+  address: Address
+  notes?: string
 }
 ```
 
@@ -1068,13 +1068,13 @@ interface CreateAppointmentRequest {
 ```typescript
 // POST /api/payments/create-session
 interface CreatePaymentSessionRequest {
-  orderId: string;
-  method: PaymentMethod;
+  orderId: string
+  method: PaymentMethod
 }
 
 interface CreatePaymentSessionResponse {
-  sessionId: string;
-  url: string;
+  sessionId: string
+  url: string
 }
 
 // POST /api/payments/webhook (Stripe)
@@ -1086,20 +1086,20 @@ interface CreatePaymentSessionResponse {
 ```typescript
 // POST /api/whatsapp/webhook (Twilio)
 interface TwilioWebhookPayload {
-  MessageSid: string;
-  From: string;
-  To: string;
-  Body: string;
-  NumMedia: string;
-  MediaUrl0?: string;
+  MessageSid: string
+  From: string
+  To: string
+  Body: string
+  NumMedia: string
+  MediaUrl0?: string
   // ...
 }
 
 // POST /api/whatsapp/send
 interface SendMessageRequest {
-  to: string;
-  body: string;
-  mediaUrl?: string;
+  to: string
+  body: string
+  mediaUrl?: string
 }
 ```
 
@@ -1111,47 +1111,44 @@ interface SendMessageRequest {
 
 ```typescript
 // lib/auth.ts
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/lib/prisma";
-import bcrypt from "bcryptjs";
+import NextAuth from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import GoogleProvider from 'next-auth/providers/google'
+import { PrismaAdapter } from '@auth/prisma-adapter'
+import { prisma } from '@/lib/prisma'
+import bcrypt from 'bcryptjs'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
+  session: { strategy: 'jwt' },
   pages: {
-    signIn: "/auth/login",
-    error: "/auth/error",
+    signIn: '/auth/login',
+    error: '/auth/error',
   },
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: 'credentials',
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Senha", type: "password" },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Senha', type: 'password' },
       },
       async authorize(credentials) {
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
-        });
+        })
 
-        if (!user || !user.password) return null;
+        if (!user || !user.password) return null
 
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
+        const isValid = await bcrypt.compare(credentials.password, user.password)
 
-        if (!isValid) return null;
+        if (!isValid) return null
 
         return {
           id: user.id,
           email: user.email,
           name: user.name,
           role: user.role,
-        };
+        }
       },
     }),
     GoogleProvider({
@@ -1162,55 +1159,55 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
+        token.id = user.id
+        token.role = user.role
       }
-      return token;
+      return token
     },
     async session({ session, token }) {
-      session.user.id = token.id;
-      session.user.role = token.role;
-      return session;
+      session.user.id = token.id
+      session.user.role = token.role
+      return session
     },
   },
-});
+})
 ```
 
 ### 6.2 Middleware de Proteção
 
 ```typescript
 // middleware.ts
-import { auth } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 
 export default auth((req) => {
-  const { pathname } = req.nextUrl;
-  const isLoggedIn = !!req.auth;
-  const userRole = req.auth?.user?.role;
+  const { pathname } = req.nextUrl
+  const isLoggedIn = !!req.auth
+  const userRole = req.auth?.user?.role
 
   // Proteger rotas do portal
-  if (pathname.startsWith("/portal")) {
+  if (pathname.startsWith('/portal')) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/auth/login", req.url));
+      return NextResponse.redirect(new URL('/auth/login', req.url))
     }
   }
 
   // Proteger rotas admin
-  if (pathname.startsWith("/admin")) {
+  if (pathname.startsWith('/admin')) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/auth/login", req.url));
+      return NextResponse.redirect(new URL('/auth/login', req.url))
     }
-    if (userRole !== "admin" && userRole !== "staff") {
-      return NextResponse.redirect(new URL("/portal", req.url));
+    if (userRole !== 'admin' && userRole !== 'staff') {
+      return NextResponse.redirect(new URL('/portal', req.url))
     }
   }
 
-  return NextResponse.next();
-});
+  return NextResponse.next()
+})
 
 export const config = {
-  matcher: ["/portal/:path*", "/admin/:path*"],
-};
+  matcher: ['/portal/:path*', '/admin/:path*'],
+}
 ```
 
 ---
@@ -1221,19 +1218,16 @@ export const config = {
 
 ```typescript
 // lib/twilio.ts
-import twilio from "twilio";
+import twilio from 'twilio'
 
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
 
 export async function sendWhatsAppMessage(to: string, body: string) {
   return client.messages.create({
     from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
     to: `whatsapp:${to}`,
     body,
-  });
+  })
 }
 
 export async function sendWhatsAppTemplate(
@@ -1246,63 +1240,63 @@ export async function sendWhatsAppTemplate(
     to: `whatsapp:${to}`,
     contentSid: templateSid,
     contentVariables: JSON.stringify(variables),
-  });
+  })
 }
 ```
 
-### 7.2 Claude AI
+### 7.2 Groq AI (Llama)
 
 ```typescript
-// lib/claude.ts
-import Anthropic from "@anthropic-ai/sdk";
+// services/ai.ts
+import Groq from 'groq-sdk'
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+})
 
 export async function chat(
-  messages: { role: "user" | "assistant"; content: string }[],
+  messages: { role: 'user' | 'assistant'; content: string }[],
   systemPrompt: string
 ) {
-  const response = await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
+  const completion = await groq.chat.completions.create({
+    model: 'llama-3.3-70b-versatile',
     max_tokens: 1024,
-    system: systemPrompt,
-    messages,
-  });
+    temperature: 0.7,
+    messages: [{ role: 'system', content: systemPrompt }, ...messages],
+  })
 
-  return response.content[0].type === "text"
-    ? response.content[0].text
-    : "";
+  return completion.choices[0]?.message?.content || ''
 }
 
+// Para análise de imagens, usar OpenAI GPT-4 Vision
+import OpenAI from 'openai'
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+})
+
 export async function analyzeImage(imageUrl: string, prompt: string) {
-  const response = await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o',
     max_tokens: 1024,
     messages: [
       {
-        role: "user",
+        role: 'user',
         content: [
           {
-            type: "image",
-            source: {
-              type: "url",
-              url: imageUrl,
-            },
+            type: 'image_url',
+            image_url: { url: imageUrl },
           },
           {
-            type: "text",
+            type: 'text',
             text: prompt,
           },
         ],
       },
     ],
-  });
+  })
 
-  return response.content[0].type === "text"
-    ? response.content[0].text
-    : "";
+  return response.choices[0]?.message?.content || ''
 }
 ```
 
@@ -1310,11 +1304,11 @@ export async function analyzeImage(imageUrl: string, prompt: string) {
 
 ```typescript
 // lib/stripe.ts
-import Stripe from "stripe";
+import Stripe from 'stripe'
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-11-20.acacia",
-});
+  apiVersion: '2024-11-20.acacia',
+})
 
 export async function createCheckoutSession(
   orderId: string,
@@ -1322,13 +1316,13 @@ export async function createCheckoutSession(
   customerEmail: string
 ) {
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    mode: "payment",
+    payment_method_types: ['card'],
+    mode: 'payment',
     customer_email: customerEmail,
     line_items: [
       {
         price_data: {
-          currency: "brl",
+          currency: 'brl',
           product_data: {
             name: `Pedido ${orderId}`,
           },
@@ -1340,20 +1334,20 @@ export async function createCheckoutSession(
     metadata: { orderId },
     success_url: `${process.env.NEXT_PUBLIC_URL}/portal/ordens/${orderId}?success=true`,
     cancel_url: `${process.env.NEXT_PUBLIC_URL}/portal/ordens/${orderId}?cancelled=true`,
-  });
+  })
 
-  return session;
+  return session
 }
 
 export async function createPixPayment(orderId: string, amount: number) {
   const paymentIntent = await stripe.paymentIntents.create({
     amount: Math.round(amount * 100),
-    currency: "brl",
-    payment_method_types: ["pix"],
+    currency: 'brl',
+    payment_method_types: ['pix'],
     metadata: { orderId },
-  });
+  })
 
-  return paymentIntent;
+  return paymentIntent
 }
 ```
 
@@ -1389,8 +1383,11 @@ TWILIO_ACCOUNT_SID=
 TWILIO_AUTH_TOKEN=
 TWILIO_WHATSAPP_NUMBER=+14155238886
 
-# Anthropic
-ANTHROPIC_API_KEY=sk-ant-...
+# Groq AI (Llama)
+GROQ_API_KEY=gsk_...
+
+# OpenAI (para análise de imagens)
+OPENAI_API_KEY=sk-proj-...
 
 # Cloudflare R2
 R2_ACCESS_KEY_ID=
@@ -1463,7 +1460,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install
       - run: pnpm lint
       - run: pnpm type-check
@@ -1478,11 +1475,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install
       - run: pnpm test
 ```
 
 ---
 
-*Versati Glass Technical Architecture v1.0 - Dezembro 2024*
+_Versati Glass Technical Architecture v1.0 - Dezembro 2024_

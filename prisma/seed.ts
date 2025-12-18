@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('🌱 Iniciando seed...')
+  console.log('🌱 Iniciando seed completo baseado no catalogo...')
 
   // Limpar dados existentes
   await prisma.message.deleteMany()
@@ -21,7 +21,7 @@ async function main() {
   await prisma.session.deleteMany()
   await prisma.user.deleteMany()
 
-  // Criar usuários
+  // Criar usuarios
   const adminPassword = await bcrypt.hash('admin123', 12)
   const admin = await prisma.user.create({
     data: {
@@ -39,7 +39,7 @@ async function main() {
     data: {
       email: 'cliente@example.com',
       password: customerPassword,
-      name: 'João Silva',
+      name: 'Joao Silva',
       phone: '+5521987654321',
       role: 'CUSTOMER',
       emailVerified: new Date(),
@@ -52,50 +52,78 @@ async function main() {
     },
   })
 
-  console.log('✅ Usuários criados')
+  console.log('✅ Usuarios criados')
 
-  // Criar produtos
+  // ============================================
+  // PRODUTOS - CATALOGO COMPLETO VERSATI GLASS
+  // ============================================
+
   const products = await Promise.all([
-    // BOX
+    // ==========================================
+    // BOX PARA BANHEIRO (Categoria principal)
+    // ==========================================
+
+    // Box Frontal (Reto)
     prisma.product.create({
       data: {
-        name: 'Box Elegance',
-        slug: 'box-elegance',
+        name: 'Box Frontal Simples',
+        slug: 'box-frontal-simples',
         description:
-          'Box de correr com roldanas modernas e design sofisticado. Perfeito para banheiros de todos os tamanhos.',
-        shortDescription: 'Box de correr premium',
+          'Box frontal com 1 folha fixa + 1 porta de correr. Modelo mais comum e popular. Ideal para banheiros de todos os tamanhos.',
+        shortDescription: 'Box de correr 1 fixa + 1 movel',
         category: 'BOX',
-        subcategory: 'Correr',
-        images: ['/products/box-elegance-1.jpg', '/products/box-elegance-2.jpg'],
-        thumbnail: '/products/box-elegance-thumb.jpg',
+        subcategory: 'Frontal',
+        images: ['/products/box-frontal-simples.jpg'],
+        thumbnail: '/products/box-frontal-simples-thumb.jpg',
         priceType: 'QUOTE_ONLY',
-        priceRangeMin: 1800,
-        priceRangeMax: 2500,
-        colors: ['Preto', 'Branco', 'Inox', 'Bronze'],
-        finishes: [],
+        priceRangeMin: 1200,
+        priceRangeMax: 1800,
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze', 'Extra Clear'],
+        finishes: ['Branco', 'Preto', 'Fosco', 'Bronze', 'Cromado', 'Dourado', 'Champanhe'],
         thicknesses: ['8mm'],
         isActive: true,
         isFeatured: true,
-        metaTitle: 'Box Elegance - Vidraçaria Versati Glass',
-        metaDescription: 'Box de correr premium para seu banheiro. Orçamento online.',
       },
     }),
     prisma.product.create({
       data: {
-        name: 'Box Flex',
-        slug: 'box-flex',
+        name: 'Box Frontal Duplo',
+        slug: 'box-frontal-duplo',
         description:
-          'Solução inovadora para espaços compactos. Maximiza o uso do banheiro sem comprometer o design.',
-        shortDescription: 'Ideal para espaços pequenos',
+          'Box frontal com 2 folhas fixas + 2 portas de correr. Para vaos grandes ate 2,40m.',
+        shortDescription: 'Box de correr 2 fixas + 2 moveis',
         category: 'BOX',
-        subcategory: 'Especial',
-        images: ['/products/box-flex-1.jpg'],
-        thumbnail: '/products/box-flex-thumb.jpg',
+        subcategory: 'Frontal',
+        images: ['/products/box-frontal-duplo.jpg'],
+        thumbnail: '/products/box-frontal-duplo-thumb.jpg',
         priceType: 'QUOTE_ONLY',
-        priceRangeMin: 1600,
+        priceRangeMin: 2200,
+        priceRangeMax: 3000,
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze'],
+        finishes: ['Branco', 'Preto', 'Fosco', 'Bronze', 'Cromado', 'Dourado', 'Champanhe'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // Box de Canto (Em L)
+    prisma.product.create({
+      data: {
+        name: 'Box de Canto em L',
+        slug: 'box-canto-l',
+        description:
+          'Box que aproveita canto do banheiro. Duas laterais com vidro. Configuracao 2 fixas + 2 correr ou 2 fixas + 1 correr.',
+        shortDescription: 'Box angular para cantos',
+        category: 'BOX',
+        subcategory: 'Canto',
+        images: ['/products/box-canto-l.jpg'],
+        thumbnail: '/products/box-canto-l-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1500,
         priceRangeMax: 2200,
-        colors: ['Preto', 'Branco', 'Inox'],
-        finishes: [],
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze'],
+        finishes: ['Branco', 'Preto', 'Inox', 'Bronze'],
         thicknesses: ['8mm'],
         isActive: true,
         isFeatured: true,
@@ -103,44 +131,271 @@ async function main() {
     }),
     prisma.product.create({
       data: {
-        name: 'Box Comum',
-        slug: 'box-comum',
+        name: 'Box de Canto Inox',
+        slug: 'box-canto-inox',
+        description: 'Box de canto com ferragens 100% inox. Premium para projetos sofisticados.',
+        shortDescription: 'Box canto premium inox',
+        category: 'BOX',
+        subcategory: 'Canto',
+        images: ['/products/box-canto-inox.jpg'],
+        thumbnail: '/products/box-canto-inox-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 2200,
+        priceRangeMax: 3500,
+        colors: ['Incolor', 'Extra Clear'],
+        finishes: ['Inox Polido', 'Inox Escovado'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // Box de Abrir
+    prisma.product.create({
+      data: {
+        name: 'Box de Abrir',
+        slug: 'box-de-abrir',
         description:
-          'Box de abrir tradicional com design clean e funcional. Excelente custo-benefício.',
-        shortDescription: 'Box de abrir tradicional',
+          'Porta abre para fora como porta convencional. Abertura total do vao, visual clean com dobradicas decorativas.',
+        shortDescription: 'Box com porta de abrir',
         category: 'BOX',
         subcategory: 'Abrir',
-        images: ['/products/box-comum-1.jpg'],
-        thumbnail: '/products/box-comum-thumb.jpg',
+        images: ['/products/box-abrir.jpg'],
+        thumbnail: '/products/box-abrir-thumb.jpg',
         priceType: 'QUOTE_ONLY',
         priceRangeMin: 1400,
         priceRangeMax: 1900,
-        colors: ['Preto', 'Branco', 'Inox', 'Bronze'],
-        finishes: [],
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze', 'Extra Clear'],
+        finishes: ['Cromado', 'Preto', 'Dourado', 'Inox Escovado'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+
+    // Box Articulado (Sanfonado)
+    prisma.product.create({
+      data: {
+        name: 'Box Articulado 2 Folhas',
+        slug: 'box-articulado-2-folhas',
+        description:
+          'Porta dobra sobre si mesma. Ideal para espacos restritos. Configuracao basica com 2 folhas.',
+        shortDescription: 'Box sanfonado compacto',
+        category: 'BOX',
+        subcategory: 'Articulado',
+        images: ['/products/box-articulado-2.jpg'],
+        thumbnail: '/products/box-articulado-2-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1600,
+        priceRangeMax: 2200,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Cromado', 'Preto', 'Branco'],
         thicknesses: ['8mm'],
         isActive: true,
         isFeatured: false,
       },
     }),
-    // ESPELHOS
     prisma.product.create({
       data: {
-        name: 'Espelho Guardian 4mm',
-        slug: 'espelho-guardian-4mm',
-        description:
-          'Espelho de alta qualidade Guardian 4mm. Ideal para qualquer ambiente.',
-        shortDescription: 'Espelho padrão premium',
-        category: 'ESPELHOS',
-        subcategory: 'Padrão',
-        images: ['/products/espelho-4mm-1.jpg'],
-        thumbnail: '/products/espelho-4mm-thumb.jpg',
-        priceType: 'PER_M2',
-        pricePerM2: 180,
-        colors: [],
-        finishes: ['Liso', 'Lapidado', 'Bisotê'],
-        thicknesses: ['4mm'],
+        name: 'Box Articulado 4 Folhas',
+        slug: 'box-articulado-4-folhas',
+        description: 'Box articulado com 4 folhas para maxima abertura. Ideal para vaos maiores.',
+        shortDescription: 'Box sanfonado grande',
+        category: 'BOX',
+        subcategory: 'Articulado',
+        images: ['/products/box-articulado-4.jpg'],
+        thumbnail: '/products/box-articulado-4-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 2000,
+        priceRangeMax: 2800,
+        colors: ['Incolor', 'Fume', 'Bronze'],
+        finishes: ['Cromado', 'Preto', 'Branco'],
+        thicknesses: ['8mm'],
         isActive: true,
         isFeatured: false,
+      },
+    }),
+
+    // Box Pivotante
+    prisma.product.create({
+      data: {
+        name: 'Box Pivotante',
+        slug: 'box-pivotante',
+        description:
+          'Porta gira em eixo central ou deslocado. Pivo central gira 180 graus, pivo deslocado ocupa menos espaco.',
+        shortDescription: 'Box com porta pivotante',
+        category: 'BOX',
+        subcategory: 'Pivotante',
+        images: ['/products/box-pivotante.jpg'],
+        thumbnail: '/products/box-pivotante-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1800,
+        priceRangeMax: 2500,
+        colors: ['Incolor', 'Extra Clear'],
+        finishes: ['Cromado', 'Preto Fosco', 'Dourado Fosco', 'Inox'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+
+    // Box Walk-In
+    prisma.product.create({
+      data: {
+        name: 'Box Walk-In',
+        slug: 'box-walk-in',
+        description:
+          'Sem porta, apenas paineis fixos com entrada livre. Requer minimo 1,20m de largura. Visual moderno e clean.',
+        shortDescription: 'Box aberto sem porta',
+        category: 'BOX',
+        subcategory: 'Walk-In',
+        images: ['/products/box-walk-in.jpg'],
+        thumbnail: '/products/box-walk-in-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1200,
+        priceRangeMax: 1800,
+        colors: ['Incolor', 'Extra Clear', 'Fume'],
+        finishes: ['Inox Polido', 'Inox Escovado', 'Preto'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // Box para Banheira
+    prisma.product.create({
+      data: {
+        name: 'Box para Banheira',
+        slug: 'box-para-banheira',
+        description:
+          'Modelos especificos para banheiras. Deslizante sobre banheira, articulado ou combinacao fixa + correr.',
+        shortDescription: 'Box especial para banheira',
+        category: 'BOX',
+        subcategory: 'Banheira',
+        images: ['/products/box-banheira.jpg'],
+        thumbnail: '/products/box-banheira-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1800,
+        priceRangeMax: 2800,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Cromado', 'Branco', 'Preto'],
+        thicknesses: ['8mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // Box Elegance (Roldana Aparente)
+    prisma.product.create({
+      data: {
+        name: 'Box Elegance Roldana Aparente',
+        slug: 'box-elegance-roldana-aparente',
+        description:
+          'Linha premium com roldanas aparentes decorativas. Trilho superior em inox ou aluminio, acabamento sofisticado.',
+        shortDescription: 'Box premium roldana aparente',
+        category: 'BOX',
+        subcategory: 'Elegance',
+        images: ['/products/box-elegance.jpg'],
+        thumbnail: '/products/box-elegance-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 2200,
+        priceRangeMax: 3500,
+        colors: ['Incolor', 'Extra Clear', 'Fume', 'Bronze'],
+        finishes: ['Inox Polido', 'Inox Escovado', 'Cromado', 'Preto Fosco', 'Dourado Fosco'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+
+    // Box Premium 100% Inox
+    prisma.product.create({
+      data: {
+        name: 'Box Premium 100% Inox',
+        slug: 'box-premium-inox',
+        description:
+          'Linha top com trilho em aco inox 304, roldanas inox com rolamento, ferragens inox macico. Acabamento polido espelhado, escovado ou black PVD.',
+        shortDescription: 'Box luxo 100% inox',
+        category: 'BOX',
+        subcategory: 'Premium',
+        images: ['/products/box-premium-inox.jpg'],
+        thumbnail: '/products/box-premium-inox-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 3500,
+        priceRangeMax: 6000,
+        colors: ['Incolor', 'Extra Clear'],
+        finishes: ['Polido Espelhado', 'Escovado Acetinado', 'Black PVD'],
+        thicknesses: ['10mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+
+    // Box Cristal (Dobradicas)
+    prisma.product.create({
+      data: {
+        name: 'Box Cristal Dobradicas',
+        slug: 'box-cristal-dobradicas',
+        description:
+          'Sem trilhos, vidro como protagonista com dobradicas decorativas clean. Puxador integrado ao vidro.',
+        shortDescription: 'Box minimalista com dobradicas',
+        category: 'BOX',
+        subcategory: 'Cristal',
+        images: ['/products/box-cristal.jpg'],
+        thumbnail: '/products/box-cristal-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 2500,
+        priceRangeMax: 4000,
+        colors: ['Incolor', 'Extra Clear'],
+        finishes: ['Inox Polido', 'Cromado', 'Preto', 'Dourado'],
+        thicknesses: ['10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // ESPELHOS
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Espelho Lapidado 4mm',
+        slug: 'espelho-lapidado-4mm',
+        description:
+          'Espelho com bordas retas e polidas, acabamento simples. Ideal para ambientes clean e modernos.',
+        shortDescription: 'Espelho borda reta polida',
+        category: 'ESPELHOS',
+        subcategory: 'Lapidado',
+        images: ['/products/espelho-lapidado.jpg'],
+        thumbnail: '/products/espelho-lapidado-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 150,
+        colors: ['Cristal Prata'],
+        finishes: ['Lapidado'],
+        thicknesses: ['4mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Espelho Bisotado 4mm',
+        slug: 'espelho-bisotado-4mm',
+        description:
+          'Espelho com bordas chanfradas formando moldura natural. Chanfro de 0,5cm a 4cm de largura, efeito de refracao de luz nas bordas.',
+        shortDescription: 'Espelho com bisote decorativo',
+        category: 'ESPELHOS',
+        subcategory: 'Bisotado',
+        images: ['/products/espelho-bisotado.jpg'],
+        thumbnail: '/products/espelho-bisotado-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 250,
+        colors: ['Cristal Prata'],
+        finishes: ['Bisote 1cm', 'Bisote 2cm', 'Bisote 3cm', 'Bisote 4cm'],
+        thicknesses: ['4mm'],
+        isActive: true,
+        isFeatured: true,
       },
     }),
     prisma.product.create({
@@ -148,47 +403,1360 @@ async function main() {
         name: 'Espelho com LED',
         slug: 'espelho-com-led',
         description:
-          'Espelho moderno com iluminação LED integrada. Perfeito para banheiros e closets.',
-        shortDescription: 'Espelho iluminado',
+          'Espelho moderno com iluminacao LED integrada. Retroiluminado ou frontal, com touch e dimmer opcional. Temperatura 3000K a 6000K.',
+        shortDescription: 'Espelho iluminado LED',
         category: 'ESPELHOS',
         subcategory: 'LED',
-        images: ['/products/espelho-led-1.jpg'],
+        images: ['/products/espelho-led.jpg'],
         thumbnail: '/products/espelho-led-thumb.jpg',
         priceType: 'QUOTE_ONLY',
-        priceRangeMin: 800,
-        priceRangeMax: 2500,
-        colors: [],
-        finishes: [],
+        priceRangeMin: 400,
+        priceRangeMax: 800,
+        colors: ['Cristal Prata'],
+        finishes: ['Retroiluminado', 'LED Frontal', 'Touch', 'Com Dimmer'],
         thicknesses: ['4mm'],
         isActive: true,
         isFeatured: true,
       },
     }),
+    prisma.product.create({
+      data: {
+        name: 'Espelho Camarim',
+        slug: 'espelho-camarim',
+        description:
+          'Espelho estilo Hollywood com lampadas ao redor. Ideal para maquiagem, 10 a 20 lampadas LED, temperatura 4000K.',
+        shortDescription: 'Espelho estilo Hollywood',
+        category: 'ESPELHOS',
+        subcategory: 'Camarim',
+        images: ['/products/espelho-camarim.jpg'],
+        thumbnail: '/products/espelho-camarim-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 600,
+        priceRangeMax: 1500,
+        colors: ['Cristal Prata'],
+        finishes: ['Com Moldura', 'Sem Moldura'],
+        thicknesses: ['4mm', '5mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Espelho Fume',
+        slug: 'espelho-fume',
+        description:
+          'Espelho fume 4mm com reflexo escurecido. Modernidade e sofisticacao para ambientes contemporaneos.',
+        shortDescription: 'Espelho cinza escuro',
+        category: 'ESPELHOS',
+        subcategory: 'Colorido',
+        images: ['/products/espelho-fume.jpg'],
+        thumbnail: '/products/espelho-fume-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 200,
+        colors: ['Fume'],
+        finishes: ['Liso', 'Lapidado'],
+        thicknesses: ['4mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Espelho Bronze',
+        slug: 'espelho-bronze',
+        description:
+          'Espelho bronze 4mm com toque sofisticado e tom quente. Ideal para decoracao classica.',
+        shortDescription: 'Espelho dourado/bronze',
+        category: 'ESPELHOS',
+        subcategory: 'Colorido',
+        images: ['/products/espelho-bronze.jpg'],
+        thumbnail: '/products/espelho-bronze-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 200,
+        colors: ['Bronze'],
+        finishes: ['Liso', 'Lapidado'],
+        thicknesses: ['4mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Espelho Decorativo Veneziano',
+        slug: 'espelho-decorativo-veneziano',
+        description:
+          'Espelho com molduras de espelho sobrepostas, estilo veneziano classico. Peca decorativa sofisticada.',
+        shortDescription: 'Espelho estilo veneziano',
+        category: 'ESPELHOS',
+        subcategory: 'Decorativo',
+        images: ['/products/espelho-veneziano.jpg'],
+        thumbnail: '/products/espelho-veneziano-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 500,
+        priceRangeMax: 2000,
+        colors: ['Cristal Prata'],
+        finishes: ['Veneziano Classico'],
+        thicknesses: ['4mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Espelho Jateado com Desenho',
+        slug: 'espelho-jateado-desenho',
+        description:
+          'Espelho com areas foscas formando desenhos personalizados. Ideal para logos, decoracao ou faixas de privacidade.',
+        shortDescription: 'Espelho com arte jateada',
+        category: 'ESPELHOS',
+        subcategory: 'Jateado',
+        images: ['/products/espelho-jateado.jpg'],
+        thumbnail: '/products/espelho-jateado-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 300,
+        priceRangeMax: 800,
+        colors: ['Cristal Prata'],
+        finishes: ['Jateado Personalizado'],
+        thicknesses: ['4mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
     // VIDROS
+    // ==========================================
+
     prisma.product.create({
       data: {
         name: 'Vidro Temperado 8mm',
         slug: 'vidro-temperado-8mm',
-        description: 'Vidro temperado de 8mm para diversas aplicações.',
-        shortDescription: 'Vidro temperado padrão',
+        description:
+          'Vidro submetido a tratamento termico (tempera). 5x mais resistente que vidro comum. Quebra em pequenos fragmentos nao cortantes. NBR 14698.',
+        shortDescription: 'Vidro temperado padrao',
         category: 'VIDROS',
         subcategory: 'Temperado',
-        images: ['/products/vidro-8mm-1.jpg'],
-        thumbnail: '/products/vidro-8mm-thumb.jpg',
+        images: ['/products/vidro-temperado-8mm.jpg'],
+        thumbnail: '/products/vidro-temperado-8mm-thumb.jpg',
         priceType: 'PER_M2',
         pricePerM2: 250,
-        colors: ['Transparente', 'Fumê', 'Verde'],
-        finishes: [],
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze', 'Extra Clear'],
+        finishes: ['Liso'],
+        thicknesses: ['8mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Vidro Temperado 10mm',
+        slug: 'vidro-temperado-10mm',
+        description:
+          'Vidro temperado de maior espessura para aplicacoes que exigem maior resistencia. Ideal para portas e divisorias.',
+        shortDescription: 'Vidro temperado reforcado',
+        category: 'VIDROS',
+        subcategory: 'Temperado',
+        images: ['/products/vidro-temperado-10mm.jpg'],
+        thumbnail: '/products/vidro-temperado-10mm-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 320,
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze', 'Extra Clear'],
+        finishes: ['Liso'],
+        thicknesses: ['10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Vidro Laminado 8mm',
+        slug: 'vidro-laminado-8mm',
+        description:
+          'Duas laminas de vidro unidas por pelicula PVB. Fragmentos ficam presos a pelicula. Protecao UV 99%, isolamento acustico ate 40dB.',
+        shortDescription: 'Vidro de seguranca com PVB',
+        category: 'VIDROS',
+        subcategory: 'Laminado',
+        images: ['/products/vidro-laminado-8mm.jpg'],
+        thumbnail: '/products/vidro-laminado-8mm-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 380,
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze'],
+        finishes: ['Liso'],
+        thicknesses: ['8mm (4+4)'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Vidro Laminado Temperado',
+        slug: 'vidro-laminado-temperado',
+        description:
+          'Combinacao das vantagens do temperado e laminado. Resistencia maxima para aplicacoes premium.',
+        shortDescription: 'Vidro premium temperado+laminado',
+        category: 'VIDROS',
+        subcategory: 'Laminado Temperado',
+        images: ['/products/vidro-laminado-temperado.jpg'],
+        thumbnail: '/products/vidro-laminado-temperado-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 520,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Liso'],
+        thicknesses: ['10mm (5+5)', '12mm (6+6)'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Vidro Jateado',
+        slug: 'vidro-jateado',
+        description:
+          'Vidro com superficie fosca por jateamento de areia. Translucido - permite luz e bloqueia visao. Para privacidade.',
+        shortDescription: 'Vidro fosco para privacidade',
+        category: 'VIDROS',
+        subcategory: 'Jateado',
+        images: ['/products/vidro-jateado.jpg'],
+        thumbnail: '/products/vidro-jateado-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 300,
+        colors: ['Incolor'],
+        finishes: ['Jateado Total', 'Jateado Parcial'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Vidro Acidato (Satinato)',
+        slug: 'vidro-acidato',
+        description:
+          'Vidro tratado com acido para efeito fosco. Superficie lisa e uniforme, facil limpeza, nao mancha com dedos.',
+        shortDescription: 'Vidro fosco premium',
+        category: 'VIDROS',
+        subcategory: 'Acidato',
+        images: ['/products/vidro-acidato.jpg'],
+        thumbnail: '/products/vidro-acidato-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 350,
+        colors: ['Incolor'],
+        finishes: ['Acetinado'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Vidro Serigrafado',
+        slug: 'vidro-serigrafado',
+        description:
+          'Vidro temperado com tinta ceramica vitrificada. Qualquer cor RAL/Pantone. Padroes chapado, listrado, pontilhado ou personalizado.',
+        shortDescription: 'Vidro colorido esmaltado',
+        category: 'VIDROS',
+        subcategory: 'Serigrafado',
+        images: ['/products/vidro-serigrafado.jpg'],
+        thumbnail: '/products/vidro-serigrafado-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 400,
+        colors: ['Qualquer cor RAL'],
+        finishes: ['Chapado', 'Listrado', 'Pontilhado', 'Personalizado'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Vidro Extra Clear',
+        slug: 'vidro-extra-clear',
+        description:
+          'Vidro com baixo teor de ferro, sem tonalidade verde nas bordas. Transmissao luminosa 91%. Cristalino puro.',
+        shortDescription: 'Vidro cristalino premium',
+        category: 'VIDROS',
+        subcategory: 'Extra Clear',
+        images: ['/products/vidro-extra-clear.jpg'],
+        thumbnail: '/products/vidro-extra-clear-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 450,
+        colors: ['Extra Clear'],
+        finishes: ['Liso'],
+        thicknesses: ['8mm', '10mm', '12mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Vidro Reflectivo',
+        slug: 'vidro-reflectivo',
+        description:
+          'Vidro com camada metalica que reflete luz e calor. Controle solar bloqueia ate 70% do calor. Privacidade diurna.',
+        shortDescription: 'Vidro espelhado controle solar',
+        category: 'VIDROS',
+        subcategory: 'Reflectivo',
+        images: ['/products/vidro-reflectivo.jpg'],
+        thumbnail: '/products/vidro-reflectivo-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 380,
+        colors: ['Prata', 'Bronze', 'Azul', 'Verde'],
+        finishes: ['Reflectivo'],
         thicknesses: ['8mm'],
         isActive: true,
         isFeatured: false,
       },
     }),
+
+    // ==========================================
+    // PORTAS DE VIDRO
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Porta Pivotante',
+        slug: 'porta-pivotante',
+        description:
+          'Porta que gira em eixo vertical (pivo superior e inferior). Eixo central ou deslocado. Para vaos de 0,80m a 1,50m.',
+        shortDescription: 'Porta de vidro pivotante',
+        category: 'PORTAS',
+        subcategory: 'Pivotante',
+        images: ['/products/porta-pivotante.jpg'],
+        thumbnail: '/products/porta-pivotante-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1500,
+        priceRangeMax: 2500,
+        colors: ['Incolor', 'Fume', 'Bronze', 'Extra Clear'],
+        finishes: ['Cromado', 'Preto', 'Dourado', 'Inox'],
+        thicknesses: ['10mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Porta Pivotante Premium',
+        slug: 'porta-pivotante-premium',
+        description:
+          'Porta pivotante com acabamento premium. Mola de piso inclusa, puxadores sofisticados, ferragens de alta qualidade.',
+        shortDescription: 'Porta pivotante luxo',
+        category: 'PORTAS',
+        subcategory: 'Pivotante',
+        images: ['/products/porta-pivotante-premium.jpg'],
+        thumbnail: '/products/porta-pivotante-premium-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 2500,
+        priceRangeMax: 4000,
+        colors: ['Incolor', 'Extra Clear'],
+        finishes: ['Inox Polido', 'Inox Escovado', 'Black PVD', 'Gold PVD'],
+        thicknesses: ['10mm', '12mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Porta de Abrir',
+        slug: 'porta-de-abrir',
+        description:
+          'Porta de vidro que abre como porta convencional com dobradicas laterais. Mola hidraulica opcional.',
+        shortDescription: 'Porta de vidro de giro',
+        category: 'PORTAS',
+        subcategory: 'Abrir',
+        images: ['/products/porta-abrir.jpg'],
+        thumbnail: '/products/porta-abrir-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1200,
+        priceRangeMax: 2000,
+        colors: ['Incolor', 'Fume', 'Bronze'],
+        finishes: ['Cromado', 'Preto', 'Branco'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Porta de Correr',
+        slug: 'porta-de-correr',
+        description:
+          'Porta que desliza lateralmente sobre trilho. Aparente, embutida ou com bandeira (vidro fixo acima).',
+        shortDescription: 'Porta deslizante',
+        category: 'PORTAS',
+        subcategory: 'Correr',
+        images: ['/products/porta-correr.jpg'],
+        thumbnail: '/products/porta-correr-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1500,
+        priceRangeMax: 2500,
+        colors: ['Incolor', 'Fume', 'Bronze', 'Serigrafado'],
+        finishes: ['Cromado', 'Preto', 'Branco', 'Inox'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Porta Camarao (Articulada)',
+        slug: 'porta-camarao',
+        description:
+          'Porta que dobra sobre si mesma, economiza espaco. 2, 4 ou 6+ folhas para grandes aberturas.',
+        shortDescription: 'Porta sanfonada de vidro',
+        category: 'PORTAS',
+        subcategory: 'Camarao',
+        images: ['/products/porta-camarao.jpg'],
+        thumbnail: '/products/porta-camarao-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 2500,
+        priceRangeMax: 4000,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Cromado', 'Preto', 'Branco'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Porta Automatica',
+        slug: 'porta-automatica',
+        description:
+          'Porta com abertura motorizada e sensor. Deslizante simples, dupla, giratoria ou telescopica.',
+        shortDescription: 'Porta com sensor automatico',
+        category: 'PORTAS',
+        subcategory: 'Automatica',
+        images: ['/products/porta-automatica.jpg'],
+        thumbnail: '/products/porta-automatica-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 5000,
+        priceRangeMax: 15000,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Aluminio', 'Inox'],
+        thicknesses: ['10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // JANELAS DE VIDRO
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Janela Maxim-Ar',
+        slug: 'janela-maxim-ar',
+        description:
+          'Abre projetando a parte inferior para fora com limitador. Ventilacao mesmo com chuva, seguranca e limpeza facil.',
+        shortDescription: 'Janela projetante com haste',
+        category: 'JANELAS',
+        subcategory: 'Maxim-Ar',
+        images: ['/products/janela-maxim-ar.jpg'],
+        thumbnail: '/products/janela-maxim-ar-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 450,
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze'],
+        finishes: ['Aluminio Branco', 'Aluminio Preto', 'Inox'],
+        thicknesses: ['8mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Janela Basculante',
+        slug: 'janela-basculante',
+        description:
+          'Pivota no eixo horizontal central. Com dobradicas pivotantes, corrente limitadora e trinco central.',
+        shortDescription: 'Janela basculante pivotante',
+        category: 'JANELAS',
+        subcategory: 'Basculante',
+        images: ['/products/janela-basculante.jpg'],
+        thumbnail: '/products/janela-basculante-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 400,
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze'],
+        finishes: ['Aluminio Branco', 'Aluminio Preto', 'Inox'],
+        thicknesses: ['8mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Janela de Correr',
+        slug: 'janela-de-correr',
+        description:
+          'Folhas deslizam horizontalmente. 2 folhas (1 fixa + 1 movel), 4 folhas ou todas moveis.',
+        shortDescription: 'Janela deslizante',
+        category: 'JANELAS',
+        subcategory: 'Correr',
+        images: ['/products/janela-correr.jpg'],
+        thumbnail: '/products/janela-correr-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 350,
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze'],
+        finishes: ['Aluminio Branco', 'Aluminio Preto'],
+        thicknesses: ['8mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Janela Guilhotina',
+        slug: 'janela-guilhotina',
+        description: 'Folhas deslizam verticalmente. Trilhos laterais com contrapeso ou trava.',
+        shortDescription: 'Janela vertical deslizante',
+        category: 'JANELAS',
+        subcategory: 'Guilhotina',
+        images: ['/products/janela-guilhotina.jpg'],
+        thumbnail: '/products/janela-guilhotina-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 500,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Aluminio Branco', 'Aluminio Preto', 'Madeira'],
+        thicknesses: ['8mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Janela Pivotante',
+        slug: 'janela-pivotante',
+        description:
+          'Gira em eixo central vertical ou horizontal. Design moderno para grandes aberturas.',
+        shortDescription: 'Janela pivotante moderna',
+        category: 'JANELAS',
+        subcategory: 'Pivotante',
+        images: ['/products/janela-pivotante.jpg'],
+        thumbnail: '/products/janela-pivotante-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 550,
+        colors: ['Incolor', 'Extra Clear'],
+        finishes: ['Aluminio Preto', 'Inox'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // GUARDA-CORPO
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Guarda-Corpo Autoportante',
+        slug: 'guarda-corpo-autoportante',
+        description:
+          'Vidro fixado em perfil U embutido no piso. Apenas vidro aparente, visual clean. Vidro laminado obrigatorio conforme NBR 14718.',
+        shortDescription: 'Guarda-corpo embutido no piso',
+        category: 'GUARDA_CORPO',
+        subcategory: 'Autoportante',
+        images: ['/products/guarda-corpo-autoportante.jpg'],
+        thumbnail: '/products/guarda-corpo-autoportante-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 800,
+        priceRangeMax: 1200,
+        colors: ['Incolor', 'Fume', 'Verde'],
+        finishes: ['Aluminio', 'Inox'],
+        thicknesses: ['10mm laminado', '12mm laminado'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Guarda-Corpo Autoportante Inox',
+        slug: 'guarda-corpo-autoportante-inox',
+        description:
+          'Guarda-corpo autoportante com perfil em inox AISI 304. Premium para projetos sofisticados.',
+        shortDescription: 'Guarda-corpo premium inox',
+        category: 'GUARDA_CORPO',
+        subcategory: 'Autoportante',
+        images: ['/products/guarda-corpo-autoportante-inox.jpg'],
+        thumbnail: '/products/guarda-corpo-autoportante-inox-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1200,
+        priceRangeMax: 1800,
+        colors: ['Incolor', 'Extra Clear'],
+        finishes: ['Inox Polido', 'Inox Escovado'],
+        thicknesses: ['10mm laminado', '12mm laminado'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Guarda-Corpo Torres de Inox',
+        slug: 'guarda-corpo-torres-inox',
+        description:
+          'Vidro fixado por torres verticais de inox com pincas. Torres de 40cm a 60cm com 2 a 4 pincas por torre.',
+        shortDescription: 'Guarda-corpo com torres e pincas',
+        category: 'GUARDA_CORPO',
+        subcategory: 'Torres',
+        images: ['/products/guarda-corpo-torres.jpg'],
+        thumbnail: '/products/guarda-corpo-torres-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 900,
+        priceRangeMax: 1400,
+        colors: ['Incolor', 'Fume', 'Verde'],
+        finishes: ['Inox Polido', 'Inox Escovado', 'Inox 316'],
+        thicknesses: ['8mm temperado', '10mm laminado'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Guarda-Corpo Bottons',
+        slug: 'guarda-corpo-bottons',
+        description:
+          'Vidro fixado por botoes de inox pontuais. Bottons de 50mm ou 60mm, minimo 4 por placa. Visual minimalista.',
+        shortDescription: 'Guarda-corpo com botoes inox',
+        category: 'GUARDA_CORPO',
+        subcategory: 'Bottons',
+        images: ['/products/guarda-corpo-bottons.jpg'],
+        thumbnail: '/products/guarda-corpo-bottons-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 700,
+        priceRangeMax: 1100,
+        colors: ['Incolor', 'Verde'],
+        finishes: ['Cromado', 'Inox Polido', 'Inox Escovado'],
+        thicknesses: ['8mm temperado', '10mm temperado'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Guarda-Corpo Spider',
+        slug: 'guarda-corpo-spider',
+        description:
+          'Sistema de grampos articulados em inox (aranha). Grampos de 2, 4 ou 6 pontas. Visual industrial/moderno.',
+        shortDescription: 'Guarda-corpo com grampos spider',
+        category: 'GUARDA_CORPO',
+        subcategory: 'Spider',
+        images: ['/products/guarda-corpo-spider.jpg'],
+        thumbnail: '/products/guarda-corpo-spider-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1000,
+        priceRangeMax: 1600,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Inox 304', 'Inox 316'],
+        thicknesses: ['10mm laminado', '12mm laminado'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Gradil de Inox',
+        slug: 'gradil-inox',
+        description:
+          'Tubos horizontais ou verticais de inox sem vidro. Configuracao horizontal, vertical ou mista.',
+        shortDescription: 'Gradil tubular de inox',
+        category: 'GUARDA_CORPO',
+        subcategory: 'Gradil',
+        images: ['/products/gradil-inox.jpg'],
+        thumbnail: '/products/gradil-inox-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 600,
+        priceRangeMax: 1000,
+        colors: [],
+        finishes: ['Inox Polido', 'Inox Escovado', 'Inox Satinado'],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // CORTINAS DE VIDRO / ENVIDRACAMENTO
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Cortina de Vidro Sistema Europeu',
+        slug: 'cortina-vidro-europeu',
+        description:
+          'Folhas giram 90 graus e recolhem em pacote na lateral. Abertura 100% do vao. Unico sistema permitido pela NBR 16259 para varandas.',
+        shortDescription: 'Envidracamento sistema europeu',
+        category: 'CORTINAS_VIDRO',
+        subcategory: 'Europeu',
+        images: ['/products/cortina-europeu.jpg'],
+        thumbnail: '/products/cortina-europeu-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 450,
+        colors: ['Incolor', 'Verde', 'Fume', 'Bronze', 'Reflecta'],
+        finishes: ['Branco', 'Preto', 'Bronze', 'Champanhe'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Cortina de Vidro Sistema Europeu Premium',
+        slug: 'cortina-vidro-europeu-premium',
+        description:
+          'Sistema europeu com acabamentos premium e ferragens de alta qualidade. Para projetos sofisticados.',
+        shortDescription: 'Envidracamento premium',
+        category: 'CORTINAS_VIDRO',
+        subcategory: 'Europeu Premium',
+        images: ['/products/cortina-europeu-premium.jpg'],
+        thumbnail: '/products/cortina-europeu-premium-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 600,
+        colors: ['Incolor', 'Extra Clear', 'Fume'],
+        finishes: ['Preto Fosco', 'Inox', 'Bronze Premium'],
+        thicknesses: ['10mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Cortina de Vidro Sistema Stanley',
+        slug: 'cortina-vidro-stanley',
+        description:
+          'Folhas correm em trilhos multiplos independentes. Abertura parcial. Maior resistencia a vento, custo menor.',
+        shortDescription: 'Envidracamento sistema stanley',
+        category: 'CORTINAS_VIDRO',
+        subcategory: 'Stanley',
+        images: ['/products/cortina-stanley.jpg'],
+        thumbnail: '/products/cortina-stanley-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 350,
+        colors: ['Incolor', 'Verde', 'Fume'],
+        finishes: ['Branco', 'Preto', 'Fosco'],
+        thicknesses: ['8mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Cortina de Vidro Automatizada',
+        slug: 'cortina-vidro-automatizada',
+        description:
+          'Sistema de envidracamento com motor eletrico e controle remoto. Abertura e fechamento automatico.',
+        shortDescription: 'Envidracamento motorizado',
+        category: 'CORTINAS_VIDRO',
+        subcategory: 'Automatizado',
+        images: ['/products/cortina-automatizada.jpg'],
+        thumbnail: '/products/cortina-automatizada-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 900,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Preto', 'Branco', 'Inox'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // PERGOLADOS E COBERTURAS
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Cobertura de Vidro Laminado',
+        slug: 'cobertura-vidro-laminado',
+        description:
+          'Cobertura com vidro laminado obrigatorio (NBR 7199). Protecao com luminosidade natural. Inclinacao minima 5%.',
+        shortDescription: 'Cobertura de vidro seguranca',
+        category: 'PERGOLADOS',
+        subcategory: 'Cobertura',
+        images: ['/products/cobertura-laminado.jpg'],
+        thumbnail: '/products/cobertura-laminado-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 450,
+        colors: ['Incolor', 'Verde'],
+        finishes: ['Liso'],
+        thicknesses: ['8mm laminado', '10mm laminado'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Cobertura Vidro Controle Solar',
+        slug: 'cobertura-vidro-controle-solar',
+        description:
+          'Cobertura com vidro laminado e tecnologia de controle solar. Reduz calor mantendo luminosidade.',
+        shortDescription: 'Cobertura com controle termico',
+        category: 'PERGOLADOS',
+        subcategory: 'Controle Solar',
+        images: ['/products/cobertura-controle-solar.jpg'],
+        thumbnail: '/products/cobertura-controle-solar-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 650,
+        colors: ['Incolor', 'Verde', 'Fume'],
+        finishes: ['Controle Solar', 'Low-E'],
+        thicknesses: ['10mm laminado'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Pergolado com Estrutura Aluminio',
+        slug: 'pergolado-estrutura-aluminio',
+        description:
+          'Pergolado completo com estrutura em aluminio (leve, resistente, baixa manutencao) e cobertura de vidro laminado.',
+        shortDescription: 'Pergolado aluminio + vidro',
+        category: 'PERGOLADOS',
+        subcategory: 'Pergolado',
+        images: ['/products/pergolado-aluminio.jpg'],
+        thumbnail: '/products/pergolado-aluminio-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 750,
+        priceRangeMax: 1200,
+        colors: ['Incolor', 'Verde'],
+        finishes: ['Branco', 'Preto', 'Bronze', 'Amadeirado'],
+        thicknesses: ['8mm laminado', '10mm laminado'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Pergolado com Estrutura Aco Inox',
+        slug: 'pergolado-estrutura-inox',
+        description:
+          'Pergolado premium com estrutura 100% aco inox. Zero manutencao, durabilidade maxima.',
+        shortDescription: 'Pergolado inox premium',
+        category: 'PERGOLADOS',
+        subcategory: 'Pergolado Premium',
+        images: ['/products/pergolado-inox.jpg'],
+        thumbnail: '/products/pergolado-inox-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1200,
+        priceRangeMax: 2000,
+        colors: ['Incolor', 'Extra Clear'],
+        finishes: ['Inox Polido', 'Inox Escovado'],
+        thicknesses: ['10mm laminado'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // TAMPOS E PRATELEIRAS
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Tampo de Vidro para Mesa',
+        slug: 'tampo-vidro-mesa',
+        description:
+          'Tampo de vidro temperado para mesa. Protecao e elegancia. Formatos retangular, quadrado, redondo ou oval.',
+        shortDescription: 'Tampo protetor para mesa',
+        category: 'TAMPOS_PRATELEIRAS',
+        subcategory: 'Tampo',
+        images: ['/products/tampo-mesa.jpg'],
+        thumbnail: '/products/tampo-mesa-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 200,
+        colors: ['Incolor', 'Fume', 'Extra Clear'],
+        finishes: ['Lapidado', 'Bisote'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Tampo Extra Clear',
+        slug: 'tampo-extra-clear',
+        description:
+          'Tampo de vidro Extra Clear sem tonalidade verde. Ideal quando cor verdadeira e importante.',
+        shortDescription: 'Tampo cristalino premium',
+        category: 'TAMPOS_PRATELEIRAS',
+        subcategory: 'Tampo Premium',
+        images: ['/products/tampo-extra-clear.jpg'],
+        thumbnail: '/products/tampo-extra-clear-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 350,
+        colors: ['Extra Clear'],
+        finishes: ['Lapidado'],
+        thicknesses: ['10mm', '12mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Prateleira de Vidro',
+        slug: 'prateleira-vidro',
+        description:
+          'Prateleira de vidro temperado. Ideal para banheiros, salas, cozinhas. Com suportes inclusos.',
+        shortDescription: 'Prateleira decorativa',
+        category: 'TAMPOS_PRATELEIRAS',
+        subcategory: 'Prateleira',
+        images: ['/products/prateleira.jpg'],
+        thumbnail: '/products/prateleira-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 80,
+        priceRangeMax: 150,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Lapidado'],
+        thicknesses: ['6mm', '8mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // DIVISORIAS E PAINEIS
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Divisoria de Escritorio',
+        slug: 'divisoria-escritorio',
+        description:
+          'Divisoria de vidro temperado para ambientes corporativos. Sistema piso-teto ou meia altura.',
+        shortDescription: 'Divisoria corporativa',
+        category: 'DIVISORIAS',
+        subcategory: 'Escritorio',
+        images: ['/products/divisoria-escritorio.jpg'],
+        thumbnail: '/products/divisoria-escritorio-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 350,
+        colors: ['Incolor', 'Jateado', 'Serigrafado'],
+        finishes: ['Cromado', 'Preto'],
+        thicknesses: ['10mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Divisoria Acustica',
+        slug: 'divisoria-acustica',
+        description:
+          'Divisoria de vidro laminado com isolamento acustico. Reducao de ate 45dB. Ideal para escritorios e salas de reuniao.',
+        shortDescription: 'Divisoria com isolamento sonoro',
+        category: 'DIVISORIAS',
+        subcategory: 'Acustica',
+        images: ['/products/divisoria-acustica.jpg'],
+        thumbnail: '/products/divisoria-acustica-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 580,
+        colors: ['Incolor'],
+        finishes: ['Cromado', 'Preto', 'Fosco'],
+        thicknesses: ['10mm laminado', '12mm laminado'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Divisoria com Porta Integrada',
+        slug: 'divisoria-com-porta',
+        description:
+          'Sistema de divisoria completo com porta de vidro integrada. Para ambientes corporativos.',
+        shortDescription: 'Divisoria + porta',
+        category: 'DIVISORIAS',
+        subcategory: 'Com Porta',
+        images: ['/products/divisoria-porta.jpg'],
+        thumbnail: '/products/divisoria-porta-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 1850,
+        priceRangeMax: 3000,
+        colors: ['Incolor', 'Jateado'],
+        finishes: ['Cromado', 'Preto'],
+        thicknesses: ['10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Painel Decorativo',
+        slug: 'painel-decorativo',
+        description:
+          'Painel de vidro para revestimento de paredes, cabeceiras, colunas e nichos. Visual sofisticado.',
+        shortDescription: 'Painel para revestimento',
+        category: 'DIVISORIAS',
+        subcategory: 'Painel',
+        images: ['/products/painel-decorativo.jpg'],
+        thumbnail: '/products/painel-decorativo-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 300,
+        colors: ['Incolor', 'Fume', 'Bronze', 'Serigrafado'],
+        finishes: ['Liso', 'Jateado'],
+        thicknesses: ['8mm', '10mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // FECHAMENTOS EM VIDRO
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Fechamento de Sacada',
+        slug: 'fechamento-sacada',
+        description:
+          'Fechamento de sacada com cortina de vidro ou sistema fixo. Protecao e conforto termico.',
+        shortDescription: 'Fechamento para varanda',
+        category: 'FECHAMENTOS',
+        subcategory: 'Sacada',
+        images: ['/products/fechamento-sacada.jpg'],
+        thumbnail: '/products/fechamento-sacada-thumb.jpg',
+        priceType: 'PER_M2',
+        pricePerM2: 450,
+        colors: ['Incolor', 'Verde', 'Fume'],
+        finishes: ['Branco', 'Preto', 'Champanhe'],
+        thicknesses: ['8mm'],
+        isActive: true,
+        isFeatured: true,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Fechamento de Area Gourmet',
+        slug: 'fechamento-area-gourmet',
+        description:
+          'Fechamento para area gourmet com cortina de vidro, portas de correr ou camarao.',
+        shortDescription: 'Fechamento area externa',
+        category: 'FECHAMENTOS',
+        subcategory: 'Area Gourmet',
+        images: ['/products/fechamento-gourmet.jpg'],
+        thumbnail: '/products/fechamento-gourmet-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 450,
+        priceRangeMax: 700,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Branco', 'Preto', 'Bronze'],
+        thicknesses: ['8mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Fechamento de Area de Servico',
+        slug: 'fechamento-area-servico',
+        description:
+          'Fechamento de area de servico. Amplia o espaco util do apartamento com protecao contra chuva.',
+        shortDescription: 'Fechamento lavanderia',
+        category: 'FECHAMENTOS',
+        subcategory: 'Area Servico',
+        images: ['/products/fechamento-servico.jpg'],
+        thumbnail: '/products/fechamento-servico-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 380,
+        priceRangeMax: 550,
+        colors: ['Incolor', 'Fume'],
+        finishes: ['Branco', 'Preto'],
+        thicknesses: ['8mm'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Fechamento de Piscina',
+        slug: 'fechamento-piscina',
+        description:
+          'Fechamento para area de piscina. Vidro temperado ou laminado com ferragens inox 316 (resistente a cloro).',
+        shortDescription: 'Fechamento area piscina',
+        category: 'FECHAMENTOS',
+        subcategory: 'Piscina',
+        images: ['/products/fechamento-piscina.jpg'],
+        thumbnail: '/products/fechamento-piscina-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        priceRangeMin: 500,
+        priceRangeMax: 800,
+        colors: ['Incolor'],
+        finishes: ['Inox 316'],
+        thicknesses: ['8mm temperado', '10mm laminado'],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // FERRAGENS E ACESSORIOS
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Kit Porta Pivotante V/A',
+        slug: 'kit-porta-pivotante-va',
+        description:
+          'Kit completo para porta pivotante vidro/alvenaria. Inclui pivos, dobradicas, fechadura e contra-fechadura.',
+        shortDescription: 'Kit ferragens pivotante',
+        category: 'FERRAGENS',
+        subcategory: 'Kit Porta',
+        images: ['/products/kit-pivotante.jpg'],
+        thumbnail: '/products/kit-pivotante-thumb.jpg',
+        priceType: 'FIXED',
+        basePrice: 180,
+        priceRangeMin: 180,
+        priceRangeMax: 350,
+        colors: [],
+        finishes: ['Cromado', 'Preto', 'Branco', 'Bronze'],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Kit Box Frontal',
+        slug: 'kit-box-frontal',
+        description:
+          'Kit completo para box frontal. Trilhos, roldanas, perfis, borrachas e parafusos.',
+        shortDescription: 'Kit ferragens box',
+        category: 'FERRAGENS',
+        subcategory: 'Kit Box',
+        images: ['/products/kit-box-frontal.jpg'],
+        thumbnail: '/products/kit-box-frontal-thumb.jpg',
+        priceType: 'FIXED',
+        basePrice: 150,
+        priceRangeMin: 150,
+        priceRangeMax: 280,
+        colors: [],
+        finishes: ['Branco', 'Preto', 'Fosco', 'Cromado'],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Puxador Tubular 40cm',
+        slug: 'puxador-tubular-40cm',
+        description: 'Puxador tubular em inox ou aluminio para portas de vidro. Tamanho 40x30cm.',
+        shortDescription: 'Puxador para porta vidro',
+        category: 'FERRAGENS',
+        subcategory: 'Puxador',
+        images: ['/products/puxador-tubular.jpg'],
+        thumbnail: '/products/puxador-tubular-thumb.jpg',
+        priceType: 'FIXED',
+        basePrice: 60,
+        priceRangeMin: 60,
+        priceRangeMax: 150,
+        colors: [],
+        finishes: ['Cromado', 'Inox Escovado', 'Preto', 'Dourado'],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Mola de Piso',
+        slug: 'mola-de-piso',
+        description:
+          'Mola hidraulica de piso para portas pivotantes pesadas. Capacidades de 40kg a 120kg.',
+        shortDescription: 'Mola para porta pesada',
+        category: 'FERRAGENS',
+        subcategory: 'Mola',
+        images: ['/products/mola-piso.jpg'],
+        thumbnail: '/products/mola-piso-thumb.jpg',
+        priceType: 'FIXED',
+        basePrice: 400,
+        priceRangeMin: 400,
+        priceRangeMax: 1200,
+        colors: [],
+        finishes: ['Inox', 'Cromado'],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // KITS COMPLETOS
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Kit Box Elegance Completo',
+        slug: 'kit-box-elegance-completo',
+        description:
+          'Kit premium para box com roldana aparente. Trilho, roldanas decorativas, perfis e acabamentos.',
+        shortDescription: 'Kit box premium completo',
+        category: 'KITS',
+        subcategory: 'Box',
+        images: ['/products/kit-elegance.jpg'],
+        thumbnail: '/products/kit-elegance-thumb.jpg',
+        priceType: 'FIXED',
+        basePrice: 300,
+        priceRangeMin: 300,
+        priceRangeMax: 500,
+        colors: [],
+        finishes: ['Inox Polido', 'Inox Escovado', 'Cromado', 'Preto Fosco'],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Kit Basculante/Maxim-Ar',
+        slug: 'kit-basculante-maximar',
+        description:
+          'Kit completo para janela basculante ou maxim-ar. Dobradicas, trinco com corrente ou haste.',
+        shortDescription: 'Kit ferragens janela',
+        category: 'KITS',
+        subcategory: 'Janela',
+        images: ['/products/kit-basculante.jpg'],
+        thumbnail: '/products/kit-basculante-thumb.jpg',
+        priceType: 'FIXED',
+        basePrice: 80,
+        priceRangeMin: 60,
+        priceRangeMax: 150,
+        colors: [],
+        finishes: ['Cromado', 'Branco', 'Preto'],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+
+    // ==========================================
+    // SERVICOS
+    // ==========================================
+
+    prisma.product.create({
+      data: {
+        name: 'Medicao Tecnica',
+        slug: 'medicao-tecnica',
+        description:
+          'Visita tecnica para avaliacao in loco com equipamento laser. Medicao precisa e relatorio tecnico com especificacoes.',
+        shortDescription: 'Visita tecnica profissional',
+        category: 'SERVICOS',
+        subcategory: 'Medicao',
+        images: ['/products/medicao-tecnica.jpg'],
+        thumbnail: '/products/medicao-tecnica-thumb.jpg',
+        priceType: 'FIXED',
+        basePrice: 0,
+        colors: [],
+        finishes: [],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+        metaDescription: 'Medicao gratuita na regiao metropolitana RJ ou descontada do pedido',
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Instalacao Profissional',
+        slug: 'instalacao-profissional',
+        description:
+          'Instalacao por equipe especializada. Inclui ferramentas adequadas, limpeza pos-instalacao, orientacao de uso e descarte de embalagens.',
+        shortDescription: 'Instalacao especializada',
+        category: 'SERVICOS',
+        subcategory: 'Instalacao',
+        images: ['/products/instalacao.jpg'],
+        thumbnail: '/products/instalacao-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        colors: [],
+        finishes: [],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+        metaDescription: 'Instalacao inclusa no produto ou +15% a 30% para complexa',
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Manutencao Preventiva',
+        slug: 'manutencao-preventiva',
+        description:
+          'Servico de manutencao preventiva. Limpeza tecnica, lubrificacao, regulagem e verificacao de borrachas.',
+        shortDescription: 'Manutencao periodica',
+        category: 'SERVICOS',
+        subcategory: 'Manutencao',
+        images: ['/products/manutencao-preventiva.jpg'],
+        thumbnail: '/products/manutencao-preventiva-thumb.jpg',
+        priceType: 'FIXED',
+        basePrice: 150,
+        priceRangeMin: 150,
+        priceRangeMax: 300,
+        colors: [],
+        finishes: [],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Manutencao Corretiva',
+        slug: 'manutencao-corretiva',
+        description:
+          'Reparo de box, portas e janelas. Troca de roldanas, borrachas, trilhos, regulagem de ferragens, reparo de fechaduras.',
+        shortDescription: 'Reparo e conserto',
+        category: 'SERVICOS',
+        subcategory: 'Manutencao',
+        images: ['/products/manutencao-corretiva.jpg'],
+        thumbnail: '/products/manutencao-corretiva-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        colors: [],
+        finishes: [],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Troca de Vidro',
+        slug: 'troca-de-vidro',
+        description:
+          'Substituicao de vidros quebrados, trincados ou com defeito. Atendimento emergencial 24h disponivel.',
+        shortDescription: 'Reposicao de vidros',
+        category: 'SERVICOS',
+        subcategory: 'Reposicao',
+        images: ['/products/troca-vidro.jpg'],
+        thumbnail: '/products/troca-vidro-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        colors: [],
+        finishes: [],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+      },
+    }),
+    prisma.product.create({
+      data: {
+        name: 'Atendimento Emergencial 24h',
+        slug: 'atendimento-emergencial',
+        description:
+          'Servico de emergencia 24 horas. Vidro quebrado, box com defeito, porta travada, vazamentos urgentes.',
+        shortDescription: 'Emergencia 24 horas',
+        category: 'SERVICOS',
+        subcategory: 'Emergencia',
+        images: ['/products/emergencia.jpg'],
+        thumbnail: '/products/emergencia-thumb.jpg',
+        priceType: 'QUOTE_ONLY',
+        colors: [],
+        finishes: [],
+        thicknesses: [],
+        isActive: true,
+        isFeatured: false,
+        metaDescription: 'Taxa adicional para atendimento noturno/fins de semana (+50% a 100%)',
+      },
+    }),
   ])
 
-  console.log('✅ Produtos criados')
+  console.log(`✅ ${products.length} produtos criados`)
 
-  // Criar orçamento de exemplo
+  // Criar orcamento de exemplo
   const quote = await prisma.quote.create({
     data: {
       number: 'ORC-2024-0001',
@@ -202,24 +1770,25 @@ async function main() {
       serviceCity: 'Rio de Janeiro',
       serviceState: 'RJ',
       serviceZipCode: '22745-005',
-      subtotal: 2000,
+      subtotal: 2200,
       discount: 0,
-      total: 2000,
+      total: 2200,
       status: 'SENT',
-      validUntil: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 dias
+      validUntil: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       source: 'WEBSITE',
       items: {
         create: [
           {
             productId: products[0].id,
-            description: 'Box Elegance - Ferragem Preta',
+            description: 'Box Frontal Simples - Ferragem Preta',
             specifications: '1,20m x 1,90m',
             width: 1.2,
             height: 1.9,
             quantity: 1,
-            color: 'Preto',
-            unitPrice: 2000,
-            totalPrice: 2000,
+            color: 'Incolor',
+            finish: 'Preto',
+            unitPrice: 2200,
+            totalPrice: 2200,
             customerImages: [],
           },
         ],
@@ -227,7 +1796,7 @@ async function main() {
     },
   })
 
-  console.log('✅ Orçamento criado')
+  console.log('✅ Orcamento criado')
 
   // Criar ordem de exemplo
   const order = await prisma.order.create({
@@ -241,27 +1810,27 @@ async function main() {
       serviceCity: 'Rio de Janeiro',
       serviceState: 'RJ',
       serviceZipCode: '22745-005',
-      subtotal: 2000,
-      installationFee: 200,
+      subtotal: 2200,
+      installationFee: 0,
       total: 2200,
       paymentStatus: 'PAID',
       paymentMethod: 'PIX',
       paidAmount: 2200,
       status: 'EM_PRODUCAO',
-      estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 dias
-      warrantyUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 ano
+      estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      warrantyUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
       items: {
         create: [
           {
             productId: products[0].id,
-            description: 'Box Elegance - Ferragem Preta',
+            description: 'Box Frontal Simples - Ferragem Preta',
             specifications: '1,20m x 1,90m',
             width: 1.2,
             height: 1.9,
             quantity: 1,
-            color: 'Preto',
-            unitPrice: 2000,
-            totalPrice: 2000,
+            color: 'Incolor',
+            unitPrice: 2200,
+            totalPrice: 2200,
             status: 'IN_PRODUCTION',
           },
         ],
@@ -270,19 +1839,19 @@ async function main() {
         create: [
           {
             status: 'ORCAMENTO_ENVIADO',
-            description: 'Orçamento enviado ao cliente',
+            description: 'Orcamento enviado ao cliente',
             createdBy: 'system',
             createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
           },
           {
             status: 'APROVADO',
-            description: 'Cliente aprovou o orçamento',
+            description: 'Cliente aprovou o orcamento',
             createdBy: customer.id,
             createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
           },
           {
             status: 'EM_PRODUCAO',
-            description: 'Produção iniciada',
+            description: 'Producao iniciada',
             createdBy: admin.id,
             createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
           },
@@ -294,7 +1863,7 @@ async function main() {
   console.log('✅ Ordem criada')
 
   // Criar agendamento
-  const appointment = await prisma.appointment.create({
+  await prisma.appointment.create({
     data: {
       userId: customer.id,
       orderId: order.id,
@@ -315,11 +1884,23 @@ async function main() {
 
   console.log('✅ Agendamento criado')
 
-  console.log('🎉 Seed concluído com sucesso!')
+  // Contagem por categoria
+  const categoryCounts: Record<string, number> = {}
+  products.forEach((p) => {
+    categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1
+  })
+
+  console.log('\n🎉 Seed concluido com sucesso!')
   console.log('\n📊 Resumo:')
-  console.log(`- ${products.length} produtos`)
-  console.log(`- 2 usuários (admin + cliente)`)
-  console.log(`- 1 orçamento`)
+  console.log(`- ${products.length} produtos totais`)
+  console.log('\n📦 Produtos por categoria:')
+  Object.entries(categoryCounts)
+    .sort()
+    .forEach(([cat, count]) => {
+      console.log(`  - ${cat}: ${count} produtos`)
+    })
+  console.log(`\n- 2 usuarios (admin + cliente)`)
+  console.log(`- 1 orcamento`)
   console.log(`- 1 ordem`)
   console.log(`- 1 agendamento`)
   console.log('\n🔐 Credenciais:')

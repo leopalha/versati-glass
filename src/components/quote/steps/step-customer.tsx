@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { useSession, signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -10,9 +10,10 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { formatPhone, formatCEP, formatCPFOrCNPJ, validateCPFOrCNPJ } from '@/lib/utils'
-import { ArrowLeft, User } from 'lucide-react'
+import { ArrowLeft, User, LogIn, UserPlus, CheckCircle2, MapPin } from 'lucide-react'
 import { logger, getErrorMessage } from '@/lib/logger'
 import { BUSINESS_RULES } from '@/lib/constants'
+import Link from 'next/link'
 
 // FQ.4.4: Schema de validação robusto para dados do cliente
 const customerSchema = z.object({
@@ -49,8 +50,9 @@ const customerSchema = z.object({
 type CustomerFormData = z.infer<typeof customerSchema>
 
 export function StepCustomer() {
-  const { data: session } = useSession()
-  const { customerData, setCustomerData, nextStep, prevStep } = useQuoteStore()
+  const { data: session, status } = useSession()
+  const { customerData, locationData, setCustomerData, nextStep, prevStep } = useQuoteStore()
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false)
 
   const {
     register,
@@ -65,13 +67,13 @@ export function StepCustomer() {
       email: session?.user?.email || '',
       phone: '',
       cpfCnpj: '',
-      street: '',
+      street: locationData?.street || '',
       number: '',
       complement: '',
-      neighborhood: '',
-      city: '',
-      state: '',
-      zipCode: '',
+      neighborhood: locationData?.neighborhood || '',
+      city: locationData?.city || '',
+      state: locationData?.state || '',
+      zipCode: locationData?.zipCode || '',
     },
   })
 
@@ -86,10 +88,24 @@ export function StepCustomer() {
     }
   }, [session, customerData, setValue])
 
+  // Pre-fill from locationData (Step 0)
+  useEffect(() => {
+    if (locationData && !customerData) {
+      if (locationData.zipCode) setValue('zipCode', locationData.zipCode)
+      if (locationData.street) setValue('street', locationData.street)
+      if (locationData.neighborhood) setValue('neighborhood', locationData.neighborhood)
+      if (locationData.city) setValue('city', locationData.city)
+      if (locationData.state) setValue('state', locationData.state)
+    }
+  }, [locationData, customerData, setValue])
+
   const zipCode = watch('zipCode')
 
-  // Auto-fill address from CEP
+  // Auto-fill address from CEP (only if not pre-filled from locationData)
   useEffect(() => {
+    // Skip if we already have location data and CEP matches
+    if (locationData?.zipCode === zipCode?.replace(/\D/g, '')) return
+
     const fetchAddress = async () => {
       const cleanCep = zipCode?.replace(/\D/g, '')
       if (cleanCep?.length === 8) {
@@ -115,7 +131,7 @@ export function StepCustomer() {
     }
 
     fetchAddress()
-  }, [zipCode, setValue])
+  }, [zipCode, setValue, locationData])
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhone(e.target.value)
@@ -137,6 +153,12 @@ export function StepCustomer() {
     nextStep()
   }
 
+  // Handle login redirect
+  const handleLogin = () => {
+    // Save current URL to return after login
+    signIn(undefined, { callbackUrl: '/orcamento' })
+  }
+
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-8 text-center">
@@ -146,12 +168,66 @@ export function StepCustomer() {
         </p>
       </div>
 
+      {/* Login/Register Prompt for non-logged users */}
+      {status !== 'loading' && !session?.user && (
+        <Card className="border-accent-500/30 bg-accent-500/5 mb-6 p-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <User className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent-500" />
+              <div>
+                <p className="text-sm font-medium text-white">Ja tem conta?</p>
+                <p className="text-theme-muted text-xs">
+                  Entre para preencher automaticamente e acompanhar seus orcamentos
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleLogin}
+                className="flex-1 sm:flex-none"
+              >
+                <LogIn className="mr-1.5 h-4 w-4" />
+                Entrar
+              </Button>
+              <Link href="/registro?redirect=/orcamento" className="flex-1 sm:flex-none">
+                <Button type="button" size="sm" className="w-full">
+                  <UserPlus className="mr-1.5 h-4 w-4" />
+                  Criar conta
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Logged in indicator */}
       {session?.user && (
-        <div className="bg-accent-500/10 mb-6 flex items-center gap-3 rounded-lg p-4">
-          <User className="h-5 w-5 text-accent-400" />
+        <div className="mb-6 flex items-center gap-3 rounded-lg bg-green-500/10 p-4">
+          <CheckCircle2 className="h-5 w-5 text-green-500" />
           <div>
-            <p className="text-sm text-accent-400">Logado como {session.user.name}</p>
+            <p className="text-sm font-medium text-green-400">Logado como {session.user.name}</p>
             <p className="text-theme-muted text-xs">Seus dados foram preenchidos automaticamente</p>
+          </div>
+        </div>
+      )}
+
+      {/* Location info from Step 0 */}
+      {locationData && (
+        <div className="bg-accent-500/10 mb-6 flex items-center gap-3 rounded-lg p-4">
+          <MapPin className="h-5 w-5 text-accent-500" />
+          <div>
+            <p className="text-sm font-medium text-accent-400">Regiao: {locationData.regionName}</p>
+            <p className="text-theme-muted text-xs">
+              Endereco pre-preenchido do CEP {locationData.zipCode}
+              {locationData.priceMultiplier > 1 && (
+                <span className="ml-1 text-yellow-400">
+                  (+{Math.round((locationData.priceMultiplier - 1) * 100)}% ajuste regional)
+                </span>
+              )}
+            </p>
           </div>
         </div>
       )}
@@ -360,6 +436,14 @@ export function StepCustomer() {
           </div>
         </form>
       </Card>
+
+      {/* Info about account creation */}
+      {!session?.user && (
+        <p className="text-theme-subtle mt-4 text-center text-xs">
+          Ao continuar, uma conta sera criada automaticamente para voce acompanhar seu orcamento.
+          Voce recebera um email com os dados de acesso.
+        </p>
+      )}
     </div>
   )
 }

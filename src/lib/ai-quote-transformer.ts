@@ -251,18 +251,46 @@ export function transformAiContextToQuoteData(
 /**
  * Validate if AI quote context has minimum required data
  * for creating a quote
+ *
+ * IMPORTANT: We require MORE data now to prevent premature finalization.
+ * The assistant should collect all info before showing the button.
  */
 export function isQuoteContextComplete(quoteContext: AiQuoteContext | null | undefined): boolean {
   if (!quoteContext || !quoteContext.items || quoteContext.items.length === 0) {
     return false
   }
 
-  // Check if at least one item has category and basic dimensions
-  return quoteContext.items.some((item) => {
-    const hasCategory = !!item.category
-    const hasDimensions = (item.width && item.width > 0) || (item.height && item.height > 0)
-    return hasCategory && hasDimensions
+  // Check if at least one item has:
+  // 1. Category (required)
+  // 2. BOTH dimensions (width AND height - not just one)
+  // 3. Quantity (optional but encouraged)
+  const hasCompleteItem = quoteContext.items.some((item) => {
+    const hasCategory = !!item.category || !!item.productName
+    const hasBothDimensions = item.width && item.width > 0 && item.height && item.height > 0
+    return hasCategory && hasBothDimensions
   })
+
+  if (!hasCompleteItem) {
+    return false
+  }
+
+  // Also require some customer info OR multiple items
+  // This ensures the customer has engaged more in the conversation
+  const hasCustomerInfo = !!(
+    quoteContext.customerData &&
+    (quoteContext.customerData.name ||
+      quoteContext.customerData.phone ||
+      quoteContext.customerData.email)
+  )
+
+  const hasMultipleItems = quoteContext.items.length > 1
+
+  // Return true only if we have complete item AND (customer info OR multiple items)
+  // This prevents showing "Finalizar" too early
+  return (
+    hasCompleteItem &&
+    (hasCustomerInfo || hasMultipleItems || getQuoteContextCompletion(quoteContext) >= 50)
+  )
 }
 
 /**

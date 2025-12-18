@@ -94,7 +94,6 @@ async function main() {
       thicknesses: ['8mm'],
       isActive: true,
       isFeatured: true,
-      tags: ['box', 'banheiro', 'temperado', 'frontal'],
     },
     {
       name: 'Box de Canto (L) Fumê 8mm',
@@ -113,7 +112,6 @@ async function main() {
       thicknesses: ['8mm', '10mm'],
       isActive: true,
       isFeatured: true,
-      tags: ['box', 'banheiro', 'canto', 'fumê'],
     },
     {
       name: 'Box de Abrir Incolor 10mm Premium',
@@ -132,7 +130,6 @@ async function main() {
       thicknesses: ['10mm'],
       isActive: true,
       isFeatured: true,
-      tags: ['box', 'premium', 'abrir', 'inox'],
     },
     // ESPELHOS
     {
@@ -152,7 +149,6 @@ async function main() {
       thicknesses: ['4mm', '6mm'],
       isActive: true,
       isFeatured: true,
-      tags: ['espelho', 'bisotado', 'decorativo'],
     },
     {
       name: 'Espelho Bronze 4mm',
@@ -171,7 +167,6 @@ async function main() {
       thicknesses: ['4mm'],
       isActive: true,
       isFeatured: false,
-      tags: ['espelho', 'bronze', 'decorativo'],
     },
     // GUARDA-CORPO
     {
@@ -191,7 +186,6 @@ async function main() {
       thicknesses: ['10mm (5+5 laminado)'],
       isActive: true,
       isFeatured: true,
-      tags: ['guarda-corpo', 'segurança', 'laminado', 'NBR'],
     },
     {
       name: 'Guarda-Corpo Verde 12mm',
@@ -210,7 +204,6 @@ async function main() {
       thicknesses: ['12mm (6+6 laminado)'],
       isActive: true,
       isFeatured: true,
-      tags: ['guarda-corpo', 'premium', 'spider', 'verde'],
     },
     // PORTAS
     {
@@ -232,7 +225,6 @@ async function main() {
       thicknesses: ['10mm'],
       isActive: true,
       isFeatured: true,
-      tags: ['porta', 'pivotante', 'inox'],
     },
     {
       name: 'Porta de Abrir Temperada 8mm',
@@ -253,7 +245,6 @@ async function main() {
       thicknesses: ['8mm', '10mm'],
       isActive: true,
       isFeatured: false,
-      tags: ['porta', 'abrir', 'dobradiças'],
     },
     // FECHAMENTOS / SACADAS
     {
@@ -273,7 +264,6 @@ async function main() {
       thicknesses: ['8mm'],
       isActive: true,
       isFeatured: true,
-      tags: ['sacada', 'cortina', 'envidraçamento'],
     },
     {
       name: 'Fachada Estrutural Spider Glass',
@@ -291,7 +281,6 @@ async function main() {
       thicknesses: ['10mm (5+5)', '12mm (6+6)', '16mm (8+8)'],
       isActive: true,
       isFeatured: true,
-      tags: ['fachada', 'spider', 'estrutural', 'projeto'],
     },
     // TAMPOS E PRATELEIRAS
     {
@@ -300,7 +289,7 @@ async function main() {
       description:
         'Tampo de mesa em vidro temperado incolor 10mm. Bordas lapidadas e polidas. Ideal para mesas de jantar, centro, escritório. Suporta uso intenso.',
       shortDescription: 'Tampo de mesa temperado lapidado',
-      category: ProductCategory.TAMPOS,
+      category: ProductCategory.TAMPOS_PRATELEIRAS,
       subcategory: 'Tampo de Mesa',
       thumbnail: '/images/products/tampo-mesa.jpg',
       images: ['/images/products/tampo-mesa.jpg'],
@@ -311,7 +300,6 @@ async function main() {
       thicknesses: ['8mm', '10mm', '12mm'],
       isActive: true,
       isFeatured: false,
-      tags: ['tampo', 'mesa', 'temperado'],
     },
     {
       name: 'Prateleira de Vidro 8mm',
@@ -319,7 +307,7 @@ async function main() {
       description:
         'Prateleira em vidro temperado incolor 8mm com bordas polidas. Inclui suportes cromados. Ideal para estantes, armários, nichos.',
       shortDescription: 'Prateleira com suportes cromados',
-      category: ProductCategory.TAMPOS,
+      category: ProductCategory.TAMPOS_PRATELEIRAS,
       subcategory: 'Prateleira',
       thumbnail: '/images/products/prateleira.jpg',
       images: ['/images/products/prateleira.jpg'],
@@ -330,7 +318,6 @@ async function main() {
       thicknesses: ['6mm', '8mm', '10mm'],
       isActive: true,
       isFeatured: false,
-      tags: ['prateleira', 'estante', 'nicho'],
     },
   ]
 
@@ -338,7 +325,9 @@ async function main() {
     await prisma.product.create({ data: productData })
   }
 
-  console.log(`✅ ${products.length} products created (${new Set(products.map((p) => p.category)).size} categories)`)
+  console.log(
+    `✅ ${products.length} products created (${new Set(products.map((p) => p.category)).size} categories)`
+  )
 
   // Create a test quote (optional - for quote management tests)
   const quote = await prisma.quote.create({

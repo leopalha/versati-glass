@@ -42,11 +42,11 @@ pnpm dev
 
 ### 3. URLs de Desenvolvimento
 
-| Serviço | URL |
-|---------|-----|
-| Frontend | http://localhost:3000 |
-| Prisma Studio | http://localhost:5555 |
-| API Health | http://localhost:3000/api/health |
+| Serviço       | URL                              |
+| ------------- | -------------------------------- |
+| Frontend      | http://localhost:3000            |
+| Prisma Studio | http://localhost:5555            |
+| API Health    | http://localhost:3000/api/health |
 
 ---
 
@@ -113,17 +113,17 @@ pnpm test:cov     # Cobertura de testes
 
 ### Nomenclatura
 
-| Tipo | Convenção | Exemplo |
-|------|-----------|---------|
-| Componentes | PascalCase | `ProductCard.tsx` |
-| Hooks | camelCase + use | `useProducts.ts` |
-| Utilitários | camelCase | `formatCurrency.ts` |
-| Types/Interfaces | PascalCase | `Product`, `QuoteItem` |
-| Constantes | UPPER_SNAKE | `MAX_FILE_SIZE` |
-| Variáveis | camelCase | `isLoading`, `currentUser` |
-| CSS Classes | kebab-case | `.card-header` |
-| Rotas API | kebab-case | `/api/quote-items` |
-| DB Tables | snake_case | `quote_items` |
+| Tipo             | Convenção       | Exemplo                    |
+| ---------------- | --------------- | -------------------------- |
+| Componentes      | PascalCase      | `ProductCard.tsx`          |
+| Hooks            | camelCase + use | `useProducts.ts`           |
+| Utilitários      | camelCase       | `formatCurrency.ts`        |
+| Types/Interfaces | PascalCase      | `Product`, `QuoteItem`     |
+| Constantes       | UPPER_SNAKE     | `MAX_FILE_SIZE`            |
+| Variáveis        | camelCase       | `isLoading`, `currentUser` |
+| CSS Classes      | kebab-case      | `.card-header`             |
+| Rotas API        | kebab-case      | `/api/quote-items`         |
+| DB Tables        | snake_case      | `quote_items`              |
 
 ### Commits (Conventional Commits)
 
@@ -143,36 +143,32 @@ chore: atualizar dependências
 // components/features/product-card.tsx
 
 // 1. Imports externos
-import { useState } from "react";
-import Image from "next/image";
+import { useState } from 'react'
+import Image from 'next/image'
 
 // 2. Imports internos
-import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
+import { Button } from '@/components/ui/button'
+import { formatCurrency } from '@/lib/utils'
 
 // 3. Types
 interface ProductCardProps {
-  product: Product;
-  onSelect?: (product: Product) => void;
+  product: Product
+  onSelect?: (product: Product) => void
 }
 
 // 4. Componente
 export function ProductCard({ product, onSelect }: ProductCardProps) {
   // 4.1 Hooks
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   // 4.2 Handlers
   const handleClick = () => {
-    setIsLoading(true);
-    onSelect?.(product);
-  };
+    setIsLoading(true)
+    onSelect?.(product)
+  }
 
   // 4.3 Render
-  return (
-    <div className="...">
-      {/* JSX */}
-    </div>
-  );
+  return <div className="...">{/* JSX */}</div>
 }
 ```
 
@@ -215,30 +211,30 @@ export function ProductCard({ product, onSelect }: ProductCardProps) {
 
 ```typescript
 // app/api/products/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { z } from "zod";
+import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { z } from 'zod'
 
 const querySchema = z.object({
-  category: z.enum(["box", "espelhos", "vidros"]).optional(),
+  category: z.enum(['box', 'espelhos', 'vidros']).optional(),
   page: z.coerce.number().default(1),
   limit: z.coerce.number().default(10),
-});
+})
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const query = querySchema.parse(Object.fromEntries(searchParams));
+    const { searchParams } = new URL(request.url)
+    const query = querySchema.parse(Object.fromEntries(searchParams))
 
     const products = await prisma.product.findMany({
       where: query.category ? { category: query.category } : undefined,
       skip: (query.page - 1) * query.limit,
       take: query.limit,
-    });
+    })
 
     const total = await prisma.product.count({
       where: query.category ? { category: query.category } : undefined,
-    });
+    })
 
     return NextResponse.json({
       success: true,
@@ -249,19 +245,19 @@ export async function GET(request: NextRequest) {
         total,
         pages: Math.ceil(total / query.limit),
       },
-    });
+    })
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { success: false, error: { code: "VALIDATION_ERROR", message: error.message } },
+        { success: false, error: { code: 'VALIDATION_ERROR', message: error.message } },
         { status: 400 }
-      );
+      )
     }
 
     return NextResponse.json(
-      { success: false, error: { code: "INTERNAL_ERROR", message: "Erro interno" } },
+      { success: false, error: { code: 'INTERNAL_ERROR', message: 'Erro interno' } },
       { status: 500 }
-    );
+    )
   }
 }
 ```
@@ -274,42 +270,42 @@ export async function GET(request: NextRequest) {
 
 ```typescript
 // middleware.ts
-import { auth } from "@/lib/auth";
+import { auth } from '@/lib/auth'
 
 export default auth((req) => {
-  const isLoggedIn = !!req.auth;
-  const isPortal = req.nextUrl.pathname.startsWith("/portal");
-  const isAdmin = req.nextUrl.pathname.startsWith("/admin");
+  const isLoggedIn = !!req.auth
+  const isPortal = req.nextUrl.pathname.startsWith('/portal')
+  const isAdmin = req.nextUrl.pathname.startsWith('/admin')
 
   if ((isPortal || isAdmin) && !isLoggedIn) {
-    return Response.redirect(new URL("/auth/login", req.url));
+    return Response.redirect(new URL('/auth/login', req.url))
   }
-});
+})
 
 export const config = {
-  matcher: ["/portal/:path*", "/admin/:path*"],
-};
+  matcher: ['/portal/:path*', '/admin/:path*'],
+}
 ```
 
 ### Uso no Cliente
 
 ```tsx
-"use client";
+'use client'
 
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from '@/hooks/use-auth'
 
 export function ProfilePage() {
-  const { user, isLoading, logout } = useAuth();
+  const { user, isLoading, logout } = useAuth()
 
-  if (isLoading) return <Loading />;
-  if (!user) return <Redirect to="/login" />;
+  if (isLoading) return <Loading />
+  if (!user) return <Redirect to="/login" />
 
   return (
     <div>
       <p>Olá, {user.name}</p>
       <button onClick={logout}>Sair</button>
     </div>
-  );
+  )
 }
 ```
 
@@ -317,23 +313,20 @@ export function ProfilePage() {
 
 ```typescript
 // app/api/orders/route.ts
-import { auth } from "@/lib/auth";
+import { auth } from '@/lib/auth'
 
 export async function GET() {
-  const session = await auth();
+  const session = await auth()
 
   if (!session) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const orders = await prisma.order.findMany({
     where: { userId: session.user.id },
-  });
+  })
 
-  return NextResponse.json({ data: orders });
+  return NextResponse.json({ data: orders })
 }
 ```
 
@@ -410,17 +403,17 @@ import { motion } from "framer-motion";
 ### React Hook Form + Zod
 
 ```tsx
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
 const schema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-  email: z.string().email("Email inválido"),
-  phone: z.string().regex(/^\(\d{2}\) \d{5}-\d{4}$/, "Telefone inválido"),
-});
+  name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
+  email: z.string().email('Email inválido'),
+  phone: z.string().regex(/^\(\d{2}\) \d{5}-\d{4}$/, 'Telefone inválido'),
+})
 
-type FormData = z.infer<typeof schema>;
+type FormData = z.infer<typeof schema>
 
 export function ContactForm() {
   const {
@@ -429,30 +422,21 @@ export function ContactForm() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-  });
+  })
 
   const onSubmit = async (data: FormData) => {
     // ...
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        label="Nome"
-        {...register("name")}
-        error={errors.name?.message}
-      />
-      <Input
-        label="Email"
-        type="email"
-        {...register("email")}
-        error={errors.email?.message}
-      />
+      <Input label="Nome" {...register('name')} error={errors.name?.message} />
+      <Input label="Email" type="email" {...register('email')} error={errors.email?.message} />
       <Button type="submit" loading={isSubmitting}>
         Enviar
       </Button>
     </form>
-  );
+  )
 }
 ```
 
@@ -463,27 +447,27 @@ export function ContactForm() {
 ### React Query
 
 ```tsx
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 // Query
 const { data, isLoading, error } = useQuery({
-  queryKey: ["products", category],
+  queryKey: ['products', category],
   queryFn: () => fetchProducts(category),
-});
+})
 
 // Mutation
-const queryClient = useQueryClient();
+const queryClient = useQueryClient()
 
 const mutation = useMutation({
   mutationFn: createQuote,
   onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["quotes"] });
-    toast.success("Orçamento criado!");
+    queryClient.invalidateQueries({ queryKey: ['quotes'] })
+    toast.success('Orçamento criado!')
   },
   onError: (error) => {
-    toast.error(error.message);
+    toast.error(error.message)
   },
-});
+})
 ```
 
 ---
@@ -509,18 +493,21 @@ TWILIO_ACCOUNT_SID="..."
 TWILIO_AUTH_TOKEN="..."
 TWILIO_WHATSAPP_NUMBER="+14155238886"
 
-# Anthropic
-ANTHROPIC_API_KEY="sk-ant-..."
+# Groq AI (Llama para chat)
+GROQ_API_KEY="gsk_..."
+
+# OpenAI (para análise de imagens)
+OPENAI_API_KEY="sk-proj-..."
 ```
 
 ### Acessando
 
 ```typescript
 // Server-side (seguro)
-const apiKey = process.env.STRIPE_SECRET_KEY;
+const apiKey = process.env.STRIPE_SECRET_KEY
 
 // Client-side (apenas NEXT_PUBLIC_*)
-const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 ```
 
 ---
@@ -544,12 +531,12 @@ pnpm db:generate
 
 ```tsx
 // Componente deve ser client-side
-"use client";
+'use client'
 
 // Ou usar useEffect para dados que mudam
-const [mounted, setMounted] = useState(false);
-useEffect(() => setMounted(true), []);
-if (!mounted) return null;
+const [mounted, setMounted] = useState(false)
+useEffect(() => setMounted(true), [])
+if (!mounted) return null
 ```
 
 ### Erro: "Too many re-renders"
@@ -600,25 +587,25 @@ pnpm dev
 
 ## DOCUMENTAÇÃO RELACIONADA
 
-| Documento | Descrição |
-|-----------|-----------|
-| `00_ACTIVATION_PROMPT.md` | Contexto do agente |
-| `01_CONCEITO_VERSATI.md` | Identidade da marca |
-| `02_DESIGN_SYSTEM.md` | Tokens e padrões visuais |
-| `03_PRD.md` | Requisitos do produto |
-| `04_USER_FLOWS.md` | Fluxos de usuário |
-| `05_TECHNICAL_ARCHITECTURE.md` | Arquitetura técnica |
-| `06_COMPONENT_LIBRARY.md` | Biblioteca de componentes |
-| `tasks.md` | Roadmap de implementação |
+| Documento                      | Descrição                 |
+| ------------------------------ | ------------------------- |
+| `00_ACTIVATION_PROMPT.md`      | Contexto do agente        |
+| `01_CONCEITO_VERSATI.md`       | Identidade da marca       |
+| `02_DESIGN_SYSTEM.md`          | Tokens e padrões visuais  |
+| `03_PRD.md`                    | Requisitos do produto     |
+| `04_USER_FLOWS.md`             | Fluxos de usuário         |
+| `05_TECHNICAL_ARCHITECTURE.md` | Arquitetura técnica       |
+| `06_COMPONENT_LIBRARY.md`      | Biblioteca de componentes |
+| `tasks.md`                     | Roadmap de implementação  |
 
 ---
 
 ## CONTATOS
 
-| Papel | Contato |
-|-------|---------|
+| Papel         | Contato                |
+| ------------- | ---------------------- |
 | Product Owner | versatiglass@gmail.com |
-| WhatsApp | +55 (21) 98253-6229 |
+| WhatsApp      | +55 (21) 98253-6229    |
 
 ---
 
@@ -626,4 +613,4 @@ pnpm dev
 
 ---
 
-*Versati Glass Dev Brief v1.0 - Dezembro 2024*
+_Versati Glass Dev Brief v1.0 - Dezembro 2024_

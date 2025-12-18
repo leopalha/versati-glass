@@ -48,6 +48,7 @@ export interface SpeechSynthesisOptions {
   rate?: number
   pitch?: number
   volume?: number
+  useOpenAI?: boolean // Use OpenAI TTS for natural voice
 }
 
 export function useVoice(options: VoiceOptions = {}) {
@@ -63,8 +64,10 @@ export function useVoice(options: VoiceOptions = {}) {
   // TTS State
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([])
+  const [useNaturalVoice, setUseNaturalVoice] = useState(true) // Default to OpenAI TTS
 
   const recognitionRef = useRef<SpeechRecognition | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // Check browser support
   useEffect(() => {
@@ -167,8 +170,63 @@ export function useVoice(options: VoiceOptions = {}) {
     setInterimTranscript('')
   }, [])
 
-  // TTS Functions
-  const speak = useCallback(
+  // TTS Functions - OpenAI TTS for natural voice
+  const speakWithOpenAI = useCallback(async (text: string, voice: string = 'nova') => {
+    try {
+      setIsSpeaking(true)
+      setError(null)
+
+      const response = await fetch('/api/ai/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, voice }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        // If TTS service unavailable, fall back to browser
+        if (errorData.fallback) {
+          return false
+        }
+        throw new Error(errorData.error || 'TTS error')
+      }
+
+      // Create audio from blob
+      const audioBlob = await response.blob()
+      const audioUrl = URL.createObjectURL(audioBlob)
+
+      // Stop any previous audio
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.src = ''
+      }
+
+      // Create and play new audio
+      const audio = new Audio(audioUrl)
+      audioRef.current = audio
+
+      audio.onended = () => {
+        setIsSpeaking(false)
+        URL.revokeObjectURL(audioUrl)
+      }
+
+      audio.onerror = () => {
+        setIsSpeaking(false)
+        setError('Erro ao reproduzir audio')
+        URL.revokeObjectURL(audioUrl)
+      }
+
+      await audio.play()
+      return true
+    } catch (err) {
+      setIsSpeaking(false)
+      console.warn('OpenAI TTS failed, falling back to browser:', err)
+      return false
+    }
+  }, [])
+
+  // TTS Functions - Browser fallback
+  const speakWithBrowser = useCallback(
     (text: string, options: SpeechSynthesisOptions = {}) => {
       if (!('speechSynthesis' in window)) {
         setError('Sintese de voz nao suportada')
@@ -211,11 +269,37 @@ export function useVoice(options: VoiceOptions = {}) {
     [language, availableVoices]
   )
 
+  // Main speak function - tries OpenAI first, falls back to browser
+  const speak = useCallback(
+    async (text: string, options: SpeechSynthesisOptions = {}) => {
+      // If useOpenAI explicitly set to false, use browser only
+      if (options.useOpenAI === false || !useNaturalVoice) {
+        speakWithBrowser(text, options)
+        return
+      }
+
+      // Try OpenAI TTS first
+      const success = await speakWithOpenAI(text, options.voice || 'nova')
+
+      // Fall back to browser TTS if OpenAI fails
+      if (!success) {
+        speakWithBrowser(text, options)
+      }
+    },
+    [useNaturalVoice, speakWithOpenAI, speakWithBrowser]
+  )
+
   const stopSpeaking = useCallback(() => {
+    // Stop OpenAI audio
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.src = ''
+    }
+    // Stop browser speech synthesis
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel()
-      setIsSpeaking(false)
     }
+    setIsSpeaking(false)
   }, [])
 
   const pauseSpeaking = useCallback(() => {
@@ -249,6 +333,10 @@ export function useVoice(options: VoiceOptions = {}) {
     pauseSpeaking,
     resumeSpeaking,
     availableVoices: ptBRVoices,
+
+    // Natural Voice (OpenAI TTS)
+    useNaturalVoice,
+    setUseNaturalVoice,
 
     // Common
     isSupported,

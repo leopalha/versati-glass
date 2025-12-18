@@ -9,7 +9,7 @@ import { MessageSquare, Search, User, Phone } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { useToast } from '@/components/providers/toast-provider'
+import { useToast } from '@/components/ui/toast/use-toast'
 
 interface Message {
   id: string
@@ -58,7 +58,7 @@ export function WhatsAppConversationList({
   const [connectionStatus, setConnectionStatus] = useState<
     'connecting' | 'connected' | 'disconnected'
   >('disconnected')
-  const { showToast } = useToast()
+  const { toast } = useToast()
 
   // Server-Sent Events (SSE) para atualizações em tempo real
   useEffect(() => {
@@ -92,18 +92,9 @@ export function WhatsAppConversationList({
                     ? data.data.body.substring(0, 50) + '...'
                     : data.data.body
 
-                showToast({
-                  title: `💬 Nova mensagem de ${customerName}`,
+                toast({
+                  title: `Nova mensagem de ${customerName}`,
                   description: messagePreview,
-                  variant: 'info',
-                  action: (
-                    <Link
-                      href={`/admin/whatsapp/${encodeURIComponent(data.data.from)}`}
-                      className="text-sm font-semibold underline"
-                    >
-                      Ver conversa →
-                    </Link>
-                  ),
                 })
               }
 
