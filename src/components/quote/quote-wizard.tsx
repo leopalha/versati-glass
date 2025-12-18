@@ -20,6 +20,9 @@ import {
 } from '@/components/ui/alert-dialog'
 
 // Dynamic imports for heavy step components (code splitting)
+const StepLocation = lazy(() =>
+  import('./steps/step-location').then((m) => ({ default: m.StepLocation }))
+)
 const StepCategory = lazy(() =>
   import('./steps/step-category').then((m) => ({ default: m.StepCategory }))
 )
@@ -28,6 +31,12 @@ const StepProduct = lazy(() =>
 )
 const StepDetails = lazy(() =>
   import('./steps/step-details').then((m) => ({ default: m.StepDetails }))
+)
+const StepDetailsFerragens = lazy(() =>
+  import('./steps/step-details-ferragens').then((m) => ({ default: m.StepDetailsFerragens }))
+)
+const StepDetailsKits = lazy(() =>
+  import('./steps/step-details-kits').then((m) => ({ default: m.StepDetailsKits }))
 )
 const StepItemReview = lazy(() =>
   import('./steps/step-item-review').then((m) => ({ default: m.StepItemReview }))
@@ -42,7 +51,9 @@ const StepSchedule = lazy(() =>
   import('./steps/step-schedule').then((m) => ({ default: m.StepSchedule }))
 )
 
+// Steps config - Step 0 (CEP) is shown separately, steps 1-7 shown in progress bar
 const steps = [
+  { number: 0, title: 'Localizacao', description: 'Seu CEP para calcular' },
   { number: 1, title: 'Categoria', description: 'Escolha o tipo de produto' },
   { number: 2, title: 'Produto', description: 'Selecione o modelo' },
   { number: 3, title: 'Detalhes', description: 'Informe os detalhes' },
@@ -52,10 +63,17 @@ const steps = [
   { number: 7, title: 'Agendamento', description: 'Agende a visita' },
 ]
 
+// Steps to display in progress bar (exclude step 0)
+const progressSteps = steps.filter(s => s.number > 0)
+
 export function QuoteWizard() {
   const router = useRouter()
-  const { step, items, reset } = useQuoteStore()
+  const { step, items, reset, getCurrentProductToDetail } = useQuoteStore()
   const [showExitDialog, setShowExitDialog] = useState(false)
+
+  // Get current product category to determine which details form to show
+  const currentProduct = getCurrentProductToDetail()
+  const currentCategory = currentProduct?.category
 
   // Para exibição, mostramos quantos itens tem no carrinho
   const cartCount = items.length
@@ -100,91 +118,94 @@ export function QuoteWizard() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Progress Steps */}
-      <div className="border-theme-default bg-theme-secondary relative border-b">
-        <div className="container mx-auto px-4 py-4 md:py-6">
-          {/* Close Button - Mobile and Desktop */}
-          <div className="absolute right-4 top-4 md:right-8 md:top-6">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleExit}
-              className="text-theme-muted hover:text-theme-primary hover:bg-white/10"
-              aria-label="Fechar orçamento"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-
-          {/* Mobile: Show current step only */}
-          <div className="flex items-center justify-center md:hidden">
-            <div className="flex items-center gap-3">
-              <div
-                className={cn(
-                  'flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-medium',
-                  'border-accent-500 bg-accent-500 text-neutral-900'
-                )}
+      {/* Progress Steps - Only show for steps 1-7, not for step 0 */}
+      {step > 0 && (
+        <div className="border-theme-default bg-theme-secondary relative border-b">
+          <div className="container mx-auto px-4 py-4 md:py-6">
+            {/* Close Button - Mobile and Desktop */}
+            <div className="absolute right-4 top-4 z-10 md:right-8 md:top-6">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExit}
+                className="border-neutral-600 bg-neutral-800/50 text-neutral-300 hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400"
+                aria-label="Fechar orçamento"
               >
-                {step}
-              </div>
-              <div>
-                <p className="text-theme-primary text-sm font-medium">
-                  {steps[step - 1]?.title}
-                  {step === 4 && cartCount > 0 && ` (${cartCount})`}
-                </p>
-                <p className="text-theme-subtle text-xs">
-                  Passo {step} de {steps.length}
-                </p>
+                <X className="mr-1 h-4 w-4" />
+                <span className="hidden sm:inline">Fechar</span>
+              </Button>
+            </div>
+
+            {/* Mobile: Show current step only */}
+            <div className="flex items-center justify-center md:hidden">
+              <div className="flex items-center gap-3">
+                <div
+                  className={cn(
+                    'flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-medium',
+                    'border-accent-500 bg-accent-500 text-neutral-900'
+                  )}
+                >
+                  {step}
+                </div>
+                <div>
+                  <p className="text-theme-primary text-sm font-medium">
+                    {progressSteps[step - 1]?.title}
+                    {step === 4 && cartCount > 0 && ` (${cartCount})`}
+                  </p>
+                  <p className="text-theme-subtle text-xs">
+                    Passo {step} de {progressSteps.length}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Desktop: Show all steps (compact for 7 steps) */}
-          <div className="hidden md:flex md:items-center md:justify-between">
-            {steps.map((s, index) => (
-              <div
-                key={s.number}
-                className={cn('flex items-center', index < steps.length - 1 && 'flex-1')}
-              >
-                <div className="flex flex-col items-center">
-                  <div
-                    className={cn(
-                      'flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-medium transition-all lg:h-10 lg:w-10 lg:text-sm',
-                      step === s.number
-                        ? 'border-accent-500 bg-accent-500 text-neutral-900'
-                        : step > s.number
-                          ? 'border-green-500 bg-green-500 text-white'
-                          : 'border-neutral-600 bg-transparent text-neutral-400'
-                    )}
-                  >
-                    {step > s.number ? <Check className="h-4 w-4" /> : s.number}
-                  </div>
-                  <div className="mt-2 text-center">
-                    <p
+            {/* Desktop: Show all steps (compact for 7 steps) */}
+            <div className="hidden md:flex md:items-center md:justify-between">
+              {progressSteps.map((s, index) => (
+                <div
+                  key={s.number}
+                  className={cn('flex items-center', index < progressSteps.length - 1 && 'flex-1')}
+                >
+                  <div className="flex flex-col items-center">
+                    <div
                       className={cn(
-                        'text-xs font-medium lg:text-sm',
-                        step >= s.number ? 'text-theme-primary' : 'text-theme-subtle'
+                        'flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-medium transition-all lg:h-10 lg:w-10 lg:text-sm',
+                        step === s.number
+                          ? 'border-accent-500 bg-accent-500 text-neutral-900'
+                          : step > s.number
+                            ? 'border-green-500 bg-green-500 text-white'
+                            : 'border-neutral-600 bg-transparent text-neutral-400'
                       )}
                     >
-                      {s.title}
-                      {s.number === 4 && cartCount > 0 && ` (${cartCount})`}
-                    </p>
-                    <p className="text-theme-subtle hidden text-xs lg:block">{s.description}</p>
+                      {step > s.number ? <Check className="h-4 w-4" /> : s.number}
+                    </div>
+                    <div className="mt-2 text-center">
+                      <p
+                        className={cn(
+                          'text-xs font-medium lg:text-sm',
+                          step >= s.number ? 'text-theme-primary' : 'text-theme-subtle'
+                        )}
+                      >
+                        {s.title}
+                        {s.number === 4 && cartCount > 0 && ` (${cartCount})`}
+                      </p>
+                      <p className="text-theme-subtle hidden text-xs lg:block">{s.description}</p>
+                    </div>
                   </div>
+                  {index < progressSteps.length - 1 && (
+                    <div
+                      className={cn(
+                        'mx-2 h-0.5 flex-1 lg:mx-4',
+                        step > s.number ? 'bg-green-500' : 'bg-neutral-700'
+                      )}
+                    />
+                  )}
                 </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={cn(
-                      'mx-2 h-0.5 flex-1 lg:mx-4',
-                      step > s.number ? 'bg-green-500' : 'bg-neutral-700'
-                    )}
-                  />
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Step Content */}
       <div className="container mx-auto px-4 py-8">
@@ -195,9 +216,16 @@ export function QuoteWizard() {
             </div>
           }
         >
+          {step === 0 && <StepLocation />}
           {step === 1 && <StepCategory />}
           {step === 2 && <StepProduct />}
-          {step === 3 && <StepDetails />}
+          {step === 3 && (
+            <>
+              {currentCategory === 'FERRAGENS' && <StepDetailsFerragens />}
+              {currentCategory === 'KITS' && <StepDetailsKits />}
+              {currentCategory !== 'FERRAGENS' && currentCategory !== 'KITS' && <StepDetails />}
+            </>
+          )}
           {step === 4 && <StepItemReview />}
           {step === 5 && <StepCustomer />}
           {step === 6 && <StepFinalSummary />}
