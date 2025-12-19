@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 }
 
 async function getConversations() {
-  // Agrupar mensagens por telefone (from para INBOUND, to para OUTBOUND)
-  const messages = await prisma.whatsAppMessage.findMany({
+  // Buscar conversas do modelo Conversation (WhatsApp)
+  const conversations = await prisma.conversation.findMany({
     include: {
       user: {
         select: {
@@ -27,56 +27,58 @@ async function getConversations() {
           number: true,
         },
       },
-      order: {
-        select: {
-          id: true,
-          number: true,
+      messages: {
+        orderBy: {
+          createdAt: 'asc',
+        },
+        include: {
+          sender: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+            },
+          },
         },
       },
     },
     orderBy: {
-      createdAt: 'desc',
+      lastMessageAt: 'desc',
     },
   })
 
-  // Agrupar por número de telefone
-  const conversationsMap = new Map<string, any>()
-
-  messages.forEach((msg) => {
-    // Determinar o número do cliente (quem está conversando)
-    const customerPhone = msg.direction === 'INBOUND' ? msg.from : msg.to
-
-    if (!conversationsMap.has(customerPhone)) {
-      conversationsMap.set(customerPhone, {
-        phone: customerPhone,
-        customerName: msg.user?.name || null,
-        userId: msg.userId || null,
-        messages: [],
-        lastMessageAt: msg.createdAt,
-        unreadCount: 0,
-      })
-    }
-
-    const conversation = conversationsMap.get(customerPhone)!
-    conversation.messages.push(msg)
-
-    // Atualizar data da última mensagem
-    if (msg.createdAt > conversation.lastMessageAt) {
-      conversation.lastMessageAt = msg.createdAt
-    }
-
+  // Transformar para o formato esperado pelo componente
+  return conversations.map((conv) => {
     // Contar mensagens não lidas (INBOUND que não foram marcadas como READ)
-    if (msg.direction === 'INBOUND' && msg.status !== 'READ') {
-      conversation.unreadCount++
+    const unreadCount = conv.messages.filter(
+      (msg) => msg.direction === 'INBOUND' && msg.status !== 'READ'
+    ).length
+
+    // Transformar mensagens para o formato esperado
+    const messages = conv.messages.map((msg) => ({
+      id: msg.id,
+      messageId: msg.id, // Usar o mesmo ID
+      from: msg.direction === 'INBOUND' ? conv.phoneNumber : process.env.TWILIO_PHONE_NUMBER || '',
+      to: msg.direction === 'OUTBOUND' ? conv.phoneNumber : process.env.TWILIO_PHONE_NUMBER || '',
+      body: msg.content,
+      direction: msg.direction,
+      status: msg.status || 'SENT',
+      createdAt: msg.createdAt,
+      user: conv.user,
+      quote: conv.quote,
+      order: null, // Não temos referência direta a order em Message
+    }))
+
+    return {
+      phone: conv.phoneNumber,
+      customerName: conv.customerName || conv.user?.name || null,
+      userId: conv.userId || null,
+      messages,
+      lastMessageAt: conv.lastMessageAt,
+      unreadCount,
     }
   })
-
-  // Converter Map para Array e ordenar por última mensagem
-  const conversations = Array.from(conversationsMap.values()).sort(
-    (a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime()
-  )
-
-  return conversations
 }
 
 export default async function WhatsAppPage() {
