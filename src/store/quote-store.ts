@@ -24,6 +24,7 @@ export interface LocationData {
   region: string // Zone code (ZONA_SUL, ZONA_NORTE, etc)
   regionName: string // Human readable name
   priceMultiplier: number // Price adjustment for this region
+  windZone: 1 | 2 | 3 | 4 // NBR wind zone for thickness calculations (Phase 3)
 }
 
 export interface QuoteItem {

@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { formatCEP } from '@/lib/utils'
 import { getRegionFromCEP, formatRegionDisplay, type RegionInfo } from '@/lib/region-pricing'
+import { getWindZoneByCEP, getWindZoneDescription } from '@/lib/wind-zone-mapping'
 import {
   MapPin,
   ArrowRight,
@@ -30,6 +31,7 @@ import {
   Truck,
   DollarSign,
   Info,
+  Wind,
 } from 'lucide-react'
 
 export function StepLocation() {
@@ -125,6 +127,7 @@ export function StepLocation() {
       region: regionInfo.zone,
       regionName: regionInfo.zoneName,
       priceMultiplier: regionInfo.priceMultiplier,
+      windZone: getWindZoneByCEP(cep), // NEW LINE - Phase 3
     })
 
     nextStep()
@@ -287,6 +290,20 @@ export function StepLocation() {
                         {regionInfo.isServiceArea ? 'Area atendida' : 'Sob consulta'}
                       </p>
                     </div>
+                  </div>
+                </div>
+
+                {/* Wind Zone (Phase 3) */}
+                <div className="col-span-2 mt-3 flex items-start gap-2 border-t border-neutral-700 pt-3">
+                  <Wind className="h-4 w-4 flex-shrink-0 text-blue-400" />
+                  <div>
+                    <p className="text-xs text-neutral-400">Zona de Vento (NBR)</p>
+                    <p className="text-sm font-medium text-blue-400">
+                      {getWindZoneDescription(getWindZoneByCEP(cep))}
+                    </p>
+                    <p className="mt-1 text-xs text-neutral-500">
+                      Usado para cálculo de espessura do vidro
+                    </p>
                   </div>
                 </div>
 
