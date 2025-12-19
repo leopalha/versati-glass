@@ -50,10 +50,18 @@ import {
   CLOSING_SYSTEMS,
   SERVICE_URGENCY,
 } from '@/lib/catalog-options'
+// Phase 3 - NBR Validations & Smart Suggestions
+import { validateDimensions } from '@/lib/nbr-validations'
+import type { QuoteContext } from '@/lib/smart-suggestions'
+import { ThicknessCalculator } from '@/components/quote/thickness-calculator'
+import { SmartSuggestionsPanel } from '@/components/quote/smart-suggestions-panel'
+import { ProductReferenceImages } from '@/components/quote/product-reference-images'
+
 
 export function StepDetails() {
   const {
     currentItem,
+    locationData, // Phase 3
     addItem,
     updateItem,
     editingIndex,
@@ -83,6 +91,9 @@ export function StepDetails() {
 
   // Category can come from editing item or current product
   const category = existingItem?.category || currentProduct?.category || currentItem?.category
+
+  // Phase 3: Helper for showing dimensions
+  const showDimensions = category !== 'SERVICOS' && category !== 'FERRAGENS' && category !== 'KITS'
 
   const [uploadingImages, setUploadingImages] = useState(false)
 
@@ -121,6 +132,24 @@ export function StepDetails() {
   const [closingType, setClosingType] = useState('')
   const [closingSystem, setClosingSystem] = useState('')
   const [serviceUrgency, setServiceUrgency] = useState('')
+  // Phase 3: Context for smart suggestions
+  const suggestionContext = useMemo<QuoteContext>(
+    () => ({
+      category: category || '',
+      width: width ? parseFloat(width) : undefined,
+      height: height ? parseFloat(height) : undefined,
+      glassType,
+      model,
+      color,
+      thickness: thickness ? parseInt(thickness) : undefined,
+      finish,
+      glassColor,
+      glassTexture,
+      hasteSize,
+    }),
+    [category, width, height, glassType, model, color, thickness, finish, glassColor, glassTexture, hasteSize]
+  )
+
 
   // Opções de cor de ferragem baseadas na categoria
   const hardwareColorOptions = useMemo(() => {
@@ -263,6 +292,50 @@ export function StepDetails() {
   const removeImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index))
   }
+  // Phase 3: Handle applying suggestions
+  const handleApplySuggestion = useCallback(
+    (field: string, value: string) => {
+      switch (field) {
+        case 'thickness':
+          setThickness(value)
+          break
+        case 'glassType':
+          setGlassType(value)
+          break
+        case 'finish':
+          setFinish(value)
+          break
+        case 'color':
+          setColor(value)
+          break
+        case 'glassColor':
+          setGlassColor(value)
+          break
+        case 'model':
+          setModel(value)
+          break
+        case 'finishLine':
+          setFinishLine(value)
+          break
+        case 'ledTemp':
+          setLedTemp(value)
+          break
+        case 'shape':
+          setShape(value)
+          break
+        case 'bisoteWidth':
+          setBisoteWidth(value)
+          break
+      }
+
+      toast({
+        title: 'Sugestão aplicada',
+        description: `Campo "${field}" atualizado para "${value}"`,
+      })
+    },
+    [toast]
+  )
+
 
   const handleContinue = () => {
     // FQ.4.2: Validação de quantidade mínima
@@ -322,6 +395,35 @@ export function StepDetails() {
 
     const widthNum = parseFloat(width) || 0
     const heightNum = parseFloat(height) || 0
+
+    // Phase 3: NBR Validation (BEFORE creating newItem)
+    if (width && height && thickness && category) {
+      const w = parseFloat(width)
+      const h = parseFloat(height)
+      const t = parseInt(thickness)
+
+      const validation = validateDimensions(
+        { width: w, height: h, thickness: t },
+        category as any
+      )
+
+      if (!validation.valid) {
+        toast({
+          variant: 'error',
+          title: 'Dimensões não atendem às normas NBR',
+          description: validation.message,
+        })
+        return // Block submission
+      }
+
+      if (validation.severity === 'warning') {
+        toast({
+          variant: 'warning',
+          title: 'Atenção',
+          description: validation.message,
+        })
+      }
+    }
 
     // Construir descrição detalhada
     const descParts = [currentItem?.productName]
@@ -487,6 +589,17 @@ export function StepDetails() {
             </p>
           </div>
 
+
+          {/* Phase 3: Product Reference Images */}
+          {category && (
+            <ProductReferenceImages
+              category={category}
+              subcategory={model}
+              maxImages={4}
+              showTitle={true}
+            />
+          )}
+
           {/* Measurements */}
           {category !== 'SERVICOS' && (
             <div className="grid grid-cols-2 gap-4">
@@ -519,6 +632,19 @@ export function StepDetails() {
                 />
               </div>
             </div>
+          )}
+
+
+          {/* Phase 3: Thickness Calculator */}
+          {showDimensions && width && height && parseFloat(width) > 0 && parseFloat(height) > 0 && (
+            <ThicknessCalculator
+              width={parseFloat(width)}
+              height={parseFloat(height)}
+              application={category as any}
+              currentThickness={thickness ? parseInt(thickness) : undefined}
+              windZone={locationData?.windZone || 2}
+              onApplyThickness={(t) => setThickness(t.toString())}
+            />
           )}
 
           {/* Quantity */}
@@ -1251,6 +1377,15 @@ export function StepDetails() {
               </label>
             )}
           </div>
+
+
+          {/* Phase 3: Smart Suggestions */}
+          <SmartSuggestionsPanel
+            context={suggestionContext}
+            onApplySuggestion={handleApplySuggestion}
+            maxSuggestions={3}
+            minConfidence="medium"
+          />
         </div>
       </Card>
 
