@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Menu, X, User, LogOut, ShoppingCart } from 'lucide-react'
+import { Menu, X, User, LogOut, ShoppingCart, LayoutDashboard } from 'lucide-react'
 import { useState, useCallback, useMemo } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
@@ -131,6 +131,12 @@ export function Header() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link href={session.user.role === 'ADMIN' ? '/admin' : '/portal'}>
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      {session.user.role === 'ADMIN' ? 'Portal do Admin' : 'Portal do Cliente'}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={session.user.role === 'ADMIN' ? '/admin/perfil' : '/portal/perfil'}>
                       <User className="mr-2 h-4 w-4" />
                       Minha Conta
                     </Link>
@@ -237,14 +243,26 @@ export function Header() {
                   asChild
                 >
                   <Link href={session.user.role === 'ADMIN' ? '/admin' : '/portal'}>
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    {session.user.role === 'ADMIN' ? 'Portal do Admin' : 'Portal do Cliente'}
+                  </Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  className="text-header-primary w-full border-white/20 hover:bg-white/10"
+                  asChild
+                >
+                  <Link href={session.user.role === 'ADMIN' ? '/admin/perfil' : '/portal/perfil'}>
+                    <User className="mr-2 h-4 w-4" />
                     Minha Conta
                   </Link>
                 </Button>
                 <Button
                   variant="ghost"
-                  className="w-full text-error hover:bg-error/10"
+                  className="w-full justify-start text-error hover:bg-error/10"
                   onClick={handleSignOut}
                 >
+                  <LogOut className="mr-2 h-4 w-4" />
                   Sair
                 </Button>
               </>
