@@ -388,7 +388,9 @@ export function ChatAssistido({
 
   // AI-CHAT Sprint P2.4: Handle product selection
   const handleSelectProduct = useCallback(async (product: ProductSuggestion) => {
-    // Toggle selection
+    console.log('[CHAT] Product selected:', product.name)
+
+    // Toggle selection visual state
     setSelectedProductIds((prev) => {
       if (prev.includes(product.id)) {
         return prev.filter((id) => id !== product.id)
@@ -410,7 +412,11 @@ export function ChatAssistido({
     setMessages((prev) => [...prev, userMessage])
     setIsLoading(true)
 
+    // Scroll to bottom to show new message
+    setTimeout(() => scrollToBottom(), 100)
+
     try {
+      console.log('[CHAT] Sending product selection to API...')
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -428,6 +434,7 @@ export function ChatAssistido({
       }
 
       const data = await response.json()
+      console.log('[CHAT] AI response received')
 
       // Update conversationId if new conversation
       if (data.conversationId && !conversationId) {
@@ -442,7 +449,11 @@ export function ChatAssistido({
       }
 
       setMessages((prev) => [...prev, assistantMessage])
-    } catch {
+
+      // Hide product suggestions after selection
+      setProductSuggestions([])
+    } catch (error) {
+      console.error('[CHAT] Error sending product selection:', error)
       // Add error message
       setMessages((prev) => [
         ...prev,
@@ -457,7 +468,7 @@ export function ChatAssistido({
     } finally {
       setIsLoading(false)
     }
-  }, [conversationId, sessionId])
+  }, [conversationId, sessionId, scrollToBottom])
 
   // AI-CHAT Sprint P1.6 + P3.2: Check export status and update progress
   const checkExportStatus = useCallback(async () => {
@@ -1118,10 +1129,68 @@ export function ChatAssistido({
                     </div>
                   </div>
 
+                  {/* Action Buttons */}
+                  <div className="mt-4 flex flex-col gap-2">
+                    {/* Skip to Contact Data - only show if product and measurements are complete */}
+                    {quoteProgress >= 40 && quoteProgress < 70 && (
+                      <Button
+                        onClick={() => {
+                          const skipMessage = 'Quero informar meus dados de contato agora'
+                          const userMessage: Message = {
+                            id: `user-${Date.now()}`,
+                            role: 'USER',
+                            content: skipMessage,
+                            createdAt: new Date().toISOString(),
+                          }
+                          setMessages((prev) => [...prev, userMessage])
+                          setInput('')
+                          // The AI will respond asking for contact data
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className="w-full border-accent-500 text-accent-500 hover:bg-accent-500/10"
+                      >
+                        <UserCircle className="mr-2 h-4 w-4" />
+                        Pular para Dados de Contato
+                      </Button>
+                    )}
+
+                    {/* Cancel/Reset Quote */}
+                    <Button
+                      onClick={() => {
+                        if (confirm('Tem certeza que deseja cancelar este orçamento?')) {
+                          // Clear quote context
+                          setQuoteContext(null)
+                          setQuoteProgress(0)
+                          setCanExportQuote(false)
+                          setProductSuggestions([])
+                          setSuggestedCategory(null)
+                          setSelectedProductIds([])
+                          // Add cancellation message
+                          setMessages((prev) => [
+                            ...prev,
+                            {
+                              id: `user-${Date.now()}`,
+                              role: 'USER',
+                              content: 'Quero cancelar este orçamento e começar de novo',
+                              createdAt: new Date().toISOString(),
+                            },
+                          ])
+                        }
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10"
+                    >
+                      <XCircle className="mr-2 h-4 w-4" />
+                      Cancelar Orçamento
+                    </Button>
+                  </div>
+
                   {/* Hint message */}
                   {quoteProgress < 70 && (
-                    <p className="text-theme-subtle mt-2 text-xs">
-                      Continue conversando para completar seu orçamento...
+                    <p className="text-theme-subtle mt-3 text-xs">
+                      💡 Continue conversando para completar seu orçamento...
                     </p>
                   )}
                 </motion.div>
