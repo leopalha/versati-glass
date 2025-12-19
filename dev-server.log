@@ -361,3 +361,520 @@ prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id
  GET /images/cta-pattern.svg 404 in 1407ms
  GET /images/hero-pattern.svg 404 in 1430ms
  GET /images/cta-pattern.svg 404 in 1409ms
+ ✓ Compiled in 12.5s (1296 modules)
+ ✓ Compiled in 5.8s (1296 modules)
+ ✓ Compiled in 1ms (766 modules)
+ ✓ Compiled in 4.4s (1296 modules)
+ GET /images/cta-pattern.svg 404 in 9773ms
+ GET /images/hero-pattern.svg 404 in 9786ms
+ GET /images/cta-pattern.svg 404 in 9818ms
+ GET /images/hero-pattern.svg 404 in 9864ms
+ ✓ Compiled in 3.4s (1296 modules)
+ ✓ Compiled in 1ms (766 modules)
+ GET /images/hero-pattern.svg 404 in 825ms
+ GET /images/cta-pattern.svg 404 in 819ms
+ GET /images/cta-pattern.svg 404 in 447ms
+ GET /images/hero-pattern.svg 404 in 470ms
+ ✓ Compiled in 7.5s (1295 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1112ms (766 modules)
+ GET /images/hero-pattern.svg 404 in 1950ms
+ GET /images/cta-pattern.svg 404 in 2075ms
+ GET /images/hero-pattern.svg 404 in 2102ms
+ GET /images/cta-pattern.svg 404 in 1926ms
+ ✓ Compiled in 6.3s (1296 modules)
+ GET /images/cta-pattern.svg 404 in 483ms
+ GET /images/hero-pattern.svg 404 in 511ms
+ GET /images/cta-pattern.svg 404 in 442ms
+ GET /images/hero-pattern.svg 404 in 464ms
+ ✓ Compiled in 4.6s (1296 modules)
+ GET /images/cta-pattern.svg 404 in 744ms
+ GET /images/hero-pattern.svg 404 in 756ms
+ GET /images/hero-pattern.svg 404 in 792ms
+ GET /images/cta-pattern.svg 404 in 619ms
+ ✓ Compiled in 2.7s (530 modules)
+ ✓ Compiled in 1931ms (530 modules)
+ GET /images/cta-pattern.svg 404 in 379ms
+ GET /images/hero-pattern.svg 404 in 426ms
+ GET /images/cta-pattern.svg 404 in 503ms
+ GET /images/hero-pattern.svg 404 in 501ms
+ ✓ Compiled in 1391ms (530 modules)
+ GET /images/hero-pattern.svg 404 in 491ms
+ GET /images/cta-pattern.svg 404 in 537ms
+ GET /images/hero-pattern.svg 404 in 553ms
+ GET /images/cta-pattern.svg 404 in 509ms
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 3.1s (769 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/csrf 200 in 3827ms
+ POST /api/auth/signout 200 in 148ms
+ ○ Compiling /_not-found ...
+ GET / 200 in 2236ms
+ ✓ Compiled /_not-found in 1758ms (770 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 2902ms
+ GET /images/hero-pattern.svg 404 in 2651ms
+ GET /images/cta-pattern.svg 404 in 1092ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 958ms
+ ○ Compiling /manifest.webmanifest ...
+ ✓ Compiled /manifest.webmanifest in 3.3s (802 modules)
+ ✓ Compiled /login in 1ms (802 modules)
+ ✓ Compiled in 1ms (824 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /manifest.webmanifest 200 in 8881ms
+ GET /api/auth/session 200 in 7591ms
+ GET /api/auth/session 200 in 257ms
+ GET /api/auth/session 200 in 249ms
+ GET /icons/icon-144x144.png 404 in 480ms
+ GET /api/auth/providers 200 in 112ms
+ GET /api/auth/csrf 200 in 84ms
+[DEBUG] 2025-12-19T03:57:14.330Z - [AUTH] Starting authorization { email: 'admin@versatiglass.com.br' }
+[DEBUG] 2025-12-19T03:57:14.333Z - [AUTH] Credentials validated { email: 'admin@versatiglass.com.br' }
+prisma:query SELECT "public"."users"."id", "public"."users"."email", "public"."users"."password", "public"."users"."name", "public"."users"."phone", "public"."users"."cpfCnpj", "public"."users"."street", "public"."users"."number", "public"."users"."complement", "public"."users"."neighborhood", "public"."users"."city", "public"."users"."state", "public"."users"."zipCode", "public"."users"."role"::text, "public"."users"."emailVerified", "public"."users"."phoneVerified", "public"."users"."authProvider"::text, "public"."users"."googleId", "public"."users"."createdAt", "public"."users"."updatedAt", "public"."users"."lastLoginAt" FROM "public"."users" WHERE ("public"."users"."email" = $1 AND 1=1) LIMIT $2 OFFSET $3
+[DEBUG] 2025-12-19T03:57:14.474Z - [AUTH] User found { email: 'admin@versatiglass.com.br', hasPassword: true }
+[DEBUG] 2025-12-19T03:57:15.385Z - [AUTH] Password comparison result { isValid: true }
+[DEBUG] 2025-12-19T03:57:15.385Z - [AUTH] Authentication successful {
+  userId: '81628a46-5e97-437a-9488-32d6a79e9d58',
+  email: 'admin@versatiglass.com.br'
+}
+[DEBUG] 2025-12-19T03:57:15.386Z - [AUTH] SignIn callback {
+  provider: 'credentials',
+  userId: '81628a46-5e97-437a-9488-32d6a79e9d58',
+  email: 'admin@versatiglass.com.br'
+}
+[DEBUG] 2025-12-19T03:57:15.386Z - [AUTH] JWT callback { hasUser: true, trigger: 'signIn' }
+[DEBUG] 2025-12-19T03:57:15.386Z - [AUTH] JWT - User added to token { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ POST /api/auth/callback/credentials? 200 in 1161ms
+[DEBUG] 2025-12-19T03:57:15.505Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:15.506Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:15.506Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 97ms
+[DEBUG] 2025-12-19T03:57:15.616Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:15.616Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:15.616Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 96ms
+[DEBUG] 2025-12-19T03:57:15.727Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:15.727Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:15.727Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 96ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 5.3s (1397 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE 1=1 OFFSET $1) AS "sub"
+prisma:query SELECT SUM("total") AS "_sum$total" FROM (SELECT "public"."orders"."total" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."createdAt" <= $2 AND "public"."orders"."paymentStatus" = CAST($3::text AS "public"."PaymentStatus")) OFFSET $4) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."conversations"."id" FROM "public"."conversations" WHERE "public"."conversations"."status" = CAST($1::text AS "public"."ConversationStatus") OFFSET $2) AS "sub"
+prisma:query SELECT "public"."orders"."id", "public"."orders"."number", "public"."orders"."quoteId", "public"."orders"."userId", "public"."orders"."serviceStreet", "public"."orders"."serviceNumber", "public"."orders"."serviceComplement", "public"."orders"."serviceNeighborhood", "public"."orders"."serviceCity", "public"."orders"."serviceState", "public"."orders"."serviceZipCode", "public"."orders"."subtotal", "public"."orders"."discount", "public"."orders"."installationFee", "public"."orders"."total", "public"."orders"."paymentStatus"::text, "public"."orders"."paymentMethod"::text, "public"."orders"."paidAmount", "public"."orders"."stripeSessionId", "public"."orders"."stripePaymentIntentId", "public"."orders"."status"::text, "public"."orders"."estimatedDelivery", "public"."orders"."installedAt", "public"."orders"."completedAt", "public"."orders"."warrantyUntil", "public"."orders"."internalNotes", "public"."orders"."createdAt", "public"."orders"."updatedAt" FROM "public"."orders" WHERE 1=1 ORDER BY "public"."orders"."createdAt" DESC LIMIT $1 OFFSET $2
+prisma:query SELECT "public"."users"."id", "public"."users"."name" FROM "public"."users" WHERE "public"."users"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."status" IN (CAST($1::text AS "public"."QuoteStatus"),CAST($2::text AS "public"."QuoteStatus")) ORDER BY "public"."quotes"."createdAt" DESC LIMIT $3 OFFSET $4
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE 1=1 OFFSET $1) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."appointments"."id" FROM "public"."appointments" WHERE ("public"."appointments"."scheduledDate" >= $1 AND "public"."appointments"."scheduledDate" < $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"))) OFFSET $5) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."createdAt" <= $2) OFFSET $3) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."status" NOT IN (CAST($1::text AS "public"."OrderStatus"),CAST($2::text AS "public"."OrderStatus")) OFFSET $3) AS "sub"
+[DEBUG] 2025-12-19T03:57:22.526Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:22.527Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:22.527Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."users"."id" FROM "public"."users" WHERE "public"."users"."role" = CAST($1::text AS "public"."Role") OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."createdAt" >= $1 OFFSET $2) AS "sub"
+prisma:query SELECT SUM("total") AS "_sum$total" FROM (SELECT "public"."orders"."total" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."paymentStatus" = CAST($2::text AS "public"."PaymentStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE "public"."quotes"."status" IN (CAST($1::text AS "public"."QuoteStatus"),CAST($2::text AS "public"."QuoteStatus")) OFFSET $3) AS "sub"
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 367ms
+ GET /admin 200 in 7181ms
+ GET /images/hero-pattern.svg 404 in 322ms
+ GET /images/cta-pattern.svg 404 in 305ms
+ GET /icons/icon-144x144.png 404 in 400ms
+ ○ Compiling /api/whatsapp/stream ...
+ ✓ Compiled /api/whatsapp/stream in 978ms (844 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[DEBUG] 2025-12-19T03:57:27.207Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:27.208Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:27.208Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 2005ms
+[DEBUG] 2025-12-19T03:57:27.296Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:27.297Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:27.297Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+[DEBUG] 2025-12-19T03:57:27.407Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:27.407Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:27.408Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 160ms
+[DEBUG] 2025-12-19T03:57:27.534Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:27.535Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:27.535Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 111ms
+[DEBUG] 2025-12-19T03:57:27.699Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:27.699Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:27.699Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 150ms
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+ GET /api/whatsapp/stream 200 in 9307ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 233ms
+ GET /images/hero-pattern.svg 404 in 194ms
+ GET / 200 in 853ms
+ GET /images/cta-pattern.svg 404 in 461ms
+ GET /manifest.webmanifest 200 in 494ms
+[DEBUG] 2025-12-19T03:57:38.546Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:38.546Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:38.547Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 394ms
+[DEBUG] 2025-12-19T03:57:38.814Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:38.815Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:38.815Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 236ms
+[DEBUG] 2025-12-19T03:57:39.011Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:39.011Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:39.011Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 158ms
+[DEBUG] 2025-12-19T03:57:39.183Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:57:39.185Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:57:39.185Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 155ms
+[DEBUG] 2025-12-19T03:58:22.525Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:58:22.526Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:58:22.527Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /portal?_rsc=19zvn 200 in 275ms
+[DEBUG] 2025-12-19T03:58:23.124Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:58:23.125Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:58:23.125Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT "public"."orders"."id", "public"."orders"."number", "public"."orders"."quoteId", "public"."orders"."userId", "public"."orders"."serviceStreet", "public"."orders"."serviceNumber", "public"."orders"."serviceComplement", "public"."orders"."serviceNeighborhood", "public"."orders"."serviceCity", "public"."orders"."serviceState", "public"."orders"."serviceZipCode", "public"."orders"."subtotal", "public"."orders"."discount", "public"."orders"."installationFee", "public"."orders"."total", "public"."orders"."paymentStatus"::text, "public"."orders"."paymentMethod"::text, "public"."orders"."paidAmount", "public"."orders"."stripeSessionId", "public"."orders"."stripePaymentIntentId", "public"."orders"."status"::text, "public"."orders"."estimatedDelivery", "public"."orders"."installedAt", "public"."orders"."completedAt", "public"."orders"."warrantyUntil", "public"."orders"."internalNotes", "public"."orders"."createdAt", "public"."orders"."updatedAt" FROM "public"."orders" WHERE "public"."orders"."userId" = $1 ORDER BY "public"."orders"."createdAt" DESC LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."userId" = $1 ORDER BY "public"."quotes"."createdAt" DESC LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."appointments"."id", "public"."appointments"."userId", "public"."appointments"."orderId", "public"."appointments"."quoteId", "public"."appointments"."type"::text, "public"."appointments"."scheduledDate", "public"."appointments"."scheduledTime", "public"."appointments"."estimatedDuration", "public"."appointments"."addressStreet", "public"."appointments"."addressNumber", "public"."appointments"."addressComplement", "public"."appointments"."addressNeighborhood", "public"."appointments"."addressCity", "public"."appointments"."addressState", "public"."appointments"."addressZipCode", "public"."appointments"."status"::text, "public"."appointments"."assignedToId", "public"."appointments"."notes", "public"."appointments"."completionNotes", "public"."appointments"."reminderSentAt", "public"."appointments"."createdAt", "public"."appointments"."updatedAt", "public"."appointments"."completedAt" FROM "public"."appointments" WHERE ("public"."appointments"."userId" = $1 AND "public"."appointments"."scheduledDate" >= $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"))) ORDER BY "public"."appointments"."scheduledDate" ASC LIMIT $5 OFFSET $6
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."userId" = $1 OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE ("public"."quotes"."userId" = $1 AND "public"."quotes"."status" IN (CAST($2::text AS "public"."QuoteStatus"),CAST($3::text AS "public"."QuoteStatus"))) OFFSET $4) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE ("public"."orders"."userId" = $1 AND "public"."orders"."status" NOT IN (CAST($2::text AS "public"."OrderStatus"),CAST($3::text AS "public"."OrderStatus"))) OFFSET $4) AS "sub"
+ GET /portal?_rsc=17gzd 200 in 441ms
+ GET /icons/icon-144x144.png 404 in 301ms
+ ✓ Compiled in 4.5s (1347 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[DEBUG] 2025-12-19T03:59:09.886Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:59:09.886Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:59:09.886Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+[DEBUG] 2025-12-19T03:59:09.887Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:59:09.887Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:59:09.888Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT "public"."appointments"."id", "public"."appointments"."userId", "public"."appointments"."orderId", "public"."appointments"."quoteId", "public"."appointments"."type"::text, "public"."appointments"."scheduledDate", "public"."appointments"."scheduledTime", "public"."appointments"."estimatedDuration", "public"."appointments"."addressStreet", "public"."appointments"."addressNumber", "public"."appointments"."addressComplement", "public"."appointments"."addressNeighborhood", "public"."appointments"."addressCity", "public"."appointments"."addressState", "public"."appointments"."addressZipCode", "public"."appointments"."status"::text, "public"."appointments"."assignedToId", "public"."appointments"."notes", "public"."appointments"."completionNotes", "public"."appointments"."reminderSentAt", "public"."appointments"."createdAt", "public"."appointments"."updatedAt", "public"."appointments"."completedAt" FROM "public"."appointments" WHERE ("public"."appointments"."userId" = $1 AND "public"."appointments"."scheduledDate" >= $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"))) ORDER BY "public"."appointments"."scheduledDate" ASC LIMIT $5 OFFSET $6
+prisma:query SELECT "public"."orders"."id", "public"."orders"."number", "public"."orders"."quoteId", "public"."orders"."userId", "public"."orders"."serviceStreet", "public"."orders"."serviceNumber", "public"."orders"."serviceComplement", "public"."orders"."serviceNeighborhood", "public"."orders"."serviceCity", "public"."orders"."serviceState", "public"."orders"."serviceZipCode", "public"."orders"."subtotal", "public"."orders"."discount", "public"."orders"."installationFee", "public"."orders"."total", "public"."orders"."paymentStatus"::text, "public"."orders"."paymentMethod"::text, "public"."orders"."paidAmount", "public"."orders"."stripeSessionId", "public"."orders"."stripePaymentIntentId", "public"."orders"."status"::text, "public"."orders"."estimatedDelivery", "public"."orders"."installedAt", "public"."orders"."completedAt", "public"."orders"."warrantyUntil", "public"."orders"."internalNotes", "public"."orders"."createdAt", "public"."orders"."updatedAt" FROM "public"."orders" WHERE "public"."orders"."userId" = $1 ORDER BY "public"."orders"."createdAt" DESC LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."userId" = $1 ORDER BY "public"."quotes"."createdAt" DESC LIMIT $2 OFFSET $3
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE ("public"."orders"."userId" = $1 AND "public"."orders"."status" NOT IN (CAST($2::text AS "public"."OrderStatus"),CAST($3::text AS "public"."OrderStatus"))) OFFSET $4) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."userId" = $1 OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE ("public"."quotes"."userId" = $1 AND "public"."quotes"."status" IN (CAST($2::text AS "public"."QuoteStatus"),CAST($3::text AS "public"."QuoteStatus"))) OFFSET $4) AS "sub"
+ GET /portal?_rsc=1hazs 200 in 827ms
+ GET /images/hero-pattern.svg 404 in 485ms
+ GET /images/cta-pattern.svg 404 in 486ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 238ms
+ GET / 200 in 709ms
+ GET /images/hero-pattern.svg 404 in 431ms
+ GET /images/cta-pattern.svg 404 in 528ms
+ ○ Compiling /manifest.webmanifest ...
+ ✓ Compiled /api/auth/[...nextauth] in 2.4s (835 modules)
+ ✓ Compiled (837 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /manifest.webmanifest 200 in 6204ms
+[DEBUG] 2025-12-19T03:59:22.835Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:59:22.836Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:59:22.836Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 6515ms
+ ✓ Compiled in 8.1s (1383 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[DEBUG] 2025-12-19T03:59:31.017Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:59:31.019Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:59:31.019Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 7697ms
+[DEBUG] 2025-12-19T03:59:33.218Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:59:33.220Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:59:33.221Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 1816ms
+[DEBUG] 2025-12-19T03:59:34.145Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:59:34.146Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:59:34.147Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 855ms
+ GET /images/hero-pattern.svg 404 in 1411ms
+ GET /images/cta-pattern.svg 404 in 1434ms
+ GET /images/cta-pattern.svg 404 in 1410ms
+ GET /images/hero-pattern.svg 404 in 1462ms
+ GET /icons/icon-144x144.png 404 in 1566ms
+ ✓ Compiled in 12s (1381 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[DEBUG] 2025-12-19T03:59:59.307Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:59:59.308Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:59:59.308Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /admin?_rsc=19zvn 200 in 10254ms
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE 1=1 OFFSET $1) AS "sub"
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."createdAt" >= $1 OFFSET $2) AS "sub"
+prisma:query SELECT 1
+prisma:query SELECT SUM("total") AS "_sum$total" FROM (SELECT "public"."orders"."total" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."createdAt" <= $2 AND "public"."orders"."paymentStatus" = CAST($3::text AS "public"."PaymentStatus")) OFFSET $4) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."conversations"."id" FROM "public"."conversations" WHERE "public"."conversations"."status" = CAST($1::text AS "public"."ConversationStatus") OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE 1=1 OFFSET $1) AS "sub"
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."status" IN (CAST($1::text AS "public"."QuoteStatus"),CAST($2::text AS "public"."QuoteStatus")) ORDER BY "public"."quotes"."createdAt" DESC LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."orders"."id", "public"."orders"."number", "public"."orders"."quoteId", "public"."orders"."userId", "public"."orders"."serviceStreet", "public"."orders"."serviceNumber", "public"."orders"."serviceComplement", "public"."orders"."serviceNeighborhood", "public"."orders"."serviceCity", "public"."orders"."serviceState", "public"."orders"."serviceZipCode", "public"."orders"."subtotal", "public"."orders"."discount", "public"."orders"."installationFee", "public"."orders"."total", "public"."orders"."paymentStatus"::text, "public"."orders"."paymentMethod"::text, "public"."orders"."paidAmount", "public"."orders"."stripeSessionId", "public"."orders"."stripePaymentIntentId", "public"."orders"."status"::text, "public"."orders"."estimatedDelivery", "public"."orders"."installedAt", "public"."orders"."completedAt", "public"."orders"."warrantyUntil", "public"."orders"."internalNotes", "public"."orders"."createdAt", "public"."orders"."updatedAt" FROM "public"."orders" WHERE 1=1 ORDER BY "public"."orders"."createdAt" DESC LIMIT $1 OFFSET $2
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."appointments"."id" FROM "public"."appointments" WHERE ("public"."appointments"."scheduledDate" >= $1 AND "public"."appointments"."scheduledDate" < $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"))) OFFSET $5) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."status" NOT IN (CAST($1::text AS "public"."OrderStatus"),CAST($2::text AS "public"."OrderStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT SUM("total") AS "_sum$total" FROM (SELECT "public"."orders"."total" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."paymentStatus" = CAST($2::text AS "public"."PaymentStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."users"."id" FROM "public"."users" WHERE "public"."users"."role" = CAST($1::text AS "public"."Role") OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."createdAt" <= $2) OFFSET $3) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE "public"."quotes"."status" IN (CAST($1::text AS "public"."QuoteStatus"),CAST($2::text AS "public"."QuoteStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT "public"."users"."id", "public"."users"."name" FROM "public"."users" WHERE "public"."users"."id" IN ($1) OFFSET $2
+[DEBUG] 2025-12-19T04:00:01.010Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T04:00:01.013Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T04:00:01.014Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /admin?_rsc=jirn6 200 in 1444ms
+ GET /images/cta-pattern.svg 404 in 1114ms
+ GET /images/hero-pattern.svg 404 in 1138ms
+ ○ Compiling /api/whatsapp/stream ...
+ ✓ Compiled /api/whatsapp/stream in 4.4s (1383 modules)
+ GET /images/cta-pattern.svg 404 in 5036ms
+ GET /images/hero-pattern.svg 404 in 5050ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[DEBUG] 2025-12-19T04:00:07.396Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T04:00:07.396Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T04:00:07.396Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /icons/icon-144x144.png 404 in 4884ms
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."createdAt" >= $1 OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE 1=1 OFFSET $1) AS "sub"
+prisma:query SELECT SUM("total") AS "_sum$total" FROM (SELECT "public"."orders"."total" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."paymentStatus" = CAST($2::text AS "public"."PaymentStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."appointments"."id" FROM "public"."appointments" WHERE ("public"."appointments"."scheduledDate" >= $1 AND "public"."appointments"."scheduledDate" < $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"))) OFFSET $5) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."status" NOT IN (CAST($1::text AS "public"."OrderStatus"),CAST($2::text AS "public"."OrderStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE "public"."quotes"."status" IN (CAST($1::text AS "public"."QuoteStatus"),CAST($2::text AS "public"."QuoteStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT "public"."orders"."id", "public"."orders"."number", "public"."orders"."quoteId", "public"."orders"."userId", "public"."orders"."serviceStreet", "public"."orders"."serviceNumber", "public"."orders"."serviceComplement", "public"."orders"."serviceNeighborhood", "public"."orders"."serviceCity", "public"."orders"."serviceState", "public"."orders"."serviceZipCode", "public"."orders"."subtotal", "public"."orders"."discount", "public"."orders"."installationFee", "public"."orders"."total", "public"."orders"."paymentStatus"::text, "public"."orders"."paymentMethod"::text, "public"."orders"."paidAmount", "public"."orders"."stripeSessionId", "public"."orders"."stripePaymentIntentId", "public"."orders"."status"::text, "public"."orders"."estimatedDelivery", "public"."orders"."installedAt", "public"."orders"."completedAt", "public"."orders"."warrantyUntil", "public"."orders"."internalNotes", "public"."orders"."createdAt", "public"."orders"."updatedAt" FROM "public"."orders" WHERE 1=1 ORDER BY "public"."orders"."createdAt" DESC LIMIT $1 OFFSET $2
+prisma:query SELECT SUM("total") AS "_sum$total" FROM (SELECT "public"."orders"."total" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."createdAt" <= $2 AND "public"."orders"."paymentStatus" = CAST($3::text AS "public"."PaymentStatus")) OFFSET $4) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."users"."id" FROM "public"."users" WHERE "public"."users"."role" = CAST($1::text AS "public"."Role") OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."conversations"."id" FROM "public"."conversations" WHERE "public"."conversations"."status" = CAST($1::text AS "public"."ConversationStatus") OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE 1=1 OFFSET $1) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."createdAt" <= $2) OFFSET $3) AS "sub"
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."status" IN (CAST($1::text AS "public"."QuoteStatus"),CAST($2::text AS "public"."QuoteStatus")) ORDER BY "public"."quotes"."createdAt" DESC LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."users"."id", "public"."users"."name" FROM "public"."users" WHERE "public"."users"."id" IN ($1) OFFSET $2
+[DEBUG] 2025-12-19T04:00:07.818Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T04:00:07.819Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T04:00:07.819Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /admin?_rsc=jirn6 200 in 425ms
+ GET /images/hero-pattern.svg 404 in 204ms
+ GET /images/cta-pattern.svg 404 in 192ms
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+ ✓ Compiled in 2s (1349 modules)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE 1=1 OFFSET $1) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."createdAt" <= $2) OFFSET $3) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."createdAt" >= $1 OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE 1=1 OFFSET $1) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE "public"."quotes"."status" IN (CAST($1::text AS "public"."QuoteStatus"),CAST($2::text AS "public"."QuoteStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."status" NOT IN (CAST($1::text AS "public"."OrderStatus"),CAST($2::text AS "public"."OrderStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT SUM("total") AS "_sum$total" FROM (SELECT "public"."orders"."total" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."createdAt" <= $2 AND "public"."orders"."paymentStatus" = CAST($3::text AS "public"."PaymentStatus")) OFFSET $4) AS "sub"
+prisma:query SELECT "public"."orders"."id", "public"."orders"."number", "public"."orders"."quoteId", "public"."orders"."userId", "public"."orders"."serviceStreet", "public"."orders"."serviceNumber", "public"."orders"."serviceComplement", "public"."orders"."serviceNeighborhood", "public"."orders"."serviceCity", "public"."orders"."serviceState", "public"."orders"."serviceZipCode", "public"."orders"."subtotal", "public"."orders"."discount", "public"."orders"."installationFee", "public"."orders"."total", "public"."orders"."paymentStatus"::text, "public"."orders"."paymentMethod"::text, "public"."orders"."paidAmount", "public"."orders"."stripeSessionId", "public"."orders"."stripePaymentIntentId", "public"."orders"."status"::text, "public"."orders"."estimatedDelivery", "public"."orders"."installedAt", "public"."orders"."completedAt", "public"."orders"."warrantyUntil", "public"."orders"."internalNotes", "public"."orders"."createdAt", "public"."orders"."updatedAt" FROM "public"."orders" WHERE 1=1 ORDER BY "public"."orders"."createdAt" DESC LIMIT $1 OFFSET $2
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."conversations"."id" FROM "public"."conversations" WHERE "public"."conversations"."status" = CAST($1::text AS "public"."ConversationStatus") OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."users"."id" FROM "public"."users" WHERE "public"."users"."role" = CAST($1::text AS "public"."Role") OFFSET $2) AS "sub"
+prisma:query SELECT SUM("total") AS "_sum$total" FROM (SELECT "public"."orders"."total" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."paymentStatus" = CAST($2::text AS "public"."PaymentStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT "public"."users"."id", "public"."users"."name" FROM "public"."users" WHERE "public"."users"."id" IN ($1) OFFSET $2
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."appointments"."id" FROM "public"."appointments" WHERE ("public"."appointments"."scheduledDate" >= $1 AND "public"."appointments"."scheduledDate" < $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"))) OFFSET $5) AS "sub"
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."status" IN (CAST($1::text AS "public"."QuoteStatus"),CAST($2::text AS "public"."QuoteStatus")) ORDER BY "public"."quotes"."createdAt" DESC LIMIT $3 OFFSET $4
+[DEBUG] 2025-12-19T04:00:46.703Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T04:00:46.704Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T04:00:46.704Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /admin?_rsc=jirn6 200 in 620ms
+ GET /images/hero-pattern.svg 404 in 463ms
+ GET /images/cta-pattern.svg 404 in 454ms
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+ ✓ Compiled in 1759ms (1349 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE 1=1 OFFSET $1) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."createdAt" >= $1 OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."createdAt" <= $2) OFFSET $3) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."status" NOT IN (CAST($1::text AS "public"."OrderStatus"),CAST($2::text AS "public"."OrderStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT "public"."orders"."id", "public"."orders"."number", "public"."orders"."quoteId", "public"."orders"."userId", "public"."orders"."serviceStreet", "public"."orders"."serviceNumber", "public"."orders"."serviceComplement", "public"."orders"."serviceNeighborhood", "public"."orders"."serviceCity", "public"."orders"."serviceState", "public"."orders"."serviceZipCode", "public"."orders"."subtotal", "public"."orders"."discount", "public"."orders"."installationFee", "public"."orders"."total", "public"."orders"."paymentStatus"::text, "public"."orders"."paymentMethod"::text, "public"."orders"."paidAmount", "public"."orders"."stripeSessionId", "public"."orders"."stripePaymentIntentId", "public"."orders"."status"::text, "public"."orders"."estimatedDelivery", "public"."orders"."installedAt", "public"."orders"."completedAt", "public"."orders"."warrantyUntil", "public"."orders"."internalNotes", "public"."orders"."createdAt", "public"."orders"."updatedAt" FROM "public"."orders" WHERE 1=1 ORDER BY "public"."orders"."createdAt" DESC LIMIT $1 OFFSET $2
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."users"."id" FROM "public"."users" WHERE "public"."users"."role" = CAST($1::text AS "public"."Role") OFFSET $2) AS "sub"
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."status" IN (CAST($1::text AS "public"."QuoteStatus"),CAST($2::text AS "public"."QuoteStatus")) ORDER BY "public"."quotes"."createdAt" DESC LIMIT $3 OFFSET $4
+prisma:query SELECT SUM("total") AS "_sum$total" FROM (SELECT "public"."orders"."total" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."createdAt" <= $2 AND "public"."orders"."paymentStatus" = CAST($3::text AS "public"."PaymentStatus")) OFFSET $4) AS "sub"
+prisma:query SELECT "public"."users"."id", "public"."users"."name" FROM "public"."users" WHERE "public"."users"."id" IN ($1) OFFSET $2
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE "public"."quotes"."status" IN (CAST($1::text AS "public"."QuoteStatus"),CAST($2::text AS "public"."QuoteStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT SUM("total") AS "_sum$total" FROM (SELECT "public"."orders"."total" FROM "public"."orders" WHERE ("public"."orders"."createdAt" >= $1 AND "public"."orders"."paymentStatus" = CAST($2::text AS "public"."PaymentStatus")) OFFSET $3) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."appointments"."id" FROM "public"."appointments" WHERE ("public"."appointments"."scheduledDate" >= $1 AND "public"."appointments"."scheduledDate" < $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"))) OFFSET $5) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."conversations"."id" FROM "public"."conversations" WHERE "public"."conversations"."status" = CAST($1::text AS "public"."ConversationStatus") OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE 1=1 OFFSET $1) AS "sub"
+[DEBUG] 2025-12-19T04:00:59.645Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T04:00:59.646Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T04:00:59.646Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /admin?_rsc=jirn6 200 in 575ms
+ GET /images/cta-pattern.svg 404 in 418ms
+ GET /images/hero-pattern.svg 404 in 432ms
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[SSE] Error fetching messages: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Timeout.eval [as _onTimeout] (webpack-internal:///(rsc)/./src/app/api/whatsapp/stream/route.ts:42:111)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+ GET /api/whatsapp/stream 200 in 83185ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 233ms
+ GET / 200 in 598ms
+ GET /images/hero-pattern.svg 404 in 160ms
+ GET /images/cta-pattern.svg 404 in 289ms
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 792ms (834 modules)
+ ✓ Compiled (836 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /manifest.webmanifest 200 in 2431ms
+[DEBUG] 2025-12-19T04:01:29.848Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T04:01:29.849Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T04:01:29.849Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 2299ms
+[DEBUG] 2025-12-19T04:01:30.002Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T04:01:30.003Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T04:01:30.003Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 131ms
+[DEBUG] 2025-12-19T04:01:30.119Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T04:01:30.119Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T04:01:30.120Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 106ms
+[DEBUG] 2025-12-19T04:01:30.269Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T04:01:30.269Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T04:01:30.269Z - [AUTH] Session created { userId: '81628a46-5e97-437a-9488-32d6a79e9d58', role: 'ADMIN' }
+ GET /api/auth/session 200 in 120ms
+ GET /api/auth/csrf 200 in 212ms
+ POST /api/auth/signout 200 in 176ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 731ms
+ GET /images/hero-pattern.svg 404 in 910ms
+ GET / 200 in 3594ms
+ GET /images/cta-pattern.svg 404 in 800ms
+ GET /manifest.webmanifest 200 in 811ms
+ GET /api/auth/session 200 in 741ms
+ GET /api/auth/session 200 in 205ms
+ GET /api/auth/session 200 in 175ms
+ GET /api/auth/session 200 in 122ms
+ ✓ Compiled in 4.3s (1381 modules)
+ GET /images/hero-pattern.svg 404 in 587ms
+ GET /images/cta-pattern.svg 404 in 580ms
+ GET /images/hero-pattern.svg 404 in 616ms
+ GET /images/cta-pattern.svg 404 in 769ms
+ GET /icons/icon-144x144.png 404 in 445ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 430ms
+ GET / 200 in 1147ms
+ GET /images/hero-pattern.svg 404 in 397ms
+ GET /images/cta-pattern.svg 404 in 414ms
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 4.5s (831 modules)
+ ✓ Compiled (838 modules)
+ GET /manifest.webmanifest 200 in 7514ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /icon.png?4a0e2032a7eb3a55 200 in 7982ms
+ GET /api/auth/session 200 in 6872ms
+ GET /api/auth/session 200 in 254ms
+ GET /api/auth/session 200 in 157ms
+ GET /api/auth/session 200 in 174ms

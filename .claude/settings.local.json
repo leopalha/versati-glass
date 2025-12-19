@@ -151,7 +151,8 @@
       "Bash(node test-phase4-integration.mjs:*)",
       "Bash(if exist .next rmdir /s /q .next)",
       "Bash(powershell -Command \"if \\(Test-Path .next\\) { Remove-Item -Recurse -Force .next }\")",
-      "Bash(powershell -Command \"Start-Sleep -Seconds 15; netstat -ano | Select-String '':3000''\")"
+      "Bash(powershell -Command \"Start-Sleep -Seconds 15; netstat -ano | Select-String '':3000''\")",
+      "Bash(powershell -Command \"netstat -ano | Select-String '':3000''\")"
     ]
   }
 }
