@@ -1,8 +1,12 @@
 /**
- * Product Images Library - ATUALIZADO COM IMAGENS REAIS
+ * Product Images Library - ATUALIZADO COM IMAGENS REAIS (ORGANIZAÇÃO CORRETA)
  *
  * Reference images for glass products to help users visualize options
- * Images organizadas por categoria em /public/images/products/
+ *
+ * Estrutura:
+ * - public/images/products/ - Imagens de produtos de vidro (41 imagens)
+ * - public/images/gallery/  - Arquitetura e referências (19 imagens)
+ * - public/images/site/     - Logos, ícones, designs, screenshots (42 imagens)
  */
 
 export interface ProductImage {
@@ -15,7 +19,7 @@ export interface ProductImage {
 }
 
 // ============================================================================
-// IMAGE DATABASE - IMAGENS REAIS
+// IMAGE DATABASE - IMAGENS REAIS (PATHS CORRETOS)
 // ============================================================================
 
 /**
@@ -79,15 +83,23 @@ export const MIRROR_IMAGES: ProductImage[] = [
     category: 'ESPELHOS',
     description: 'Espelho decorativo ideal para sala',
   },
+  {
+    id: 'espelho-adesivo-1',
+    url: '/images/products/espelhos/nouvelle-affiche-miroir-autocollant-de-mur.jpg',
+    alt: 'Espelho Adesivo Decorativo',
+    category: 'ESPELHOS',
+    subcategory: 'ADESIVO',
+    description: 'Espelho adesivo moderno para decoração',
+  },
 ]
 
 /**
- * Door types reference images - PLACEHOLDERS (adicionar fotos reais)
+ * Door types reference images
  */
 export const DOOR_IMAGES: ProductImage[] = [
   {
-    id: 'door-placeholder-1',
-    url: '/images/products/geral/architecture-1048092-1920-1536x1152.jpg',
+    id: 'door-gallery-1',
+    url: '/images/gallery/architecture-1048092-1920-1536x1152.jpg',
     alt: 'Porta de Vidro em Projeto Arquitetônico',
     category: 'PORTAS',
     description: 'Exemplo de porta de vidro em ambiente comercial',
@@ -120,6 +132,14 @@ export const GUARD_RAIL_IMAGES: ProductImage[] = [
     subcategory: 'INOX',
     description: 'Guarda-corpo moderno com vidro laminado e estrutura inox',
   },
+  {
+    id: 'guarda-corpo-escada-1',
+    url: '/images/products/guarda-corpo/escalera-despues1-1024x768.jpg',
+    alt: 'Guarda-Corpo para Escada',
+    category: 'GUARDA_CORPO',
+    subcategory: 'ESCADA',
+    description: 'Guarda-corpo de vidro para escada interna',
+  },
 ]
 
 /**
@@ -128,14 +148,14 @@ export const GUARD_RAIL_IMAGES: ProductImage[] = [
 export const GLASS_CURTAIN_IMAGES: ProductImage[] = [
   {
     id: 'cortina-vidro-1',
-    url: '/images/products/vidros/cortina-cristal-1.jpg',
+    url: '/images/products/cortinas-vidro/cortina-cristal-1.jpg',
     alt: 'Cortina de Vidro para Varanda',
     category: 'CORTINAS_VIDRO',
     description: 'Sistema de cortina de vidro retrátil para varanda',
   },
   {
     id: 'cortina-vidro-2',
-    url: '/images/products/vidros/cortina-cristal-2.jpg',
+    url: '/images/products/cortinas-vidro/cortina-cristal-2.jpg',
     alt: 'Cortina de Vidro Instalada',
     category: 'CORTINAS_VIDRO',
     description: 'Cortina de vidro com folhas em operação',
@@ -148,14 +168,14 @@ export const GLASS_CURTAIN_IMAGES: ProductImage[] = [
 export const PERGOLA_IMAGES: ProductImage[] = [
   {
     id: 'cobertura-vidro-1',
-    url: '/images/products/vidros/cobertura-em-vidro-temperado-laminado-com-duponttm.jpg',
+    url: '/images/products/pergolados/cobertura-em-vidro-temperado-laminado-com-duponttm.jpg',
     alt: 'Cobertura em Vidro Temperado Laminado',
     category: 'PERGOLADOS',
     description: 'Cobertura premium com vidro laminado DuPont SentryGlas',
   },
   {
     id: 'cobertura-vidro-2',
-    url: '/images/products/vidros/cobertura-em-vidro-temperado-d-nq-np-761910-mlb255.jpg',
+    url: '/images/products/pergolados/cobertura-em-vidro-temperado-d-nq-np-761910-mlb255.jpg',
     alt: 'Pergolado em Vidro Temperado',
     category: 'PERGOLADOS',
     description: 'Estrutura de pergolado com cobertura em vidro',
@@ -184,7 +204,7 @@ export const SHELF_IMAGES: ProductImage[] = [
   },
   {
     id: 'cristal-mesa-1',
-    url: '/images/products/vidros/cristal-para-mesa.jpg',
+    url: '/images/products/tampos/cristal-para-mesa.jpg',
     alt: 'Cristal para Mesa',
     category: 'TAMPOS_PRATELEIRAS',
     subcategory: 'TAMPO',
@@ -192,7 +212,7 @@ export const SHELF_IMAGES: ProductImage[] = [
   },
   {
     id: 'cristal-mesa-2',
-    url: '/images/products/vidros/cristal-para-mesa-de-interior-2.jpg',
+    url: '/images/products/tampos/cristal-para-mesa-de-interior-2.jpg',
     alt: 'Cristal para Mesa de Interior',
     category: 'TAMPOS_PRATELEIRAS',
     subcategory: 'TAMPO',
@@ -212,6 +232,29 @@ export const PARTITION_IMAGES: ProductImage[] = [
     subcategory: 'ESCRITORIO',
     description: 'Divisória de vidro para ambientes corporativos',
   },
+  {
+    id: 'divisoria-oficina-1',
+    url: '/images/products/divisorias/division-de-oficina.jpg',
+    alt: 'Divisória de Vidro para Oficina',
+    category: 'DIVISORIAS',
+    description: 'Divisória de vidro temperado para área industrial',
+  },
+  {
+    id: 'divisoria-decorada-1',
+    url: '/images/products/divisorias/division-interior-vidrio-decorado.jpg',
+    alt: 'Divisória com Vidro Decorado',
+    category: 'DIVISORIAS',
+    subcategory: 'DECORADO',
+    description: 'Divisória com vidro jateado decorativo',
+  },
+  {
+    id: 'divisoria-corporativa-1',
+    url: '/images/products/divisorias/dormakaba-americas-interior-glass-wall-system-for-.jpeg',
+    alt: 'Sistema de Divisórias Corporativas',
+    category: 'DIVISORIAS',
+    subcategory: 'CORPORATIVO',
+    description: 'Sistema profissional de divisórias de vidro para escritórios',
+  },
 ]
 
 /**
@@ -225,6 +268,40 @@ export const CLOSURE_IMAGES: ProductImage[] = [
     category: 'FECHAMENTOS',
     subcategory: 'SACADA',
     description: 'Envidraçamento completo de sacada',
+  },
+]
+
+/**
+ * Películas decorativas e de segurança
+ */
+export const PELICULA_IMAGES: ProductImage[] = [
+  {
+    id: 'pelicula-decorativa-1',
+    url: '/images/products/peliculas/bg-peliculas-decorativas-01.jpg',
+    alt: 'Película Decorativa para Vidro',
+    category: 'PELICULAS',
+    subcategory: 'DECORATIVA',
+    description: 'Película decorativa com efeito jateado',
+  },
+]
+
+/**
+ * Fachadas em vidro
+ */
+export const FACHADA_IMAGES: ProductImage[] = [
+  {
+    id: 'fachada-pele-vidro-1',
+    url: '/images/products/fachadas/fachada-pele-de-vidro.jpg',
+    alt: 'Fachada Pele de Vidro',
+    category: 'FACHADAS',
+    description: 'Sistema de fachada pele de vidro estrutural',
+  },
+  {
+    id: 'fachada-tipos-1',
+    url: '/images/products/fachadas/tipos-de-vidros-para-fachada.jpg',
+    alt: 'Tipos de Vidros para Fachada',
+    category: 'FACHADAS',
+    description: 'Diferentes aplicações de vidro em fachadas',
   },
 ]
 
@@ -260,60 +337,111 @@ export const GLASS_EXAMPLES: ProductImage[] = [
     category: 'VIDROS',
     description: 'Vidros fabricados sob encomenda',
   },
+  {
+    id: 'vidro-temperado-1',
+    url: '/images/products/vidros/vidro-temperado.jpg',
+    alt: 'Vidro Temperado',
+    category: 'VIDROS',
+    subcategory: 'TEMPERADO',
+    description: 'Vidro temperado para diversas aplicações',
+  },
+  {
+    id: 'vidro-refletivo-1',
+    url: '/images/products/vidros/vidro-refletivo-champagne-habitat-cebrace.jpg',
+    alt: 'Vidro Refletivo Champagne',
+    category: 'VIDROS',
+    subcategory: 'REFLETIVO',
+    description: 'Vidro refletivo cor champagne',
+  },
+  {
+    id: 'vidracaria-tipos-1',
+    url: '/images/products/vidros/vidracaria-qual-tipo-de-vidro-escolher1.png',
+    alt: 'Tipos de Vidro Disponíveis',
+    category: 'VIDROS',
+    description: 'Guia visual de tipos de vidro',
+  },
+  {
+    id: 'cristaleria-1',
+    url: '/images/products/vidros/cristaleria-terrassa-2.png',
+    alt: 'Produtos de Cristaleria',
+    category: 'VIDROS',
+    description: 'Variedade de produtos de vidro',
+  },
 ]
 
 /**
- * Imagens gerais - Arquitetura e Aplicações
+ * Imagens gerais - Arquitetura e Aplicações (da pasta gallery/)
  */
 export const GENERAL_IMAGES: ProductImage[] = [
   {
     id: 'arquitetura-vidro-1',
-    url: '/images/products/geral/architecture-1048092-1920-1536x1152.jpg',
+    url: '/images/gallery/architecture-1048092-1920-1536x1152.jpg',
     alt: 'Arquitetura com Vidro',
     category: 'GERAL',
     description: 'Projeto arquitetônico moderno com vidro',
   },
   {
     id: 'fachada-comercial-1',
-    url: '/images/products/geral/building-91228-1920.jpg',
+    url: '/images/gallery/building-91228-1920.jpg',
     alt: 'Fachada Comercial em Vidro',
     category: 'GERAL',
     description: 'Edifício comercial com fachada de vidro',
   },
   {
     id: 'shopping-1',
-    url: '/images/products/geral/shopping-arcade-1214815-1920.jpg',
+    url: '/images/gallery/shopping-arcade-1214815-1920.jpg',
     alt: 'Shopping com Vidro',
     category: 'GERAL',
     description: 'Galeria de shopping com cobertura em vidro',
   },
   {
     id: 'shopping-mall-1',
-    url: '/images/products/geral/shopping-mall-906734-1920-1536x1043.jpg',
+    url: '/images/gallery/shopping-mall-906734-1920-1536x1043.jpg',
     alt: 'Shopping Center',
     category: 'GERAL',
     description: 'Interior de shopping com estruturas de vidro',
   },
   {
     id: 'vitrine-1',
-    url: '/images/products/geral/showcase-g01b6a45e8-1920.jpg',
+    url: '/images/gallery/showcase-g01b6a45e8-1920.jpg',
     alt: 'Vitrine de Vidro',
     category: 'GERAL',
     description: 'Vitrine comercial em vidro temperado',
   },
   {
     id: 'loja-1',
-    url: '/images/products/geral/store-832188-1920-1536x1024.jpg',
+    url: '/images/gallery/store-832188-1920-1536x1024.jpg',
     alt: 'Fachada de Loja',
     category: 'GERAL',
     description: 'Fachada de loja com vidro e iluminação',
   },
   {
     id: 'urban-1',
-    url: '/images/products/geral/urban-2004494-1920.jpg',
+    url: '/images/gallery/urban-2004494-1920.jpg',
     alt: 'Arquitetura Urbana',
     category: 'GERAL',
     description: 'Projeto urbano com vidro estrutural',
+  },
+  {
+    id: 'adobestock-1',
+    url: '/images/gallery/adobestock-342435973-2048x1365.jpeg',
+    alt: 'Projeto Arquitetônico Premium',
+    category: 'GERAL',
+    description: 'Arquitetura premium com vidro',
+  },
+  {
+    id: 'adaptive-1',
+    url: '/images/gallery/co-adaptive-b50-photo-peterdressel-07.jpg',
+    alt: 'Sistema Adaptativo',
+    category: 'GERAL',
+    description: 'Sistema de vidro adaptativo',
+  },
+  {
+    id: 'clients-1',
+    url: '/images/gallery/clientsc-1536x1024.jpeg',
+    alt: 'Projeto para Cliente',
+    category: 'GERAL',
+    description: 'Exemplo de projeto executado',
   },
 ]
 
@@ -343,6 +471,8 @@ export function getImagesForCategory(category: string): ProductImage[] {
     ...SHELF_IMAGES,
     ...PARTITION_IMAGES,
     ...CLOSURE_IMAGES,
+    ...PELICULA_IMAGES,
+    ...FACHADA_IMAGES,
     ...GLASS_EXAMPLES,
     ...GENERAL_IMAGES,
     ...HARDWARE_IMAGES,
@@ -373,6 +503,8 @@ export function getImageById(id: string): ProductImage | undefined {
     ...SHELF_IMAGES,
     ...PARTITION_IMAGES,
     ...CLOSURE_IMAGES,
+    ...PELICULA_IMAGES,
+    ...FACHADA_IMAGES,
     ...GLASS_EXAMPLES,
     ...GENERAL_IMAGES,
     ...HARDWARE_IMAGES,
