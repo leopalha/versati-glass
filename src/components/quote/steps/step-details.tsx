@@ -56,6 +56,7 @@ import type { QuoteContext } from '@/lib/smart-suggestions'
 import { ThicknessCalculator } from '@/components/quote/thickness-calculator'
 import { SmartSuggestionsPanel } from '@/components/quote/smart-suggestions-panel'
 import { ProductReferenceImages } from '@/components/quote/product-reference-images'
+import { DimensionSlider } from '@/components/quote/dimension-slider'
 
 
 export function StepDetails() {
@@ -600,37 +601,33 @@ export function StepDetails() {
             />
           )}
 
-          {/* Measurements */}
+          {/* Measurements - Seletores Híbridos com Slider */}
           {category !== 'SERVICOS' && (
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="width" className="text-theme-muted mb-1 block text-sm">
-                  Largura (metros)
-                </label>
-                <Input
-                  id="width"
-                  type="number"
-                  step="0.01"
-                  placeholder="Ex: 1.20"
-                  aria-label="Largura"
-                  value={width}
-                  onChange={(e) => setWidth(e.target.value)}
-                />
-              </div>
-              <div>
-                <label htmlFor="height" className="text-theme-muted mb-1 block text-sm">
-                  Altura (metros)
-                </label>
-                <Input
-                  id="height"
-                  type="number"
-                  step="0.01"
-                  placeholder="Ex: 1.90"
-                  aria-label="Altura"
-                  value={height}
-                  onChange={(e) => setHeight(e.target.value)}
-                />
-              </div>
+            <div className="space-y-6">
+              <DimensionSlider
+                id="width"
+                label="Largura"
+                value={width}
+                onChange={setWidth}
+                min={0.3}
+                max={6.0}
+                step={0.05}
+                unit="m"
+                presets={[0.5, 1.0, 1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]}
+                showPresets={true}
+              />
+              <DimensionSlider
+                id="height"
+                label="Altura"
+                value={height}
+                onChange={setHeight}
+                min={0.3}
+                max={6.0}
+                step={0.05}
+                unit="m"
+                presets={[0.5, 1.0, 1.5, 1.8, 2.0, 2.2, 2.5, 3.0]}
+                showPresets={true}
+              />
             </div>
           )}
 

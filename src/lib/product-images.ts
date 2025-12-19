@@ -1,8 +1,8 @@
 /**
- * Product Images Library
+ * Product Images Library - ATUALIZADO COM IMAGENS REAIS
  *
  * Reference images for glass products to help users visualize options
- * Images are placeholder URLs - replace with actual product photos
+ * Images organizadas por categoria em /public/images/products/
  */
 
 export interface ProductImage {
@@ -15,7 +15,7 @@ export interface ProductImage {
 }
 
 // ============================================================================
-// IMAGE DATABASE
+// IMAGE DATABASE - IMAGENS REAIS
 // ============================================================================
 
 /**
@@ -23,28 +23,11 @@ export interface ProductImage {
  */
 export const BOX_IMAGES: ProductImage[] = [
   {
-    id: 'box-frontal',
-    url: '/images/products/box-frontal.jpg',
-    alt: 'Box Frontal em Vidro Temperado',
+    id: 'box-banheiro-1',
+    url: '/images/products/box/box-de-vidro-para-banheiro-2.webp',
+    alt: 'Box de Vidro para Banheiro',
     category: 'BOX',
-    subcategory: 'FRONTAL',
-    description: 'Box frontal com 1 ou 2 folhas de correr',
-  },
-  {
-    id: 'box-canto',
-    url: '/images/products/box-canto.jpg',
-    alt: 'Box de Canto em Vidro Temperado',
-    category: 'BOX',
-    subcategory: 'CANTO',
-    description: 'Box de canto em L com portas de correr',
-  },
-  {
-    id: 'box-articulado',
-    url: '/images/products/box-articulado.jpg',
-    alt: 'Box Articulado com Dobradiças',
-    category: 'BOX',
-    subcategory: 'ARTICULADO',
-    description: 'Box com porta de abrir em dobradiças',
+    description: 'Box frontal de vidro temperado com perfis de alumínio',
   },
 ]
 
@@ -53,72 +36,61 @@ export const BOX_IMAGES: ProductImage[] = [
  */
 export const MIRROR_IMAGES: ProductImage[] = [
   {
-    id: 'mirror-comum',
-    url: '/images/products/espelho-comum.jpg',
-    alt: 'Espelho Comum sem Moldura',
+    id: 'espelho-decorativo-1',
+    url: '/images/products/espelhos/decorative-wall-mirrors-14.webp',
+    alt: 'Espelho Decorativo de Parede',
     category: 'ESPELHOS',
-    subcategory: 'COMUM',
-    description: 'Espelho tradicional com borda polida',
+    subcategory: 'DECORATIVO',
+    description: 'Espelho decorativo com moldura sofisticada',
   },
   {
-    id: 'mirror-bronze',
-    url: '/images/products/espelho-bronze.jpg',
-    alt: 'Espelho Bronze',
+    id: 'espelho-grande-1',
+    url: '/images/products/espelhos/espelho-grande-13.webp',
+    alt: 'Espelho Grande para Sala',
     category: 'ESPELHOS',
-    subcategory: 'BRONZE',
-    description: 'Espelho com tonalidade bronze',
+    description: 'Espelho grande ideal para ambientes amplos',
   },
   {
-    id: 'mirror-bisote',
-    url: '/images/products/espelho-bisote.jpg',
-    alt: 'Espelho com Bisotê',
+    id: 'espelho-grande-2',
+    url: '/images/products/espelhos/espelho-grande-37.webp',
+    alt: 'Espelho Grande Bisotado',
     category: 'ESPELHOS',
-    description: 'Espelho com acabamento bisotê nas bordas',
+    subcategory: 'BISOTE',
+    description: 'Espelho grande com acabamento bisotê',
   },
   {
-    id: 'mirror-led',
-    url: '/images/products/espelho-led.jpg',
-    alt: 'Espelho com LED',
+    id: 'espelho-grande-3',
+    url: '/images/products/espelhos/espelho-grande-51.webp',
+    alt: 'Espelho Grande Moderno',
     category: 'ESPELHOS',
-    description: 'Espelho com iluminação LED integrada',
+    description: 'Espelho grande com design contemporâneo',
+  },
+  {
+    id: 'espelho-grande-4',
+    url: '/images/products/espelhos/espelho-grande-57.jpg',
+    alt: 'Espelho Grande Retangular',
+    category: 'ESPELHOS',
+    description: 'Espelho retangular grande para parede',
+  },
+  {
+    id: 'espelho-sala-1',
+    url: '/images/products/espelhos/espelho-para-sala-13.webp',
+    alt: 'Espelho para Sala de Estar',
+    category: 'ESPELHOS',
+    description: 'Espelho decorativo ideal para sala',
   },
 ]
 
 /**
- * Door types reference images
+ * Door types reference images - PLACEHOLDERS (adicionar fotos reais)
  */
 export const DOOR_IMAGES: ProductImage[] = [
   {
-    id: 'door-abrir',
-    url: '/images/products/porta-abrir.jpg',
-    alt: 'Porta de Abrir em Vidro Temperado',
+    id: 'door-placeholder-1',
+    url: '/images/products/geral/architecture-1048092-1920-1536x1152.jpg',
+    alt: 'Porta de Vidro em Projeto Arquitetônico',
     category: 'PORTAS',
-    subcategory: 'ABRIR',
-    description: 'Porta de abrir com dobradiças',
-  },
-  {
-    id: 'door-correr',
-    url: '/images/products/porta-correr.jpg',
-    alt: 'Porta de Correr em Vidro',
-    category: 'PORTAS',
-    subcategory: 'CORRER',
-    description: 'Porta de correr sobre trilho',
-  },
-  {
-    id: 'door-pivotante',
-    url: '/images/products/porta-pivotante.jpg',
-    alt: 'Porta Pivotante em Vidro',
-    category: 'PORTAS',
-    subcategory: 'PIVOTANTE',
-    description: 'Porta pivotante com eixo central ou deslocado',
-  },
-  {
-    id: 'door-camarao',
-    url: '/images/products/porta-camarao.jpg',
-    alt: 'Porta Camarão',
-    category: 'PORTAS',
-    subcategory: 'CAMARAO',
-    description: 'Porta sanfonada tipo camarão',
+    description: 'Exemplo de porta de vidro em ambiente comercial',
   },
 ]
 
@@ -127,36 +99,12 @@ export const DOOR_IMAGES: ProductImage[] = [
  */
 export const WINDOW_IMAGES: ProductImage[] = [
   {
-    id: 'window-fixa',
-    url: '/images/products/janela-fixa.jpg',
-    alt: 'Janela Fixa',
-    category: 'JANELAS',
-    subcategory: 'FIXA',
-    description: 'Janela fixa sem abertura',
-  },
-  {
-    id: 'window-maximar',
-    url: '/images/products/janela-maximar.jpg',
-    alt: 'Janela Maxim-Ar',
-    category: 'JANELAS',
-    subcategory: 'MAXIM_AR',
-    description: 'Janela maxim-ar com abertura para fora',
-  },
-  {
-    id: 'window-basculante',
-    url: '/images/products/janela-basculante.jpg',
-    alt: 'Janela Basculante',
-    category: 'JANELAS',
-    subcategory: 'BASCULANTE',
-    description: 'Janela basculante horizontal',
-  },
-  {
-    id: 'window-correr',
-    url: '/images/products/janela-correr.jpg',
-    alt: 'Janela de Correr',
+    id: 'janela-aluminio-1',
+    url: '/images/products/janelas/ventana-aluminio-sabadell.jpg',
+    alt: 'Janela de Alumínio e Vidro',
     category: 'JANELAS',
     subcategory: 'CORRER',
-    description: 'Janela de correr com 2 ou mais folhas',
+    description: 'Janela de correr em alumínio com vidro temperado',
   },
 ]
 
@@ -165,27 +113,12 @@ export const WINDOW_IMAGES: ProductImage[] = [
  */
 export const GUARD_RAIL_IMAGES: ProductImage[] = [
   {
-    id: 'guardrail-vidro',
-    url: '/images/products/guarda-corpo-vidro.jpg',
-    alt: 'Guarda-Corpo em Vidro Laminado',
-    category: 'GUARDA_CORPO',
-    subcategory: 'VIDRO',
-    description: 'Guarda-corpo de vidro com perfis de alumínio',
-  },
-  {
-    id: 'guardrail-inox',
-    url: '/images/products/guarda-corpo-inox.jpg',
-    alt: 'Guarda-Corpo Inox com Vidro',
+    id: 'guarda-corpo-1',
+    url: '/images/products/guarda-corpo/barandilla-2.jpg',
+    alt: 'Guarda-Corpo em Vidro e Inox',
     category: 'GUARDA_CORPO',
     subcategory: 'INOX',
-    description: 'Guarda-corpo com estrutura em inox e vidro',
-  },
-  {
-    id: 'guardrail-corrimao',
-    url: '/images/products/guarda-corpo-corrimao.jpg',
-    alt: 'Guarda-Corpo com Corrimão',
-    category: 'GUARDA_CORPO',
-    description: 'Guarda-corpo com corrimão superior em inox',
+    description: 'Guarda-corpo moderno com vidro laminado e estrutura inox',
   },
 ]
 
@@ -194,18 +127,18 @@ export const GUARD_RAIL_IMAGES: ProductImage[] = [
  */
 export const GLASS_CURTAIN_IMAGES: ProductImage[] = [
   {
-    id: 'curtain-varanda',
-    url: '/images/products/cortina-vidro-varanda.jpg',
+    id: 'cortina-vidro-1',
+    url: '/images/products/vidros/cortina-cristal-1.jpg',
     alt: 'Cortina de Vidro para Varanda',
     category: 'CORTINAS_VIDRO',
-    description: 'Sistema de cortina de vidro retrátil',
+    description: 'Sistema de cortina de vidro retrátil para varanda',
   },
   {
-    id: 'curtain-completa',
-    url: '/images/products/cortina-vidro-completa.jpg',
+    id: 'cortina-vidro-2',
+    url: '/images/products/vidros/cortina-cristal-2.jpg',
     alt: 'Cortina de Vidro Instalada',
     category: 'CORTINAS_VIDRO',
-    description: 'Cortina de vidro com todas as folhas fechadas',
+    description: 'Cortina de vidro com folhas em operação',
   },
 ]
 
@@ -214,18 +147,18 @@ export const GLASS_CURTAIN_IMAGES: ProductImage[] = [
  */
 export const PERGOLA_IMAGES: ProductImage[] = [
   {
-    id: 'pergola-vidro',
-    url: '/images/products/pergola-vidro.jpg',
-    alt: 'Pergolado em Vidro Laminado',
+    id: 'cobertura-vidro-1',
+    url: '/images/products/vidros/cobertura-em-vidro-temperado-laminado-com-duponttm.jpg',
+    alt: 'Cobertura em Vidro Temperado Laminado',
     category: 'PERGOLADOS',
-    description: 'Cobertura em vidro com estrutura de alumínio',
+    description: 'Cobertura premium com vidro laminado DuPont SentryGlas',
   },
   {
-    id: 'pergola-estrutura',
-    url: '/images/products/pergola-estrutura.jpg',
-    alt: 'Estrutura de Pergolado',
+    id: 'cobertura-vidro-2',
+    url: '/images/products/vidros/cobertura-em-vidro-temperado-d-nq-np-761910-mlb255.jpg',
+    alt: 'Pergolado em Vidro Temperado',
     category: 'PERGOLADOS',
-    description: 'Detalhes da estrutura e fixação do pergolado',
+    description: 'Estrutura de pergolado com cobertura em vidro',
   },
 ]
 
@@ -234,20 +167,36 @@ export const PERGOLA_IMAGES: ProductImage[] = [
  */
 export const SHELF_IMAGES: ProductImage[] = [
   {
-    id: 'tampo-mesa',
-    url: '/images/products/tampo-mesa-vidro.jpg',
-    alt: 'Tampo de Mesa em Vidro Temperado',
+    id: 'tampo-mesa-1',
+    url: '/images/products/tampos/tables-cedar-1186z.jpg',
+    alt: 'Tampo de Mesa em Vidro',
     category: 'TAMPOS_PRATELEIRAS',
     subcategory: 'TAMPO',
-    description: 'Tampo de mesa redondo ou retangular',
+    description: 'Tampo de mesa em vidro temperado',
   },
   {
-    id: 'prateleira-vidro',
-    url: '/images/products/prateleira-vidro.jpg',
-    alt: 'Prateleira de Vidro',
+    id: 'mesa-vidro-1',
+    url: '/images/products/tampos/mesas-vital-gallery-31.jpg',
+    alt: 'Mesa com Tampo de Vidro',
     category: 'TAMPOS_PRATELEIRAS',
-    subcategory: 'PRATELEIRA',
-    description: 'Prateleira de vidro com suportes invisíveis',
+    subcategory: 'TAMPO',
+    description: 'Mesa decorativa com tampo de vidro',
+  },
+  {
+    id: 'cristal-mesa-1',
+    url: '/images/products/vidros/cristal-para-mesa.jpg',
+    alt: 'Cristal para Mesa',
+    category: 'TAMPOS_PRATELEIRAS',
+    subcategory: 'TAMPO',
+    description: 'Tampo de cristal temperado para mesa',
+  },
+  {
+    id: 'cristal-mesa-2',
+    url: '/images/products/vidros/cristal-para-mesa-de-interior-2.jpg',
+    alt: 'Cristal para Mesa de Interior',
+    category: 'TAMPOS_PRATELEIRAS',
+    subcategory: 'TAMPO',
+    description: 'Tampo de cristal para ambientes internos',
   },
 ]
 
@@ -256,20 +205,12 @@ export const SHELF_IMAGES: ProductImage[] = [
  */
 export const PARTITION_IMAGES: ProductImage[] = [
   {
-    id: 'divisoria-piso-teto',
-    url: '/images/products/divisoria-piso-teto.jpg',
-    alt: 'Divisória Piso-Teto',
+    id: 'divisoria-escritorio-1',
+    url: '/images/products/divisorias/divisoria-de-escritorio-site-e1575370609135.jpg',
+    alt: 'Divisória de Escritório em Vidro',
     category: 'DIVISORIAS',
-    subcategory: 'PISO_TETO',
-    description: 'Divisória de vidro piso-teto com perfis',
-  },
-  {
-    id: 'divisoria-porta',
-    url: '/images/products/divisoria-porta.jpg',
-    alt: 'Divisória com Porta',
-    category: 'DIVISORIAS',
-    subcategory: 'COM_PORTA',
-    description: 'Divisória de vidro com porta integrada',
+    subcategory: 'ESCRITORIO',
+    description: 'Divisória de vidro para ambientes corporativos',
   },
 ]
 
@@ -278,51 +219,109 @@ export const PARTITION_IMAGES: ProductImage[] = [
  */
 export const CLOSURE_IMAGES: ProductImage[] = [
   {
-    id: 'fechamento-varanda',
-    url: '/images/products/fechamento-varanda.jpg',
-    alt: 'Fechamento de Varanda',
+    id: 'fechamento-sacada-1',
+    url: '/images/products/fechamentos/envidra-amento-de-sacada.jpg',
+    alt: 'Fechamento de Sacada em Vidro',
     category: 'FECHAMENTOS',
-    subcategory: 'VARANDA',
-    description: 'Fechamento completo de varanda em vidro',
-  },
-  {
-    id: 'fechamento-piscina',
-    url: '/images/products/fechamento-piscina.jpg',
-    alt: 'Fechamento de Piscina',
-    category: 'FECHAMENTOS',
-    subcategory: 'PISCINA',
-    description: 'Fechamento de área de piscina para segurança',
+    subcategory: 'SACADA',
+    description: 'Envidraçamento completo de sacada',
   },
 ]
 
 /**
- * Hardware reference images
+ * Vidros diversos - Exemplos de produtos e aplicações
+ */
+export const GLASS_EXAMPLES: ProductImage[] = [
+  {
+    id: 'cristal-porta-1',
+    url: '/images/products/vidros/cristal-para-puerta-interior.jpg',
+    alt: 'Cristal para Porta Interior',
+    category: 'VIDROS',
+    description: 'Vidro temperado para porta interna',
+  },
+  {
+    id: 'cristales-medida-1',
+    url: '/images/products/vidros/cristales-a-medida.jpg',
+    alt: 'Cristais sob Medida',
+    category: 'VIDROS',
+    description: 'Vidros temperados cortados sob medida',
+  },
+  {
+    id: 'cristales-medida-2',
+    url: '/images/products/vidros/cristales-a-medida-1.png',
+    alt: 'Vidros Personalizados',
+    category: 'VIDROS',
+    description: 'Vidros personalizados para diversos projetos',
+  },
+  {
+    id: 'cristales-medida-3',
+    url: '/images/products/vidros/cristales-a-medida-2.png',
+    alt: 'Vidros Sob Encomenda',
+    category: 'VIDROS',
+    description: 'Vidros fabricados sob encomenda',
+  },
+]
+
+/**
+ * Imagens gerais - Arquitetura e Aplicações
+ */
+export const GENERAL_IMAGES: ProductImage[] = [
+  {
+    id: 'arquitetura-vidro-1',
+    url: '/images/products/geral/architecture-1048092-1920-1536x1152.jpg',
+    alt: 'Arquitetura com Vidro',
+    category: 'GERAL',
+    description: 'Projeto arquitetônico moderno com vidro',
+  },
+  {
+    id: 'fachada-comercial-1',
+    url: '/images/products/geral/building-91228-1920.jpg',
+    alt: 'Fachada Comercial em Vidro',
+    category: 'GERAL',
+    description: 'Edifício comercial com fachada de vidro',
+  },
+  {
+    id: 'shopping-1',
+    url: '/images/products/geral/shopping-arcade-1214815-1920.jpg',
+    alt: 'Shopping com Vidro',
+    category: 'GERAL',
+    description: 'Galeria de shopping com cobertura em vidro',
+  },
+  {
+    id: 'shopping-mall-1',
+    url: '/images/products/geral/shopping-mall-906734-1920-1536x1043.jpg',
+    alt: 'Shopping Center',
+    category: 'GERAL',
+    description: 'Interior de shopping com estruturas de vidro',
+  },
+  {
+    id: 'vitrine-1',
+    url: '/images/products/geral/showcase-g01b6a45e8-1920.jpg',
+    alt: 'Vitrine de Vidro',
+    category: 'GERAL',
+    description: 'Vitrine comercial em vidro temperado',
+  },
+  {
+    id: 'loja-1',
+    url: '/images/products/geral/store-832188-1920-1536x1024.jpg',
+    alt: 'Fachada de Loja',
+    category: 'GERAL',
+    description: 'Fachada de loja com vidro e iluminação',
+  },
+  {
+    id: 'urban-1',
+    url: '/images/products/geral/urban-2004494-1920.jpg',
+    alt: 'Arquitetura Urbana',
+    category: 'GERAL',
+    description: 'Projeto urbano com vidro estrutural',
+  },
+]
+
+/**
+ * Hardware reference images - PLACEHOLDERS (adicionar fotos reais)
  */
 export const HARDWARE_IMAGES: ProductImage[] = [
-  {
-    id: 'hardware-dobradica',
-    url: '/images/products/dobradica.jpg',
-    alt: 'Dobradiças para Vidro',
-    category: 'FERRAGENS',
-    subcategory: 'DOBRADICA',
-    description: 'Dobradiças para porta de vidro',
-  },
-  {
-    id: 'hardware-puxador',
-    url: '/images/products/puxador.jpg',
-    alt: 'Puxadores Diversos',
-    category: 'FERRAGENS',
-    subcategory: 'PUXADOR',
-    description: 'Puxadores tubulares e tipo H',
-  },
-  {
-    id: 'hardware-fechadura',
-    url: '/images/products/fechadura.jpg',
-    alt: 'Fechaduras para Vidro',
-    category: 'FERRAGENS',
-    subcategory: 'FECHADURA',
-    description: 'Fechaduras e trincos para porta de vidro',
-  },
+  // Aguardando fotos reais de ferragens
 ]
 
 // ============================================================================
@@ -344,6 +343,8 @@ export function getImagesForCategory(category: string): ProductImage[] {
     ...SHELF_IMAGES,
     ...PARTITION_IMAGES,
     ...CLOSURE_IMAGES,
+    ...GLASS_EXAMPLES,
+    ...GENERAL_IMAGES,
     ...HARDWARE_IMAGES,
   ]
 
@@ -372,6 +373,8 @@ export function getImageById(id: string): ProductImage | undefined {
     ...SHELF_IMAGES,
     ...PARTITION_IMAGES,
     ...CLOSURE_IMAGES,
+    ...GLASS_EXAMPLES,
+    ...GENERAL_IMAGES,
     ...HARDWARE_IMAGES,
   ]
 
@@ -383,6 +386,19 @@ export function getImageById(id: string): ProductImage | undefined {
  */
 export function getSampleImages(category: string, count: number = 3): ProductImage[] {
   const images = getImagesForCategory(category)
+
+  // Se não tiver imagens específicas, usar imagens gerais
+  if (images.length === 0) {
+    return GENERAL_IMAGES.slice(0, Math.min(count, GENERAL_IMAGES.length))
+  }
+
   const shuffled = [...images].sort(() => Math.random() - 0.5)
   return shuffled.slice(0, Math.min(count, images.length))
+}
+
+/**
+ * Get fallback images when category has no specific images
+ */
+export function getFallbackImages(count: number = 3): ProductImage[] {
+  return GENERAL_IMAGES.slice(0, Math.min(count, GENERAL_IMAGES.length))
 }
