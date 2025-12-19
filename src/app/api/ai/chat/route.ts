@@ -368,7 +368,7 @@ async function extractQuoteDataFromConversation(
   try {
     // Build conversation text
     const conversationText = messages
-      .map((msg) => `${msg.role === 'USER' ? 'Cliente' : 'Assistente'}: ${msg.content}`)
+      .map((msg) => `${msg.role === 'user' ? 'Cliente' : 'Assistente'}: ${msg.content}`)
       .join('\n')
 
     const extractionCompletion = await groq.chat.completions.create({
@@ -584,7 +584,6 @@ export async function POST(request: Request) {
       conversation = await prisma.aiConversation.create({
         data: {
           sessionId: sessionId || `anon-${Date.now()}`,
-          userId,
           status: 'ACTIVE',
         },
         include: {
@@ -622,7 +621,7 @@ export async function POST(request: Request) {
     await prisma.aiMessage.create({
       data: {
         conversationId: conversation.id,
-        role: 'USER',
+        role: 'user',
         content: message,
         imageUrl: imageUrl || null,
       },
@@ -705,7 +704,7 @@ export async function POST(request: Request) {
     await prisma.aiMessage.create({
       data: {
         conversationId: conversation.id,
-        role: 'ASSISTANT',
+        role: 'assistant',
         content: assistantMessage,
         metadata: {
           model: modelUsed,
@@ -723,7 +722,7 @@ export async function POST(request: Request) {
       {
         id: 'temp',
         conversationId: conversation.id,
-        role: 'USER' as const,
+        role: 'user' as const,
         content: message,
         createdAt: new Date(),
         imageUrl: null,
@@ -732,7 +731,7 @@ export async function POST(request: Request) {
       {
         id: 'temp',
         conversationId: conversation.id,
-        role: 'ASSISTANT' as const,
+        role: 'assistant' as const,
         content: assistantMessage,
         createdAt: new Date(),
         imageUrl: null,
