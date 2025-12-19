@@ -139,7 +139,16 @@
       "Bash(git checkout:*)",
       "Bash(node test-user.mjs:*)",
       "Bash(node test-quote-creation.mjs:*)",
-      "Bash(node diagnose-quote-error.mjs:*)"
+      "Bash(node diagnose-quote-error.mjs:*)",
+      "Bash(powershell -Command \"\\(Invoke-WebRequest -Uri ''http://localhost:3000/debug-quote.html'' -UseBasicParsing\\).StatusCode\")",
+      "Bash(timeout //t 5 //nobreak)",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 5; netstat -ano | Select-String '':3000''\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 10; netstat -ano | Select-String '':3000''\")",
+      "Bash(python integrate-phase3.py:*)",
+      "Bash(iconv:*)",
+      "Bash(timeout 30 npx tsc:*)",
+      "Bash(pnpm list:*)",
+      "Bash(node test-phase4-integration.mjs:*)"
     ]
   }
 }

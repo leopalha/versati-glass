@@ -163,6 +163,20 @@ export async function POST(request: Request) {
     // Create or get user
     let userId = session?.user?.id
 
+    // Validate that userId exists in database if provided by session
+    if (userId) {
+      const userExists = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true },
+      })
+
+      if (!userExists) {
+        logger.warn('[API /quotes POST] Session userId not found in database', { userId })
+        // Reset userId to force user lookup/creation by email
+        userId = undefined
+      }
+    }
+
     if (!userId) {
       // Check if user exists with this email
       let user = await prisma.user.findUnique({

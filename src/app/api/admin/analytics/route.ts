@@ -55,7 +55,7 @@ export async function GET(request: Request) {
     // Calculate metrics
     const totalConversations = webChats.length + whatsappChats.length
     const linkedConversations = webChats.filter(
-      (c) => c.linkedPhone || c.whatsappConversationId
+      (c) => c.quoteId !== null
     ).length
     const linkingRate =
       totalConversations > 0 ? (linkedConversations / totalConversations) * 100 : 0
@@ -102,15 +102,13 @@ export async function GET(request: Request) {
           (allMessages.length - 1)
         : 0
 
-    // Cross-channel analytics
-    const startedWeb = webChats.filter((c) => !c.whatsappConversationId).length
-    const startedWhatsApp = whatsappChats.filter((c) => !c.websiteChatId).length
-    const switchedChannels =
-      webChats.filter((c) => c.whatsappConversationId).length +
-      whatsappChats.filter((c) => c.websiteChatId).length
+    // Cross-channel analytics (simplified without linking fields)
+    const startedWeb = webChats.length
+    const startedWhatsApp = whatsappChats.length
+    const switchedChannels = 0 // Feature not implemented yet
 
     // Simplified: assume cross-channel has higher conversion
-    const completedCrossChannel = Math.floor(switchedChannels * 0.7) // 70% conversion for cross-channel
+    const completedCrossChannel = 0 // Feature not implemented yet
 
     // Timeline data (daily aggregation)
     const timeline: Array<{

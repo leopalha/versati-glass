@@ -1,0 +1,29 @@
+# NOVAS CREDENCIAIS GOOGLE - VERSATI GLASS
+
+## OAUTH (Login com Google)
+
+ID do Cliente OAuth:
+[COLE AQUI O ID DO CLIENTE]
+
+Chave Secreta do Cliente:
+[COLE AQUI A CHAVE SECRETA]
+
+
+## CALENDAR (depois de criar Service Account)
+
+ID do Calendário:
+[COLE AQUI O ID DO CALENDARIO]
+
+Email da Service Account:
+[COLE AQUI O EMAIL]
+
+Private Key:
+[COLE AQUI A PRIVATE KEY DO ARQUIVO JSON]
+
+
+## INSTRUÇÕES
+
+1. Copie o ID do Cliente e a Chave Secreta que aparecerem na tela
+2. Cole aqui neste arquivo
+3. Me avise quando estiver pronto
+4. Vou atualizar o .env automaticamente para você

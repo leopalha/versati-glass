@@ -2,6 +2,7 @@ import { type NextAuthConfig } from 'next-auth'
 import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
 import Credentials from 'next-auth/providers/credentials'
+import { PrismaAdapter } from '@auth/prisma-adapter'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
@@ -43,6 +44,7 @@ const isGoogleConfigured =
   process.env.GOOGLE_CLIENT_ID.endsWith('.apps.googleusercontent.com')
 
 export const authConfig: NextAuthConfig = {
+  adapter: PrismaAdapter(prisma),
   trustHost: true,
   session: {
     strategy: 'jwt',
@@ -119,14 +121,29 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, trigger, session, account }) {
       logger.debug('[AUTH] JWT callback', { hasUser: !!user, trigger })
 
       if (user) {
-        token.id = user.id as string
-        token.role = user.role
-        token.phone = user.phone
-        logger.debug('[AUTH] JWT - User added to token', { userId: user.id, role: user.role })
+        // For OAuth users, fetch role from database
+        if (account?.provider === 'google') {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: user.email?.toLowerCase() },
+            select: { id: true, role: true, phone: true },
+          })
+
+          if (dbUser) {
+            token.id = dbUser.id
+            token.role = dbUser.role
+            token.phone = dbUser.phone
+          }
+        } else {
+          // For credentials users
+          token.id = user.id as string
+          token.role = user.role
+          token.phone = user.phone
+        }
+        logger.debug('[AUTH] JWT - User added to token', { userId: token.id, role: token.role })
       }
 
       // Handle session updates
@@ -148,14 +165,43 @@ export const authConfig: NextAuthConfig = {
       }
       return session
     },
-    async signIn({ user, account }) {
-      logger.debug('[AUTH] SignIn callback', { provider: account?.provider, userId: user?.id })
+    async signIn({ user, account, profile }) {
+      logger.debug('[AUTH] SignIn callback', {
+        provider: account?.provider,
+        userId: user?.id,
+        email: user?.email
+      })
 
-      // Allow OAuth sign in
-      if (account?.provider !== 'credentials') {
-        return true
+      // Handle OAuth sign in (Google)
+      if (account?.provider === 'google') {
+        try {
+          // Check if user exists in our database
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email?.toLowerCase() },
+          })
+
+          if (!existingUser) {
+            // Create new user with CUSTOMER role
+            await prisma.user.create({
+              data: {
+                email: user.email!.toLowerCase(),
+                name: user.name || 'Usuário Google',
+                role: 'CUSTOMER',
+                emailVerified: new Date(),
+                image: user.image,
+                provider: 'GOOGLE',
+              },
+            })
+            logger.debug('[AUTH] New Google user created', { email: user.email })
+          } else {
+            logger.debug('[AUTH] Existing Google user found', { email: user.email, role: existingUser.role })
+          }
+        } catch (error) {
+          logger.error('[AUTH] Error handling Google sign in', { error })
+          return false
+        }
       }
-      // Credentials sign in handled in authorize
+
       return true
     },
   },

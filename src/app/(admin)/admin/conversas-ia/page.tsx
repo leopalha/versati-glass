@@ -34,11 +34,11 @@ export default async function AdminConversasIAPage() {
         orderBy: { createdAt: 'desc' },
         take: 1,
       },
-      user: {
+      quote: {
         select: {
           id: true,
-          name: true,
-          email: true,
+          number: true,
+          status: true,
         },
       },
       _count: {
@@ -157,7 +157,7 @@ export default async function AdminConversasIAPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-4">
                         <div className="bg-accent-500/20 flex h-12 w-12 items-center justify-center rounded-full">
-                          {conversation.user ? (
+                          {conversation.customerName ? (
                             <User className="h-6 w-6 text-accent-500" />
                           ) : (
                             <Bot className="h-6 w-6 text-accent-500" />
@@ -166,7 +166,7 @@ export default async function AdminConversasIAPage() {
                         <div>
                           <div className="flex items-center gap-2">
                             <p className="font-medium text-white">
-                              {conversation.user?.name || 'Visitante Anonimo'}
+                              {conversation.customerName || 'Visitante Anônimo'}
                             </p>
                             <span
                               className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${statusInfo.color}`}
@@ -176,12 +176,13 @@ export default async function AdminConversasIAPage() {
                             </span>
                           </div>
                           <p className="text-sm text-neutral-700">
-                            {conversation.user?.email ||
-                              `Sessao: ${conversation.sessionId.slice(0, 20)}...`}
+                            {conversation.customerEmail ||
+                              conversation.customerPhone ||
+                              `Sessão: ${conversation.sessionId.slice(0, 20)}...`}
                           </p>
                           {lastMessage && (
                             <p className="mt-1 line-clamp-1 text-sm text-neutral-600">
-                              {lastMessage.role === 'ASSISTANT' && (
+                              {lastMessage.role === 'assistant' && (
                                 <span className="text-accent-500">IA: </span>
                               )}
                               {lastMessage.content.slice(0, 100)}

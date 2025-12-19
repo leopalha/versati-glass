@@ -41,12 +41,12 @@ export default async function ConversaIADetailPage({ params }: PageProps) {
       messages: {
         orderBy: { createdAt: 'asc' },
       },
-      user: {
+      quote: {
         select: {
           id: true,
-          name: true,
-          email: true,
-          phone: true,
+          number: true,
+          status: true,
+          total: true,
         },
       },
     },
@@ -60,8 +60,8 @@ export default async function ConversaIADetailPage({ params }: PageProps) {
   const StatusIcon = statusInfo.icon
 
   // Calcular estatisticas
-  const userMessages = conversation.messages.filter((m) => m.role === 'USER')
-  const aiMessages = conversation.messages.filter((m) => m.role === 'ASSISTANT')
+  const userMessages = conversation.messages.filter((m) => m.role === 'user')
+  const aiMessages = conversation.messages.filter((m) => m.role === 'assistant')
   const imagesCount = conversation.messages.filter((m) => m.imageUrl).length
 
   // Extrair metadata dos tokens
@@ -112,13 +112,13 @@ export default async function ConversaIADetailPage({ params }: PageProps) {
               <div>
                 <p className="text-sm text-neutral-700">Cliente</p>
                 <p className="font-medium text-white">
-                  {conversation.user?.name || 'Visitante Anonimo'}
+                  {conversation.customerName || 'Visitante Anônimo'}
                 </p>
-                {conversation.user?.email && (
-                  <p className="text-sm text-neutral-600">{conversation.user.email}</p>
+                {conversation.customerEmail && (
+                  <p className="text-sm text-neutral-600">{conversation.customerEmail}</p>
                 )}
-                {conversation.user?.phone && (
-                  <p className="text-sm text-neutral-600">{conversation.user.phone}</p>
+                {conversation.customerPhone && (
+                  <p className="text-sm text-neutral-600">{conversation.customerPhone}</p>
                 )}
               </div>
 
@@ -208,14 +208,14 @@ export default async function ConversaIADetailPage({ params }: PageProps) {
                   return (
                     <div
                       key={message.id}
-                      className={`flex gap-3 ${message.role === 'USER' ? 'flex-row-reverse' : ''}`}
+                      className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
                     >
                       <div
                         className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
-                          message.role === 'USER' ? 'bg-neutral-600' : 'bg-accent-500/20'
+                          message.role === 'user' ? 'bg-neutral-600' : 'bg-accent-500/20'
                         }`}
                       >
-                        {message.role === 'USER' ? (
+                        {message.role === 'user' ? (
                           <User className="h-4 w-4 text-neutral-300" />
                         ) : (
                           <Bot className="h-4 w-4 text-accent-500" />
@@ -224,7 +224,7 @@ export default async function ConversaIADetailPage({ params }: PageProps) {
 
                       <div
                         className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                          message.role === 'USER'
+                          message.role === 'user'
                             ? 'bg-accent-500 text-neutral-900'
                             : 'bg-neutral-200 text-white'
                         }`}

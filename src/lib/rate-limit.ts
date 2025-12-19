@@ -135,11 +135,12 @@ function getClientIP(request: Request): string {
 export const RateLimitPresets = {
   /**
    * Strict rate limit for quote creation
-   * 5 requests per 15 minutes per IP
+   * In development: 50 requests per 5 minutes
+   * In production: 5 requests per 15 minutes per IP
    */
   QUOTE_CREATION: {
-    maxRequests: 5,
-    windowSeconds: 15 * 60, // 15 minutes
+    maxRequests: process.env.NODE_ENV === 'development' ? 50 : 5,
+    windowSeconds: process.env.NODE_ENV === 'development' ? 5 * 60 : 15 * 60,
   },
 
   /**

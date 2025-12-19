@@ -4,22 +4,23 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function testAdminLogin() {
-  const email = 'admin@versatiglass.com'
+  const emails = ['admin@versatiglass.com', 'admin@versatiglass.com.br']
   const testPassword = 'admin123'
 
-  console.log(`\n🔍 Testing admin login for: ${email}`)
-  console.log(`📝 Test password: ${testPassword}`)
-  console.log('─'.repeat(50))
+  for (const email of emails) {
+    console.log(`\n🔍 Testing admin login for: ${email}`)
+    console.log(`📝 Test password: ${testPassword}`)
+    console.log('─'.repeat(50))
 
-  // Find user
-  const user = await prisma.user.findUnique({
-    where: { email: email.toLowerCase() },
-  })
+    // Find user
+    const user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+    })
 
-  if (!user) {
-    console.log('❌ User not found in database!')
-    return
-  }
+    if (!user) {
+      console.log('❌ User not found in database!')
+      continue
+    }
 
   console.log('✅ User found:')
   console.log(`   ID: ${user.id}`)
@@ -59,6 +60,7 @@ async function testAdminLogin() {
 
   console.log('─'.repeat(50))
   console.log('✅ Test completed\n')
+  }
 }
 
 testAdminLogin()
