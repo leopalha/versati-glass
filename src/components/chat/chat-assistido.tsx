@@ -156,6 +156,9 @@ export function ChatAssistido({
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false)
   const { speak, stopSpeaking, isSpeaking } = useVoice({ language: 'pt-BR' })
 
+  // Progress bar minimize state
+  const [isProgressMinimized, setIsProgressMinimized] = useState(false)
+
   // OMNICHANNEL Sprint 1 - Task 4: Cross-channel notifications
   // Memoize onUpdate to prevent infinite loop
   const handleCrossChannelUpdate = useCallback((message: any) => {
@@ -384,7 +387,7 @@ export function ChatAssistido({
   }, [])
 
   // AI-CHAT Sprint P2.4: Handle product selection
-  const handleSelectProduct = useCallback((product: ProductSuggestion) => {
+  const handleSelectProduct = useCallback(async (product: ProductSuggestion) => {
     // Toggle selection
     setSelectedProductIds((prev) => {
       if (prev.includes(product.id)) {
@@ -393,13 +396,68 @@ export function ChatAssistido({
       return [...prev, product.id]
     })
 
-    // Set input with selection message (user can press Enter to send)
+    // Auto-send selection message
     const selectionMessage = `Selecionei o produto: ${product.name}`
-    setInput(selectionMessage)
 
-    // Focus input for user to send
-    inputRef.current?.focus()
-  }, [])
+    // Add user message immediately
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      role: 'USER',
+      content: selectionMessage,
+      createdAt: new Date().toISOString(),
+    }
+
+    setMessages((prev) => [...prev, userMessage])
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: selectionMessage,
+          conversationId,
+          sessionId,
+          imageBase64: null,
+          imageUrl: null,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Erro ao enviar mensagem')
+      }
+
+      const data = await response.json()
+
+      // Update conversationId if new conversation
+      if (data.conversationId && !conversationId) {
+        setConversationId(data.conversationId)
+      }
+
+      const assistantMessage: Message = {
+        id: `assistant-${Date.now()}`,
+        role: 'ASSISTANT',
+        content: data.message,
+        createdAt: new Date().toISOString(),
+      }
+
+      setMessages((prev) => [...prev, assistantMessage])
+    } catch {
+      // Add error message
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `error-${Date.now()}`,
+          role: 'ASSISTANT',
+          content:
+            'Desculpe, ocorreu um erro. Por favor, tente novamente ou entre em contato pelo WhatsApp.',
+          createdAt: new Date().toISOString(),
+        },
+      ])
+    } finally {
+      setIsLoading(false)
+    }
+  }, [conversationId, sessionId])
 
   // AI-CHAT Sprint P1.6 + P3.2: Check export status and update progress
   const checkExportStatus = useCallback(async () => {
@@ -775,22 +833,40 @@ export function ChatAssistido({
             {quoteProgress > 0 && (
               <div className="border-theme-default bg-theme-secondary border-b p-3">
                 <div className="space-y-2">
-                  {/* Progress Bar */}
+                  {/* Progress Bar - Header with Minimize Button */}
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-theme-subtle font-medium">Progresso do Orçamento</span>
-                    <span className="font-bold text-accent-500">{quoteProgress}%</span>
-                  </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-600">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-accent-500 to-gold-500"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${quoteProgress}%` }}
-                      transition={{ duration: 0.5, ease: 'easeOut' }}
-                    />
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-accent-500">{quoteProgress}%</span>
+                      <button
+                        onClick={() => setIsProgressMinimized(!isProgressMinimized)}
+                        className="rounded p-1 text-neutral-700 transition-colors hover:bg-neutral-600 hover:text-white"
+                        aria-label={isProgressMinimized ? 'Expandir progresso' : 'Minimizar progresso'}
+                        title={isProgressMinimized ? 'Expandir progresso' : 'Minimizar progresso'}
+                      >
+                        {isProgressMinimized ? (
+                          <Maximize2 className="h-3.5 w-3.5" />
+                        ) : (
+                          <Minimize2 className="h-3.5 w-3.5" />
+                        )}
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Checklist */}
-                  <div className="mt-3 grid grid-cols-3 gap-2">
+                  {/* Progress details - only show when not minimized */}
+                  {!isProgressMinimized && (
+                    <>
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-600">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-accent-500 to-gold-500"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${quoteProgress}%` }}
+                          transition={{ duration: 0.5, ease: 'easeOut' }}
+                        />
+                      </div>
+
+                      {/* Checklist */}
+                      <div className="mt-3 grid grid-cols-3 gap-2">
                     {/* Items Check */}
                     <div
                       className={cn(
@@ -843,17 +919,19 @@ export function ChatAssistido({
                     </div>
                   </div>
 
-                  {/* Next Steps Hint */}
-                  {quoteProgress > 0 && quoteProgress < 100 && (
-                    <p className="text-theme-subtle mt-2 text-xs">
-                      {quoteProgress < 40 && '💡 Próximo: Especifique produto e medidas'}
-                      {quoteProgress >= 40 &&
-                        quoteProgress < 80 &&
-                        '💡 Próximo: Forneça seus dados de contato'}
-                      {quoteProgress >= 80 &&
-                        quoteProgress < 100 &&
-                        '💡 Quase lá! Verifique se falta algo'}
-                    </p>
+                      {/* Next Steps Hint */}
+                      {quoteProgress > 0 && quoteProgress < 100 && (
+                        <p className="text-theme-subtle mt-2 text-xs">
+                          {quoteProgress < 40 && '💡 Próximo: Especifique produto e medidas'}
+                          {quoteProgress >= 40 &&
+                            quoteProgress < 80 &&
+                            '💡 Próximo: Forneça seus dados de contato'}
+                          {quoteProgress >= 80 &&
+                            quoteProgress < 100 &&
+                            '💡 Quase lá! Verifique se falta algo'}
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
