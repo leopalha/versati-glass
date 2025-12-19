@@ -704,7 +704,7 @@ export function ChatAssistido({
           // Responsivo: fullscreen no mobile, fixed size no desktop
           isMinimized
             ? 'bottom-4 h-14 w-72'
-            : 'bottom-0 left-0 right-0 h-[100dvh] w-full sm:bottom-4 sm:left-auto sm:right-4 sm:h-[500px] sm:max-h-[80vh] sm:w-[380px] sm:rounded-lg',
+            : 'bottom-0 left-0 right-0 h-[100dvh] w-full sm:bottom-4 sm:left-auto sm:right-4 sm:h-[600px] sm:max-h-[85vh] sm:w-[400px] sm:rounded-lg',
           // Remover border radius no mobile fullscreen
           !isMinimized && 'rounded-none sm:rounded-lg',
           className
@@ -1074,9 +1074,19 @@ export function ChatAssistido({
 
             {/* Input */}
             <div className="border-theme-default bg-theme-secondary rounded-b-lg border-t p-3">
+              {/* Input de arquivo oculto */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={handleImageSelect}
+                className="hidden"
+                aria-label="Selecionar imagem"
+              />
+
               {/* Preview da imagem selecionada */}
               {selectedImage && (
-                <div className="relative mb-2 inline-block">
+                <div className="relative mb-3 inline-block">
                   <img
                     src={selectedImage.preview}
                     alt="Imagem selecionada"
@@ -1092,22 +1102,13 @@ export function ChatAssistido({
                 </div>
               )}
 
-              <div className="flex items-center gap-2">
-                {/* Input de arquivo oculto */}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif"
-                  onChange={handleImageSelect}
-                  className="hidden"
-                  aria-label="Selecionar imagem"
-                />
-
+              {/* Botões de ação no topo */}
+              <div className="mb-2 flex items-center justify-center gap-2">
                 {/* Botao de anexar imagem */}
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isLoading || isUploadingImage}
-                  className="bg-theme-elevated text-theme-subtle flex-shrink-0 rounded-lg border border-neutral-600 p-2 transition-colors hover:border-accent-500 hover:text-accent-500 disabled:opacity-50"
+                  className="bg-theme-elevated text-theme-subtle flex items-center gap-2 rounded-lg border border-neutral-600 px-3 py-2 text-sm transition-colors hover:border-accent-500 hover:text-accent-500 disabled:opacity-50"
                   aria-label="Anexar imagem"
                   title="Enviar foto do espaço para análise"
                 >
@@ -1116,6 +1117,7 @@ export function ChatAssistido({
                   ) : (
                     <ImageIcon className="h-4 w-4" />
                   )}
+                  <span className="hidden sm:inline">Imagem</span>
                 </button>
 
                 {/* Voice Chat Button */}
@@ -1132,7 +1134,10 @@ export function ChatAssistido({
                   onVoiceStateChange={setIsVoiceEnabled}
                   className="flex-shrink-0"
                 />
+              </div>
 
+              {/* Input de texto e botão enviar */}
+              <div className="flex items-center gap-2">
                 <input
                   ref={inputRef}
                   type="text"
@@ -1143,13 +1148,13 @@ export function ChatAssistido({
                     selectedImage ? 'Descreva o que precisa...' : 'Digite sua mensagem...'
                   }
                   disabled={isLoading}
-                  className="bg-theme-elevated text-theme-primary placeholder:text-theme-subtle min-w-0 flex-1 rounded-lg border border-neutral-600 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none disabled:opacity-50"
+                  className="bg-theme-elevated text-theme-primary placeholder:text-theme-subtle flex-1 rounded-lg border border-neutral-600 px-4 py-2.5 text-sm focus:border-accent-500 focus:outline-none disabled:opacity-50"
                 />
                 <Button
                   size="sm"
                   onClick={sendMessage}
                   disabled={(!input.trim() && !selectedImage) || isLoading}
-                  className="flex-shrink-0 px-3"
+                  className="flex-shrink-0 px-4 py-2.5"
                 >
                   {isLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -1158,6 +1163,7 @@ export function ChatAssistido({
                   )}
                 </Button>
               </div>
+
               <p className="text-theme-subtle mt-2 text-center text-xs">
                 Powered by Groq AI + GPT-4 Vision
               </p>
