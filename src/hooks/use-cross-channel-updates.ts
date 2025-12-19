@@ -28,7 +28,7 @@ export function useCrossChannelUpdates({
   conversationId,
   enabled = true,
   onUpdate,
-  pollingInterval = 10000
+  pollingInterval = 10000,
 }: UseCrossChannelUpdatesOptions) {
   const [lastChecked, setLastChecked] = useState<string>(new Date().toISOString())
   const [hasUpdate, setHasUpdate] = useState(false)
@@ -40,7 +40,7 @@ export function useCrossChannelUpdates({
     try {
       const params = new URLSearchParams({
         conversationId,
-        lastChecked
+        lastChecked,
       })
 
       const response = await fetch(`/api/ai/chat/check-updates?${params}`)
@@ -67,7 +67,8 @@ export function useCrossChannelUpdates({
     } catch (error) {
       logger.error('[CROSS-CHANNEL] Error checking updates:', error)
     }
-  }, [conversationId, enabled, lastChecked, onUpdate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversationId, enabled, lastChecked])
 
   useEffect(() => {
     if (!conversationId || !enabled) return
@@ -89,6 +90,6 @@ export function useCrossChannelUpdates({
   return {
     hasUpdate,
     latestMessage,
-    dismissUpdate
+    dismissUpdate,
   }
 }

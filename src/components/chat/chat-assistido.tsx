@@ -157,18 +157,23 @@ export function ChatAssistido({
   const { speak, stopSpeaking, isSpeaking } = useVoice({ language: 'pt-BR' })
 
   // OMNICHANNEL Sprint 1 - Task 4: Cross-channel notifications
-  useCrossChannelUpdates({
-    conversationId: conversationId || undefined,
-    enabled: isOpen && !!conversationId,
-    onUpdate: (message) => {
-      // Exibir notificação toast
-      showCrossChannelNotification({
-        content: message.content,
-        senderType: message.senderType,
-      })
+  // Memoize onUpdate to prevent infinite loop
+  const handleCrossChannelUpdate = useCallback((message: any) => {
+    // Exibir notificação toast
+    showCrossChannelNotification({
+      content: message.content,
+      senderType: message.senderType,
+    })
 
-      // Adicionar mensagem à timeline do chat
-      setMessages((prev) => [
+    // Adicionar mensagem à timeline do chat (apenas se não existir)
+    setMessages((prev) => {
+      // Check if message already exists by ID
+      const messageExists = prev.some((msg) => msg.id === message.id)
+      if (messageExists) {
+        return prev // Don't add duplicate
+      }
+
+      return [
         ...prev,
         {
           id: message.id,
@@ -176,8 +181,14 @@ export function ChatAssistido({
           content: `📱 *Resposta via WhatsApp:*\n\n${message.content}`,
           createdAt: message.timestamp,
         },
-      ])
-    },
+      ]
+    })
+  }, [])
+
+  useCrossChannelUpdates({
+    conversationId: conversationId || undefined,
+    enabled: isOpen && !!conversationId,
+    onUpdate: handleCrossChannelUpdate,
     pollingInterval: 10000, // 10 segundos
   })
 
