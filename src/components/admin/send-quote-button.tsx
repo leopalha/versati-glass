@@ -59,41 +59,44 @@ export function SendQuoteButton({
   const [quoteDetails, setQuoteDetails] = useState<QuoteDetails | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const loadQuoteDetails = async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      const response = await fetch(`/api/quotes/${quoteId}`)
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao carregar orçamento')
-      }
-
-      setQuoteDetails({
-        items: data.items || [],
-        subtotal: data.subtotal || 0,
-        discount: data.discount || 0,
-        shippingFee: data.shippingFee || 0,
-        laborFee: data.laborFee || 0,
-        materialFee: data.materialFee || 0,
-        total: data.total || 0,
-      })
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Erro ao carregar orçamento'
-      setError(message)
-    } finally {
-      setLoading(false)
-    }
-  }
+  // Verificar se orçamento pode ser enviado
+  const canSend = ['DRAFT', 'SENT', 'VIEWED'].includes(status)
 
   // Carregar detalhes do orçamento quando o dialog abrir
   useEffect(() => {
-    if (open && !quoteDetails) {
+    if (open && !quoteDetails && canSend) {
+      const loadQuoteDetails = async () => {
+        setLoading(true)
+        setError(null)
+
+        try {
+          const response = await fetch(`/api/quotes/${quoteId}`)
+          const data = await response.json()
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Erro ao carregar orçamento')
+          }
+
+          setQuoteDetails({
+            items: data.items || [],
+            subtotal: data.subtotal || 0,
+            discount: data.discount || 0,
+            shippingFee: data.shippingFee || 0,
+            laborFee: data.laborFee || 0,
+            materialFee: data.materialFee || 0,
+            total: data.total || 0,
+          })
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Erro ao carregar orçamento'
+          setError(message)
+        } finally {
+          setLoading(false)
+        }
+      }
+
       loadQuoteDetails()
     }
-  }, [open, quoteDetails])
+  }, [open, quoteDetails, canSend, quoteId])
 
   const handleSend = async () => {
     setSending(true)
@@ -120,9 +123,6 @@ export function SendQuoteButton({
       setSending(false)
     }
   }
-
-  // Verificar se orçamento pode ser enviado
-  const canSend = ['DRAFT', 'SENT', 'VIEWED'].includes(status)
 
   if (!canSend) {
     return null
