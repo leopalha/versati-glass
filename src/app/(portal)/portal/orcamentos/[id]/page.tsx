@@ -187,7 +187,7 @@ export default function OrcamentoDetalhePage() {
         {/* Back button */}
         <Link
           href="/portal/orcamentos"
-          className="mb-6 inline-flex items-center gap-2 text-neutral-700 hover:text-white"
+          className="mb-6 inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar para orcamentos
@@ -214,7 +214,7 @@ export default function OrcamentoDetalhePage() {
           <div className="space-y-6 lg:col-span-2">
             {/* Items */}
             <Card className="p-6">
-              <h2 className="mb-4 font-display text-lg font-semibold text-white">
+              <h2 className="mb-4 font-display text-lg font-semibold">
                 Itens do Orcamento
               </h2>
 
@@ -222,35 +222,35 @@ export default function OrcamentoDetalhePage() {
                 {quote.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start justify-between rounded-lg border border-neutral-400 p-4"
+                    className="flex items-start justify-between rounded-lg border p-4"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-neutral-200">
-                        <Package className="h-6 w-6 text-neutral-700" />
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
+                        <Package className="h-6 w-6 text-muted-foreground" />
                       </div>
                       <div>
-                        <p className="font-medium text-white">{item.description}</p>
+                        <p className="font-medium">{item.description}</p>
                         {item.specifications && (
-                          <p className="text-sm text-neutral-700">{item.specifications}</p>
+                          <p className="text-sm text-muted-foreground">{item.specifications}</p>
                         )}
                         <div className="mt-1 flex flex-wrap gap-2">
                           {item.width && item.height && (
-                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
+                            <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                               {item.width}m x {item.height}m
                             </span>
                           )}
                           {item.color && (
-                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
+                            <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                               {item.color}
                             </span>
                           )}
                           {item.finish && (
-                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
+                            <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                               {item.finish}
                             </span>
                           )}
                           {item.thickness && (
-                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
+                            <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                               {item.thickness}
                             </span>
                           )}
@@ -258,10 +258,10 @@ export default function OrcamentoDetalhePage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-white">
+                      <p className="font-medium">
                         {formatCurrency(Number(item.totalPrice))}
                       </p>
-                      <p className="text-sm text-neutral-700">
+                      <p className="text-sm text-muted-foreground">
                         {item.quantity}x {formatCurrency(Number(item.unitPrice))}
                       </p>
                     </div>
@@ -273,8 +273,8 @@ export default function OrcamentoDetalhePage() {
             {/* Notes */}
             {quote.customerNotes && (
               <Card className="p-6">
-                <h2 className="mb-4 font-display text-lg font-semibold text-white">Observacoes</h2>
-                <p className="text-neutral-800">{quote.customerNotes}</p>
+                <h2 className="mb-4 font-display text-lg font-semibold">Observacoes</h2>
+                <p className="text-muted-foreground">{quote.customerNotes}</p>
               </Card>
             )}
           </div>
@@ -283,25 +283,25 @@ export default function OrcamentoDetalhePage() {
           <div className="space-y-6">
             {/* Summary */}
             <Card className="p-6">
-              <h2 className="mb-4 font-display text-lg font-semibold text-white">Resumo</h2>
+              <h2 className="mb-4 font-display text-lg font-semibold">Resumo</h2>
 
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-neutral-700">Subtotal</span>
-                  <span className="text-white">{formatCurrency(Number(quote.subtotal))}</span>
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span>{formatCurrency(Number(quote.subtotal))}</span>
                 </div>
                 {Number(quote.discount) > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-neutral-700">Desconto</span>
-                    <span className="text-green-400">
+                    <span className="text-muted-foreground">Desconto</span>
+                    <span className="text-green-600">
                       -{formatCurrency(Number(quote.discount))}
                     </span>
                   </div>
                 )}
-                <div className="border-t border-neutral-400 pt-3">
+                <div className="border-t pt-3">
                   <div className="flex justify-between">
-                    <span className="font-medium text-white">Total</span>
-                    <span className="font-display text-xl font-bold text-gold-500">
+                    <span className="font-medium">Total</span>
+                    <span className="font-display text-xl font-bold text-primary">
                       {formatCurrency(Number(quote.total))}
                     </span>
                   </div>
@@ -310,8 +310,8 @@ export default function OrcamentoDetalhePage() {
 
               {/* Validity */}
               <div className="mt-4 flex items-center gap-2 text-sm">
-                <Calendar className="h-4 w-4 text-neutral-600" />
-                <span className={isExpired ? 'text-red-400' : 'text-neutral-700'}>
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span className={isExpired ? 'text-destructive' : 'text-muted-foreground'}>
                   Valido ate {new Date(quote.validUntil).toLocaleDateString('pt-BR')}
                 </span>
               </div>
@@ -351,13 +351,13 @@ export default function OrcamentoDetalhePage() {
             {/* Address */}
             <Card className="p-6">
               <div className="mb-4 flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-gold-500" />
-                <h2 className="font-display text-lg font-semibold text-white">
+                <MapPin className="h-5 w-5 text-primary" />
+                <h2 className="font-display text-lg font-semibold">
                   Endereco de Instalacao
                 </h2>
               </div>
 
-              <p className="text-neutral-800">
+              <p className="text-muted-foreground">
                 {quote.serviceStreet}, {quote.serviceNumber}
                 {quote.serviceComplement && ` - ${quote.serviceComplement}`}
                 <br />

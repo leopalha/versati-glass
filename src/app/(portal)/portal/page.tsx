@@ -111,8 +111,8 @@ export default async function PortalDashboardPage() {
                 <Package className="h-6 w-6 text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-700">Total de Pedidos</p>
-                <p className="text-2xl font-bold text-white">{stats.totalOrders}</p>
+                <p className="text-sm text-muted-foreground">Total de Pedidos</p>
+                <p className="text-2xl font-bold">{stats.totalOrders}</p>
               </div>
             </div>
           </Card>
@@ -123,8 +123,8 @@ export default async function PortalDashboardPage() {
                 <TrendingUp className="h-6 w-6 text-yellow-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-700">Pedidos Ativos</p>
-                <p className="text-2xl font-bold text-white">{stats.activeOrders}</p>
+                <p className="text-sm text-muted-foreground">Pedidos Ativos</p>
+                <p className="text-2xl font-bold">{stats.activeOrders}</p>
               </div>
             </div>
           </Card>
@@ -135,8 +135,8 @@ export default async function PortalDashboardPage() {
                 <FileText className="h-6 w-6 text-purple-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-700">Orcamentos Pendentes</p>
-                <p className="text-2xl font-bold text-white">{stats.pendingQuotes}</p>
+                <p className="text-sm text-muted-foreground">Orcamentos Pendentes</p>
+                <p className="text-2xl font-bold">{stats.pendingQuotes}</p>
               </div>
             </div>
           </Card>
@@ -147,8 +147,8 @@ export default async function PortalDashboardPage() {
                 <Calendar className="h-6 w-6 text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-700">Proximo Agendamento</p>
-                <p className="text-lg font-bold text-white">
+                <p className="text-sm text-muted-foreground">Proximo Agendamento</p>
+                <p className="text-lg font-bold">
                   {stats.nextAppointment
                     ? new Date(stats.nextAppointment.scheduledDate).toLocaleDateString('pt-BR', {
                         day: '2-digit',
@@ -165,10 +165,10 @@ export default async function PortalDashboardPage() {
           {/* Recent Orders */}
           <Card className="p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-white">Pedidos Recentes</h2>
+              <h2 className="font-display text-lg font-semibold">Pedidos Recentes</h2>
               <Link
                 href="/portal/pedidos"
-                className="flex items-center gap-1 text-sm text-gold-500 hover:text-gold-400"
+                className="flex items-center gap-1 text-sm text-primary hover:text-primary/80"
               >
                 Ver todos <ArrowRight className="h-4 w-4" />
               </Link>
@@ -176,9 +176,9 @@ export default async function PortalDashboardPage() {
 
             {orders.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
-                <Package className="mb-3 h-12 w-12 text-neutral-600" />
-                <p className="text-neutral-700">Nenhum pedido ainda</p>
-                <Link href="/orcamento" className="mt-2 text-sm text-gold-500 hover:text-gold-400">
+                <Package className="mb-3 h-12 w-12 text-muted-foreground" />
+                <p className="text-muted-foreground">Nenhum pedido ainda</p>
+                <Link href="/orcamento" className="mt-2 text-sm text-primary hover:text-primary/80">
                   Solicitar orcamento
                 </Link>
               </div>
@@ -188,21 +188,23 @@ export default async function PortalDashboardPage() {
                   <Link
                     key={order.id}
                     href={`/portal/pedidos/${order.id}`}
-                    className="flex items-center justify-between rounded-lg border border-neutral-400 p-3 transition-colors hover:bg-neutral-200"
+                    className="block rounded-lg border p-3 transition-colors hover:bg-accent"
                   >
-                    <div>
-                      <p className="font-medium text-white">#{order.number}</p>
-                      <p className="text-sm text-neutral-700">
-                        {order.items.length} item(s) - {formatCurrency(Number(order.total))}
-                      </p>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">#{order.number}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {order.items.length} item(s) - {formatCurrency(Number(order.total))}
+                        </p>
+                      </div>
+                      <span
+                        className={`rounded-full px-2 py-1 text-xs font-medium ${
+                          statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-700'
+                        }`}
+                      >
+                        {statusLabels[order.status]?.label || order.status}
+                      </span>
                     </div>
-                    <span
-                      className={`rounded-full px-2 py-1 text-xs font-medium ${
-                        statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-700'
-                      }`}
-                    >
-                      {statusLabels[order.status]?.label || order.status}
-                    </span>
                   </Link>
                 ))}
               </div>
@@ -212,10 +214,10 @@ export default async function PortalDashboardPage() {
           {/* Pending Quotes */}
           <Card className="p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-white">Orcamentos</h2>
+              <h2 className="font-display text-lg font-semibold">Orcamentos</h2>
               <Link
                 href="/portal/orcamentos"
-                className="flex items-center gap-1 text-sm text-gold-500 hover:text-gold-400"
+                className="flex items-center gap-1 text-sm text-primary hover:text-primary/80"
               >
                 Ver todos <ArrowRight className="h-4 w-4" />
               </Link>
@@ -223,9 +225,9 @@ export default async function PortalDashboardPage() {
 
             {quotes.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
-                <FileText className="mb-3 h-12 w-12 text-neutral-600" />
-                <p className="text-neutral-700">Nenhum orcamento</p>
-                <Link href="/orcamento" className="mt-2 text-sm text-gold-500 hover:text-gold-400">
+                <FileText className="mb-3 h-12 w-12 text-muted-foreground" />
+                <p className="text-muted-foreground">Nenhum orcamento</p>
+                <Link href="/orcamento" className="mt-2 text-sm text-primary hover:text-primary/80">
                   Solicitar orcamento
                 </Link>
               </div>
@@ -235,27 +237,29 @@ export default async function PortalDashboardPage() {
                   <Link
                     key={quote.id}
                     href={`/portal/orcamentos/${quote.id}`}
-                    className="flex items-center justify-between rounded-lg border border-neutral-400 p-3 transition-colors hover:bg-neutral-200"
+                    className="block rounded-lg border p-3 transition-colors hover:bg-accent"
                   >
-                    <div>
-                      <p className="font-medium text-white">#{quote.number}</p>
-                      <p className="text-sm text-neutral-700">
-                        {formatCurrency(Number(quote.total))}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {quote.status === 'SENT' && (
-                        <span className="flex items-center gap-1 rounded-full bg-yellow-500/20 px-2 py-1 text-xs font-medium text-yellow-400">
-                          <AlertCircle className="h-3 w-3" />
-                          Aguardando
-                        </span>
-                      )}
-                      {quote.status === 'ACCEPTED' && (
-                        <span className="flex items-center gap-1 rounded-full bg-green-500/20 px-2 py-1 text-xs font-medium text-green-400">
-                          <CheckCircle className="h-3 w-3" />
-                          Aceito
-                        </span>
-                      )}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">#{quote.number}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {formatCurrency(Number(quote.total))}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {quote.status === 'SENT' && (
+                          <span className="flex items-center gap-1 rounded-full bg-yellow-500/20 px-2 py-1 text-xs font-medium text-yellow-400">
+                            <AlertCircle className="h-3 w-3" />
+                            Aguardando
+                          </span>
+                        )}
+                        {quote.status === 'ACCEPTED' && (
+                          <span className="flex items-center gap-1 rounded-full bg-green-500/20 px-2 py-1 text-xs font-medium text-green-400">
+                            <CheckCircle className="h-3 w-3" />
+                            Aceito
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </Link>
                 ))}
@@ -268,12 +272,12 @@ export default async function PortalDashboardPage() {
         {appointments.length > 0 && (
           <Card className="mt-6 p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-white">
+              <h2 className="font-display text-lg font-semibold">
                 Proximos Agendamentos
               </h2>
               <Link
                 href="/portal/agendamentos"
-                className="flex items-center gap-1 text-sm text-gold-500 hover:text-gold-400"
+                className="flex items-center gap-1 text-sm text-primary hover:text-primary/80"
               >
                 Ver todos <ArrowRight className="h-4 w-4" />
               </Link>
@@ -281,10 +285,10 @@ export default async function PortalDashboardPage() {
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {appointments.map((appointment) => (
-                <div key={appointment.id} className="rounded-lg border border-neutral-400 p-4">
+                <div key={appointment.id} className="rounded-lg border p-4">
                   <div className="mb-2 flex items-center gap-2">
-                    <Calendar className="h-5 w-5 text-gold-500" />
-                    <span className="font-medium text-white">
+                    <Calendar className="h-5 w-5 text-primary" />
+                    <span className="font-medium">
                       {new Date(appointment.scheduledDate).toLocaleDateString('pt-BR', {
                         weekday: 'long',
                         day: 'numeric',
@@ -292,11 +296,11 @@ export default async function PortalDashboardPage() {
                       })}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-neutral-700">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Clock className="h-4 w-4" />
                     <span>{appointment.scheduledTime}</span>
                   </div>
-                  <p className="mt-2 text-sm text-neutral-700">
+                  <p className="mt-2 text-sm text-muted-foreground">
                     {appointment.type === 'VISITA_TECNICA'
                       ? 'Visita Tecnica'
                       : appointment.type === 'INSTALACAO'

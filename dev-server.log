@@ -97,3 +97,267 @@
  GET /images/hero-pattern.svg 404 in 873ms
  GET /images/cta-pattern.svg 404 in 722ms
  GET /images/hero-pattern.svg 404 in 730ms
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 2.8s (712 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/csrf 200 in 3803ms
+ POST /api/auth/signout 200 in 267ms
+ ○ Compiling /_not-found ...
+ GET / 200 in 4369ms
+ ✓ Compiled /_not-found in 3.2s (714 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 5443ms
+ GET /images/cta-pattern.svg 404 in 2048ms
+ GET /images/hero-pattern.svg 404 in 4817ms
+ ○ Compiling /manifest.webmanifest ...
+ ✓ Compiled /manifest.webmanifest in 5.1s (746 modules)
+ GET /manifest.webmanifest 200 in 7851ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/session 200 in 7630ms
+ GET /api/auth/session 200 in 566ms
+ GET /api/auth/session 200 in 724ms
+ GET /api/auth/session 200 in 674ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 7.9s (1272 modules)
+ GET /images/hero-pattern.svg 404 in 917ms
+ GET /images/cta-pattern.svg 404 in 806ms
+ GET /images/hero-pattern.svg 404 in 389ms
+ GET /images/cta-pattern.svg 404 in 403ms
+ GET /icons/icon-144x144.png 404 in 145ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /api/auth/providers 200 in 228ms
+ GET /api/auth/csrf 200 in 65ms
+[DEBUG] 2025-12-19T03:43:55.871Z - [AUTH] Starting authorization { email: 'cliente@versatiglass.com.br' }
+[DEBUG] 2025-12-19T03:43:55.874Z - [AUTH] Credentials validated { email: 'cliente@versatiglass.com.br' }
+prisma:query SELECT "public"."users"."id", "public"."users"."email", "public"."users"."password", "public"."users"."name", "public"."users"."phone", "public"."users"."cpfCnpj", "public"."users"."street", "public"."users"."number", "public"."users"."complement", "public"."users"."neighborhood", "public"."users"."city", "public"."users"."state", "public"."users"."zipCode", "public"."users"."role"::text, "public"."users"."emailVerified", "public"."users"."phoneVerified", "public"."users"."authProvider"::text, "public"."users"."googleId", "public"."users"."createdAt", "public"."users"."updatedAt", "public"."users"."lastLoginAt" FROM "public"."users" WHERE ("public"."users"."email" = $1 AND 1=1) LIMIT $2 OFFSET $3
+[DEBUG] 2025-12-19T03:43:56.025Z - [AUTH] User found { email: 'cliente@versatiglass.com.br', hasPassword: true }
+[DEBUG] 2025-12-19T03:43:56.296Z - [AUTH] Password comparison result { isValid: true }
+[DEBUG] 2025-12-19T03:43:56.296Z - [AUTH] Authentication successful {
+  userId: 'fae47148-3f7b-426f-985d-488ba2a850fb',
+  email: 'cliente@versatiglass.com.br'
+}
+[DEBUG] 2025-12-19T03:43:56.297Z - [AUTH] SignIn callback {
+  provider: 'credentials',
+  userId: 'fae47148-3f7b-426f-985d-488ba2a850fb',
+  email: 'cliente@versatiglass.com.br'
+}
+[DEBUG] 2025-12-19T03:43:56.297Z - [AUTH] JWT callback { hasUser: true, trigger: 'signIn' }
+[DEBUG] 2025-12-19T03:43:56.297Z - [AUTH] JWT - User added to token { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ POST /api/auth/callback/credentials? 200 in 500ms
+[DEBUG] 2025-12-19T03:43:56.390Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:43:56.390Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:43:56.390Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 74ms
+[DEBUG] 2025-12-19T03:43:56.490Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:43:56.490Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:43:56.491Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 84ms
+[DEBUG] 2025-12-19T03:43:56.598Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:43:56.599Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:43:56.599Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 86ms
+ ○ Compiling /portal ...
+ ✓ Compiled /portal in 4.2s (1300 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[DEBUG] 2025-12-19T03:44:02.164Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:02.165Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:02.165Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+[DEBUG] 2025-12-19T03:44:02.166Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:02.166Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:02.166Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT "public"."orders"."id", "public"."orders"."number", "public"."orders"."quoteId", "public"."orders"."userId", "public"."orders"."serviceStreet", "public"."orders"."serviceNumber", "public"."orders"."serviceComplement", "public"."orders"."serviceNeighborhood", "public"."orders"."serviceCity", "public"."orders"."serviceState", "public"."orders"."serviceZipCode", "public"."orders"."subtotal", "public"."orders"."discount", "public"."orders"."installationFee", "public"."orders"."total", "public"."orders"."paymentStatus"::text, "public"."orders"."paymentMethod"::text, "public"."orders"."paidAmount", "public"."orders"."stripeSessionId", "public"."orders"."stripePaymentIntentId", "public"."orders"."status"::text, "public"."orders"."estimatedDelivery", "public"."orders"."installedAt", "public"."orders"."completedAt", "public"."orders"."warrantyUntil", "public"."orders"."internalNotes", "public"."orders"."createdAt", "public"."orders"."updatedAt" FROM "public"."orders" WHERE "public"."orders"."userId" = $1 ORDER BY "public"."orders"."createdAt" DESC LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."appointments"."id", "public"."appointments"."userId", "public"."appointments"."orderId", "public"."appointments"."quoteId", "public"."appointments"."type"::text, "public"."appointments"."scheduledDate", "public"."appointments"."scheduledTime", "public"."appointments"."estimatedDuration", "public"."appointments"."addressStreet", "public"."appointments"."addressNumber", "public"."appointments"."addressComplement", "public"."appointments"."addressNeighborhood", "public"."appointments"."addressCity", "public"."appointments"."addressState", "public"."appointments"."addressZipCode", "public"."appointments"."status"::text, "public"."appointments"."assignedToId", "public"."appointments"."notes", "public"."appointments"."completionNotes", "public"."appointments"."reminderSentAt", "public"."appointments"."createdAt", "public"."appointments"."updatedAt", "public"."appointments"."completedAt" FROM "public"."appointments" WHERE ("public"."appointments"."userId" = $1 AND "public"."appointments"."scheduledDate" >= $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"))) ORDER BY "public"."appointments"."scheduledDate" ASC LIMIT $5 OFFSET $6
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."userId" = $1 ORDER BY "public"."quotes"."createdAt" DESC LIMIT $2 OFFSET $3
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."userId" = $1 OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE ("public"."orders"."userId" = $1 AND "public"."orders"."status" NOT IN (CAST($2::text AS "public"."OrderStatus"),CAST($3::text AS "public"."OrderStatus"))) OFFSET $4) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE ("public"."quotes"."userId" = $1 AND "public"."quotes"."status" IN (CAST($2::text AS "public"."QuoteStatus"),CAST($3::text AS "public"."QuoteStatus"))) OFFSET $4) AS "sub"
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 515ms
+ GET /portal 200 in 5998ms
+ GET /icons/icon-144x144.png 404 in 264ms
+[DEBUG] 2025-12-19T03:44:04.847Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:04.847Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:04.848Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 142ms
+[DEBUG] 2025-12-19T03:44:04.939Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:04.939Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:04.939Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 72ms
+[DEBUG] 2025-12-19T03:44:05.016Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:05.016Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:05.016Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 65ms
+[DEBUG] 2025-12-19T03:44:05.086Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:05.087Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:05.087Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 60ms
+ ○ Compiling /portal/pedidos ...
+ ✓ Compiled /portal/pedidos in 1018ms (1305 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[DEBUG] 2025-12-19T03:44:20.050Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:20.051Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:20.051Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT 1
+prisma:query SELECT "public"."orders"."id", "public"."orders"."number", "public"."orders"."quoteId", "public"."orders"."userId", "public"."orders"."serviceStreet", "public"."orders"."serviceNumber", "public"."orders"."serviceComplement", "public"."orders"."serviceNeighborhood", "public"."orders"."serviceCity", "public"."orders"."serviceState", "public"."orders"."serviceZipCode", "public"."orders"."subtotal", "public"."orders"."discount", "public"."orders"."installationFee", "public"."orders"."total", "public"."orders"."paymentStatus"::text, "public"."orders"."paymentMethod"::text, "public"."orders"."paidAmount", "public"."orders"."stripeSessionId", "public"."orders"."stripePaymentIntentId", "public"."orders"."status"::text, "public"."orders"."estimatedDelivery", "public"."orders"."installedAt", "public"."orders"."completedAt", "public"."orders"."warrantyUntil", "public"."orders"."internalNotes", "public"."orders"."createdAt", "public"."orders"."updatedAt" FROM "public"."orders" WHERE "public"."orders"."userId" = $1 ORDER BY "public"."orders"."createdAt" DESC OFFSET $2
+ GET /portal/pedidos?_rsc=1vo4h 200 in 281ms
+ GET /icons/icon-144x144.png 404 in 192ms
+ ○ Compiling /portal/orcamentos ...
+ ✓ Compiled /portal/orcamentos in 757ms (1277 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[DEBUG] 2025-12-19T03:44:26.877Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:26.878Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:26.878Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."userId" = $1 ORDER BY "public"."quotes"."createdAt" DESC OFFSET $2
+prisma:query SELECT "public"."quote_items"."id", "public"."quote_items"."quoteId", "public"."quote_items"."productId", "public"."quote_items"."description", "public"."quote_items"."specifications", "public"."quote_items"."width", "public"."quote_items"."height", "public"."quote_items"."quantity", "public"."quote_items"."color", "public"."quote_items"."finish", "public"."quote_items"."thickness", "public"."quote_items"."glassType", "public"."quote_items"."glassColor", "public"."quote_items"."model", "public"."quote_items"."unitPrice", "public"."quote_items"."totalPrice", "public"."quote_items"."customerImages" FROM "public"."quote_items" WHERE "public"."quote_items"."quoteId" IN ($1,$2) OFFSET $3
+ GET /icons/icon-144x144.png 404 in 308ms
+ GET /portal/orcamentos?_rsc=fkd23 200 in 382ms
+ ○ Compiling /portal/orcamentos/[id] ...
+ ✓ Compiled /portal/orcamentos/[id] in 1136ms (1295 modules)
+ ○ Compiling /api/quotes/[id] ...
+ ✓ Compiled /api/quotes/[id] in 924ms (789 modules)
+ GET /icons/icon-144x144.png 404 in 1783ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[DEBUG] 2025-12-19T03:44:36.878Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:36.879Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:36.879Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT 1
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE ("public"."quotes"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."quote_items"."id", "public"."quote_items"."quoteId", "public"."quote_items"."productId", "public"."quote_items"."description", "public"."quote_items"."specifications", "public"."quote_items"."width", "public"."quote_items"."height", "public"."quote_items"."quantity", "public"."quote_items"."color", "public"."quote_items"."finish", "public"."quote_items"."thickness", "public"."quote_items"."glassType", "public"."quote_items"."glassColor", "public"."quote_items"."model", "public"."quote_items"."unitPrice", "public"."quote_items"."totalPrice", "public"."quote_items"."customerImages" FROM "public"."quote_items" WHERE "public"."quote_items"."quoteId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."products"."id", "public"."products"."name", "public"."products"."slug", "public"."products"."thumbnail", "public"."products"."category"::text FROM "public"."products" WHERE "public"."products"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", "public"."users"."phone" FROM "public"."users" WHERE "public"."users"."id" IN ($1) OFFSET $2
+ GET /api/quotes/0a595f6a-3b92-438f-8410-2d8b0bc4bae8 200 in 2841ms
+[DEBUG] 2025-12-19T03:44:36.984Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:36.984Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:36.984Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE ("public"."quotes"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."quote_items"."id", "public"."quote_items"."quoteId", "public"."quote_items"."productId", "public"."quote_items"."description", "public"."quote_items"."specifications", "public"."quote_items"."width", "public"."quote_items"."height", "public"."quote_items"."quantity", "public"."quote_items"."color", "public"."quote_items"."finish", "public"."quote_items"."thickness", "public"."quote_items"."glassType", "public"."quote_items"."glassColor", "public"."quote_items"."model", "public"."quote_items"."unitPrice", "public"."quote_items"."totalPrice", "public"."quote_items"."customerImages" FROM "public"."quote_items" WHERE "public"."quote_items"."quoteId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."products"."id", "public"."products"."name", "public"."products"."slug", "public"."products"."thumbnail", "public"."products"."category"::text FROM "public"."products" WHERE "public"."products"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", "public"."users"."phone" FROM "public"."users" WHERE "public"."users"."id" IN ($1) OFFSET $2
+ GET /api/quotes/0a595f6a-3b92-438f-8410-2d8b0bc4bae8 200 in 86ms
+ ○ Compiling /portal/perfil ...
+ ✓ Compiled /portal/agendamentos in 1793ms (1313 modules)
+ ✓ Compiled in 602ms (516 modules)
+ GET /icons/icon-144x144.png 404 in 2715ms
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /icons/icon-144x144.png 404 in 207ms
+[DEBUG] 2025-12-19T03:44:46.526Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:46.526Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:46.526Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT 1
+prisma:query SELECT "public"."appointments"."id", "public"."appointments"."userId", "public"."appointments"."orderId", "public"."appointments"."quoteId", "public"."appointments"."type"::text, "public"."appointments"."scheduledDate", "public"."appointments"."scheduledTime", "public"."appointments"."estimatedDuration", "public"."appointments"."addressStreet", "public"."appointments"."addressNumber", "public"."appointments"."addressComplement", "public"."appointments"."addressNeighborhood", "public"."appointments"."addressCity", "public"."appointments"."addressState", "public"."appointments"."addressZipCode", "public"."appointments"."status"::text, "public"."appointments"."assignedToId", "public"."appointments"."notes", "public"."appointments"."completionNotes", "public"."appointments"."reminderSentAt", "public"."appointments"."createdAt", "public"."appointments"."updatedAt", "public"."appointments"."completedAt" FROM "public"."appointments" WHERE ("public"."appointments"."userId" = $1 AND ("public"."appointments"."scheduledDate" < $2 OR "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"),CAST($5::text AS "public"."AppointmentStatus")))) ORDER BY "public"."appointments"."scheduledDate" DESC LIMIT $6 OFFSET $7
+prisma:query SELECT "public"."appointments"."id", "public"."appointments"."userId", "public"."appointments"."orderId", "public"."appointments"."quoteId", "public"."appointments"."type"::text, "public"."appointments"."scheduledDate", "public"."appointments"."scheduledTime", "public"."appointments"."estimatedDuration", "public"."appointments"."addressStreet", "public"."appointments"."addressNumber", "public"."appointments"."addressComplement", "public"."appointments"."addressNeighborhood", "public"."appointments"."addressCity", "public"."appointments"."addressState", "public"."appointments"."addressZipCode", "public"."appointments"."status"::text, "public"."appointments"."assignedToId", "public"."appointments"."notes", "public"."appointments"."completionNotes", "public"."appointments"."reminderSentAt", "public"."appointments"."createdAt", "public"."appointments"."updatedAt", "public"."appointments"."completedAt" FROM "public"."appointments" WHERE ("public"."appointments"."userId" = $1 AND "public"."appointments"."scheduledDate" >= $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"),CAST($5::text AS "public"."AppointmentStatus"))) ORDER BY "public"."appointments"."scheduledDate" ASC OFFSET $6
+ GET /portal/agendamentos?_rsc=cham2 200 in 228ms
+ ○ Compiling /portal/documentos ...
+ ✓ Compiled /portal/documentos in 856ms (1325 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+[DEBUG] 2025-12-19T03:44:50.487Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:44:50.487Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:44:50.488Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT "public"."documents"."id", "public"."documents"."userId", "public"."documents"."orderId", "public"."documents"."quoteId", "public"."documents"."type"::text, "public"."documents"."name", "public"."documents"."url", "public"."documents"."mimeType", "public"."documents"."size", "public"."documents"."status"::text, "public"."documents"."signedAt", "public"."documents"."signedBy", "public"."documents"."signatureUrl", "public"."documents"."createdAt", "public"."documents"."updatedAt" FROM "public"."documents" WHERE "public"."documents"."userId" = $1 ORDER BY "public"."documents"."createdAt" DESC OFFSET $2
+ GET /icons/icon-144x144.png 404 in 195ms
+ GET /portal/documentos?_rsc=1t5cm 200 in 261ms
+ GET /icons/icon-144x144.png 404 in 109ms
+[DEBUG] 2025-12-19T03:45:53.404Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:45:53.404Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:45:53.404Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT "public"."appointments"."id", "public"."appointments"."userId", "public"."appointments"."orderId", "public"."appointments"."quoteId", "public"."appointments"."type"::text, "public"."appointments"."scheduledDate", "public"."appointments"."scheduledTime", "public"."appointments"."estimatedDuration", "public"."appointments"."addressStreet", "public"."appointments"."addressNumber", "public"."appointments"."addressComplement", "public"."appointments"."addressNeighborhood", "public"."appointments"."addressCity", "public"."appointments"."addressState", "public"."appointments"."addressZipCode", "public"."appointments"."status"::text, "public"."appointments"."assignedToId", "public"."appointments"."notes", "public"."appointments"."completionNotes", "public"."appointments"."reminderSentAt", "public"."appointments"."createdAt", "public"."appointments"."updatedAt", "public"."appointments"."completedAt" FROM "public"."appointments" WHERE ("public"."appointments"."userId" = $1 AND "public"."appointments"."scheduledDate" >= $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"),CAST($5::text AS "public"."AppointmentStatus"))) ORDER BY "public"."appointments"."scheduledDate" ASC OFFSET $6
+prisma:query SELECT "public"."appointments"."id", "public"."appointments"."userId", "public"."appointments"."orderId", "public"."appointments"."quoteId", "public"."appointments"."type"::text, "public"."appointments"."scheduledDate", "public"."appointments"."scheduledTime", "public"."appointments"."estimatedDuration", "public"."appointments"."addressStreet", "public"."appointments"."addressNumber", "public"."appointments"."addressComplement", "public"."appointments"."addressNeighborhood", "public"."appointments"."addressCity", "public"."appointments"."addressState", "public"."appointments"."addressZipCode", "public"."appointments"."status"::text, "public"."appointments"."assignedToId", "public"."appointments"."notes", "public"."appointments"."completionNotes", "public"."appointments"."reminderSentAt", "public"."appointments"."createdAt", "public"."appointments"."updatedAt", "public"."appointments"."completedAt" FROM "public"."appointments" WHERE ("public"."appointments"."userId" = $1 AND ("public"."appointments"."scheduledDate" < $2 OR "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"),CAST($5::text AS "public"."AppointmentStatus")))) ORDER BY "public"."appointments"."scheduledDate" DESC LIMIT $6 OFFSET $7
+ GET /icons/icon-144x144.png 404 in 157ms
+ GET /portal/agendamentos?_rsc=cham2 200 in 212ms
+ GET /icons/icon-144x144.png 404 in 86ms
+[DEBUG] 2025-12-19T03:45:55.071Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:45:55.072Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:45:55.072Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."userId" = $1 ORDER BY "public"."quotes"."createdAt" DESC OFFSET $2
+ GET /icons/icon-144x144.png 404 in 156ms
+prisma:query SELECT "public"."quote_items"."id", "public"."quote_items"."quoteId", "public"."quote_items"."productId", "public"."quote_items"."description", "public"."quote_items"."specifications", "public"."quote_items"."width", "public"."quote_items"."height", "public"."quote_items"."quantity", "public"."quote_items"."color", "public"."quote_items"."finish", "public"."quote_items"."thickness", "public"."quote_items"."glassType", "public"."quote_items"."glassColor", "public"."quote_items"."model", "public"."quote_items"."unitPrice", "public"."quote_items"."totalPrice", "public"."quote_items"."customerImages" FROM "public"."quote_items" WHERE "public"."quote_items"."quoteId" IN ($1,$2) OFFSET $3
+ GET /portal/orcamentos?_rsc=fkd23 200 in 232ms
+ GET /icons/icon-144x144.png 404 in 90ms
+[DEBUG] 2025-12-19T03:45:57.924Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:45:57.924Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:45:57.924Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE ("public"."quotes"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."quote_items"."id", "public"."quote_items"."quoteId", "public"."quote_items"."productId", "public"."quote_items"."description", "public"."quote_items"."specifications", "public"."quote_items"."width", "public"."quote_items"."height", "public"."quote_items"."quantity", "public"."quote_items"."color", "public"."quote_items"."finish", "public"."quote_items"."thickness", "public"."quote_items"."glassType", "public"."quote_items"."glassColor", "public"."quote_items"."model", "public"."quote_items"."unitPrice", "public"."quote_items"."totalPrice", "public"."quote_items"."customerImages" FROM "public"."quote_items" WHERE "public"."quote_items"."quoteId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."products"."id", "public"."products"."name", "public"."products"."slug", "public"."products"."thumbnail", "public"."products"."category"::text FROM "public"."products" WHERE "public"."products"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", "public"."users"."phone" FROM "public"."users" WHERE "public"."users"."id" IN ($1) OFFSET $2
+ GET /api/quotes/0a595f6a-3b92-438f-8410-2d8b0bc4bae8 200 in 192ms
+ GET /icons/icon-144x144.png 404 in 198ms
+[DEBUG] 2025-12-19T03:45:58.071Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:45:58.071Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:45:58.072Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE ("public"."quotes"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."quote_items"."id", "public"."quote_items"."quoteId", "public"."quote_items"."productId", "public"."quote_items"."description", "public"."quote_items"."specifications", "public"."quote_items"."width", "public"."quote_items"."height", "public"."quote_items"."quantity", "public"."quote_items"."color", "public"."quote_items"."finish", "public"."quote_items"."thickness", "public"."quote_items"."glassType", "public"."quote_items"."glassColor", "public"."quote_items"."model", "public"."quote_items"."unitPrice", "public"."quote_items"."totalPrice", "public"."quote_items"."customerImages" FROM "public"."quote_items" WHERE "public"."quote_items"."quoteId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."products"."id", "public"."products"."name", "public"."products"."slug", "public"."products"."thumbnail", "public"."products"."category"::text FROM "public"."products" WHERE "public"."products"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", "public"."users"."phone" FROM "public"."users" WHERE "public"."users"."id" IN ($1) OFFSET $2
+ GET /api/quotes/0a595f6a-3b92-438f-8410-2d8b0bc4bae8 200 in 113ms
+[DEBUG] 2025-12-19T03:46:26.988Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:46:26.989Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:46:26.989Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT "public"."appointments"."id", "public"."appointments"."userId", "public"."appointments"."orderId", "public"."appointments"."quoteId", "public"."appointments"."type"::text, "public"."appointments"."scheduledDate", "public"."appointments"."scheduledTime", "public"."appointments"."estimatedDuration", "public"."appointments"."addressStreet", "public"."appointments"."addressNumber", "public"."appointments"."addressComplement", "public"."appointments"."addressNeighborhood", "public"."appointments"."addressCity", "public"."appointments"."addressState", "public"."appointments"."addressZipCode", "public"."appointments"."status"::text, "public"."appointments"."assignedToId", "public"."appointments"."notes", "public"."appointments"."completionNotes", "public"."appointments"."reminderSentAt", "public"."appointments"."createdAt", "public"."appointments"."updatedAt", "public"."appointments"."completedAt" FROM "public"."appointments" WHERE ("public"."appointments"."userId" = $1 AND "public"."appointments"."scheduledDate" >= $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"),CAST($5::text AS "public"."AppointmentStatus"))) ORDER BY "public"."appointments"."scheduledDate" ASC OFFSET $6
+prisma:query SELECT "public"."appointments"."id", "public"."appointments"."userId", "public"."appointments"."orderId", "public"."appointments"."quoteId", "public"."appointments"."type"::text, "public"."appointments"."scheduledDate", "public"."appointments"."scheduledTime", "public"."appointments"."estimatedDuration", "public"."appointments"."addressStreet", "public"."appointments"."addressNumber", "public"."appointments"."addressComplement", "public"."appointments"."addressNeighborhood", "public"."appointments"."addressCity", "public"."appointments"."addressState", "public"."appointments"."addressZipCode", "public"."appointments"."status"::text, "public"."appointments"."assignedToId", "public"."appointments"."notes", "public"."appointments"."completionNotes", "public"."appointments"."reminderSentAt", "public"."appointments"."createdAt", "public"."appointments"."updatedAt", "public"."appointments"."completedAt" FROM "public"."appointments" WHERE ("public"."appointments"."userId" = $1 AND ("public"."appointments"."scheduledDate" < $2 OR "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"),CAST($5::text AS "public"."AppointmentStatus")))) ORDER BY "public"."appointments"."scheduledDate" DESC LIMIT $6 OFFSET $7
+ GET /portal/agendamentos?_rsc=cham2 200 in 244ms
+ GET /icons/icon-144x144.png 404 in 189ms
+ GET /icons/icon-144x144.png 404 in 83ms
+[DEBUG] 2025-12-19T03:46:28.317Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:46:28.317Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:46:28.317Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+prisma:query SELECT "public"."orders"."id", "public"."orders"."number", "public"."orders"."quoteId", "public"."orders"."userId", "public"."orders"."serviceStreet", "public"."orders"."serviceNumber", "public"."orders"."serviceComplement", "public"."orders"."serviceNeighborhood", "public"."orders"."serviceCity", "public"."orders"."serviceState", "public"."orders"."serviceZipCode", "public"."orders"."subtotal", "public"."orders"."discount", "public"."orders"."installationFee", "public"."orders"."total", "public"."orders"."paymentStatus"::text, "public"."orders"."paymentMethod"::text, "public"."orders"."paidAmount", "public"."orders"."stripeSessionId", "public"."orders"."stripePaymentIntentId", "public"."orders"."status"::text, "public"."orders"."estimatedDelivery", "public"."orders"."installedAt", "public"."orders"."completedAt", "public"."orders"."warrantyUntil", "public"."orders"."internalNotes", "public"."orders"."createdAt", "public"."orders"."updatedAt" FROM "public"."orders" WHERE "public"."orders"."userId" = $1 ORDER BY "public"."orders"."createdAt" DESC LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."quotes"."id", "public"."quotes"."number", "public"."quotes"."userId", "public"."quotes"."customerName", "public"."quotes"."customerEmail", "public"."quotes"."customerPhone", "public"."quotes"."serviceStreet", "public"."quotes"."serviceNumber", "public"."quotes"."serviceComplement", "public"."quotes"."serviceNeighborhood", "public"."quotes"."serviceCity", "public"."quotes"."serviceState", "public"."quotes"."serviceZipCode", "public"."quotes"."subtotal", "public"."quotes"."discount", "public"."quotes"."total", "public"."quotes"."status"::text, "public"."quotes"."validUntil", "public"."quotes"."internalNotes", "public"."quotes"."customerNotes", "public"."quotes"."source"::text, "public"."quotes"."createdAt", "public"."quotes"."updatedAt", "public"."quotes"."sentAt", "public"."quotes"."viewedAt", "public"."quotes"."acceptedAt" FROM "public"."quotes" WHERE "public"."quotes"."userId" = $1 ORDER BY "public"."quotes"."createdAt" DESC LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."appointments"."id", "public"."appointments"."userId", "public"."appointments"."orderId", "public"."appointments"."quoteId", "public"."appointments"."type"::text, "public"."appointments"."scheduledDate", "public"."appointments"."scheduledTime", "public"."appointments"."estimatedDuration", "public"."appointments"."addressStreet", "public"."appointments"."addressNumber", "public"."appointments"."addressComplement", "public"."appointments"."addressNeighborhood", "public"."appointments"."addressCity", "public"."appointments"."addressState", "public"."appointments"."addressZipCode", "public"."appointments"."status"::text, "public"."appointments"."assignedToId", "public"."appointments"."notes", "public"."appointments"."completionNotes", "public"."appointments"."reminderSentAt", "public"."appointments"."createdAt", "public"."appointments"."updatedAt", "public"."appointments"."completedAt" FROM "public"."appointments" WHERE ("public"."appointments"."userId" = $1 AND "public"."appointments"."scheduledDate" >= $2 AND "public"."appointments"."status" IN (CAST($3::text AS "public"."AppointmentStatus"),CAST($4::text AS "public"."AppointmentStatus"))) ORDER BY "public"."appointments"."scheduledDate" ASC LIMIT $5 OFFSET $6
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE "public"."orders"."userId" = $1 OFFSET $2) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "public"."orders" WHERE ("public"."orders"."userId" = $1 AND "public"."orders"."status" NOT IN (CAST($2::text AS "public"."OrderStatus"),CAST($3::text AS "public"."OrderStatus"))) OFFSET $4) AS "sub"
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."quotes"."id" FROM "public"."quotes" WHERE ("public"."quotes"."userId" = $1 AND "public"."quotes"."status" IN (CAST($2::text AS "public"."QuoteStatus"),CAST($3::text AS "public"."QuoteStatus"))) OFFSET $4) AS "sub"
+ GET /portal?_rsc=17gzd 200 in 227ms
+ GET /icons/icon-144x144.png 404 in 183ms
+ GET /icons/icon-144x144.png 404 in 114ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 288ms
+ GET / 200 in 817ms
+ GET /images/hero-pattern.svg 404 in 240ms
+ GET /images/cta-pattern.svg 404 in 373ms
+ ○ Compiling /manifest.webmanifest ...
+ ✓ Compiled /api/auth/[...nextauth] in 6.2s (800 modules)
+ ✓ Compiled (802 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /manifest.webmanifest 200 in 9129ms
+[DEBUG] 2025-12-19T03:48:00.221Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:48:00.222Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:48:00.223Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 6345ms
+[DEBUG] 2025-12-19T03:48:00.801Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:48:00.802Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:48:00.802Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 518ms
+[DEBUG] 2025-12-19T03:48:01.309Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:48:01.309Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:48:01.309Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 455ms
+[DEBUG] 2025-12-19T03:48:01.707Z - [AUTH] JWT callback { hasUser: false, trigger: undefined }
+[DEBUG] 2025-12-19T03:48:01.708Z - [AUTH] Session callback { hasToken: true }
+[DEBUG] 2025-12-19T03:48:01.708Z - [AUTH] Session created { userId: 'fae47148-3f7b-426f-985d-488ba2a850fb', role: 'CUSTOMER' }
+ GET /api/auth/session 200 in 364ms
+ ✓ Compiled in 7.9s (1332 modules)
+ ✓ Compiled in 6.2s (1332 modules)
+ ✓ Compiled in 1ms (802 modules)
+ ✓ Compiled in 5.1s (1332 modules)
+ GET /images/cta-pattern.svg 404 in 11608ms
+ GET /images/hero-pattern.svg 404 in 11625ms
+ GET /images/cta-pattern.svg 404 in 11648ms
+ GET /images/hero-pattern.svg 404 in 11680ms
+ GET /icons/icon-144x144.png 404 in 12130ms
+ ✓ Compiled in 5.1s (1332 modules)
+ ✓ Compiled in 8.3s (1332 modules)
+ ✓ Compiled in 12.5s (1296 modules)
+ ✓ Compiled in 2ms (766 modules)
+ ✓ Compiled in 8.5s (1296 modules)
+ GET /images/cta-pattern.svg 404 in 22479ms
+ GET /images/hero-pattern.svg 404 in 22502ms
+ GET /images/hero-pattern.svg 404 in 22488ms
+ GET /images/cta-pattern.svg 404 in 22502ms
+ ✓ Compiled in 5ms (766 modules)
+ GET /images/hero-pattern.svg 404 in 1383ms
+ GET /images/cta-pattern.svg 404 in 1407ms
+ GET /images/hero-pattern.svg 404 in 1430ms
+ GET /images/cta-pattern.svg 404 in 1409ms
