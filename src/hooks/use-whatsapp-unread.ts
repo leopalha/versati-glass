@@ -15,6 +15,10 @@ export function useWhatsAppUnread() {
 
     const connect = () => {
       try {
+        // TEMP FIX: WhatsAppMessage model not in schema yet
+        // Disabled to prevent 500 errors
+        // TODO: Add WhatsAppMessage model to schema.prisma
+        /*
         // Initial fetch
         fetch('/api/whatsapp/messages')
           .then((res) => res.json())
@@ -29,6 +33,7 @@ export function useWhatsAppUnread() {
           .catch(() => {
             // Ignore errors
           })
+        */
 
         // Connect to SSE for real-time updates
         eventSource = new EventSource('/api/whatsapp/stream')

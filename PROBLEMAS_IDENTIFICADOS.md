@@ -46,25 +46,32 @@ O Twilio Sandbox expira após **3 dias** sem uso. Você autorizou ontem, mas pre
 
 ---
 
-## 🔴 PROBLEMA 2: Google Calendar Não Criou Evento
+## ✅ PROBLEMA 2: Google Calendar Não Criou Evento - RESOLVIDO
 
 ### Causa Identificada:
-O agendamento foi salvo no banco, mas o evento **NÃO foi criado** no Google Calendar.
+O serviço `google-calendar.ts` estava configurado para **OAuth2 Client** mas as credenciais no `.env` eram de **Service Account**.
 
 ```
-Google Calendar Event ID: ❌ NÃO CRIADO
+❌ Código esperava: GOOGLE_REFRESH_TOKEN (OAuth2)
+✅ Variáveis configuradas: GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_PRIVATE_KEY
 ```
 
-### Possíveis Causas:
+### Solução Aplicada:
 
-1. **Erro silencioso** ao chamar a API do Google Calendar
-2. **Permissão incorreta** do Service Account
-3. **Código não está chamando** a criação do evento
-4. **Erro de configuração** das credenciais
+1. ✅ **Atualizado `src/services/google-calendar.ts`**
+   - Substituído `getOAuth2Client()` por `getServiceAccountAuth()`
+   - Usando `google.auth.JWT` em vez de `google.auth.OAuth2`
+   - Atualizado `isGoogleCalendarEnabled()` para validar Service Account
 
-### Verificação Necessária:
+2. ✅ **Atualizado `src/app/api/appointments/route.ts`**
+   - Adicionado código para salvar `calendarEventId` no banco após criar evento
+   - Agora atualiza o appointment com `prisma.appointment.update()`
 
-Vamos verificar se o código de criação de agendamento está chamando o Google Calendar.
+3. ✅ **Testado com sucesso**
+   - Evento de teste criado: `74m3rj63ukgqq1lr1h6d9p3v4o`
+   - Link: https://www.google.com/calendar/event?eid=...
+
+**Detalhes completos:** [CORRECAO_GOOGLE_CALENDAR.md](CORRECAO_GOOGLE_CALENDAR.md)
 
 ---
 
@@ -130,16 +137,32 @@ Google Calendar Event ID: ❌ NÃO CRIADO
 
 ## ✅ AÇÕES IMEDIATAS
 
-**AGORA:**
-1. Renovar autorização WhatsApp
-2. Investigar código do agendamento
-3. Corrigir criação de evento no Calendar
-4. Testar novamente
+**CONCLUÍDO:**
+1. ✅ ~~Investigar código do agendamento~~
+2. ✅ ~~Corrigir criação de evento no Calendar~~
+3. ✅ ~~Testar Google Calendar~~
 
-**DEPOIS:**
+**PENDENTE:**
+1. ⏳ Renovar autorização WhatsApp Sandbox
+2. ⏳ Testar fluxo completo (orçamento + agendamento)
+3. ⏳ Verificar OAuth Consent Screen (para login com Google)
+
+**DEPOIS DO MVP:**
 - Deploy em produção
 - Comprar número WhatsApp dedicado (para não expirar)
 
 ---
 
-**Vou investigar o código do agendamento agora...**
+## 📊 STATUS ATUAL
+
+| Funcionalidade | Status | Observações |
+|----------------|--------|-------------|
+| **Google Calendar** | ✅ FUNCIONANDO | Service Account configurado |
+| **Criar Evento** | ✅ FUNCIONANDO | Testado com sucesso |
+| **Salvar calendarEventId** | ✅ FUNCIONANDO | Código atualizado |
+| **WhatsApp Sandbox** | ⏳ EXPIRADO | Precisa renovar autorização |
+| **OAuth Login Google** | ⏳ PENDENTE | Configurar Consent Screen |
+
+---
+
+**Última atualização:** 19/12/2024 - Google Calendar corrigido e funcionando

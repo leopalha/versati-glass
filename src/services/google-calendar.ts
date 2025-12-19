@@ -7,8 +7,10 @@
  * SETUP NECESSÁRIO:
  * 1. Criar projeto no Google Cloud Console
  * 2. Ativar Google Calendar API
- * 3. Criar credenciais OAuth 2.0
- * 4. Configurar .env com: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN
+ * 3. Criar Service Account no Google Cloud
+ * 4. Baixar arquivo JSON da Service Account
+ * 5. Compartilhar calendário com o email da Service Account
+ * 6. Configurar .env com: GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY, GOOGLE_CALENDAR_ID
  */
 
 import { google } from 'googleapis'
@@ -45,30 +47,26 @@ interface CalendarEventResponse {
 }
 
 /**
- * Inicializa cliente OAuth2 do Google
+ * Inicializa cliente Service Account do Google
  */
-function getOAuth2Client() {
-  const clientId = process.env.GOOGLE_CLIENT_ID
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET
-  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN
+function getServiceAccountAuth() {
+  const serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
+  const privateKey = process.env.GOOGLE_PRIVATE_KEY
 
-  if (!clientId || !clientSecret || !refreshToken) {
+  if (!serviceAccountEmail || !privateKey) {
     throw new Error(
-      'Google Calendar credentials not configured. Set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_REFRESH_TOKEN in .env'
+      'Google Calendar Service Account not configured. Set GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY in .env'
     )
   }
 
-  const oauth2Client = new google.auth.OAuth2(
-    clientId,
-    clientSecret,
-    'http://localhost:3000/api/auth/google/callback' // Redirect URI (não usado com refresh token)
-  )
-
-  oauth2Client.setCredentials({
-    refresh_token: refreshToken,
+  // Criar JWT client para Service Account
+  const auth = new google.auth.JWT({
+    email: serviceAccountEmail,
+    key: privateKey.replace(/\\n/g, '\n'), // Corrigir quebras de linha
+    scopes: ['https://www.googleapis.com/auth/calendar'],
   })
 
-  return oauth2Client
+  return auth
 }
 
 /**
@@ -149,19 +147,18 @@ export async function createCalendarEvent(
 
     // Verificar se Google Calendar está configurado
     if (
-      !process.env.GOOGLE_CLIENT_ID ||
-      !process.env.GOOGLE_CLIENT_SECRET ||
-      !process.env.GOOGLE_REFRESH_TOKEN
+      !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ||
+      !process.env.GOOGLE_PRIVATE_KEY
     ) {
-      logger.warn('[Google Calendar] Credentials not configured, skipping event creation')
+      logger.warn('[Google Calendar] Service Account not configured, skipping event creation')
       return {
         success: false,
         error: 'Google Calendar not configured',
       }
     }
 
-    const oauth2Client = getOAuth2Client()
-    const calendar = google.calendar({ version: 'v3', auth: oauth2Client })
+    const auth = getServiceAccountAuth()
+    const calendar = google.calendar({ version: 'v3', auth })
 
     const eventProps = getEventProperties(appointmentData.type)
     const { start, end } = calculateEventTimes(
@@ -274,19 +271,18 @@ export async function updateCalendarEvent(
     })
 
     if (
-      !process.env.GOOGLE_CLIENT_ID ||
-      !process.env.GOOGLE_CLIENT_SECRET ||
-      !process.env.GOOGLE_REFRESH_TOKEN
+      !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ||
+      !process.env.GOOGLE_PRIVATE_KEY
     ) {
-      logger.warn('[Google Calendar] Credentials not configured, skipping event update')
+      logger.warn('[Google Calendar] Service Account not configured, skipping event update')
       return {
         success: false,
         error: 'Google Calendar not configured',
       }
     }
 
-    const oauth2Client = getOAuth2Client()
-    const calendar = google.calendar({ version: 'v3', auth: oauth2Client })
+    const auth = getServiceAccountAuth()
+    const calendar = google.calendar({ version: 'v3', auth })
 
     // Buscar evento atual
     const existingEvent = await calendar.events.get({
@@ -363,19 +359,18 @@ export async function cancelCalendarEvent(eventId: string): Promise<CalendarEven
     logger.info('[Google Calendar] Canceling event', { eventId })
 
     if (
-      !process.env.GOOGLE_CLIENT_ID ||
-      !process.env.GOOGLE_CLIENT_SECRET ||
-      !process.env.GOOGLE_REFRESH_TOKEN
+      !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ||
+      !process.env.GOOGLE_PRIVATE_KEY
     ) {
-      logger.warn('[Google Calendar] Credentials not configured, skipping event cancellation')
+      logger.warn('[Google Calendar] Service Account not configured, skipping event cancellation')
       return {
         success: false,
         error: 'Google Calendar not configured',
       }
     }
 
-    const oauth2Client = getOAuth2Client()
-    const calendar = google.calendar({ version: 'v3', auth: oauth2Client })
+    const auth = getServiceAccountAuth()
+    const calendar = google.calendar({ version: 'v3', auth })
 
     // Deletar evento
     await calendar.events.delete({
@@ -407,8 +402,7 @@ export async function cancelCalendarEvent(eventId: string): Promise<CalendarEven
  */
 export function isGoogleCalendarEnabled(): boolean {
   return !!(
-    process.env.GOOGLE_CLIENT_ID &&
-    process.env.GOOGLE_CLIENT_SECRET &&
-    process.env.GOOGLE_REFRESH_TOKEN
+    process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL &&
+    process.env.GOOGLE_PRIVATE_KEY
   )
 }
