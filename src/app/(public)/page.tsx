@@ -162,19 +162,23 @@ export default function HomePage() {
             className="object-cover"
             quality={90}
           />
-          <div className="from-theme-secondary/95 to-theme-primary/90 absolute inset-0 bg-gradient-to-br" />
-          <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-5" />
+          {/* Overlay escuro para legibilidade */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+          {/* Gradiente de cor sutil */}
+          <div className="absolute inset-0 bg-gradient-to-br from-accent-900/20 via-transparent to-accent-950/30" />
+          {/* Pattern texture */}
+          <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-[0.03]" />
         </div>
         <div className="relative z-10 mx-auto max-w-7xl text-center">
           <Badge variant="gold" className="animate-fadeIn mb-6">
             Excelência em Vidros e Esquadrias
           </Badge>
-          <h1 className="text-theme-primary mb-6 font-display text-5xl font-bold leading-tight md:text-7xl lg:text-8xl">
+          <h1 className="mb-6 font-display text-5xl font-bold leading-tight text-white drop-shadow-lg md:text-7xl lg:text-8xl">
             Transforme Seu Espaço
             <br />
-            <span className="text-gradient-accent">Com Elegância</span>
+            <span className="text-gradient-accent drop-shadow-md">Com Elegância</span>
           </h1>
-          <p className="text-theme-secondary mx-auto mb-10 max-w-2xl text-lg md:text-xl">
+          <p className="mx-auto mb-10 max-w-2xl text-lg text-white/90 drop-shadow-md md:text-xl">
             Vidraçaria de alto padrão especializada em projetos residenciais e comerciais. Qualidade
             premium, instalação impecável e atendimento personalizado.
           </p>
