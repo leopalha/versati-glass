@@ -33,8 +33,8 @@ const featuredProducts = [
     id: 1,
     name: 'Box de Vidro Premium',
     description: 'Box sob medida com vidro temperado 8mm, acabamento impecável',
-    image: '/images/products/box/box-de-vidro-para-banheiro-2.webp',
-    price: 'A partir de R$ 1.890',
+    image: '/images/products/box-premium.jpg',
+    price: 'A partir de R$ 2.490',
     badge: 'Mais Vendido',
   },
   {
@@ -47,18 +47,18 @@ const featuredProducts = [
   },
   {
     id: 3,
-    name: 'Espelho Decorativo',
-    description: 'Espelhos personalizados com iluminação LED integrada',
-    image: '/images/products/espelhos/espelho-grande-37.webp',
-    price: 'A partir de R$ 650',
+    name: 'Espelho com LED',
+    description: 'Espelhos decorativos com iluminação LED integrada',
+    image: '/images/products/espelho-led.jpg',
+    price: 'A partir de R$ 890',
     badge: 'Destaque',
   },
   {
     id: 4,
-    name: 'Fachada de Vidro',
-    description: 'Fachadas comerciais com estrutura de alta performance',
-    image: '/images/products/fachadas/fachada-pele-de-vidro.jpg',
-    price: 'Sob Consulta',
+    name: 'Divisória de Vidro',
+    description: 'Divisórias para escritórios e ambientes comerciais',
+    image: '/images/products/divisoria.jpg',
+    price: 'A partir de R$ 690/m²',
     badge: 'Corporativo',
   },
 ]
@@ -109,40 +109,61 @@ const portfolioPreview = [
   {
     title: 'Residência Alto Padrão - Leblon',
     category: 'Residencial',
-    image: '/images/gallery/architecture-1048092-1920-1536x1152.jpg',
+    image: '/images/portfolio/leblon-1.jpg',
   },
   {
-    title: 'Escritório Corporativo - Barra',
+    title: 'Escritório Corporativo - Barra da Tijuca',
     category: 'Comercial',
-    image: '/images/gallery/building-91228-1920.jpg',
+    image: '/images/portfolio/barra-1.jpg',
   },
   {
     title: 'Cobertura Duplex - Ipanema',
     category: 'Residencial',
-    image: '/images/gallery/co-adaptive-b50-photo-peterdressel-07.jpg',
+    image: '/images/portfolio/ipanema-1.jpg',
   },
 ]
 
 const testimonials = [
   {
-    name: 'Ana Paula Silveira',
-    role: 'Arquiteta',
+    name: 'Vinícius Fernando',
+    role: 'Cliente Google',
     content:
-      'A Versati Glass superou todas as expectativas. O acabamento é impecável e o atendimento é excepcional.',
+      'Gostaria de expressar minha satisfação e gratidão ao trabalho dessa empresa, recomendo 100%. O atendimento do Arthur e do Léo impecáveis.',
     rating: 5,
   },
   {
-    name: 'Roberto Mendes',
-    role: 'Proprietário',
+    name: 'Kalil Auad',
+    role: 'Cliente Google',
     content:
-      'Instalaram o box do meu banheiro em tempo recorde. Qualidade premium e equipe muito profissional.',
+      'Quebrei minha mesa de vidro 10mm, bem na borda, e eles vieram em casa consertar, ficou tudo perfeito e o serviço foi bem rápido, durou em torno de 15 minutos.',
     rating: 5,
   },
   {
-    name: 'Mariana Costa',
-    role: 'Designer de Interiores',
+    name: 'Celia Araújo',
+    role: 'Cliente Google',
     content:
-      'Trabalho com a Versati em todos os meus projetos. Confiabilidade e qualidade garantidas.',
+      'FIZ CONTATO COM A EQUIPE DA VERSATI GLASS E FUI ATENDIDA NO MESMO DIA. FOI TRANSFORMADO UM BOX EM DUAS PAREDES DE VIDRO. TODO O MATERIAL REAPROVEITADO. SUPER RECOMENDO.',
+    rating: 5,
+  },
+  {
+    name: 'Simone Avaz',
+    role: 'Cliente Google',
+    content:
+      'Uma vidraçaria que me atendeu hoje domingo às 15:40 para fazer uma manutenção dos meus três Box. Serviço ótimo.',
+    rating: 5,
+  },
+  {
+    name: 'Cláudio Azevedo',
+    role: 'Cliente Google',
+    content:
+      'Fizemos o serviço de manutenção da cortina de vidro com a equipe da Versati Glass, feito de forma ágil, com excelente atendimento e qualidade técnica! Maravilhosos! Recomendo com força!',
+    rating: 5,
+  },
+  {
+    name: 'Angela Alves',
+    role: 'Cliente Google',
+    content:
+      'Estou muito satisfeita com o serviço prestado pela VERSATI GLASS. Instalaram um Box Flex e um Box Elegance, no meu banheiro, além de uma Cortina de Vidro na sacada. A qualidade de todos é excelente.',
     rating: 5,
   },
 ]
@@ -342,6 +363,33 @@ export default function HomePage() {
             <h2 className="text-theme-primary mb-4 font-display text-4xl font-bold md:text-5xl">
               O Que Dizem Nossos Clientes
             </h2>
+            <div className="flex items-center justify-center gap-3 mt-4">
+              <div className="flex items-center gap-2">
+                <span className="text-3xl font-bold text-accent-400">4.7</span>
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className={`h-5 w-5 ${i < 4 ? 'fill-accent-400' : 'fill-accent-400/30'}`}
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                    </svg>
+                  ))}
+                </div>
+              </div>
+              <span className="text-theme-muted">• 37 avaliações</span>
+            </div>
+            <p className="text-theme-subtle mt-2 text-sm">
+              <a
+                href="https://www.google.com/maps/place/Vidra%C3%A7aria+Versati+Glass+-+Freguesia/@-22.9431728,-43.3480123,17z"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent-400 hover:underline"
+              >
+                Ver todas as avaliações no Google
+              </a>
+            </p>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             {testimonials.map((testimonial, index) => (
