@@ -151,8 +151,20 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="from-theme-secondary to-theme-primary relative flex min-h-[90vh] items-center justify-center overflow-hidden bg-gradient-to-b px-6 py-24">
-        <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-5" />
+      <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden px-6 py-24">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/hero-bg-principal.jpg"
+            alt="Versati Glass - Vidraçaria de Luxo"
+            fill
+            priority
+            className="object-cover"
+            quality={90}
+          />
+          <div className="from-theme-secondary/95 to-theme-primary/90 absolute inset-0 bg-gradient-to-br" />
+          <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-5" />
+        </div>
         <div className="relative z-10 mx-auto max-w-7xl text-center">
           <Badge variant="gold" className="animate-fadeIn mb-6">
             Excelência em Vidros e Esquadrias
