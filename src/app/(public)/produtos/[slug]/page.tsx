@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { ShareButtons } from '@/components/shared/share-buttons'
 
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 // Mock database - replace with actual Prisma query
