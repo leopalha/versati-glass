@@ -6,10 +6,7 @@ import { LocalBusinessSchema } from '@/components/seo/local-business-schema'
 
 // Dynamic import for ConsentBanner (loads after page is interactive)
 const ConsentBanner = dynamic(
-  () => import('@/components/gdpr/consent-banner').then((m) => ({ default: m.ConsentBanner })),
-  {
-    ssr: false, // Only load on client side
-  }
+  () => import('@/components/gdpr/consent-banner').then((m) => ({ default: m.ConsentBanner }))
 )
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
