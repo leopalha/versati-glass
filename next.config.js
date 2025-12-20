@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable instrumentation for Sentry
+  experimental: {
+    instrumentationHook: true,
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
   eslint: {
     // Warning: This allows production builds to complete even with ESLint warnings
     ignoreDuringBuilds: true,
@@ -27,11 +34,6 @@ const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '10mb',
-    },
-  },
   // Prevent client-reference-manifest errors in grouped routes
   webpack: (config, { isServer }) => {
     if (isServer) {
