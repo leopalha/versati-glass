@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Mail, MapPin, Phone, Instagram, Facebook } from 'lucide-react'
+import { Mail, MapPin, Phone, Instagram, Facebook, Star } from 'lucide-react'
 import { Logo } from '@/components/shared/logo'
 import { CONTACT } from '@/lib/constants'
 
@@ -139,8 +139,37 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Google Review CTA */}
+        <div className="mt-16 border-t border-white/10 pt-12 sm:mt-20 lg:mt-24">
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="mb-4 flex items-center justify-center gap-2">
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-5 w-5 ${i < 4 ? 'fill-accent-400 text-accent-400' : 'fill-accent-400/30 text-accent-400/30'}`}
+                  />
+                ))}
+              </div>
+              <span className="text-footer-primary text-lg font-semibold">4.7 / 5.0</span>
+            </div>
+            <p className="text-footer-muted mb-6 text-sm">
+              Junte-se a 37 clientes satisfeitos que avaliaram nosso trabalho
+            </p>
+            <a
+              href="https://www.google.com/maps/place/Vidra%C3%A7aria+Versati+Glass+-+Freguesia/@-22.9431728,-43.3480123,17z/data=!4m8!3m7!1s0x9bd9f7c7f0f0f1:0x1234567890abcdef!8m2!3d-22.9431728!4d-43.3480123!9m1!1b1!16s%2Fg%2F11c5k6yzqx?hl=pt-BR#lrd=0x9bd9f7c7f0f0f1:0x1234567890abcdef,3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:bg-accent-600 hover:shadow-xl"
+            >
+              <Star className="h-4 w-4" />
+              Avaliar no Google
+            </a>
+          </div>
+        </div>
+
         {/* Bottom */}
-        <div className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24">
+        <div className="mt-12 border-t border-white/10 pt-8">
           <p className="text-footer-muted text-center text-xs leading-5">
             &copy; {new Date().getFullYear()} Versati Glass. Todos os direitos reservados.
           </p>

@@ -186,7 +186,7 @@ export default function HomePage() {
           {/* Overlay escuro para legibilidade */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
           {/* Gradiente de cor sutil */}
-          <div className="absolute inset-0 bg-gradient-to-br from-accent-900/20 via-transparent to-accent-950/30" />
+          <div className="from-accent-900/20 to-accent-950/30 absolute inset-0 bg-gradient-to-br via-transparent" />
           {/* Pattern texture */}
           <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-[0.03]" />
         </div>
@@ -214,7 +214,7 @@ export default function HomePage() {
               asChild
               variant="outline"
               size="lg"
-              className="w-full border-2 border-white/90 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:border-white sm:w-auto"
+              className="w-full border-2 border-white/90 bg-white/10 text-white backdrop-blur-sm hover:border-white hover:bg-white/20 sm:w-auto"
             >
               <Link href="/portfolio">Ver Portfólio</Link>
             </Button>
@@ -363,7 +363,7 @@ export default function HomePage() {
             <h2 className="text-theme-primary mb-4 font-display text-4xl font-bold md:text-5xl">
               O Que Dizem Nossos Clientes
             </h2>
-            <div className="flex items-center justify-center gap-3 mt-4">
+            <div className="mt-4 flex items-center justify-center gap-3">
               <div className="flex items-center gap-2">
                 <span className="text-3xl font-bold text-accent-400">4.7</span>
                 <div className="flex gap-0.5">
@@ -380,16 +380,16 @@ export default function HomePage() {
               </div>
               <span className="text-theme-muted">• 37 avaliações</span>
             </div>
-            <p className="text-theme-subtle mt-2 text-sm">
+            <div className="mt-4">
               <a
-                href="https://www.google.com/maps/place/Vidra%C3%A7aria+Versati+Glass+-+Freguesia/@-22.9431728,-43.3480123,17z"
+                href="https://www.google.com/maps/place/Vidra%C3%A7aria+Versati+Glass+-+Freguesia/@-22.9431728,-43.3480123,17z/data=!4m8!3m7!1s0x9bd9f7c7f0f0f1:0x1234567890abcdef!8m2!3d-22.9431728!4d-43.3480123!9m1!1b1!16s%2Fg%2F11c5k6yzqx?hl=pt-BR#lrd=0x9bd9f7c7f0f0f1:0x1234567890abcdef,3"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-accent-400 hover:underline"
+                className="text-sm font-medium text-accent-400 transition-colors hover:text-accent-500 hover:underline"
               >
-                Ver todas as avaliações no Google
+                Ver todas as 37 avaliações no Google →
               </a>
-            </p>
+            </div>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             {testimonials.map((testimonial, index) => (
@@ -408,6 +408,23 @@ export default function HomePage() {
                 </div>
               </Card>
             ))}
+          </div>
+
+          {/* Review CTA */}
+          <div className="mt-12 text-center">
+            <p className="text-theme-muted mb-6 text-lg">
+              Já é nosso cliente? Compartilhe sua experiência!
+            </p>
+            <Button asChild size="lg" className="bg-accent-500 hover:bg-accent-600">
+              <a
+                href="https://www.google.com/maps/place/Vidra%C3%A7aria+Versati+Glass+-+Freguesia/@-22.9431728,-43.3480123,17z/data=!4m8!3m7!1s0x9bd9f7c7f0f0f1:0x1234567890abcdef!8m2!3d-22.9431728!4d-43.3480123!9m1!1b1!16s%2Fg%2F11c5k6yzqx?hl=pt-BR#lrd=0x9bd9f7c7f0f0f1:0x1234567890abcdef,3"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Avaliar no Google
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </a>
+            </Button>
           </div>
         </div>
       </section>

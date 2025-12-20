@@ -211,7 +211,9 @@
       "Bash(pnpm exec tsx:*)",
       "Bash(SKIP_TYPE_CHECK=1 git commit:*)",
       "Bash(Select-Object Id,ProcessName,StartTime)",
-      "Bash(pnpm prisma generate:*)"
+      "Bash(pnpm prisma generate:*)",
+      "Bash(pnpm run dev:*)",
+      "Bash(npx next dev --help:*)"
     ]
   }
 }

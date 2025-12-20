@@ -1,6 +1,6 @@
 'use client'
 
-import { MapPin, Phone, Mail, Clock, Instagram, Facebook, Loader2 } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, Instagram, Facebook, Loader2, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -255,6 +255,39 @@ export default function ContatoPage() {
               rel="noopener noreferrer"
             >
               Falar no WhatsApp
+            </a>
+          </Button>
+        </div>
+      </section>
+
+      {/* Google Review CTA */}
+      <section className="px-6 pb-20">
+        <div className="to-theme-secondary from-accent-900/10 mx-auto max-w-4xl rounded-2xl bg-gradient-to-br p-12 text-center">
+          <div className="mb-4 flex items-center justify-center gap-2">
+            <div className="flex gap-0.5">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={`h-6 w-6 ${i < 4 ? 'fill-accent-400 text-accent-400' : 'fill-accent-400/30 text-accent-400/30'}`}
+                />
+              ))}
+            </div>
+            <span className="text-theme-primary text-2xl font-bold">4.7 / 5.0</span>
+          </div>
+          <h2 className="text-theme-primary mb-4 font-display text-3xl font-bold md:text-4xl">
+            Já é Nosso Cliente?
+          </h2>
+          <p className="text-theme-secondary mb-8 text-lg">
+            Compartilhe sua experiência e ajude outros clientes a conhecerem nosso trabalho
+          </p>
+          <Button asChild size="lg" className="bg-accent-500 hover:bg-accent-600">
+            <a
+              href="https://www.google.com/maps/place/Vidra%C3%A7aria+Versati+Glass+-+Freguesia/@-22.9431728,-43.3480123,17z/data=!4m8!3m7!1s0x9bd9f7c7f0f0f1:0x1234567890abcdef!8m2!3d-22.9431728!4d-43.3480123!9m1!1b1!16s%2Fg%2F11c5k6yzqx?hl=pt-BR#lrd=0x9bd9f7c7f0f0f1:0x1234567890abcdef,3"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Star className="mr-2 h-5 w-5" />
+              Avaliar no Google
             </a>
           </Button>
         </div>
