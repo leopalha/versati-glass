@@ -282,7 +282,7 @@ export default function ContatoPage() {
           </p>
           <Button asChild size="lg" className="bg-accent-500 hover:bg-accent-600">
             <a
-              href="https://www.google.com/maps/place/Vidra%C3%A7aria+Versati+Glass+-+Freguesia/@-22.9431728,-43.3480123,17z/data=!4m8!3m7!1s0x9bd9f7c7f0f0f1:0x1234567890abcdef!8m2!3d-22.9431728!4d-43.3480123!9m1!1b1!16s%2Fg%2F11c5k6yzqx?hl=pt-BR#lrd=0x9bd9f7c7f0f0f1:0x1234567890abcdef,3"
+              href="https://search.google.com/local/writereview?placeid=ChIJAa_w8Mf_mQARYxg0fAHj-i8"
               target="_blank"
               rel="noopener noreferrer"
             >
