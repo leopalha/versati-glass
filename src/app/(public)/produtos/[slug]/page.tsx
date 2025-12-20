@@ -351,7 +351,8 @@ const products = {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = products[params.slug as keyof typeof products]
+  const { slug } = await params
+  const product = products[slug as keyof typeof products]
 
   if (!product) {
     return {
@@ -370,8 +371,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function ProductDetailPage({ params }: Props) {
-  const product = products[params.slug as keyof typeof products]
+export default async function ProductDetailPage({ params }: Props) {
+  const { slug } = await params
+  const product = products[slug as keyof typeof products]
 
   if (!product) {
     notFound()
