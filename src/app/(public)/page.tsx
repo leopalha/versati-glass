@@ -417,7 +417,7 @@ export default function HomePage() {
             </p>
             <Button asChild size="lg" className="bg-accent-500 hover:bg-accent-600">
               <a
-                href="https://search.google.com/local/writereview?placeid=ChIJzZaWG8k8mQAR48asdzTgBOg"
+                href="https://g.page/r/CeO8t3cONNy9EBM/review"
                 target="_blank"
                 rel="noopener noreferrer"
               >
