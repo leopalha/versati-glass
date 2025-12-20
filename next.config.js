@@ -1,15 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable instrumentation for Sentry
   experimental: {
-    instrumentationHook: true,
     serverActions: {
       bodySizeLimit: '10mb',
     },
-  },
-  eslint: {
-    // Warning: This allows production builds to complete even with ESLint warnings
-    ignoreDuringBuilds: true,
   },
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -32,24 +26,8 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
-  reactStrictMode: true,
-  swcMinify: true,
-  // Prevent client-reference-manifest errors in grouped routes
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
     ignoreBuildErrors: true,
-  },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: false,
-      }
-    }
-    return config
   },
 }
 
