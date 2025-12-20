@@ -125,10 +125,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
     const subtotal = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0)
     const discountValue = subtotal * (validatedData.discount / 100)
-    const shippingFee = validatedData.shippingFee || 0
-    const laborFee = validatedData.laborFee || 0
-    const materialFee = validatedData.materialFee || 0
-    const total = subtotal - discountValue + shippingFee + laborFee + materialFee
+    const total = subtotal - discountValue
 
     // Atualizar orcamento
     const updatedQuote = await prisma.quote.update({
@@ -136,9 +133,6 @@ export async function PUT(request: Request, { params }: RouteParams) {
       data: {
         subtotal,
         discount: validatedData.discount,
-        shippingFee,
-        laborFee,
-        materialFee,
         total,
         internalNotes: validatedData.internalNotes,
         customerNotes: validatedData.customerNotes,

@@ -3080,14 +3080,795 @@ npm install --save-dev @types/socket.io @types/twilio
 
 **Próximos Passos:**
 
-1. Implementar NOTIF.1 - WhatsApp Business (4h)
-2. Implementar NOTIF.3 - Google Calendar (4h)
-3. Implementar NOTIF.4 - Email Templates (3h)
-4. Completar E2E tests após database setup
+1. ✅ Corrigir erros TypeScript críticos (deploy bloqueado)
+2. 🔄 Implementar Sistema de Fornecedores (12h estimadas) - **PRIORIDADE MÁXIMA**
+3. Implementar NOTIF.1 - WhatsApp Business (4h)
+4. Implementar NOTIF.3 - Google Calendar (4h)
+5. Implementar NOTIF.4 - Email Templates (3h)
+6. Completar E2E tests após database setup
 
 ---
 
-**Última Atualização:** 17 Dezembro 2024 - 23:30
+## 🏭 SPRINT: SISTEMA DE FORNECEDORES (SUPPLIER FLOW)
+
+**Prioridade:** 🔴 CRÍTICA
+**Estimativa:** 12 horas
+**Status:** 📋 Planejamento Completo
+**Última Atualização:** 19 Dezembro 2024
+
+### 🎯 Objetivo
+
+Implementar fluxo completo de cotação com fornecedores antes de enviar orçamento final para o cliente.
+
+### 📊 Fluxo Atual vs. Fluxo Desejado
+
+#### ❌ FLUXO ATUAL (INCOMPLETO)
+
+```
+Cliente faz pedido → Admin edita → Admin envia para cliente → Cliente aprova → Pedido
+```
+
+**Problema:** Admin não tem como cotar com fornecedores antes de definir preço final.
+
+#### ✅ FLUXO NOVO (COMPLETO)
+
+```
+1. Cliente faz pedido
+   └─ Orçamento criado (status: DRAFT)
+        ↓
+2. Admin recebe e edita
+   └─ Ajusta itens, medidas, especificações
+        ↓
+3. Admin envia para FORNECEDORES (NOVO!)
+   ├─ Opção A: Download PDF para envio manual
+   ├─ Opção B: Envio automático (email/WhatsApp)
+   └─ Status: PENDING_SUPPLIERS
+        ↓
+4. Fornecedores respondem
+   └─ Admin recebe cotações (via email, WhatsApp, telefone)
+        ↓
+5. Admin escolhe melhor preço
+   ├─ Atualiza valores no orçamento
+   ├─ Registra fornecedor escolhido
+   └─ Status: READY_TO_SEND
+        ↓
+6. Admin envia para CLIENTE aprovar
+   ├─ Email + WhatsApp com preço final
+   └─ Status: SENT → VIEWED → ACCEPTED/REJECTED
+        ↓
+7. Cliente aprova
+   └─ Status: ACCEPTED
+        ↓
+8. Admin converte em PEDIDO
+   └─ Pedido vinculado ao fornecedor escolhido
+```
+
+---
+
+### 📋 TAREFAS DETALHADAS
+
+#### **FASE 1: MODELO DE DADOS (2h)**
+
+##### SUP.1.1 - Criar tabela `Supplier` (fornecedores)
+
+**Arquivo:** `prisma/schema.prisma`
+
+```prisma
+model Supplier {
+  id                String   @id @default(uuid())
+  name              String   // Nome da empresa
+  contactName       String?  // Nome do contato
+  email             String   // Email principal
+  phone             String?  // Telefone/WhatsApp
+  specialty         String?  // Ex: "Box de vidro", "Espelhos", "Fachadas"
+  isActive          Boolean  @default(true)
+  rating            Decimal? @default(5.0) // Avaliação (0-5)
+  notes             String?  // Notas internas sobre o fornecedor
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relações
+  quotes            SupplierQuote[]
+  orders            Order[]
+
+  @@map("suppliers")
+}
+```
+
+##### SUP.1.2 - Criar tabela `SupplierQuote` (cotações de fornecedores)
+
+**Arquivo:** `prisma/schema.prisma`
+
+```prisma
+model SupplierQuote {
+  id                String   @id @default(uuid())
+  quoteId           String   // FK Quote
+  supplierId        String   // FK Supplier
+
+  // Valores cotados
+  subtotal          Decimal  // Valor total cotado pelo fornecedor
+  shippingFee       Decimal  @default(0) // Frete
+  laborFee          Decimal  @default(0) // Mão de obra
+  materialFee       Decimal  @default(0) // Material adicional
+  total             Decimal  // Total = subtotal + fees
+
+  // Status da cotação
+  status            SupplierQuoteStatus @default(PENDING)
+  sentAt            DateTime? // Quando foi enviado para o fornecedor
+  respondedAt       DateTime? // Quando fornecedor respondeu
+  isSelected        Boolean  @default(false) // Se foi escolhido
+
+  // Observações
+  supplierNotes     String?  // Notas/observações do fornecedor
+  internalNotes     String?  // Notas internas do admin
+
+  // Prazo
+  deliveryDays      Int?     // Prazo de entrega em dias
+  validUntil        DateTime? // Validade da cotação
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relações
+  quote             Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  supplier          Supplier @relation(fields: [supplierId], references: [id])
+
+  @@map("supplier_quotes")
+}
+
+enum SupplierQuoteStatus {
+  PENDING           // Aguardando resposta
+  RESPONDED         // Fornecedor respondeu
+  REJECTED          // Fornecedor recusou
+  SELECTED          // Escolhido para o pedido
+  CANCELLED         // Cancelado
+}
+```
+
+##### SUP.1.3 - Adicionar campos no modelo `Quote`
+
+**Arquivo:** `prisma/schema.prisma`
+
+```prisma
+model Quote {
+  // ... campos existentes ...
+
+  // NOVOS CAMPOS:
+  selectedSupplierId String?  // FK Supplier escolhido
+  selectedSupplier   Supplier? @relation(fields: [selectedSupplierId], references: [id])
+
+  supplierQuotes     SupplierQuote[] // Cotações de fornecedores
+
+  // ... resto do modelo ...
+}
+```
+
+##### SUP.1.4 - Atualizar enum `QuoteStatus`
+
+**Arquivo:** `prisma/schema.prisma`
+
+```prisma
+enum QuoteStatus {
+  DRAFT              // Rascunho (admin editando)
+  PENDING_SUPPLIERS  // Aguardando cotações de fornecedores (NOVO!)
+  READY_TO_SEND      // Pronto para enviar ao cliente (NOVO!)
+  SENT               // Enviado ao cliente
+  VIEWED             // Cliente visualizou
+  ACCEPTED           // Cliente aceitou
+  REJECTED           // Cliente recusou
+  EXPIRED            // Prazo expirou
+  CONVERTED          // Virou pedido
+  CANCELLED          // Cancelado
+}
+```
+
+##### SUP.1.5 - Adicionar campo no modelo `Order`
+
+**Arquivo:** `prisma/schema.prisma`
+
+```prisma
+model Order {
+  // ... campos existentes ...
+
+  // NOVO CAMPO:
+  supplierId        String?  // FK Supplier
+  supplier          Supplier? @relation(fields: [supplierId], references: [id])
+
+  // ... resto do modelo ...
+}
+```
+
+**Checklist SUP.1:**
+
+- [ ] Criar migration: `npx prisma migrate dev --name add-supplier-system`
+- [ ] Rodar seed se necessário
+- [ ] Verificar relacionamentos no Prisma Studio
+
+---
+
+#### **FASE 2: APIs BACKEND (4h)**
+
+##### SUP.2.1 - CRUD de Fornecedores
+
+**Arquivo:** `src/app/api/admin/suppliers/route.ts` (CRIAR)
+
+```typescript
+// GET /api/admin/suppliers - Listar fornecedores
+// POST /api/admin/suppliers - Criar fornecedor
+```
+
+**Arquivo:** `src/app/api/admin/suppliers/[id]/route.ts` (CRIAR)
+
+```typescript
+// GET /api/admin/suppliers/[id] - Detalhes
+// PATCH /api/admin/suppliers/[id] - Editar
+// DELETE /api/admin/suppliers/[id] - Deletar (soft delete: isActive=false)
+```
+
+**Features:**
+
+- Validação com Zod
+- Rate limiting (10 req/min)
+- Apenas ADMIN pode acessar
+- Paginação na listagem
+- Busca por nome/especialidade
+
+##### SUP.2.2 - Enviar Orçamento para Fornecedores
+
+**Arquivo:** `src/app/api/quotes/[id]/send-to-suppliers/route.ts` (CRIAR)
+
+```typescript
+// POST /api/quotes/[id]/send-to-suppliers
+// Body: { supplierIds: string[], message?: string }
+
+// Fluxo:
+// 1. Validar quote (status deve ser DRAFT)
+// 2. Gerar PDF específico para fornecedor (sem preços, apenas specs)
+// 3. Para cada supplier:
+//    - Criar SupplierQuote (status: PENDING)
+//    - Enviar email com PDF anexo
+//    - Opcional: enviar WhatsApp
+// 4. Atualizar Quote.status = PENDING_SUPPLIERS
+// 5. Retornar lista de envios (sucesso/erro)
+```
+
+**Template Email:**
+
+```
+Assunto: Solicitação de Cotação - Versati Glass #ORC-2024-0123
+
+Olá [Nome do Fornecedor],
+
+Estamos solicitando cotação para o projeto anexo.
+
+DETALHES DO PROJETO:
+- Cliente: [Nome] - [Cidade/Bairro]
+- Categoria: [Box/Espelho/etc]
+- Itens: [quantidade] itens
+- Prazo: Necessitamos resposta até [data]
+
+Em anexo, enviamos as especificações técnicas completas.
+
+Por favor, envie sua cotação com:
+- Preço total (material + mão de obra)
+- Prazo de entrega
+- Observações técnicas
+
+Aguardamos retorno,
+Versati Glass
+```
+
+##### SUP.2.3 - Registrar Resposta de Fornecedor
+
+**Arquivo:** `src/app/api/quotes/[id]/supplier-quotes/[supplierQuoteId]/route.ts` (CRIAR)
+
+```typescript
+// PATCH /api/quotes/[id]/supplier-quotes/[supplierQuoteId]
+// Body: {
+//   subtotal, shippingFee, laborFee, materialFee,
+//   deliveryDays, supplierNotes, validUntil
+// }
+
+// Fluxo:
+// 1. Validar supplier quote exists
+// 2. Atualizar valores
+// 3. Atualizar status = RESPONDED
+// 4. Atualizar respondedAt = now()
+// 5. Notificar admin (opcional: push notification)
+```
+
+##### SUP.2.4 - Selecionar Fornecedor e Atualizar Orçamento
+
+**Arquivo:** `src/app/api/quotes/[id]/select-supplier/route.ts` (CRIAR)
+
+```typescript
+// POST /api/quotes/[id]/select-supplier
+// Body: { supplierQuoteId: string }
+
+// Fluxo:
+// 1. Validar supplier quote exists e status = RESPONDED
+// 2. Marcar supplierQuote.isSelected = true
+// 3. Desmarcar outros supplierQuotes.isSelected = false
+// 4. Atualizar Quote:
+//    - selectedSupplierId
+//    - subtotal, discount, total (baseado na cotação)
+// 5. Atualizar Quote.status = READY_TO_SEND
+// 6. Retornar quote atualizado
+```
+
+##### SUP.2.5 - Gerar PDF para Fornecedor
+
+**Arquivo:** `src/app/api/quotes/[id]/pdf-supplier/route.ts` (CRIAR)
+
+```typescript
+// GET /api/quotes/[id]/pdf-supplier
+
+// Diferenças do PDF normal:
+// - SEM preços (apenas especificações técnicas)
+// - COM medidas detalhadas
+// - COM fotos do cliente
+// - COM endereço de instalação
+// - Header: "SOLICITAÇÃO DE COTAÇÃO"
+// - Footer: "Favor responder até [data]"
+```
+
+**Checklist SUP.2:**
+
+- [ ] Implementar 5 rotas novas
+- [ ] Validação Zod em todas
+- [ ] Testes manuais com Postman/Insomnia
+- [ ] Log de todas operações (logger)
+
+---
+
+#### **FASE 3: INTERFACE ADMIN (4h)**
+
+##### SUP.3.1 - Página de Gerenciamento de Fornecedores
+
+**Arquivo:** `src/app/(admin)/admin/fornecedores/page.tsx` (CRIAR)
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│ 📦 Fornecedores                    [+ Novo]      │
+├─────────────────────────────────────────────────┤
+│ 🔍 Buscar fornecedor...          [Filtros ▼]    │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ ┌─────────────────────────────────────────┐   │
+│ │ Vidraçaria Silva          ⭐ 4.8         │   │
+│ │ 📧 contato@silva.com  📞 (11) 9999-9999  │   │
+│ │ Especialidade: Box de vidro, Espelhos    │   │
+│ │ ✅ Ativo  │ 12 cotações  │ 8 pedidos     │   │
+│ │                          [Editar] [Ver]  │   │
+│ └─────────────────────────────────────────┘   │
+│                                                 │
+│ ┌─────────────────────────────────────────┐   │
+│ │ Alumitech                 ⭐ 5.0         │   │
+│ │ 📧 vendas@alumi.com   📞 (11) 8888-8888  │   │
+│ │ Especialidade: Esquadrias, Fachadas      │   │
+│ │ ✅ Ativo  │ 8 cotações   │ 5 pedidos     │   │
+│ │                          [Editar] [Ver]  │   │
+│ └─────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────┘
+```
+
+**Features:**
+
+- Listagem com busca e filtros
+- Badge de status (Ativo/Inativo)
+- Rating (estrelas)
+- Estatísticas (cotações/pedidos)
+- Criar/Editar/Deletar (soft delete)
+
+##### SUP.3.2 - Dialog de Envio para Fornecedores
+
+**Arquivo:** `src/components/admin/send-to-suppliers-dialog.tsx` (CRIAR)
+
+**Acionamento:** Botão "Enviar para Fornecedores" na página `/admin/orcamentos/[id]`
+
+**Layout do Dialog:**
+
+```
+┌────────────────────────────────────────────────┐
+│ 📤 Enviar para Fornecedores                    │
+├────────────────────────────────────────────────┤
+│                                                │
+│ Orçamento: #ORC-2024-0123                      │
+│ Cliente: João Silva - Leblon                   │
+│                                                │
+│ ┌──────────────────────────────────────────┐  │
+│ │ Selecione os fornecedores:               │  │
+│ │                                          │  │
+│ │ ☑ Vidraçaria Silva (Box, Espelhos)      │  │
+│ │ ☑ Alumitech (Esquadrias)                │  │
+│ │ ☐ Cristal & Cia (Fachadas)              │  │
+│ │                                          │  │
+│ │ [Selecionar todos]                       │  │
+│ └──────────────────────────────────────────┘  │
+│                                                │
+│ Mensagem (opcional):                           │
+│ ┌──────────────────────────────────────────┐  │
+│ │ Precisamos da cotação até sexta-feira.  │  │
+│ │                                          │  │
+│ └──────────────────────────────────────────┘  │
+│                                                │
+│ ☑ Enviar por email                             │
+│ ☐ Enviar por WhatsApp                          │
+│                                                │
+│         [Cancelar]  [📤 Enviar (2 selecionados)]│
+└────────────────────────────────────────────────┘
+```
+
+**Funcionalidade:**
+
+- Listar fornecedores ativos
+- Multi-seleção com checkboxes
+- Contadores dinâmicos
+- Mensagem personalizada opcional
+- Confirmação de envio
+- Toast de sucesso/erro
+
+##### SUP.3.3 - Seção de Cotações na Página do Orçamento
+
+**Arquivo:** `src/app/(admin)/admin/orcamentos/[id]/page.tsx` (EDITAR)
+
+**Adicionar seção após "Itens do Orçamento":**
+
+```tsx
+{
+  quote.status === 'PENDING_SUPPLIERS' && (
+    <Card className="p-6">
+      <h3 className="mb-4 text-lg font-semibold">💼 Cotações de Fornecedores</h3>
+
+      {quote.supplierQuotes.length === 0 ? (
+        <p className="text-muted-foreground">Nenhuma cotação enviada ainda.</p>
+      ) : (
+        <div className="space-y-3">
+          {quote.supplierQuotes.map((sq) => (
+            <SupplierQuoteCard
+              key={sq.id}
+              supplierQuote={sq}
+              onSelect={() => handleSelectSupplier(sq.id)}
+              onEdit={() => handleEditQuote(sq.id)}
+            />
+          ))}
+        </div>
+      )}
+
+      <Button onClick={() => setShowSendDialog(true)} className="mt-4">
+        + Enviar para mais fornecedores
+      </Button>
+    </Card>
+  )
+}
+```
+
+##### SUP.3.4 - Componente SupplierQuoteCard
+
+**Arquivo:** `src/components/admin/supplier-quote-card.tsx` (CRIAR)
+
+**Layout:**
+
+```
+┌───────────────────────────────────────────────────┐
+│ Vidraçaria Silva                    ⭐ 4.8       │
+├───────────────────────────────────────────────────┤
+│ Status: ⏳ Aguardando resposta                    │
+│ Enviado: 18/12/2024 às 14:30                     │
+│                                                   │
+│ [Registrar Resposta]  [Reenviar]                 │
+└───────────────────────────────────────────────────┘
+
+OU (se já respondeu):
+
+┌───────────────────────────────────────────────────┐
+│ Vidraçaria Silva                    ⭐ 4.8       │
+├───────────────────────────────────────────────────┤
+│ Status: ✅ Respondeu                              │
+│ Respondeu: 18/12/2024 às 16:45                   │
+│                                                   │
+│ 💰 Total: R$ 2.850,00                            │
+│    Subtotal: R$ 2.500,00                         │
+│    Frete: R$ 150,00                              │
+│    Mão de obra: R$ 200,00                        │
+│                                                   │
+│ 🚚 Prazo: 7 dias úteis                           │
+│ 📝 Obs: "Material de primeira linha"             │
+│                                                   │
+│ [✓ Selecionar este fornecedor]  [Editar]         │
+└───────────────────────────────────────────────────┘
+
+OU (se selecionado):
+
+┌───────────────────────────────────────────────────┐
+│ Alumitech                          ⭐ 5.0  ⭐ ESCOLHIDO │
+├───────────────────────────────────────────────────┤
+│ Status: ✅ Selecionado                            │
+│                                                   │
+│ 💰 Total: R$ 2.650,00  (Melhor preço!)           │
+│    Subtotal: R$ 2.400,00                         │
+│    Frete: R$ 100,00                              │
+│    Mão de obra: R$ 150,00                        │
+│                                                   │
+│ 🚚 Prazo: 5 dias úteis                           │
+│                                                   │
+│ ✅ Este fornecedor foi escolhido para o pedido    │
+│ [Trocar fornecedor]                              │
+└───────────────────────────────────────────────────┘
+```
+
+##### SUP.3.5 - Dialog de Registrar Resposta
+
+**Arquivo:** `src/components/admin/register-supplier-response-dialog.tsx` (CRIAR)
+
+**Layout:**
+
+```
+┌────────────────────────────────────────────────┐
+│ 📝 Registrar Cotação - Vidraçaria Silva        │
+├────────────────────────────────────────────────┤
+│                                                │
+│ Subtotal (R$):                                 │
+│ ┌──────────────────────────────────────────┐  │
+│ │ 2500.00                                  │  │
+│ └──────────────────────────────────────────┘  │
+│                                                │
+│ Frete (R$):                                    │
+│ ┌──────────────────────────────────────────┐  │
+│ │ 150.00                                   │  │
+│ └──────────────────────────────────────────┘  │
+│                                                │
+│ Mão de Obra (R$):                              │
+│ ┌──────────────────────────────────────────┐  │
+│ │ 200.00                                   │  │
+│ └──────────────────────────────────────────┘  │
+│                                                │
+│ Prazo de entrega (dias):                       │
+│ ┌──────────────────────────────────────────┐  │
+│ │ 7                                        │  │
+│ └──────────────────────────────────────────┘  │
+│                                                │
+│ Observações do fornecedor:                     │
+│ ┌──────────────────────────────────────────┐  │
+│ │ Material de primeira, garantia de 5 anos│  │
+│ └──────────────────────────────────────────┘  │
+│                                                │
+│ Total calculado: R$ 2.850,00                   │
+│                                                │
+│         [Cancelar]  [💾 Salvar Cotação]        │
+└────────────────────────────────────────────────┘
+```
+
+**Checklist SUP.3:**
+
+- [ ] Página de fornecedores funcional
+- [ ] Dialog de envio funcionando
+- [ ] Cards de cotação exibindo corretamente
+- [ ] Dialog de registro de resposta
+- [ ] Seleção de fornecedor atualiza orçamento
+- [ ] Testes de UX (responsivo, acessibilidade)
+
+---
+
+#### **FASE 4: AJUSTES NO FLUXO EXISTENTE (2h)**
+
+##### SUP.4.1 - Atualizar Botão "Enviar Orçamento"
+
+**Arquivo:** `src/components/admin/send-quote-button.tsx`
+
+**Mudança:** Só permitir envio ao cliente se `status === 'READY_TO_SEND'`
+
+```tsx
+// ANTES:
+if (quote.status === 'DRAFT' || quote.status === 'SENT' || quote.status === 'VIEWED') {
+  // Permitir envio
+}
+
+// DEPOIS:
+if (quote.status === 'READY_TO_SEND' || quote.status === 'SENT' || quote.status === 'VIEWED') {
+  // Permitir envio
+}
+
+// ADICIONAR validação:
+if (quote.status === 'PENDING_SUPPLIERS') {
+  return <Button disabled>⏳ Aguardando cotações de fornecedores</Button>
+}
+```
+
+##### SUP.4.2 - Atualizar Dialog de Conversão em Pedido
+
+**Arquivo:** `src/components/admin/convert-quote-button.tsx`
+
+**Adicionar:** Exibir fornecedor selecionado antes de converter
+
+```tsx
+<Dialog>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Converter em Pedido</DialogTitle>
+    </DialogHeader>
+
+    {quote.selectedSupplier && (
+      <Alert>
+        <Info className="h-4 w-4" />
+        <AlertDescription>
+          Fornecedor: <strong>{quote.selectedSupplier.name}</strong>
+          <br />
+          Total: <strong>R$ {formatCurrency(quote.total)}</strong>
+        </AlertDescription>
+      </Alert>
+    )}
+
+    <p>Confirma a conversão deste orçamento em pedido?</p>
+
+    <DialogFooter>
+      <Button onClick={handleConvert}>Confirmar</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+##### SUP.4.3 - Atualizar API de Conversão
+
+**Arquivo:** `src/app/api/quotes/[id]/convert/route.ts`
+
+**Adicionar:** Vincular fornecedor ao pedido criado
+
+```typescript
+// LINHA ~120 (onde cria o Order)
+const order = await prisma.order.create({
+  data: {
+    // ... campos existentes ...
+    supplierId: quote.selectedSupplierId || null, // NOVO!
+  },
+})
+```
+
+##### SUP.4.4 - Exibir Fornecedor na Página do Pedido
+
+**Arquivo:** `src/app/(admin)/admin/pedidos/[id]/page.tsx`
+
+**Adicionar seção:**
+
+```tsx
+{
+  order.supplier && (
+    <Card className="p-6">
+      <h3 className="mb-4 text-lg font-semibold">🏭 Fornecedor</h3>
+      <div className="grid gap-2">
+        <div>
+          <span className="text-muted-foreground">Empresa:</span>{' '}
+          <strong>{order.supplier.name}</strong>
+        </div>
+        <div>
+          <span className="text-muted-foreground">Contato:</span> {order.supplier.email}
+        </div>
+        {order.supplier.phone && (
+          <div>
+            <span className="text-muted-foreground">Telefone:</span> {order.supplier.phone}
+          </div>
+        )}
+      </div>
+    </Card>
+  )
+}
+```
+
+**Checklist SUP.4:**
+
+- [ ] Validações de status funcionando
+- [ ] Conversão vincula fornecedor
+- [ ] Pedido exibe fornecedor
+- [ ] Fluxo end-to-end testado
+
+---
+
+### 🧪 TESTES E VALIDAÇÃO
+
+**Cenário de Teste Completo:**
+
+1. ✅ **Criar fornecedores**
+   - Criar 3 fornecedores de teste via `/admin/fornecedores`
+   - Verificar listagem e busca
+
+2. ✅ **Cliente faz pedido**
+   - Acessar `/orcamento`
+   - Preencher wizard completo
+   - Verificar orçamento criado com status `DRAFT`
+
+3. ✅ **Admin edita orçamento**
+   - Acessar `/admin/orcamentos/[id]`
+   - Editar itens, ajustar medidas
+   - Salvar alterações
+
+4. ✅ **Admin envia para fornecedores**
+   - Clicar "Enviar para Fornecedores"
+   - Selecionar 2 fornecedores
+   - Verificar emails enviados
+   - Verificar status = `PENDING_SUPPLIERS`
+   - Verificar que botão "Enviar ao Cliente" está desabilitado
+
+5. ✅ **Admin registra respostas**
+   - Registrar cotação do Fornecedor 1 (R$ 2.850)
+   - Registrar cotação do Fornecedor 2 (R$ 2.650)
+   - Verificar cards exibindo valores
+
+6. ✅ **Admin seleciona melhor preço**
+   - Clicar "Selecionar" no Fornecedor 2
+   - Verificar orçamento atualizado com valores
+   - Verificar status = `READY_TO_SEND`
+   - Verificar badge "ESCOLHIDO" no card
+
+7. ✅ **Admin envia para cliente**
+   - Verificar que botão "Enviar ao Cliente" está habilitado
+   - Enviar email + WhatsApp
+   - Verificar status = `SENT`
+
+8. ✅ **Cliente aprova**
+   - Acessar link do portal
+   - Clicar "Aceitar Orçamento"
+   - Verificar status = `ACCEPTED`
+
+9. ✅ **Admin converte em pedido**
+   - Clicar "Converter em Pedido"
+   - Verificar dialog mostra fornecedor
+   - Confirmar conversão
+   - Verificar pedido criado com `supplierId`
+
+10. ✅ **Verificar pedido**
+    - Acessar `/admin/pedidos/[id]`
+    - Verificar seção "Fornecedor" exibe dados corretos
+
+---
+
+### 📊 MÉTRICAS DE SUCESSO
+
+**KPIs:**
+
+- ✅ Admin consegue gerenciar fornecedores (CRUD completo)
+- ✅ Admin consegue enviar cotação para múltiplos fornecedores
+- ✅ Admin consegue registrar respostas manualmente
+- ✅ Admin consegue comparar preços facilmente
+- ✅ Admin consegue selecionar melhor fornecedor
+- ✅ Orçamento só vai para cliente após cotação
+- ✅ Pedido fica vinculado ao fornecedor escolhido
+- ✅ Fluxo completo em <5 minutos
+
+**Performance:**
+
+- Email enviado em <3s
+- PDF gerado em <2s
+- Interface responsiva (<100ms clicks)
+
+---
+
+### 📝 DOCUMENTAÇÃO
+
+Após implementação, atualizar:
+
+- [ ] `docs/20_QUOTE_SYSTEM.md` - Adicionar seção sobre fornecedores
+- [ ] `docs/14_ADMIN_GUIDE.md` - Tutorial de uso do sistema
+- [ ] `docs/05_TECHNICAL_ARCHITECTURE.md` - Diagramas de fluxo
+- [ ] `README.md` - Mencionar novo recurso
+
+---
+
+### 🔄 INTEGRAÇÕES FUTURAS (OPCIONAL)
+
+**Depois de implementado o básico, pode-se:**
+
+- 🔮 Portal do Fornecedor (fornecedores respondem online)
+- 🔮 Integração WhatsApp (fornecedor responde direto)
+- 🔮 Histórico de cotações (analytics de preços)
+- 🔮 Avaliação automática (rating baseado em prazos/qualidade)
+- 🔮 Notificações push (admin é notificado quando fornecedor responde)
+
+---
+
+**Última Atualização:** 19 Dezembro 2024 - 02:00
 **Versão:** 2.1
 **Responsável:** Dev Team
 

@@ -44,7 +44,7 @@ const isGoogleConfigured =
   process.env.GOOGLE_CLIENT_ID.endsWith('.apps.googleusercontent.com')
 
 export const authConfig: NextAuthConfig = {
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma) as any,
   trustHost: true,
   session: {
     strategy: 'jwt',
@@ -169,7 +169,7 @@ export const authConfig: NextAuthConfig = {
       logger.debug('[AUTH] SignIn callback', {
         provider: account?.provider,
         userId: user?.id,
-        email: user?.email
+        email: user?.email,
       })
 
       // Handle OAuth sign in (Google)
@@ -188,13 +188,15 @@ export const authConfig: NextAuthConfig = {
                 name: user.name || 'Usuário Google',
                 role: 'CUSTOMER',
                 emailVerified: new Date(),
-                image: user.image,
-                provider: 'GOOGLE',
+                authProvider: 'GOOGLE',
               },
             })
             logger.debug('[AUTH] New Google user created', { email: user.email })
           } else {
-            logger.debug('[AUTH] Existing Google user found', { email: user.email, role: existingUser.role })
+            logger.debug('[AUTH] Existing Google user found', {
+              email: user.email,
+              role: existingUser.role,
+            })
           }
         } catch (error) {
           logger.error('[AUTH] Error handling Google sign in', { error })

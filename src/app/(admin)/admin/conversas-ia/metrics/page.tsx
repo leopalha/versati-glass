@@ -219,8 +219,8 @@ export default async function MetricsDashboardPage() {
     .sort((a, b) => a.date.localeCompare(b.date))
 
   // === CUSTOMER TYPE ANALYSIS ===
-  const authenticatedConversations = conversations.filter((c) => c.userId).length
-  const anonymousConversations = conversations.filter((c) => !c.userId).length
+  const authenticatedConversations = conversations.filter((c) => c.customerEmail).length
+  const anonymousConversations = conversations.filter((c) => !c.customerEmail).length
 
   return (
     <div>

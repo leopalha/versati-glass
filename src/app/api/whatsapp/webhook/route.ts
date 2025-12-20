@@ -41,17 +41,13 @@ export async function POST(request: NextRequest) {
       numMedia: incomingMessage.numMedia,
     })
 
-    // NOTIF.2: Salvar mensagem recebida no banco
-    const savedMessage = await prisma.whatsAppMessage.create({
-      data: {
-        messageId: body.MessageSid || `msg_${Date.now()}`,
-        from: incomingMessage.from,
-        to: body.To?.replace('whatsapp:', '') || process.env.TWILIO_WHATSAPP_NUMBER || '',
-        body: incomingMessage.body,
-        direction: 'INBOUND',
-        status: 'DELIVERED',
-        mediaUrl: incomingMessage.mediaUrls[0] || null,
-      },
+    // NOTIF.2: Log mensagem recebida
+    logger.info('[WEBHOOK] WhatsApp message received', {
+      messageId: body.MessageSid || `msg_${Date.now()}`,
+      from: incomingMessage.from,
+      to: body.To?.replace('whatsapp:', '') || process.env.TWILIO_WHATSAPP_NUMBER || '',
+      body: incomingMessage.body,
+      mediaUrl: incomingMessage.mediaUrls[0] || null,
     })
 
     // Tentar vincular com usuário existente
@@ -62,13 +58,6 @@ export async function POST(request: NextRequest) {
         },
       },
     })
-
-    if (user) {
-      await prisma.whatsAppMessage.update({
-        where: { id: savedMessage.id },
-        data: { userId: user.id },
-      })
-    }
 
     // OMNICHANNEL: Detectar conversa web existente para link reverso
     const normalizedPhone = incomingMessage.from.replace(/\D/g, '')
@@ -81,11 +70,10 @@ export async function POST(request: NextRequest) {
 
     const existingWebChat = await prisma.aiConversation.findFirst({
       where: {
-        linkedPhone: {
+        customerPhone: {
           contains: last10Digits,
         },
         status: { in: ['ACTIVE', 'QUOTE_GENERATED'] },
-        whatsappConversationId: null, // Ainda não linkado
       },
       orderBy: { createdAt: 'desc' },
     })

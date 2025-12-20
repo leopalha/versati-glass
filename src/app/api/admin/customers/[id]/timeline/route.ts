@@ -75,7 +75,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
           status: conv.status,
           quoteContext: conv.quoteContext,
         },
-        linkedEntityId: conv.whatsappConversationId || undefined,
+        linkedEntityId: conv.quoteId || undefined,
         status: conv.status,
       })
     })
@@ -114,7 +114,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
           status: conv.status,
           assignedToId: conv.assignedToId,
         },
-        linkedEntityId: conv.websiteChatId || undefined,
+        linkedEntityId: conv.quoteId || undefined,
         status: conv.status,
       })
     })

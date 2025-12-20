@@ -56,14 +56,6 @@ export async function GET(request: NextRequest) {
         messages: {
           orderBy: { createdAt: 'asc' },
         },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            phone: true,
-          },
-        },
       },
       orderBy: { createdAt: 'desc' },
     })
@@ -165,9 +157,9 @@ export async function GET(request: NextRequest) {
           conv.id,
           conv.sessionId,
           conv.status,
-          csvEscape(conv.user?.name || 'Anonymous'),
-          conv.user?.email || '',
-          conv.user?.phone || '',
+          csvEscape(conv.customerName || 'Anonymous'),
+          conv.customerEmail || '',
+          conv.customerPhone || '',
           conv.createdAt.toISOString(),
           conv.updatedAt.toISOString(),
           duration.toString(),

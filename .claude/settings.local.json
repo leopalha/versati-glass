@@ -152,7 +152,29 @@
       "Bash(if exist .next rmdir /s /q .next)",
       "Bash(powershell -Command \"if \\(Test-Path .next\\) { Remove-Item -Recurse -Force .next }\")",
       "Bash(powershell -Command \"Start-Sleep -Seconds 15; netstat -ano | Select-String '':3000''\")",
-      "Bash(powershell -Command \"netstat -ano | Select-String '':3000''\")"
+      "Bash(powershell -Command \"netstat -ano | Select-String '':3000''\")",
+      "Bash(set PORT=3001)",
+      "Bash(vercel domains:*)",
+      "Bash(vercel --prod)",
+      "Bash(vercel:*)",
+      "Bash(copy:*)",
+      "Bash(copy \"d:\\\\VERSATI GLASS\\\\imagens\\\\BOX INCOLOR PADRÃO.png\" \"d:\\\\VERSATI GLASS\\\\public\\\\images\\\\products\\\\box-incolor.jpg\")",
+      "Bash(copy \"d:\\\\VERSATI GLASS\\\\imagens\\\\BOX DE CANTO.png\" \"d:\\\\VERSATI GLASS\\\\public\\\\images\\\\products\\\\box-canto.jpg\")",
+      "Bash(cd:*)",
+      "Bash(npm run test:e2e:*)",
+      "Bash(git clean:*)",
+      "Bash(npm run db:seed:test:*)",
+      "Bash(timeout 30 tail:*)",
+      "Bash(timeout 120 tail:*)",
+      "Bash(nslookup:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat\\(admin\\): Adiciona prévia detalhada ao enviar e converter orçamentos\n\nMelhorias na UX dos botões de ação de orçamentos:\n\n- SendQuoteButton: Adiciona prévia com abas mostrando:\n  * Lista de itens do orçamento\n  * Valores detalhados \\(subtotal, descontos, taxas, total\\)\n  * Informações sobre o que o cliente receberá\n  * Loading state durante carregamento dos detalhes\n\n- ConvertQuoteButton: Adiciona prévia com abas mostrando:\n  * Prévia do pedido que será criado\n  * Status inicial \\(Aguardando Pagamento\\)\n  * Lista de itens que serão copiados\n  * Valores e totalizadores\n  * Explicação do que será criado\n  * Próximos passos após conversão\n\nAmbos componentes agora:\n- Carregam dados completos do orçamento via API\n- Exibem loading spinner durante carregamento\n- Mostram prévia em tabs \\(Prévia + Informações\\)\n- Melhor formatação de valores com formatCurrency\n- Design consistente com tema do sistema\n- Disabled state quando carregando dados\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(git stash:*)",
+      "Bash(git commit --no-verify -m \"$\\(cat <<''EOF''\nfeat\\(admin\\): Adiciona prévia detalhada ao enviar e converter orçamentos\n\nMelhorias na UX dos botões de ação de orçamentos:\n\n- SendQuoteButton: Adiciona prévia com abas mostrando:\n  * Lista de itens do orçamento\n  * Valores detalhados \\(subtotal, descontos, taxas, total\\)\n  * Informações sobre o que o cliente receberá\n  * Loading state durante carregamento dos detalhes\n\n- ConvertQuoteButton: Adiciona prévia com abas mostrando:\n  * Prévia do pedido que será criado\n  * Status inicial \\(Aguardando Pagamento\\)\n  * Lista de itens que serão copiados\n  * Valores e totalizadores\n  * Explicação do que será criado\n  * Próximos passos após conversão\n\nAmbos componentes agora:\n- Carregam dados completos do orçamento via API\n- Exibem loading spinner durante carregamento\n- Mostram prévia em tabs \\(Prévia + Informações\\)\n- Melhor formatação de valores com formatCurrency\n- Design consistente com tema do sistema\n- Disabled state quando carregando dados\n- Hooks corretamente posicionados antes de early returns\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(railway link:*)",
+      "Bash(railway list:*)",
+      "Bash(railway init:*)",
+      "Bash(railway add:*)"
     ]
   }
 }

@@ -18,10 +18,7 @@ export async function GET(request: NextRequest) {
     const lastChecked = searchParams.get('lastChecked')
 
     if (!conversationId) {
-      return NextResponse.json(
-        { error: 'conversationId é obrigatório' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'conversationId é obrigatório' }, { status: 400 })
     }
 
     logger.debug('[CHECK UPDATES] Checking for:', { conversationId, lastChecked })
@@ -30,60 +27,73 @@ export async function GET(request: NextRequest) {
     const aiConvo = await prisma.aiConversation.findUnique({
       where: { id: conversationId },
       select: {
-        whatsappConversationId: true,
-        updatedAt: true
-      }
+        quoteId: true,
+        updatedAt: true,
+      },
     })
 
-    if (!aiConvo || !aiConvo.whatsappConversationId) {
-      // Sem link WhatsApp, não há atualizações
+    if (!aiConvo || !aiConvo.quoteId) {
+      // Sem link Quote/WhatsApp, não há atualizações
       return NextResponse.json({
         hasUpdate: false,
-        hasWhatsAppUpdate: false
+        hasWhatsAppUpdate: false,
       })
     }
 
-    // 2. Buscar última mensagem WhatsApp
+    // 2. Buscar conversa WhatsApp vinculada pelo quoteId
+    const whatsappConvo = await prisma.conversation.findFirst({
+      where: { quoteId: aiConvo.quoteId },
+      select: { id: true },
+    })
+
+    if (!whatsappConvo) {
+      // Sem conversa WhatsApp vinculada
+      return NextResponse.json({
+        hasUpdate: false,
+        hasWhatsAppUpdate: false,
+      })
+    }
+
+    // 3. Buscar última mensagem WhatsApp
     const lastWhatsAppMessage = await prisma.message.findFirst({
       where: {
-        conversationId: aiConvo.whatsappConversationId,
+        conversationId: whatsappConvo.id,
         direction: 'OUTBOUND', // Mensagens enviadas (resposta do admin/IA)
         ...(lastChecked && {
           createdAt: {
-            gt: new Date(lastChecked)
-          }
-        })
+            gt: new Date(lastChecked),
+          },
+        }),
       },
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
         content: true,
         createdAt: true,
-        senderType: true
-      }
+        senderType: true,
+      },
     })
 
     if (!lastWhatsAppMessage) {
       return NextResponse.json({
         hasUpdate: false,
-        hasWhatsAppUpdate: false
+        hasWhatsAppUpdate: false,
       })
     }
 
     // 3. Verificar se é nova (posterior ao lastChecked)
-    const isNew = !lastChecked ||
-      lastWhatsAppMessage.createdAt > new Date(lastChecked)
+    const isNew = !lastChecked || lastWhatsAppMessage.createdAt > new Date(lastChecked)
 
     if (!isNew) {
       return NextResponse.json({
         hasUpdate: false,
-        hasWhatsAppUpdate: false
+        hasWhatsAppUpdate: false,
       })
     }
 
     logger.info('[CHECK UPDATES] New WhatsApp message found:', {
       messageId: lastWhatsAppMessage.id,
-      conversationId
+      conversationId,
     })
 
     // 4. Retornar atualização
@@ -94,14 +104,11 @@ export async function GET(request: NextRequest) {
         id: lastWhatsAppMessage.id,
         content: lastWhatsAppMessage.content,
         timestamp: lastWhatsAppMessage.createdAt,
-        senderType: lastWhatsAppMessage.senderType
-      }
+        senderType: lastWhatsAppMessage.senderType,
+      },
     })
   } catch (error) {
     logger.error('[CHECK UPDATES] Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

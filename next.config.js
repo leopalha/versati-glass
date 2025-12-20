@@ -32,6 +32,16 @@ const nextConfig = {
       bodySizeLimit: '10mb',
     },
   },
+  // Prevent client-reference-manifest errors in grouped routes
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: false,
+      }
+    }
+    return config
+  },
 }
 
 module.exports = nextConfig

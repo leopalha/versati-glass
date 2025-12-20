@@ -208,18 +208,11 @@ Versati Glass`
         if (result.success) {
           whatsappSent = true
 
-          // Registrar mensagem enviada no banco
-          await prisma.whatsAppMessage.create({
-            data: {
-              messageId: result.messageSid || `quote_${quote.id}_${Date.now()}`,
-              from: process.env.TWILIO_WHATSAPP_NUMBER?.replace('whatsapp:', '') || '',
-              to: customerPhone.replace(/\D/g, ''),
-              body: whatsappMessage,
-              direction: 'OUTBOUND',
-              status: 'SENT',
-              quoteId: quote.id,
-              userId: quote.userId,
-            },
+          // TODO: Log WhatsApp message sent (WhatsAppMessage model doesn't exist yet)
+          logger.info('WhatsApp message sent for quote', {
+            quoteId: quote.id,
+            messageSid: result.messageSid,
+            to: customerPhone,
           })
         }
       } catch (whatsappError) {

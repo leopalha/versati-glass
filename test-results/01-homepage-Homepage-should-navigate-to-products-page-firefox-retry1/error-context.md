@@ -1,0 +1,303 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+    - generic [ref=e2]:
+        - banner [ref=e3]:
+            - navigation "Global" [ref=e4]:
+                - link "Versati GlassVersati Glass" [ref=e5] [cursor=pointer]:
+                    - /url: /
+                    - generic [ref=e6]:
+                        - img "Versati Glass" [ref=e7]
+                        - text: Versati Glass
+                - generic [ref=e8]:
+                    - link "Home" [ref=e9] [cursor=pointer]:
+                        - /url: /
+                    - link "Produtos" [ref=e10] [cursor=pointer]:
+                        - /url: /produtos
+                    - link "Serviços" [ref=e11] [cursor=pointer]:
+                        - /url: /servicos
+                    - link "Portfólio" [ref=e12] [cursor=pointer]:
+                        - /url: /portfolio
+                    - link "Contato" [ref=e13] [cursor=pointer]:
+                        - /url: /contato
+                - link [ref=e15] [cursor=pointer]:
+                    - /url: /orcamento
+                    - img [ref=e16]
+                - button "Menu" [ref=e21]:
+                    - text: Abrir menu de navegação
+                    - img [ref=e22]
+            - generic [ref=e27]:
+                - link "Home" [ref=e28] [cursor=pointer]:
+                    - /url: /
+                - link "Produtos" [ref=e29] [cursor=pointer]:
+                    - /url: /produtos
+                - link "Serviços" [ref=e30] [cursor=pointer]:
+                    - /url: /servicos
+                - link "Portfólio" [ref=e31] [cursor=pointer]:
+                    - /url: /portfolio
+                - link "Contato" [ref=e32] [cursor=pointer]:
+                    - /url: /contato
+                - link "Carrinho" [ref=e33] [cursor=pointer]:
+                    - /url: /orcamento
+                - generic [ref=e34]:
+                    - generic [ref=e35]: Tema
+                    - link "Entrar" [ref=e36] [cursor=pointer]:
+                        - /url: /login
+                    - link "Fazer Orçamento" [ref=e37] [cursor=pointer]:
+                        - /url: /orcamento
+        - main [ref=e38]:
+            - generic [ref=e40]:
+                - generic [ref=e41]: Excelência em Vidros e Esquadrias
+                - heading "Transforme Seu Espaço Com Elegância" [level=1] [ref=e42]:
+                    - text: Transforme Seu Espaço
+                    - text: Com Elegância
+                - paragraph [ref=e43]: Vidraçaria de alto padrão especializada em projetos residenciais e comerciais. Qualidade premium, instalação impecável e atendimento personalizado.
+                - generic [ref=e44]:
+                    - link "Fazer Orçamento Grátis" [ref=e45] [cursor=pointer]:
+                        - /url: /orcamento
+                        - text: Fazer Orçamento Grátis
+                        - img [ref=e46]
+                    - link "Ver Portfólio" [ref=e49] [cursor=pointer]:
+                        - /url: /portfolio
+            - generic [ref=e51]:
+                - generic [ref=e52]:
+                    - heading "Produtos em Destaque" [level=2] [ref=e53]
+                    - paragraph [ref=e54]: Conheça nossas soluções mais populares
+                - generic [ref=e55]:
+                    - generic [ref=e56]:
+                        - generic [ref=e57]:
+                            - img "Box de Vidro Premium" [ref=e58]
+                            - generic [ref=e59]: Mais Vendido
+                        - generic [ref=e60]:
+                            - heading "Box de Vidro Premium" [level=3] [ref=e61]
+                            - paragraph [ref=e62]: Box sob medida com vidro temperado 8mm, acabamento impecável
+                            - paragraph [ref=e63]: A partir de R$ 1.890
+                            - link "Ver Detalhes" [ref=e64] [cursor=pointer]:
+                                - /url: /produtos
+                    - generic [ref=e65]:
+                        - generic [ref=e66]:
+                            - img "Guarda-Corpo de Vidro" [ref=e67]
+                            - generic [ref=e68]: Premium
+                        - generic [ref=e69]:
+                            - heading "Guarda-Corpo de Vidro" [level=3] [ref=e70]
+                            - paragraph [ref=e71]: Segurança e elegância com vidro laminado de alta resistência
+                            - paragraph [ref=e72]: A partir de R$ 890/m
+                            - link "Ver Detalhes" [ref=e73] [cursor=pointer]:
+                                - /url: /produtos
+                    - generic [ref=e74]:
+                        - generic [ref=e75]:
+                            - img "Espelho Decorativo" [ref=e76]
+                            - generic [ref=e77]: Destaque
+                        - generic [ref=e78]:
+                            - heading "Espelho Decorativo" [level=3] [ref=e79]
+                            - paragraph [ref=e80]: Espelhos personalizados com iluminação LED integrada
+                            - paragraph [ref=e81]: A partir de R$ 650
+                            - link "Ver Detalhes" [ref=e82] [cursor=pointer]:
+                                - /url: /produtos
+                    - generic [ref=e83]:
+                        - generic [ref=e84]:
+                            - img "Fachada de Vidro" [ref=e85]
+                            - generic [ref=e86]: Corporativo
+                        - generic [ref=e87]:
+                            - heading "Fachada de Vidro" [level=3] [ref=e88]
+                            - paragraph [ref=e89]: Fachadas comerciais com estrutura de alta performance
+                            - paragraph [ref=e90]: Sob Consulta
+                            - link "Ver Detalhes" [ref=e91] [cursor=pointer]:
+                                - /url: /produtos
+                - link "Ver Todos os Produtos" [ref=e93] [cursor=pointer]:
+                    - /url: /produtos
+                    - text: Ver Todos os Produtos
+                    - img [ref=e94]
+            - generic [ref=e98]:
+                - generic [ref=e99]:
+                    - heading "Nossos Serviços" [level=2] [ref=e100]
+                    - paragraph [ref=e101]: Soluções completas para cada necessidade
+                - generic [ref=e102]:
+                    - generic [ref=e103]:
+                        - heading "Projetos Residenciais" [level=3] [ref=e104]
+                        - paragraph [ref=e105]: Box, espelhos, divisórias e guarda-corpos para sua casa
+                    - generic [ref=e106]:
+                        - heading "Projetos Comerciais" [level=3] [ref=e107]
+                        - paragraph [ref=e108]: Fachadas, portas e soluções corporativas de alto padrão
+                    - generic [ref=e109]:
+                        - heading "Manutenção e Reparo" [level=3] [ref=e110]
+                        - paragraph [ref=e111]: Assistência técnica especializada para seus vidros
+                    - generic [ref=e112]:
+                        - heading "Consultoria Técnica" [level=3] [ref=e113]
+                        - paragraph [ref=e114]: Apoio para arquitetos e engenheiros em especificações
+            - generic [ref=e116]:
+                - heading "Por Que Escolher a Versati?" [level=2] [ref=e118]
+                - generic [ref=e119]:
+                    - generic [ref=e120]:
+                        - img [ref=e122]
+                        - heading "Garantia Vitalícia" [level=3] [ref=e124]
+                        - paragraph [ref=e125]: Todos os produtos com garantia estendida
+                    - generic [ref=e126]:
+                        - img [ref=e128]
+                        - heading "15 Anos de Experiência" [level=3] [ref=e131]
+                        - paragraph [ref=e132]: Tradição e excelência em cada projeto
+                    - generic [ref=e133]:
+                        - img [ref=e135]
+                        - heading "Instalação Rápida" [level=3] [ref=e138]
+                        - paragraph [ref=e139]: Prazos cumpridos com precisão
+                    - generic [ref=e140]:
+                        - img [ref=e142]
+                        - heading "Acabamento Impecável" [level=3] [ref=e148]
+                        - paragraph [ref=e149]: Atenção aos mínimos detalhes
+            - generic [ref=e151]:
+                - generic [ref=e152]:
+                    - heading "Projetos Realizados" [level=2] [ref=e153]
+                    - paragraph [ref=e154]: Confira alguns de nossos trabalhos
+                - generic [ref=e155]:
+                    - generic [ref=e157]:
+                        - img "Residência Alto Padrão - Leblon" [ref=e158]
+                        - generic [ref=e159]:
+                            - generic [ref=e160]: Residencial
+                            - heading "Residência Alto Padrão - Leblon" [level=3] [ref=e161]
+                    - generic [ref=e163]:
+                        - img "Escritório Corporativo - Barra" [ref=e164]
+                        - generic [ref=e165]:
+                            - generic [ref=e166]: Comercial
+                            - heading "Escritório Corporativo - Barra" [level=3] [ref=e167]
+                    - generic [ref=e169]:
+                        - img "Cobertura Duplex - Ipanema" [ref=e170]
+                        - generic [ref=e171]:
+                            - generic [ref=e172]: Residencial
+                            - heading "Cobertura Duplex - Ipanema" [level=3] [ref=e173]
+                - link "Ver Portfólio Completo" [ref=e175] [cursor=pointer]:
+                    - /url: /portfolio
+                    - text: Ver Portfólio Completo
+                    - img [ref=e176]
+            - generic [ref=e180]:
+                - heading "O Que Dizem Nossos Clientes" [level=2] [ref=e182]
+                - generic [ref=e183]:
+                    - generic [ref=e184]:
+                        - generic [ref=e185]:
+                            - img [ref=e186]
+                            - img [ref=e188]
+                            - img [ref=e190]
+                            - img [ref=e192]
+                            - img [ref=e194]
+                        - paragraph [ref=e196]: A Versati Glass superou todas as expectativas. O acabamento é impecável e o atendimento é excepcional.
+                        - generic [ref=e197]:
+                            - paragraph [ref=e198]: Ana Paula Silveira
+                            - paragraph [ref=e199]: Arquiteta
+                    - generic [ref=e200]:
+                        - generic [ref=e201]:
+                            - img [ref=e202]
+                            - img [ref=e204]
+                            - img [ref=e206]
+                            - img [ref=e208]
+                            - img [ref=e210]
+                        - paragraph [ref=e212]: Instalaram o box do meu banheiro em tempo recorde. Qualidade premium e equipe muito profissional.
+                        - generic [ref=e213]:
+                            - paragraph [ref=e214]: Roberto Mendes
+                            - paragraph [ref=e215]: Proprietário
+                    - generic [ref=e216]:
+                        - generic [ref=e217]:
+                            - img [ref=e218]
+                            - img [ref=e220]
+                            - img [ref=e222]
+                            - img [ref=e224]
+                            - img [ref=e226]
+                        - paragraph [ref=e228]: Trabalho com a Versati em todos os meus projetos. Confiabilidade e qualidade garantidas.
+                        - generic [ref=e229]:
+                            - paragraph [ref=e230]: Mariana Costa
+                            - paragraph [ref=e231]: Designer de Interiores
+            - generic [ref=e233]:
+                - heading "Pronto Para Transformar Seu Projeto?" [level=2] [ref=e234]:
+                    - text: Pronto Para Transformar
+                    - text: Seu Projeto?
+                - paragraph [ref=e235]:
+                    - text: Receba um orçamento personalizado em até 24 horas.
+                    - text: Atendimento especializado e sem compromisso.
+                - link "Solicitar Orçamento Gratuito" [ref=e236] [cursor=pointer]:
+                    - /url: /orcamento
+                    - text: Solicitar Orçamento Gratuito
+                    - img [ref=e237]
+        - contentinfo "Footer" [ref=e240]:
+            - heading "Footer" [level=2] [ref=e241]
+            - generic [ref=e242]:
+                - generic [ref=e243]:
+                    - generic [ref=e244]:
+                        - generic [ref=e245]:
+                            - img "Versati Glass" [ref=e246]
+                            - text: Versati Glass
+                        - paragraph [ref=e247]: Transparência que transforma espaços. Vidraçaria premium no Rio de Janeiro com atendimento 24h via WhatsApp.
+                        - generic [ref=e248]:
+                            - link "Instagram" [ref=e249] [cursor=pointer]:
+                                - /url: https://instagram.com/versatiglass
+                                - text: Instagram
+                                - img [ref=e250]
+                            - link "Facebook" [ref=e254] [cursor=pointer]:
+                                - /url: https://facebook.com/versatiglass
+                                - text: Facebook
+                                - img [ref=e255]
+                    - generic [ref=e257]:
+                        - generic [ref=e258]:
+                            - generic [ref=e259]:
+                                - heading "Produtos" [level=3] [ref=e260]
+                                - list [ref=e261]:
+                                    - listitem [ref=e262]:
+                                        - link "Box para Banheiro" [ref=e263] [cursor=pointer]:
+                                            - /url: /produtos/box
+                                    - listitem [ref=e264]:
+                                        - link "Espelhos" [ref=e265] [cursor=pointer]:
+                                            - /url: /produtos/espelhos
+                                    - listitem [ref=e266]:
+                                        - link "Vidros Temperados" [ref=e267] [cursor=pointer]:
+                                            - /url: /produtos/vidros
+                                    - listitem [ref=e268]:
+                                        - link "Portas e Janelas" [ref=e269] [cursor=pointer]:
+                                            - /url: /produtos/portas-janelas
+                            - generic [ref=e270]:
+                                - heading "Empresa" [level=3] [ref=e271]
+                                - list [ref=e272]:
+                                    - listitem [ref=e273]:
+                                        - link "Sobre Nós" [ref=e274] [cursor=pointer]:
+                                            - /url: /sobre
+                                    - listitem [ref=e275]:
+                                        - link "Portfólio" [ref=e276] [cursor=pointer]:
+                                            - /url: /portfolio
+                                    - listitem [ref=e277]:
+                                        - link "Contato" [ref=e278] [cursor=pointer]:
+                                            - /url: /contato
+                        - generic [ref=e279]:
+                            - generic [ref=e280]:
+                                - heading "Suporte" [level=3] [ref=e281]
+                                - list [ref=e282]:
+                                    - listitem [ref=e283]:
+                                        - link "FAQ" [ref=e284] [cursor=pointer]:
+                                            - /url: /faq
+                                    - listitem [ref=e285]:
+                                        - link "Garantia" [ref=e286] [cursor=pointer]:
+                                            - /url: /garantia
+                                    - listitem [ref=e287]:
+                                        - link "Política de Privacidade" [ref=e288] [cursor=pointer]:
+                                            - /url: /privacidade
+                                    - listitem [ref=e289]:
+                                        - link "Termos de Uso" [ref=e290] [cursor=pointer]:
+                                            - /url: /termos
+                            - generic [ref=e291]:
+                                - heading "Contato" [level=3] [ref=e292]
+                                - list [ref=e293]:
+                                    - listitem [ref=e294]:
+                                        - img [ref=e295]
+                                        - link "+55 21 98253-6229" [ref=e297] [cursor=pointer]:
+                                            - /url: tel:+5521982536229
+                                    - listitem [ref=e298]:
+                                        - img [ref=e299]
+                                        - text: versatiglass@gmail.com
+                                    - listitem [ref=e302]:
+                                        - img [ref=e303]
+                                        - generic [ref=e306]:
+                                            - text: Estrada Três Rios, 1156
+                                            - text: Freguesia - Rio de Janeiro/RJ
+                - paragraph [ref=e308]: © 2025 Versati Glass. Todos os direitos reservados.
+        - link "WhatsApp - Fale conosco" [ref=e309] [cursor=pointer]:
+            - /url: https://wa.me/5521982536229?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20um%20or%C3%A7amento.
+            - img [ref=e310]
+    - region "Notifications (F8)":
+        - list
+```

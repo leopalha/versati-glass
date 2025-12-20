@@ -214,12 +214,6 @@ export async function POST(request: NextRequest) {
       })
         .then(async (result) => {
           if (result.success && result.eventId) {
-            // Atualizar appointment com o calendarEventId
-            await prisma.appointment.update({
-              where: { id: appointment.id },
-              data: { calendarEventId: result.eventId },
-            })
-
             logger.info('[Google Calendar] Event created for appointment', {
               appointmentId: appointment.id,
               eventId: result.eventId,

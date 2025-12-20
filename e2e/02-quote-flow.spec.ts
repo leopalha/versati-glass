@@ -19,7 +19,8 @@ test.describe('Quote Flow - End to End', () => {
     await page.waitForTimeout(3000) // Wait for full hydration
 
     // 2. Step 1: Select Category - "Box para Banheiro"
-    const boxButton = page.locator('button[aria-label*="Box para Banheiro"]')
+    // Find button by text that contains "Box para Banheiro"
+    const boxButton = page.locator('button').filter({ hasText: 'Box para Banheiro' }).first()
     await expect(boxButton).toBeVisible({ timeout: 30000 })
     await boxButton.click()
 
@@ -89,7 +90,7 @@ test.describe('Quote Flow - End to End', () => {
     await expect(continueButton).toBeDisabled()
 
     // Select a category
-    const boxButton = page.locator('button[aria-label*="Box para Banheiro"]')
+    const boxButton = page.locator('button').filter({ hasText: 'Box para Banheiro' }).first()
     await expect(boxButton).toBeVisible({ timeout: 30000 })
     await boxButton.click()
 
@@ -106,7 +107,7 @@ test.describe('Quote Flow - End to End', () => {
     await page.waitForTimeout(3000)
 
     // Step 1: Select category
-    const boxButton = page.locator('button[aria-label*="Box para Banheiro"]')
+    const boxButton = page.locator('button').filter({ hasText: 'Box para Banheiro' }).first()
     await expect(boxButton).toBeVisible({ timeout: 30000 })
     await boxButton.click()
     await page.waitForTimeout(500) // Wait for state update
@@ -155,7 +156,7 @@ test.describe('Quote Flow - End to End', () => {
     await page.waitForTimeout(3000)
 
     // Step 1: Category
-    const boxButton = page.locator('button[aria-label*="Box para Banheiro"]')
+    const boxButton = page.locator('button').filter({ hasText: 'Box para Banheiro' }).first()
     await expect(boxButton).toBeVisible({ timeout: 30000 })
     await boxButton.click()
     await page.waitForTimeout(500) // Wait for state update

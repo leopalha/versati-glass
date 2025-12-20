@@ -612,7 +612,7 @@ export async function POST(request: Request) {
     const unifiedContext = await getUnifiedCustomerContext({
       userId: userId || undefined,
       sessionId: sessionId || undefined,
-      phoneNumber: conversation.linkedPhone || detectedPhone || undefined,
+      phoneNumber: conversation.customerPhone || detectedPhone || undefined,
     })
 
     const unifiedContextSummary = generateContextSummary(unifiedContext)

@@ -25,6 +25,7 @@ import {
   UserCircle,
   Circle,
   Trash2,
+  XCircle,
 } from 'lucide-react'
 
 // LocalStorage key for chat persistence
@@ -387,88 +388,91 @@ export function ChatAssistido({
   }, [])
 
   // AI-CHAT Sprint P2.4: Handle product selection
-  const handleSelectProduct = useCallback(async (product: ProductSuggestion) => {
-    console.log('[CHAT] Product selected:', product.name)
+  const handleSelectProduct = useCallback(
+    async (product: ProductSuggestion) => {
+      console.log('[CHAT] Product selected:', product.name)
 
-    // Toggle selection visual state
-    setSelectedProductIds((prev) => {
-      if (prev.includes(product.id)) {
-        return prev.filter((id) => id !== product.id)
-      }
-      return [...prev, product.id]
-    })
-
-    // Auto-send selection message
-    const selectionMessage = `Selecionei o produto: ${product.name}`
-
-    // Add user message immediately
-    const userMessage: Message = {
-      id: `user-${Date.now()}`,
-      role: 'USER',
-      content: selectionMessage,
-      createdAt: new Date().toISOString(),
-    }
-
-    setMessages((prev) => [...prev, userMessage])
-    setIsLoading(true)
-
-    // Scroll to bottom to show new message
-    setTimeout(() => scrollToBottom(), 100)
-
-    try {
-      console.log('[CHAT] Sending product selection to API...')
-      const response = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: selectionMessage,
-          conversationId,
-          sessionId,
-          imageBase64: null,
-          imageUrl: null,
-        }),
+      // Toggle selection visual state
+      setSelectedProductIds((prev) => {
+        if (prev.includes(product.id)) {
+          return prev.filter((id) => id !== product.id)
+        }
+        return [...prev, product.id]
       })
 
-      if (!response.ok) {
-        throw new Error('Erro ao enviar mensagem')
-      }
+      // Auto-send selection message
+      const selectionMessage = `Selecionei o produto: ${product.name}`
 
-      const data = await response.json()
-      console.log('[CHAT] AI response received')
-
-      // Update conversationId if new conversation
-      if (data.conversationId && !conversationId) {
-        setConversationId(data.conversationId)
-      }
-
-      const assistantMessage: Message = {
-        id: `assistant-${Date.now()}`,
-        role: 'ASSISTANT',
-        content: data.message,
+      // Add user message immediately
+      const userMessage: Message = {
+        id: `user-${Date.now()}`,
+        role: 'USER',
+        content: selectionMessage,
         createdAt: new Date().toISOString(),
       }
 
-      setMessages((prev) => [...prev, assistantMessage])
+      setMessages((prev) => [...prev, userMessage])
+      setIsLoading(true)
 
-      // Hide product suggestions after selection
-      setProductSuggestions([])
-    } catch (error) {
-      console.error('[CHAT] Error sending product selection:', error)
-      // Add error message
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `error-${Date.now()}`,
+      // Scroll to bottom to show new message
+      setTimeout(() => scrollToBottom(), 100)
+
+      try {
+        console.log('[CHAT] Sending product selection to API...')
+        const response = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: selectionMessage,
+            conversationId,
+            sessionId,
+            imageBase64: null,
+            imageUrl: null,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error('Erro ao enviar mensagem')
+        }
+
+        const data = await response.json()
+        console.log('[CHAT] AI response received')
+
+        // Update conversationId if new conversation
+        if (data.conversationId && !conversationId) {
+          setConversationId(data.conversationId)
+        }
+
+        const assistantMessage: Message = {
+          id: `assistant-${Date.now()}`,
           role: 'ASSISTANT',
-          content:
-            'Desculpe, ocorreu um erro. Por favor, tente novamente ou entre em contato pelo WhatsApp.',
+          content: data.message,
           createdAt: new Date().toISOString(),
-        },
-      ])
-    } finally {
-      setIsLoading(false)
-    }
-  }, [conversationId, sessionId, scrollToBottom])
+        }
+
+        setMessages((prev) => [...prev, assistantMessage])
+
+        // Hide product suggestions after selection
+        setProductSuggestions([])
+      } catch (error) {
+        console.error('[CHAT] Error sending product selection:', error)
+        // Add error message
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `error-${Date.now()}`,
+            role: 'ASSISTANT',
+            content:
+              'Desculpe, ocorreu um erro. Por favor, tente novamente ou entre em contato pelo WhatsApp.',
+            createdAt: new Date().toISOString(),
+          },
+        ])
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [conversationId, sessionId, scrollToBottom]
+  )
 
   // AI-CHAT Sprint P1.6 + P3.2: Check export status and update progress
   const checkExportStatus = useCallback(async () => {
@@ -852,7 +856,9 @@ export function ChatAssistido({
                       <button
                         onClick={() => setIsProgressMinimized(!isProgressMinimized)}
                         className="rounded p-1 text-neutral-700 transition-colors hover:bg-neutral-600 hover:text-white"
-                        aria-label={isProgressMinimized ? 'Expandir progresso' : 'Minimizar progresso'}
+                        aria-label={
+                          isProgressMinimized ? 'Expandir progresso' : 'Minimizar progresso'
+                        }
                         title={isProgressMinimized ? 'Expandir progresso' : 'Minimizar progresso'}
                       >
                         {isProgressMinimized ? (
@@ -878,57 +884,57 @@ export function ChatAssistido({
 
                       {/* Checklist */}
                       <div className="mt-3 grid grid-cols-3 gap-2">
-                    {/* Items Check */}
-                    <div
-                      className={cn(
-                        'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
-                        quoteContext?.items && quoteContext.items.length > 0
-                          ? 'bg-green-500/10 text-green-400'
-                          : 'bg-neutral-600/20 text-neutral-600'
-                      )}
-                    >
-                      {quoteContext?.items && quoteContext.items.length > 0 ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
-                      ) : (
-                        <Circle className="h-3.5 w-3.5 flex-shrink-0" />
-                      )}
-                      <span className="truncate">Produto</span>
-                    </div>
+                        {/* Items Check */}
+                        <div
+                          className={cn(
+                            'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
+                            quoteContext?.items && quoteContext.items.length > 0
+                              ? 'bg-green-500/10 text-green-400'
+                              : 'bg-neutral-600/20 text-neutral-600'
+                          )}
+                        >
+                          {quoteContext?.items && quoteContext.items.length > 0 ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
+                          ) : (
+                            <Circle className="h-3.5 w-3.5 flex-shrink-0" />
+                          )}
+                          <span className="truncate">Produto</span>
+                        </div>
 
-                    {/* Dimensions Check */}
-                    <div
-                      className={cn(
-                        'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
-                        quoteContext?.items?.some((item: any) => item.width || item.height)
-                          ? 'bg-green-500/10 text-green-400'
-                          : 'bg-neutral-600/20 text-neutral-600'
-                      )}
-                    >
-                      {quoteContext?.items?.some((item: any) => item.width || item.height) ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
-                      ) : (
-                        <Circle className="h-3.5 w-3.5 flex-shrink-0" />
-                      )}
-                      <span className="truncate">Medidas</span>
-                    </div>
+                        {/* Dimensions Check */}
+                        <div
+                          className={cn(
+                            'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
+                            quoteContext?.items?.some((item: any) => item.width || item.height)
+                              ? 'bg-green-500/10 text-green-400'
+                              : 'bg-neutral-600/20 text-neutral-600'
+                          )}
+                        >
+                          {quoteContext?.items?.some((item: any) => item.width || item.height) ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
+                          ) : (
+                            <Circle className="h-3.5 w-3.5 flex-shrink-0" />
+                          )}
+                          <span className="truncate">Medidas</span>
+                        </div>
 
-                    {/* Contact Check */}
-                    <div
-                      className={cn(
-                        'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
-                        quoteContext?.customerData?.name || quoteContext?.customerData?.phone
-                          ? 'bg-green-500/10 text-green-400'
-                          : 'bg-neutral-600/20 text-neutral-600'
-                      )}
-                    >
-                      {quoteContext?.customerData?.name || quoteContext?.customerData?.phone ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
-                      ) : (
-                        <Circle className="h-3.5 w-3.5 flex-shrink-0" />
-                      )}
-                      <span className="truncate">Contato</span>
-                    </div>
-                  </div>
+                        {/* Contact Check */}
+                        <div
+                          className={cn(
+                            'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
+                            quoteContext?.customerData?.name || quoteContext?.customerData?.phone
+                              ? 'bg-green-500/10 text-green-400'
+                              : 'bg-neutral-600/20 text-neutral-600'
+                          )}
+                        >
+                          {quoteContext?.customerData?.name || quoteContext?.customerData?.phone ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
+                          ) : (
+                            <Circle className="h-3.5 w-3.5 flex-shrink-0" />
+                          )}
+                          <span className="truncate">Contato</span>
+                        </div>
+                      </div>
 
                       {/* Next Steps Hint */}
                       {quoteProgress > 0 && quoteProgress < 100 && (
@@ -1131,51 +1137,170 @@ export function ChatAssistido({
 
                   {/* Action Buttons */}
                   <div className="mt-4 flex flex-col gap-2">
-                    {/* Skip to Contact Data - only show if product and measurements are complete */}
-                    {quoteProgress >= 40 && quoteProgress < 70 && (
+                    {/* Go to Checkout - only show if product and measurements are complete */}
+                    {quoteProgress >= 40 && quoteProgress < 100 && (
                       <Button
-                        onClick={() => {
-                          const skipMessage = 'Quero informar meus dados de contato agora'
+                        onClick={async () => {
+                          const checkoutMessage =
+                            'Quero finalizar meu orçamento e ir para o checkout'
                           const userMessage: Message = {
                             id: `user-${Date.now()}`,
                             role: 'USER',
-                            content: skipMessage,
+                            content: checkoutMessage,
                             createdAt: new Date().toISOString(),
                           }
                           setMessages((prev) => [...prev, userMessage])
                           setInput('')
-                          // The AI will respond asking for contact data
+                          setIsProgressMinimized(true)
+                          setIsLoading(true)
+                          setTimeout(() => scrollToBottom(), 100)
+
+                          try {
+                            // Send message to AI to finalize context
+                            const response = await fetch('/api/ai/chat', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                message: checkoutMessage,
+                                conversationId,
+                                sessionId,
+                                imageBase64: null,
+                                imageUrl: null,
+                              }),
+                            })
+
+                            if (!response.ok) {
+                              throw new Error('Erro ao enviar mensagem')
+                            }
+
+                            const data = await response.json()
+
+                            const assistantMessage: Message = {
+                              id: `assistant-${Date.now()}`,
+                              role: 'ASSISTANT',
+                              content: data.message,
+                              createdAt: new Date().toISOString(),
+                            }
+
+                            setMessages((prev) => [...prev, assistantMessage])
+
+                            // Wait a bit for user to see the response
+                            setTimeout(() => {
+                              // Minimize chat
+                              setIsMinimized(true)
+
+                              // Redirect to checkout
+                              router.push('/orcamento')
+                            }, 2000) // 2 seconds delay
+                          } catch (error) {
+                            console.error('[CHAT] Error going to checkout:', error)
+
+                            // Still redirect even on error
+                            setTimeout(() => {
+                              setIsMinimized(true)
+                              router.push('/orcamento')
+                            }, 1500)
+                          } finally {
+                            setIsLoading(false)
+                          }
                         }}
                         variant="outline"
                         size="sm"
-                        className="w-full border-accent-500 text-accent-500 hover:bg-accent-500/10"
+                        className="hover:bg-accent-500/10 w-full border-accent-500 text-accent-500"
                       >
-                        <UserCircle className="mr-2 h-4 w-4" />
-                        Pular para Dados de Contato
+                        <ArrowRight className="mr-2 h-4 w-4" />
+                        Ir para Checkout
                       </Button>
                     )}
 
                     {/* Cancel/Reset Quote */}
                     <Button
-                      onClick={() => {
+                      onClick={async () => {
                         if (confirm('Tem certeza que deseja cancelar este orçamento?')) {
-                          // Clear quote context
-                          setQuoteContext(null)
-                          setQuoteProgress(0)
-                          setCanExportQuote(false)
-                          setProductSuggestions([])
-                          setSuggestedCategory(null)
-                          setSelectedProductIds([])
-                          // Add cancellation message
-                          setMessages((prev) => [
-                            ...prev,
-                            {
-                              id: `user-${Date.now()}`,
-                              role: 'USER',
-                              content: 'Quero cancelar este orçamento e começar de novo',
+                          // Add cancellation message FIRST
+                          const cancelMessage: Message = {
+                            id: `user-${Date.now()}`,
+                            role: 'USER',
+                            content: 'Quero cancelar este orçamento e começar de novo',
+                            createdAt: new Date().toISOString(),
+                          }
+
+                          setMessages((prev) => [...prev, cancelMessage])
+                          setIsLoading(true)
+
+                          // Minimize progress to show it's being cancelled
+                          setIsProgressMinimized(true)
+
+                          setTimeout(() => scrollToBottom(), 100)
+
+                          try {
+                            // Send message to AI to restart conversation
+                            const response = await fetch('/api/ai/chat', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                message: 'Quero cancelar este orçamento e começar de novo',
+                                conversationId,
+                                sessionId,
+                                imageBase64: null,
+                                imageUrl: null,
+                              }),
+                            })
+
+                            if (!response.ok) {
+                              throw new Error('Erro ao enviar mensagem')
+                            }
+
+                            const data = await response.json()
+
+                            const assistantMessage: Message = {
+                              id: `assistant-${Date.now()}`,
+                              role: 'ASSISTANT',
+                              content: data.message,
                               createdAt: new Date().toISOString(),
-                            },
-                          ])
+                            }
+
+                            setMessages((prev) => [...prev, assistantMessage])
+
+                            // Speak response if voice enabled
+                            if (isVoiceEnabled && data.message) {
+                              speak(data.message)
+                            }
+
+                            // Clear quote context AFTER getting response (so user sees the flow)
+                            setTimeout(() => {
+                              setQuoteContext(null)
+                              setQuoteProgress(0)
+                              setCanExportQuote(false)
+                              setProductSuggestions([])
+                              setSuggestedCategory(null)
+                              setSelectedProductIds([])
+                            }, 2000) // Wait 2 seconds to clear
+                          } catch (error) {
+                            console.error('[CHAT] Error restarting conversation:', error)
+                            setMessages((prev) => [
+                              ...prev,
+                              {
+                                id: `error-${Date.now()}`,
+                                role: 'ASSISTANT',
+                                content:
+                                  'Tudo bem! Vamos começar de novo. Como posso ajudá-lo com seu novo orçamento?',
+                                createdAt: new Date().toISOString(),
+                              },
+                            ])
+
+                            // Still clear context even on error
+                            setTimeout(() => {
+                              setQuoteContext(null)
+                              setQuoteProgress(0)
+                              setCanExportQuote(false)
+                              setProductSuggestions([])
+                              setSuggestedCategory(null)
+                              setSelectedProductIds([])
+                            }, 2000)
+                          } finally {
+                            setIsLoading(false)
+                          }
                         }
                       }}
                       variant="outline"

@@ -32,12 +32,6 @@ const StepProduct = lazy(() =>
 const StepDetails = lazy(() =>
   import('./steps/step-details').then((m) => ({ default: m.StepDetails }))
 )
-const StepDetailsFerragens = lazy(() =>
-  import('./steps/step-details-ferragens').then((m) => ({ default: m.StepDetailsFerragens }))
-)
-const StepDetailsKits = lazy(() =>
-  import('./steps/step-details-kits').then((m) => ({ default: m.StepDetailsKits }))
-)
 const StepItemReview = lazy(() =>
   import('./steps/step-item-review').then((m) => ({ default: m.StepItemReview }))
 )
@@ -64,7 +58,7 @@ const steps = [
 ]
 
 // Steps to display in progress bar (exclude step 0)
-const progressSteps = steps.filter(s => s.number > 0)
+const progressSteps = steps.filter((s) => s.number > 0)
 
 export function QuoteWizard() {
   const router = useRouter()
@@ -219,13 +213,7 @@ export function QuoteWizard() {
           {step === 0 && <StepLocation />}
           {step === 1 && <StepCategory />}
           {step === 2 && <StepProduct />}
-          {step === 3 && (
-            <>
-              {currentCategory === 'FERRAGENS' && <StepDetailsFerragens />}
-              {currentCategory === 'KITS' && <StepDetailsKits />}
-              {currentCategory !== 'FERRAGENS' && currentCategory !== 'KITS' && <StepDetails />}
-            </>
-          )}
+          {step === 3 && <StepDetails />}
           {step === 4 && <StepItemReview />}
           {step === 5 && <StepCustomer />}
           {step === 6 && <StepFinalSummary />}

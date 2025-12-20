@@ -1,0 +1,158 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+    - generic [ref=e2]:
+        - banner [ref=e3]:
+            - navigation "Global" [ref=e4]:
+                - link "Versati Glass Versati Glass" [ref=e5] [cursor=pointer]:
+                    - /url: /
+                    - generic [ref=e6]:
+                        - img "Versati Glass" [ref=e7]
+                        - generic [ref=e8]: Versati Glass
+                - generic [ref=e9]:
+                    - link "Home" [ref=e10] [cursor=pointer]:
+                        - /url: /
+                    - link "Produtos" [ref=e11] [cursor=pointer]:
+                        - /url: /produtos
+                    - link "Serviços" [ref=e12] [cursor=pointer]:
+                        - /url: /servicos
+                    - link "Portfólio" [ref=e13] [cursor=pointer]:
+                        - /url: /portfolio
+                    - link "Contato" [ref=e14] [cursor=pointer]:
+                        - /url: /contato
+                - generic [ref=e15]:
+                    - link [ref=e16] [cursor=pointer]:
+                        - /url: /orcamento
+                        - img [ref=e17]
+                    - button [ref=e22] [cursor=pointer]:
+                        - img [ref=e23]
+                        - img [ref=e29]
+                    - link "Entrar" [ref=e31] [cursor=pointer]:
+                        - /url: /login
+                    - link "Fazer Orçamento" [ref=e32] [cursor=pointer]:
+                        - /url: /orcamento
+        - main [ref=e33]:
+            - generic [ref=e36]:
+                - generic [ref=e37]:
+                    - img [ref=e39]
+                    - heading "Onde voce esta?" [level=2] [ref=e42]
+                    - paragraph [ref=e43]: Informe seu CEP para calcularmos o orcamento correto para sua regiao
+                - generic [ref=e44]:
+                    - generic [ref=e45]:
+                        - generic [ref=e46]: Digite seu CEP
+                        - textbox "Digite seu CEP" [active] [ref=e49]:
+                            - /placeholder: 00000-000
+                        - paragraph [ref=e50]:
+                            - text: Nao sabe o CEP? Consulte em
+                            - link "buscacep.correios.com.br" [ref=e51] [cursor=pointer]:
+                                - /url: https://buscacepinter.correios.com.br/app/endereco/index.php
+                    - button "Continuar" [disabled]:
+                        - text: Continuar
+                        - img
+                    - paragraph [ref=e52]: O CEP e usado apenas para calcular o valor do orcamento. Voce podera alterar o endereco de instalacao depois.
+        - contentinfo "Footer" [ref=e53]:
+            - heading "Footer" [level=2] [ref=e54]
+            - generic [ref=e55]:
+                - generic [ref=e56]:
+                    - generic [ref=e57]:
+                        - generic [ref=e58]:
+                            - img "Versati Glass" [ref=e59]
+                            - generic [ref=e60]: Versati Glass
+                        - paragraph [ref=e61]: Transparência que transforma espaços. Vidraçaria premium no Rio de Janeiro com atendimento 24h via WhatsApp.
+                        - generic [ref=e62]:
+                            - link "Instagram" [ref=e63] [cursor=pointer]:
+                                - /url: https://instagram.com/versatiglass
+                                - generic [ref=e64]: Instagram
+                                - img [ref=e65]
+                            - link "Facebook" [ref=e68] [cursor=pointer]:
+                                - /url: https://facebook.com/versatiglass
+                                - generic [ref=e69]: Facebook
+                                - img [ref=e70]
+                    - generic [ref=e72]:
+                        - generic [ref=e73]:
+                            - generic [ref=e74]:
+                                - heading "Produtos" [level=3] [ref=e75]
+                                - list [ref=e76]:
+                                    - listitem [ref=e77]:
+                                        - link "Box para Banheiro" [ref=e78] [cursor=pointer]:
+                                            - /url: /produtos/box
+                                    - listitem [ref=e79]:
+                                        - link "Espelhos" [ref=e80] [cursor=pointer]:
+                                            - /url: /produtos/espelhos
+                                    - listitem [ref=e81]:
+                                        - link "Vidros Temperados" [ref=e82] [cursor=pointer]:
+                                            - /url: /produtos/vidros
+                                    - listitem [ref=e83]:
+                                        - link "Portas e Janelas" [ref=e84] [cursor=pointer]:
+                                            - /url: /produtos/portas-janelas
+                            - generic [ref=e85]:
+                                - heading "Empresa" [level=3] [ref=e86]
+                                - list [ref=e87]:
+                                    - listitem [ref=e88]:
+                                        - link "Sobre Nós" [ref=e89] [cursor=pointer]:
+                                            - /url: /sobre
+                                    - listitem [ref=e90]:
+                                        - link "Portfólio" [ref=e91] [cursor=pointer]:
+                                            - /url: /portfolio
+                                    - listitem [ref=e92]:
+                                        - link "Contato" [ref=e93] [cursor=pointer]:
+                                            - /url: /contato
+                        - generic [ref=e94]:
+                            - generic [ref=e95]:
+                                - heading "Suporte" [level=3] [ref=e96]
+                                - list [ref=e97]:
+                                    - listitem [ref=e98]:
+                                        - link "FAQ" [ref=e99] [cursor=pointer]:
+                                            - /url: /faq
+                                    - listitem [ref=e100]:
+                                        - link "Garantia" [ref=e101] [cursor=pointer]:
+                                            - /url: /garantia
+                                    - listitem [ref=e102]:
+                                        - link "Política de Privacidade" [ref=e103] [cursor=pointer]:
+                                            - /url: /privacidade
+                                    - listitem [ref=e104]:
+                                        - link "Termos de Uso" [ref=e105] [cursor=pointer]:
+                                            - /url: /termos
+                            - generic [ref=e106]:
+                                - heading "Contato" [level=3] [ref=e107]
+                                - list [ref=e108]:
+                                    - listitem [ref=e109]:
+                                        - img [ref=e110]
+                                        - link "+55 21 98253-6229" [ref=e112] [cursor=pointer]:
+                                            - /url: tel:+5521982536229
+                                    - listitem [ref=e113]:
+                                        - img [ref=e114]
+                                        - generic [ref=e117]: versatiglass@gmail.com
+                                    - listitem [ref=e118]:
+                                        - img [ref=e119]
+                                        - generic [ref=e122]:
+                                            - text: Estrada Três Rios, 1156
+                                            - text: Freguesia - Rio de Janeiro/RJ
+                - paragraph [ref=e124]: © 2025 Versati Glass. Todos os direitos reservados.
+        - generic [ref=e126]:
+            - button "Assistente IA Tire suas duvidas" [ref=e127] [cursor=pointer]:
+                - img [ref=e129]
+                - generic [ref=e132]:
+                    - paragraph [ref=e133]: Assistente IA
+                    - paragraph [ref=e134]: Tire suas duvidas
+            - button "WhatsApp Fale conosco" [ref=e138] [cursor=pointer]:
+                - img [ref=e140]
+                - generic [ref=e142]:
+                    - paragraph [ref=e143]: WhatsApp
+                    - paragraph [ref=e144]: Fale conosco
+        - generic [ref=e147]:
+            - generic [ref=e148]:
+                - img [ref=e149]
+                - paragraph [ref=e152]:
+                    - text: Usamos cookies para melhorar sua experiencia, analisar o trafego e personalizar anuncios.
+                    - link "Saiba mais" [ref=e153] [cursor=pointer]:
+                        - /url: /privacidade
+            - generic [ref=e154]:
+                - button "Personalizar" [ref=e155] [cursor=pointer]
+                - button "Apenas Necessarios" [ref=e156] [cursor=pointer]
+                - button "Aceitar Todos" [ref=e157] [cursor=pointer]
+    - region "Notifications (F8)":
+        - list
+    - alert [ref=e158]
+```

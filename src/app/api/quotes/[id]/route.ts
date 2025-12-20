@@ -69,9 +69,6 @@ export async function GET(request: Request, { params }: RouteParams) {
       ...quote,
       subtotal: Number(quote.subtotal),
       discount: Number(quote.discount),
-      shippingFee: quote.shippingFee ? Number(quote.shippingFee) : 0,
-      laborFee: quote.laborFee ? Number(quote.laborFee) : 0,
-      materialFee: quote.materialFee ? Number(quote.materialFee) : 0,
       total: Number(quote.total),
       items: quote.items.map((item) => ({
         ...item,

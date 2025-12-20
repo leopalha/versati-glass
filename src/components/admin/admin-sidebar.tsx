@@ -18,6 +18,7 @@ import {
   Settings,
   BookOpen,
   Bot,
+  Building2,
 } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
@@ -64,6 +65,11 @@ const menuItems = [
     href: '/admin/produtos',
     label: 'Produtos',
     icon: ShoppingBag,
+  },
+  {
+    href: '/admin/fornecedores',
+    label: 'Fornecedores',
+    icon: Building2,
   },
 ]
 

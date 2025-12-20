@@ -860,60 +860,1078 @@ Mirror-finish reflective glass facade panel reflecting blue sky and surrounding 
 Screen-printed ceramic frit glass with custom geometric dot pattern providing solar control and decoration. Modern office building spandrel panel application. Black frit pattern on clear glass creating contemporary graphic effect. Exterior view showing both aesthetic and functional benefits. Shot with Canon EOS R3, 35mm lens, f/8. Commercial architecture photography. Technical and artistic aesthetic. 6K resolution.
 ```
 
-Vidro Serigrafado
-PORTAS (5 faltantes):
-Porta Automática
-Porta Camarão (Articulada)
-Porta de Abrir
-Porta Pivotante
-Porta Pivotante Premium
-JANELAS (4 faltantes):
-Janela Basculante
-Janela de Correr
-Janela Guilhotina
-Janela Pivotante
-GUARDA_CORPO (4 faltantes):
-Gradil de Inox
-Guarda-Corpo Autoportante Inox
-Guarda-Corpo Bottons
-Guarda-Corpo Spider
-CORTINAS_VIDRO (4 faltantes):
-Cortina de Vidro Automatizada
-Cortina de Vidro Sistema Europeu
-Cortina de Vidro Sistema Europeu Premium
-Cortina de Vidro Sistema Stanley
-PERGOLADOS (4 faltantes):
-Cobertura de Vidro Laminado
-Cobertura Vidro Controle Solar
-Pergolado com Estrutura Aço Inox
-Pergolado com Estrutura Alumínio
-TAMPOS_PRATELEIRAS (2 faltantes):
-Prateleira de Vidro
-Tampo Extra Clear
-DIVISORIAS (3 faltantes):
-Divisória Acústica
-Divisória com Porta Integrada
-Painel Decorativo
-FECHAMENTOS (3 faltantes):
-Fechamento de Área de Serviço
-Fechamento de Área Gourmet
-Fechamento de Piscina
-FERRAGENS (4 faltantes):
-Kit Box Frontal
-Kit Porta Pivotante V/A
-Mola de Piso
-Puxador Tubular 40cm
-KITS (2 faltantes):
-Kit Basculante/Maxim-Ar
-Kit Box Elegance Completo
-SERVICOS (6 faltantes):
-Atendimento Emergencial 24h
-Instalação Profissional
-Manutenção Corretiva
-Manutenção Preventiva
-Medição Técnica
-Troca de Vidro
-📊 Estatísticas
-Total de produtos: 78
-Com imagem: 26 (33%)
-Faltantes: 52 (67%)
+# 📸 PROMPTS COMPLETOS - 52 IMAGENS FALTANTES
+
+**Versati Glass - Complemento de Imagens**
+**Total**: 52 novos prompts profissionais
+
+---
+
+## 🚪 PORTAS DE VIDRO
+
+### Porta Automática
+
+**📁 Arquivo:** `/public/products/porta-automatica-1.jpg`
+**Thumbnail:** `/public/products/porta-automatica-thumb.jpg`
+
+**Prompt:**
+
+```
+Modern automatic sliding glass doors with motion sensor activation in upscale commercial building lobby. Frameless 12mm tempered glass panels with sleek aluminum header housing motors. Business people walking through in soft motion blur. Polished marble floor reflecting doors. Bright daytime lighting. Shot with Canon EOS R3, 24-70mm lens, f/5.6. Commercial real estate photography. Professional and welcoming aesthetic. 6K resolution.
+```
+
+---
+
+### Porta Camarão (Articulada)
+
+**📁 Arquivo:** `/public/products/porta-camarao-1.jpg`
+**Thumbnail:** `/public/products/porta-camarao-thumb.jpg`
+
+**Prompt:**
+
+```
+Space-saving folding glass door (camarão/bi-fold) with multi-panel articulated system. 8mm tempered glass panels in black aluminum frame. Modern apartment separating living room from balcony. Panels shown partially folded creating accordion effect. Natural light streaming through. Shot with Sony A7R V, 35mm lens, f/5.6. Interior design photography. Flexible and space-efficient aesthetic. 5K resolution.
+```
+
+---
+
+### Porta de Abrir (Adicional)
+
+**📁 Arquivo:** `/public/products/porta-abrir-classic-1.jpg`
+**Thumbnail:** `/public/products/porta-abrir-classic-thumb.jpg`
+
+**Prompt:**
+
+```
+Traditional swing door with frosted glass panel and black aluminum frame. Office entrance with corporate professional setting. Brushed stainless steel door handle. Simple and timeless design. Soft diffused office lighting. Shot with Canon EOS R6, 50mm lens, f/4. Business interior photography. Professional and accessible aesthetic. 4K resolution.
+```
+
+---
+
+### Porta Pivotante (Adicional)
+
+**📁 Arquivo:** `/public/products/porta-pivotante-luxury-1.jpg`
+**Thumbnail:** `/public/products/porta-pivotante-luxury-thumb.jpg`
+
+**Prompt:**
+
+```
+Ultra-luxury oversized pivoting entrance door, 15mm extra-thick low-iron glass. Gold anodized aluminum pivot mechanism (#C9A962) and custom long pull handle. High-ceiling boutique hotel lobby with travertine floors. Dramatic architectural statement piece. Soft warm lighting creating golden reflections. Shot with Phase One IQ4, 55mm lens, f/8. Luxury hospitality photography. Grand and prestigious aesthetic. 12K resolution.
+```
+
+---
+
+### Porta Pivotante Premium (Variação Top)
+
+**📁 Arquivo:** `/public/products/porta-pivotante-premium-plus-1.jpg`
+**Thumbnail:** `/public/products/porta-pivotante-premium-plus-thumb.jpg`
+
+**Prompt:**
+
+```
+Cutting-edge pivoting glass door with invisible floor pivot and ceiling stabilizer. 12mm extra-clear glass with minimal hardware, appearing to float. Ultra-modern penthouse interior with concrete and steel accents. Moody dramatic lighting with rim lights on edges. Shot with Hasselblad H6D, 80mm lens, f/4. Architectural photography for design awards. Futuristic and minimalist aesthetic. 10K resolution.
+```
+
+---
+
+## 🪟 JANELAS
+
+### Janela Basculante
+
+**📁 Arquivo:** `/public/products/janela-basculante-1.jpg`
+**Thumbnail:** `/public/products/janela-basculante-thumb.jpg`
+
+**Prompt:**
+
+```
+Top-hinged tilting window (basculante) with 6mm clear tempered glass in white aluminum frame. Residential bathroom application providing ventilation and privacy. Window shown partially open tilted at 45 degrees. Soft natural light entering. Shot with Nikon Z7 II, 50mm lens, f/5.6. Residential architecture photography. Practical and ventilated aesthetic. 5K resolution.
+```
+
+---
+
+### Janela de Correr
+
+**📁 Arquivo:** `/public/products/janela-correr-1.jpg`
+**Thumbnail:** `/public/products/janela-correr-thumb.jpg`
+
+**Prompt:**
+
+```
+Multi-panel sliding window system with 4mm clear glass in anodized aluminum tracks. Modern living room with scenic outdoor view of garden. Natural oak window sill. Easy-glide operation shown with one panel open. Afternoon golden hour light. Shot with Sony A1, 35mm lens, f/8. Real estate interior photography. Convenient and bright aesthetic. 6K resolution.
+```
+
+---
+
+### Janela Guilhotina
+
+**📁 Arquivo:** `/public/products/janela-guilhotina-1.jpg`
+**Thumbnail:** `/public/products/janela-guilhotina-thumb.jpg`
+
+**Prompt:**
+
+```
+Classic double-hung sash window (guilhotina) with modern slim-profile aluminum. Two vertically sliding 5mm glass panels with balance system. Colonial-style home facade with white painted frame. Window half-open showing traditional operation. Morning soft light. Shot with Canon EOS R5, 85mm lens, f/4. Residential exterior photography. Traditional yet updated aesthetic. 5K resolution.
+```
+
+---
+
+### Janela Pivotante
+
+**📁 Arquivo:** `/public/products/janela-pivotante-1.jpg`
+**Thumbnail:** `/public/products/janela-pivotante-thumb.jpg`
+
+**Prompt:**
+
+```
+Contemporary pivot window rotating on horizontal center axis. 8mm tempered glass in black powder-coated aluminum frame. Modern minimalist bedroom with urban skyline view. Window shown rotated 90 degrees for cleaning access. Clean architectural lines. Shot with Fujifilm GFX 100, 50mm lens, f/5.6. Architectural detail photography. Innovative and functional aesthetic. 6K resolution.
+```
+
+---
+
+## 🛡️ GUARDA-CORPOS
+
+### Gradil de Inox
+
+**📁 Arquivo:** `/public/products/gradil-inox-1.jpg`
+**Thumbnail:** `/public/products/gradil-inox-thumb.jpg`
+
+**Prompt:**
+
+```
+Stainless steel cable railing system (gradil) with slim vertical posts and horizontal wire cables. Modern residential staircase with floating wood treads. Industrial-contemporary aesthetic. Cables creating geometric linear pattern. Natural daylight from skylight. Shot with Nikon Z9, 24mm lens, f/8. Interior architectural photography. Transparent and safe aesthetic. 6K resolution.
+```
+
+---
+
+### Guarda-Corpo Autoportante Inox
+
+**📁 Arquivo:** `/public/products/guarda-corpo-autoportante-1.jpg`
+**Thumbnail:** `/public/products/guarda-corpo-autoportante-thumb.jpg`
+
+**Prompt:**
+
+```
+Freestanding self-supporting stainless steel and glass railing system, no wall mounting required. 12mm structural glass base-fixed with clamp system. Rooftop terrace installation with panoramic city view. Minimalist engineering showcasing strength. Sunset lighting creating silhouette. Shot with Sony A7R V, 24-70mm lens, f/11. Engineering architecture photography. Strong and elegant aesthetic. 8K resolution, HDR.
+```
+
+---
+
+### Guarda-Corpo Bottons
+
+**📁 Arquivo:** `/public/products/guarda-corpo-bottons-1.jpg`
+**Thumbnail:** `/public/products/guarda-corpo-bottons-thumb.jpg`
+
+**Prompt:**
+
+```
+Ultra-minimalist point-fixed glass railing using stainless steel button standoffs. 12mm tempered glass panels with no visible framing. Modern commercial balcony with wood deck flooring. Close-up showing precision button fixing detail. Clean contemporary aesthetic. Shot with Phase One, 80mm macro lens, f/8. Technical architectural photography. Minimal and refined aesthetic. 8K resolution, ultra-detailed.
+```
+
+---
+
+### Guarda-Corpo Spider
+
+**📁 Arquivo:** `/public/products/guarda-corpo-spider-1.jpg`
+**Thumbnail:** `/public/products/guarda-corpo-spider-thumb.jpg`
+
+**Prompt:**
+
+```
+Structural glass railing with spider fitting system (4-point glass connectors). 15mm thick laminated glass panels point-supported at corners. High-end corporate atrium with dramatic multi-story height. Stainless steel spider fittings creating jewel-like detail. Dramatic upward angle showcasing engineering. Shot with Nikon Z9, 14-24mm ultra-wide at 18mm, f/11. Commercial architecture photography. Sophisticated engineering aesthetic. 10K resolution, maximum sharpness.
+```
+
+---
+
+## 🌊 CORTINAS DE VIDRO
+
+### Cortina de Vidro Automatizada
+
+**📁 Arquivo:** `/public/products/cortina-automatizada-1.jpg`
+**Thumbnail:** `/public/products/cortina-automatizada-thumb.jpg`
+
+**Prompt:**
+
+```
+Motorized frameless glass curtain system with electric operation. Curved glass panels on aluminum top track with remote control. Luxury penthouse balcony enclosure with ocean view. Panels stacked open to one side revealing panoramic vista. Remote control unit visible. Shot with Canon EOS R3, 24mm lens, f/8. High-end real estate photography. Convenient and luxurious aesthetic. 8K resolution.
+```
+
+---
+
+### Cortina de Vidro Sistema Europeu
+
+**📁 Arquivo:** `/public/products/cortina-europeu-1.jpg`
+**Thumbnail:** `/public/products/cortina-europeu-thumb.jpg`
+
+**Prompt:**
+
+```
+European-style frameless glass folding system for balcony enclosure. 8mm tempered glass panels with top and bottom aluminum tracks. Urban apartment balcony converted to sunroom. Panels folding and stacking compactly. Modern cityscape view background. Shot with Sony A7 IV, 35mm lens, f/5.6. Urban living photography. Versatile and practical aesthetic. 6K resolution.
+```
+
+---
+
+### Cortina de Vidro Sistema Europeu Premium
+
+**📁 Arquivo:** `/public/products/cortina-europeu-premium-1.jpg`
+**Thumbnail:** `/public/products/cortina-europeu-premium-thumb.jpg`
+
+**Prompt:**
+
+```
+Premium European frameless glass curtain with upgraded hardware and thicker 10mm low-iron glass. Gold anodized aluminum tracks (#C9A962) and smooth-glide rollers. High-rise luxury apartment wraparound terrace. Seamless indoor-outdoor living. Sunset creating golden reflections on glass and hardware. Shot with Phase One XF, 35mm lens, f/8. Luxury lifestyle photography. Upscale and refined aesthetic. 10K resolution, cinematic.
+```
+
+---
+
+### Cortina de Vidro Sistema Stanley
+
+**📁 Arquivo:** `/public/products/cortina-stanley-1.jpg`
+**Thumbnail:** `/public/products/cortina-stanley-thumb.jpg`
+
+**Prompt:**
+
+```
+Stanley brand frameless glass curtain system with proprietary track and roller design. 8mm tempered glass with weather seals. Residential balcony in coastal environment. Technical detail showing Stanley hardware quality. Ocean view with blue sky. Shot with Nikon Z7 II, 50mm lens, f/5.6. Product and architecture combination photography. Reliable and engineered aesthetic. 6K resolution.
+```
+
+---
+
+## 🏛️ PERGOLADOS E COBERTURAS
+
+### Cobertura de Vidro Laminado
+
+**📁 Arquivo:** `/public/products/cobertura-laminado-1.jpg`
+**Thumbnail:** `/public/products/cobertura-laminado-thumb.jpg`
+
+**Prompt:**
+
+```
+Overhead glass canopy with laminated safety glass panels. 10mm+10mm laminated with structural PVB interlayer. Residential patio with dining furniture underneath. Blue sky visible through transparent roof providing UV protection. Upward shot showing glass from below. Shot with Fujifilm GFX 50S, 23mm ultra-wide, f/11. Architectural exterior photography. Protected and airy aesthetic. 6K resolution.
+```
+
+---
+
+### Cobertura Vidro Controle Solar
+
+**📁 Arquivo:** `/public/products/cobertura-solar-1.jpg`
+**Thumbnail:** `/public/products/cobertura-solar-thumb.jpg`
+
+**Prompt:**
+
+```
+Advanced solar control glass roof with low-E coating and tint. Modern outdoor living area with lounge furniture staying cool beneath. Slight blue-green tint visible in glass blocking heat while allowing light. Aluminum structural frame. Summer midday sun scenario. Shot with Sony A1, 24mm lens, f/11. Technical architectural photography. Cool and comfortable aesthetic. 8K resolution, HDR for dynamic range.
+```
+
+---
+
+### Pergolado com Estrutura Aço Inox
+
+**📁 Arquivo:** `/public/products/pergolado-inox-1.jpg`
+**Thumbnail:** `/public/products/pergolado-inox-thumb.jpg`
+
+**Prompt:**
+
+```
+Contemporary pergola with stainless steel beam structure and clear glass roof panels. Luxury outdoor kitchen and dining area. Brushed stainless posts and beams with concealed fasteners. Evening with string lights and ambient glow. Shot with Canon EOS R5, 24-70mm lens, f/4. Lifestyle architectural photography. Durable and stylish aesthetic. 6K resolution.
+```
+
+---
+
+### Pergolado com Estrutura Alumínio
+
+**📁 Arquivo:** `/public/products/pergolado-aluminio-1.jpg`
+**Thumbnail:** `/public/products/pergolado-aluminio-thumb.jpg`
+
+**Prompt:**
+
+```
+Modern aluminum structure pergola with retractable glass roof panels. Powder-coated dark gray aluminum frame with motorized sliding glass. Residential poolside lounge area. Panels shown partially open for ventilation. Sunny day with palm trees. Shot with Nikon Z9, 28mm lens, f/8. Outdoor living photography. Versatile and resort-like aesthetic. 8K resolution.
+```
+
+---
+
+## 📊 TAMPOS E PRATELEIRAS
+
+### Prateleira de Vidro (Adicional Detalhado)
+
+**📁 Arquivo:** `/public/products/prateleira-vidro-premium-1.jpg`
+**Thumbnail:** `/public/products/prateleira-vidro-premium-thumb.jpg`
+
+**Prompt:**
+
+```
+Thick 10mm extra-clear floating glass shelf with polished edges and hidden mounting brackets. Modern bathroom displaying luxury skincare products and candles. LED strip underneath creating soft underglow. Close-up showing edge quality and transparency. Shot with Sony A7R IV, 90mm macro, f/5.6. Product detail photography. Elegant and weightless aesthetic. 5K resolution, ultra-sharp.
+```
+
+---
+
+### Tampo Extra Clear
+
+**📁 Arquivo:** `/public/products/tampo-extra-clear-1.jpg`
+**Thumbnail:** `/public/products/tampo-extra-clear-thumb.jpg`
+
+**Prompt:**
+
+```
+Premium low-iron extra-clear glass dining table top, 12mm thickness with beveled edges. Minimalist Scandinavian dining room with designer chairs. Perfect transparency without green tint allowing wood base to show through clearly. Top-down and edge detail views. Natural daylight photography. Shot with Phase One, 80mm lens, f/8. High-end furniture photography. Pure and premium aesthetic. 8K resolution.
+```
+
+---
+
+## 🧱 DIVISÓRIAS E PAINÉIS
+
+### Divisória Acústica
+
+**📁 Arquivo:** `/public/products/divisoria-acustica-1.jpg`
+**Thumbnail:** `/public/products/divisoria-acustica-thumb.jpg`
+
+**Prompt:**
+
+```
+Sound-insulated glass partition wall with double-glazed acoustic laminated glass. Modern recording studio control room with visible thickness of acoustic glazing. Black aluminum frame with acoustic seals. Technical cross-section detail visible. Professional audio environment. Shot with Canon EOS R3, 35mm lens, f/5.6. Technical commercial photography. Quiet and professional aesthetic. 6K resolution.
+```
+
+---
+
+### Divisória com Porta Integrada
+
+**📁 Arquivo:** `/public/products/divisoria-porta-integrada-1.jpg`
+**Thumbnail:** `/public/products/divisoria-porta-integrada-thumb.jpg`
+
+**Prompt:**
+
+```
+Floor-to-ceiling glass partition system with integrated swing door. 10mm tempered glass in minimal black aluminum frame. Modern open-plan office creating meeting room. Frosted film at seating height for privacy. Door hardware matching partition frame. Shot with Sony A7 IV, 24mm tilt-shift lens, f/8. Corporate architecture photography. Seamless and professional aesthetic. 6K resolution.
+```
+
+---
+
+### Painel Decorativo
+
+**📁 Arquivo:** `/public/products/painel-decorativo-1.jpg`
+**Thumbnail:** `/public/products/painel-decorativo-thumb.jpg`
+
+**Prompt:**
+
+```
+Artistic decorative glass panel with custom sandblasted pattern and backlit LED. Abstract organic pattern creating sophisticated room divider. Upscale hotel lobby with marble and gold accents (#C9A962). Backlight creating dramatic glow through pattern. Evening ambient lighting. Shot with Leica SL2, 50mm APO, f/2.8. Luxury hospitality photography. Artistic and exclusive aesthetic. 8K resolution, rich color.
+```
+
+---
+
+## 🏠 FECHAMENTOS
+
+### Fechamento de Área de Serviço
+
+**📁 Arquivo:** `/public/products/fechamento-area-servico-1.jpg`
+**Thumbnail:** `/public/products/fechamento-area-servico-thumb.jpg`
+
+**Prompt:**
+
+```
+Frameless glass enclosure for apartment laundry/service area. 8mm clear tempered glass panels in aluminum frame. Clean organized laundry room with washer/dryer. Sliding glass doors maximizing space. Bright white tiles and good lighting. Shot with Canon EOS R6, 35mm lens, f/5.6. Residential interior photography. Organized and efficient aesthetic. 5K resolution.
+```
+
+---
+
+### Fechamento de Área Gourmet
+
+**📁 Arquivo:** `/public/products/fechamento-gourmet-1.jpg`
+**Thumbnail:** `/public/products/fechamento-gourmet-thumb.jpg`
+
+**Prompt:**
+
+```
+Premium glass enclosure system for outdoor gourmet kitchen area. Sliding and folding frameless glass panels. Luxury residential terrace with pizza oven and bar. Panels opened creating indoor-outdoor flow. Evening with ambient lighting and city view. Shot with Sony A1, 24-70mm lens, f/4. Lifestyle real estate photography. Entertaining and upscale aesthetic. 8K resolution.
+```
+
+---
+
+### Fechamento de Piscina
+
+**📁 Arquivo:** `/public/products/fechamento-piscina-1.jpg`
+**Thumbnail:** `/public/products/fechamento-piscina-thumb.jpg`
+
+**Prompt:**
+
+```
+Retractable frameless glass pool enclosure system. Tall glass panels on tracks creating weather protection for pool area. Luxury residential pool with lounge chairs and landscaping. Panels shown partially retracted. Sunny day with blue pool water. Shot with Nikon Z9, 14-24mm ultra-wide, f/11. Luxury outdoor photography. Protected yet open aesthetic. 10K resolution, vibrant colors.
+```
+
+---
+
+## 🔧 FERRAGENS E ACESSÓRIOS
+
+### Kit Box Frontal
+
+**📁 Arquivo:** `/public/products/kit-box-frontal-1.jpg`
+**Thumbnail:** `/public/products/kit-box-frontal-thumb.jpg`
+
+**Prompt:**
+
+```
+Professional product shot of complete frontal shower door hardware kit laid out systematically. Chrome-plated aluminum tracks, rollers, handles, and mounting brackets. Clean white background with soft shadows. Product catalog photography style. All components labeled and organized. Shot with Canon EOS R5, 100mm macro, f/11. Technical product photography. Complete and professional aesthetic. 5K resolution, ultra-detailed.
+```
+
+---
+
+### Kit Porta Pivotante V/A
+
+**📁 Arquivo:** `/public/products/kit-pivotante-va-1.jpg`
+**Thumbnail:** `/public/products/kit-pivotante-va-thumb.jpg`
+
+**Prompt:**
+
+```
+Premium pivot door hardware kit including floor pivot, ceiling stabilizer, and long pull handle. Brushed stainless steel finish with precision engineering visible. Components displayed on dark surface with technical drawing overlay. Industrial product photography with dramatic lighting. Shot with Sony A7R IV, 90mm macro, f/8. Engineering product photography. Precision and quality aesthetic. 6K resolution.
+```
+
+---
+
+### Mola de Piso
+
+**📁 Arquivo:** `/public/products/mola-piso-1.jpg`
+**antml:parameter>
+<parameter name="Thumbnail:** `/public/products/mola-piso-thumb.jpg`
+
+**Prompt:**
+
+```
+Heavy-duty floor-mounted door closer spring mechanism (mola de piso) in brushed stainless steel. Installation view showing mechanism set into floor with cover plate. Commercial glass door application. Technical cutaway showing internal spring system. Professional installation detail. Shot with Nikon Z7 II, 85mm lens, f/5.6. Technical installation photography. Industrial and reliable aesthetic. 5K resolution.
+```
+
+---
+
+### Puxador Tubular 40cm
+
+**📁 Arquivo:** `/public/products/puxador-tubular-40-1.jpg`
+**Thumbnail:** `/public/products/puxador-tubular-40-thumb.jpg`
+
+**Prompt:**
+
+```
+Modern 40cm long tubular glass door pull handle in brushed gold finish (#C9A962). Clean product shot against white background showing length and finish quality. Close-up detail of mounting hardware and end caps. Professional product photography with perfect lighting. Shot with Phase One, 120mm macro, f/11. Luxury hardware photography. Elegant and substantial aesthetic. 8K resolution, color-accurate.
+```
+
+---
+
+## 📦 KITS COMPLETOS
+
+### Kit Basculante/Maxim-Ar
+
+**📁 Arquivo:** `/public/products/kit-basculante-1.jpg`
+**Thumbnail:** `/public/products/kit-basculante-thumb.jpg`
+
+**Prompt:**
+
+```
+Complete hardware kit for top-hinged tilt window (basculante). Aluminum hinges, handles, and mounting hardware in white powder coat. Components organized and labeled on clean background. Product catalog style with dimensioned technical drawing. Shot with Canon EOS R5, 100mm macro, f/11. Technical product photography. Complete solution aesthetic. 5K resolution, documentation quality.
+```
+
+---
+
+### Kit Box Elegance Completo
+
+**📁 Arquivo:** `/public/products/kit-elegance-completo-1.jpg`
+**Thumbnail:** `/public/products/kit-elegance-completo-thumb.jpg`
+
+**Prompt:**
+
+```
+Premium complete shower enclosure kit with all components for luxury installation. Black matte aluminum profiles, chrome hinges, seals, and hardware. Flagship Elegance product line. Luxury packaging visible. Professional product array photography. Shot with Sony A1, 50mm lens, f/8. High-end product photography. Complete luxury solution aesthetic. 8K resolution, premium feel.
+```
+
+---
+
+## 🛠️ SERVIÇOS
+
+### Atendimento Emergencial 24h
+
+**📁 Arquivo:** `/public/images/services/emergencia-24h.jpg`
+
+**Prompt:**
+
+```
+Professional emergency glass repair service van arriving at night. Versati Glass branded vehicle with emergency lighting. Technician in uniform with tools ready. Urban nighttime setting with ambient street lights. Sense of urgency and professionalism. Shot with Canon EOS R6, 35mm lens, f/2.8. Service documentation photography. Reliable and responsive aesthetic. 5K resolution.
+```
+
+---
+
+### Instalação Profissional
+
+**📁 Arquivo:** `/public/images/services/instalacao-profissional.jpg`
+
+**Prompt:**
+
+```
+Skilled installation team carefully installing large frameless glass panel. Professional installers in Versati Glass uniforms with safety equipment. Modern residential project site. Teamwork and precision visible. Daytime natural light. Shot with Nikon Z9, 24-70mm lens, f/5.6. Professional service photography. Expert and careful aesthetic. 6K resolution.
+```
+
+---
+
+### Manutenção Corretiva
+
+**📁 Arquivo:** `/public/images/services/manutencao-corretiva.jpg`
+
+**Prompt:**
+
+```
+Technician performing corrective maintenance on shower door hardware, replacing worn components. Close-up of hands working with precision tools. Professional and methodical work. Clean organized service scenario. Soft workshop lighting. Shot with Sony A7 III, 85mm lens, f/2.8. Service detail photography. Thorough and professional aesthetic. 5K resolution.
+```
+
+---
+
+### Manutenção Preventiva
+
+**📁 Arquivo:** `/public/images/services/manutencao-preventiva.jpg`
+
+**Prompt:**
+
+```
+Scheduled preventive maintenance inspection of commercial glass facade. Technician with tablet checking glass seals and hardware. Professional documentation and systematic process. Modern office building exterior. Daytime inspection. Shot with Canon EOS R3, 50mm lens, f/5.6. Professional service photography. Proactive and systematic aesthetic. 6K resolution.
+```
+
+---
+
+### Medição Técnica
+
+**📁 Arquivo:** `/public/images/services/medicao-tecnica.jpg`
+
+**Prompt:**
+
+```
+Professional technical measurement consultation with laser measuring devices. Consultant with tablet and laser measure taking precise dimensions. Modern residential bathroom pre-installation. Technical precision and professionalism. Natural light from window. Shot with Sony A7 IV, 35mm lens, f/4. Technical service photography. Accurate and professional aesthetic. 5K resolution.
+```
+
+---
+
+### Troca de Vidro
+
+**📁 Arquivo:** `/public/images/services/troca-vidro.jpg`
+
+**Prompt:**
+
+```
+Safe glass panel replacement service in progress. Technicians using suction cups and safety equipment handling large glass sheet. Residential window replacement. Safety and care emphasized. Outdoor daytime setting. Shot with Nikon Z7 II, 24-70mm lens, f/8. Safety-focused service photography. Careful and secure aesthetic. 6K resolution.
+```
+
+---
+
+## 📊 RESUMO FINAL
+
+**Total de Prompts Adicionados:** 52
+**Categorias Cobertas:** 12
+**Qualidade:** Profissional 4K-12K
+**Estilo:** Consistente com marca Versati Glass
+
+---
+
+**Data:** 18 Dezembro 2024
+**Status:** ✅ Completo
+**Mantido por:** Claude Code Agent
+
+# 🎨 PROMPTS - PRODUTOS HOMEPAGE VERSATI GLASS
+
+**Data:** 17 Dezembro 2024
+**Objetivo:** Gerar as 12 imagens dos produtos exibidos na página `/produtos`
+**Prioridade:** P0 - Crítico (homepage visível)
+
+---
+
+## 📋 LISTA DE PRODUTOS (12 ITENS)
+
+### Categoria: Box de Vidro (3 produtos)
+
+1. ✅ Box de Vidro Premium - **Mais Vendido**
+2. ✅ Box Incolor Padrão
+3. ✅ Box de Canto
+
+### Categoria: Guarda-Corpos (2 produtos)
+
+4. ✅ Guarda-Corpo de Vidro - **Premium**
+5. ✅ Guarda-Corpo Misto (Vidro + Inox)
+
+### Categoria: Espelhos (2 produtos)
+
+6. ✅ Espelho com LED Integrado - **Destaque**
+7. ✅ Espelho Bisotado
+
+### Categoria: Divisórias (1 produto)
+
+8. ✅ Divisória para Escritório
+
+### Categoria: Portas (1 produto)
+
+9. ✅ Porta de Vidro de Correr
+
+### Categoria: Fachadas (1 produto)
+
+10. ✅ Fachada de Vidro Comercial - **Corporativo**
+
+### Categoria: Outros (2 produtos)
+
+11. ✅ Tampo de Vidro para Mesa
+12. ✅ Janela Maxim-Ar de Vidro
+
+---
+
+## 🎯 PROMPTS PARA GERAÇÃO
+
+### 1️⃣ BOX DE VIDRO PREMIUM 🏆 (Mais Vendido)
+
+**📁 Caminho:** `/public/images/products/box-premium.jpg`
+
+**Especificações do Produto:**
+
+- Vidro temperado 8mm
+- Perfis em alumínio
+- Garantia vitalícia
+- Preço: R$ 1.890
+
+**PROMPT MIDJOURNEY/DALL-E:**
+
+```
+Professional architectural photography of a premium frameless glass shower enclosure in a luxury modern bathroom. 8mm crystal-clear tempered glass with sleek black aluminum hardware and profiles. Spacious contemporary bathroom with large white porcelain tiles (60x60cm), subtle gray grout lines, and polished chrome fixtures. Modern rainfall showerhead visible. Natural daylight streaming from left side creating elegant reflections and transparency on the glass. Minimalist aesthetic with clean lines, floating white vanity in background. Shot with Canon EOS R5, 35mm tilt-shift lens, f/5.6, professional real estate photography. Warm color temperature (3200K). Gold accent towel (#C9A962) hanging on chrome bar. High-end residential quality, inviting and aspirational feel. 8K resolution, ultra-sharp focus, slight depth of field on background.
+
+Camera settings: ISO 200, 1/125s, f/5.6
+Style: Architectural Digest, luxury home magazine
+Mood: Clean, modern, premium, achievable luxury
+Lighting: Soft natural window light + subtle fill
+```
+
+---
+
+### 2️⃣ BOX INCOLOR PADRÃO
+
+**📁 Caminho:** `/public/images/products/box-incolor.jpg`
+
+**Especificações do Produto:**
+
+- Vidro temperado 8mm incolor
+- Acabamento padrão
+- 2 anos de garantia
+- Preço: R$ 1.490
+
+**PROMPT:**
+
+```
+Clean and bright product photography of a standard hinged glass shower door, 8mm clear tempered glass with chrome hardware. Middle-class residential bathroom with standard white ceramic tiles (30x30cm), simple white grout, basic chrome fixtures. Functional and practical design. Natural daylight creating transparent and airy feel. White shower curtain visible on opposite side. Shot with Canon EOS R6, 24-70mm lens at 35mm, f/4.5. Real estate listing photography style. Neutral color palette: white tiles, chrome fixtures, light beige walls. Affordable yet quality aesthetic. Clean, well-lit, inviting for middle-income homeowners. 5K resolution, sharp focus throughout.
+
+Camera: Canon EOS R6, 24-70mm f/2.8
+Settings: ISO 400, 1/100s, f/4.5
+Style: Real estate photography, approachable luxury
+Mood: Clean, bright, practical, good value
+Lighting: Natural window light + bounce card
+```
+
+---
+
+### 3️⃣ BOX DE CANTO
+
+**📁 Caminho:** `/public/images/products/box-canto.jpg`
+
+**Especificações do Produto:**
+
+- Vidro temperado 8mm
+- Porta de abrir
+- Dobradiças premium
+- Preço: R$ 1.690
+
+**PROMPT:**
+
+```
+Corner glass shower enclosure installation photograph, L-shaped design with two glass panels meeting at 90 degrees. 8mm tempered clear glass with polished chrome hinges and handle. Compact urban bathroom showing smart space utilization. White subway tiles (7.5x15cm) with dark gray grout in classic brick pattern. Modern black matte showerhead and mixer. Corner installation maximizing limited bathroom space. Natural light from frosted window above. Shot with Nikon Z7 II, 24mm wide lens, f/5.6. Interior design photography showcasing space-saving solutions. Color scheme: white tiles, black fixtures, chrome accents. Efficient and modern aesthetic. Urban apartment living quality. 6K resolution, architectural precision.
+
+Camera: Nikon Z7 II, 24mm f/1.8
+Settings: ISO 320, 1/125s, f/5.6
+Style: Urban interior design, smart living
+Mood: Efficient, modern, space-conscious
+Lighting: Soft natural + indirect ambient
+```
+
+---
+
+### 4️⃣ GUARDA-CORPO DE VIDRO 🌟 (Premium)
+
+**📁 Caminho:** `/public/images/products/guarda-corpo.jpg`
+
+**Especificações do Produto:**
+
+- Vidro laminado 10mm
+- Fixação invisível (botões)
+- Alta resistência
+- Preço: R$ 890/m
+
+**PROMPT:**
+
+```
+Stunning outdoor balcony railing system with frameless 10mm laminated safety glass panels. Invisible point-fixed stainless steel standoffs (no posts). Modern residential balcony with wooden deck flooring (cumaru wood). Background showing blurred Rio de Janeiro cityscape at golden hour with Sugarloaf Mountain barely visible. Safety and elegance combined - transparent protective barrier preserving panoramic views. Warm sunset lighting (5200K) creating orange-gold glow (#C9A962 tones) reflecting on glass surface. Shot with Sony A1, 24mm f/1.4 GM lens, f/8 for depth. Luxury real estate exterior photography. Aspirational lifestyle, urban sophistication. 10K resolution, HDR processing, cinematic color grading.
+
+Camera: Sony A1, 24mm GM f/1.4
+Settings: ISO 100, 1/250s, f/8, HDR bracketing
+Style: Luxury real estate, lifestyle photography
+Mood: Safe yet transparent, prestigious, view-preserving
+Lighting: Golden hour natural (5200K), rim light on glass
+```
+
+---
+
+### 5️⃣ GUARDA-CORPO MISTO (VIDRO + INOX)
+
+**📁 Caminho:** `/public/images/products/guarda-corpo-inox.jpg`
+
+**Especificações do Produto:**
+
+- Vidro laminado
+- Corrimão inox
+- Design moderno
+- Preço: R$ 1.190/m
+
+**PROMPT:**
+
+```
+Modern mixed-material glass railing system combining 10mm laminated glass panels with brushed stainless steel top rail and posts. Interior residential staircase application in contemporary home. Floating wooden steps (freijó wood) with glass panels providing safety without blocking view. Polished stainless steel handrail with satin finish. Minimalist living room visible in background with modern furniture. Natural daylight from large windows. Shot with Canon EOS R5, 35mm f/1.4 lens, f/5.6. High-end interior architecture photography. Color palette: natural wood tones, stainless steel, white walls, subtle gold accents (#C9A962) in decor. Sophisticated residential quality. 8K resolution, tack-sharp throughout.
+
+Camera: Canon EOS R5, 35mm f/1.4L
+Settings: ISO 400, 1/160s, f/5.6
+Style: Interior architecture magazine
+Mood: Modern sophistication, safe elegance
+Lighting: Natural window light + fill flash (low power)
+```
+
+---
+
+### 6️⃣ ESPELHO COM LED INTEGRADO ✨ (Destaque)
+
+**📁 Caminho:** `/public/images/products/espelho-led.jpg`
+
+**Especificações do Produto:**
+
+- Iluminação LED integrada
+- Sensor touch
+- Antiembaçante
+- Preço: R$ 850
+
+**PROMPT:**
+
+```
+Sleek modern LED-backlit bathroom mirror with integrated warm white LED strip lighting (3000K) creating soft halo glow effect around edges. Frameless rectangular design (80x60cm) with touch sensor control. Contemporary luxury bathroom setting with white Carrara marble countertop, matte black faucet and fixtures, white subway tile backsplash. Evening scene showing LED backlight activated, creating ambient atmosphere. Makeup items and gold accessories (#C9A962) tastefully arranged on counter. Shot with Sony A7 IV, 50mm f/1.2 GM lens, f/2.8. Lifestyle interior photography, hotel luxury aesthetic. Soft focus on background, sharp on mirror and counter. Color grading: warm whites, blacks, gold accents. Intimate and sophisticated. 6K resolution, cinematic depth of field.
+
+Camera: Sony A7 IV, 50mm f/1.2 GM
+Settings: ISO 800, 1/60s, f/2.8, white balance 3000K
+Style: Lifestyle interior, hotel luxury
+Mood: Intimate, modern, tech-forward elegance
+Lighting: LED mirror glow + subtle ambient (3000K)
+```
+
+---
+
+### 7️⃣ ESPELHO BISOTADO
+
+**📁 Caminho:** `/public/images/products/espelho-bisotado.jpg`
+
+**Especificações do Produto:**
+
+- Bisotê 2cm em toda borda
+- Espessura 4mm
+- Fixação inclusa
+- Preço: R$ 450
+
+**PROMPT:**
+
+```
+Traditional beveled edge wall mirror (4mm Guardian glass) with 2cm polished bevel all around rectangular frame (60x90cm). Classic elegant bathroom or bedroom setting with neutral beige walls and warm wood furniture. Close-up angle showing detail of beveled edge catching and refracting light into subtle rainbow prism effect. Soft natural window light from right side. Reflection showing tasteful room interior with classic decor. Shot with Canon EOS R6, 85mm f/1.8 lens, f/4. Traditional interior design photography. Timeless and refined aesthetic. Color palette: warm beige, natural wood tones, soft whites. Accessible luxury for traditional tastes. 5K resolution, sharp focus on bevel detail.
+
+Camera: Canon EOS R6, 85mm f/1.8
+Settings: ISO 200, 1/125s, f/4
+Style: Traditional interior design, timeless
+Mood: Classic elegance, refined, accessible
+Lighting: Soft natural side light + bounce
+```
+
+---
+
+### 8️⃣ DIVISÓRIA PARA ESCRITÓRIO
+
+**📁 Caminho:** `/public/images/products/divisoria.jpg`
+
+**Especificações do Produto:**
+
+- Vidro temperado 10mm
+- Perfis de alumínio
+- Acústica
+- Preço: R$ 690/m²
+
+**PROMPT:**
+
+```
+Modern corporate office glass partition wall system, floor-to-ceiling installation (10mm tempered glass panels). Sleek black anodized aluminum frames creating modular grid pattern. Professional open-plan office environment with ergonomic workstations visible through glass. Frosted privacy film on lower 1 meter, crystal-clear upper section allowing natural light flow. Contemporary office with white desks, black chairs, tech company aesthetic. Daytime bright natural lighting from large windows. Shot with Nikon Z9, 24-70mm f/2.8 lens at 35mm, f/8. Commercial architecture photography, corporate professionalism. Color scheme: black frames, white walls, wood flooring, pops of brand colors. Productive and transparent workspace. 8K resolution, architectural precision, tilt-shift correction.
+
+Camera: Nikon Z9, 24-70mm f/2.8
+Settings: ISO 400, 1/200s, f/8, tilt-shift lens
+Style: Corporate architecture, commercial interiors
+Mood: Professional, transparent, collaborative
+Lighting: Natural office lighting + ambient
+```
+
+---
+
+### 9️⃣ PORTA DE VIDRO DE CORRER
+
+**📁 Caminho:** `/public/images/products/porta-correr.jpg`
+
+**Especificações do Produto:**
+
+- Sistema de trilho superior
+- Vidro temperado
+- Fechadura inclusa
+- Preço: R$ 2.190
+
+**PROMPT:**
+
+```
+Contemporary sliding glass door with top-mounted stainless steel track system. Single large panel (10mm tempered glass, 2.10m height) sliding smoothly on precision rollers. Modern residential interior connecting living room to home office space. Minimalist design with barely visible chrome track and handle. Partial frosted pattern (horizontal lines) on lower third for privacy. Mid-century modern furniture visible in both rooms. Natural afternoon light creating soft transparency effect. Shot with Fujifilm GFX 100S, 50mm f/3.5 lens, f/5.6. Interior architecture photography showcasing space-saving solution. Color palette: natural oak flooring, white walls, black track, warm wood furniture. Functional elegance. 7K resolution, medium format clarity.
+
+Camera: Fujifilm GFX 100S, 50mm f/3.5
+Settings: ISO 320, 1/160s, f/5.6
+Style: Mid-century modern interior design
+Mood: Space-efficient, sleek, functional beauty
+Lighting: Natural window light, even distribution
+```
+
+---
+
+### 🔟 FACHADA DE VIDRO COMERCIAL 🏢 (Corporativo)
+
+**📁 Caminho:** `/public/images/products/fachada.jpg`
+
+**Especificações do Produto:**
+
+- Controle solar
+- Alta performance
+- Estrutura reforçada
+- Preço: Sob Consulta
+
+**PROMPT:**
+
+```
+Impressive modern commercial building exterior with full structural glass curtain wall facade. Blue-green tinted solar control glass panels (8mm + 12mm laminated) reflecting sky and surrounding cityscape. Contemporary office tower in urban business district. Late afternoon view showing partial cloud reflections on glass surface creating dynamic visual interest. Aluminum mullion grid pattern visible. Ground floor showing entrance lobby through transparent sections. Professional commercial architecture. Shot with Nikon Z9, 14-24mm ultra-wide lens at 18mm, f/11, tilt-shift adapter for perspective correction. Corporate real estate photography, architectural landmark quality. Monumental and prestigious aesthetic. Blue tinted glass, steel structure, concrete base. 10K resolution, HDR, perfectly vertical lines.
+
+Camera: Nikon Z9, 14-24mm f/2.8 + tilt-shift
+Settings: ISO 100, 1/250s, f/11, HDR 3-shot
+Style: Commercial architecture, corporate prestige
+Mood: Powerful, modern, energy-efficient, iconic
+Lighting: Natural afternoon (partially cloudy)
+Post: Perspective correction, vertical line straightening
+```
+
+---
+
+### 1️⃣1️⃣ TAMPO DE VIDRO PARA MESA
+
+**📁 Caminho:** `/public/images/products/tampo.jpg`
+
+**Especificações do Produto:**
+
+- Vidro temperado
+- Bordas polidas
+- Sob medida
+- Preço: R$ 380
+
+**PROMPT:**
+
+```
+Clean top-down product shot of rectangular tempered glass table top (10mm thickness) with perfectly polished edges. Mounted on elegant wooden dining table base (walnut wood). Scandinavian-style dining room with white walls, natural light from left window. Table set with minimalist white plates, gold cutlery (#C9A962), and simple floral centerpiece. Glass top showing perfect transparency, slight green tint visible on polished edges. Protection and elegance for existing furniture. Shot with Canon EOS R5, 50mm f/1.2 lens, f/5.6, top-down angle (slightly angled). Interior product photography, catalog quality. Color scheme: natural walnut, white ceramics, gold accents, green plants. Functional beauty. 5K resolution, tack-sharp polished edges.
+
+Camera: Canon EOS R5, 50mm f/1.2L
+Settings: ISO 400, 1/125s, f/5.6
+Style: Product catalog, Scandinavian interior
+Mood: Clean, protective, natural elegance
+Lighting: Soft natural window light + fill card
+```
+
+---
+
+### 1️⃣2️⃣ JANELA MAXIM-AR DE VIDRO
+
+**📁 Caminho:** `/public/images/products/janela.jpg`
+
+**Especificações do Produto:**
+
+- Abertura maxim-ar
+- Perfil de alumínio
+- Vidro temperado
+- Preço: R$ 890
+
+**PROMPT:**
+
+```
+Modern top-hinged awning window (maxim-ar style) with 8mm tempered clear glass and white powder-coated aluminum frame. Window shown partially open at 45-degree angle allowing ventilation. Contemporary residential bathroom or kitchen setting with white walls. Visible crank handle mechanism in chrome finish. Natural outdoor greenery visible through window (blurred background). Daytime natural light streaming in. Practical ventilation solution maintaining security. Shot with Sony A7 III, 35mm f/1.8 lens, f/5.6. Architectural detail photography showing functionality. Clean and practical aesthetic. Color palette: white frame, chrome hardware, natural green exterior, bright interior. Functional and affordable. 4K resolution, product documentation quality.
+
+Camera: Sony A7 III, 35mm f/1.8
+Settings: ISO 400, 1/160s, f/5.6
+Style: Architectural detail, product documentation
+Mood: Functional, ventilated, practical, affordable
+Lighting: Natural daylight (bright cloudy day)
+```
+
+---
+
+## 🎨 ESPECIFICAÇÕES TÉCNICAS GERAIS
+
+### Resoluções Finais
+
+- **Produtos Principais (Premium, Destaque, Corporativo):** 1200x1200px @ 90% JPG
+- **Produtos Padrão:** 1200x1200px @ 85% JPG
+- **Peso máximo:** 250KB por imagem
+
+### Pós-Processamento (Photoshop/Lightroom)
+
+**Para TODOS os produtos:**
+
+1. **Exposure:** +0.3 a +0.7 (mais brilho)
+2. **Contrast:** +10 a +15
+3. **Clarity:** +10 a +20 (definição)
+4. **Vibrance:** +5 a +10 (cores naturais)
+5. **Sharpening:** Amount 70, Radius 1.0, Detail 25
+6. **Noise Reduction:** Luminance 10-15
+
+**Color Grading:**
+
+- Highlights: leve tom quente (+5 yellow)
+- Shadows: neutro ou levemente frio
+- Midtones: neutro
+
+**Cropping:**
+
+- Aspect ratio: 1:1 (quadrado)
+- Rule of thirds: produto centralizado
+- Breathing room: 10-15% padding
+
+---
+
+## 📋 CHECKLIST DE PRODUÇÃO
+
+### Fase 1 - Produtos "Badge" (P0 - Máxima Prioridade)
+
+- [ ] 1. Box Premium (Mais Vendido) 🏆
+- [ ] 4. Guarda-Corpo (Premium) 🌟
+- [ ] 6. Espelho LED (Destaque) ✨
+- [ ] 10. Fachada (Corporativo) 🏢
+
+**Tempo estimado:** 2 horas
+**Custo:** ~$20 (Midjourney Fast mode)
+
+### Fase 2 - Produtos Principais (P1)
+
+- [ ] 2. Box Incolor Padrão
+- [ ] 3. Box de Canto
+- [ ] 5. Guarda-Corpo Misto
+- [ ] 7. Espelho Bisotado
+- [ ] 8. Divisória Escritório
+- [ ] 9. Porta de Correr
+
+**Tempo estimado:** 3 horas
+**Custo:** ~$30
+
+### Fase 3 - Produtos Complementares (P2)
+
+- [ ] 11. Tampo de Vidro
+- [ ] 12. Janela Maxim-Ar
+
+**Tempo estimado:** 1 hora
+**Custo:** ~$10
+
+---
+
+## 🚀 WORKFLOW RECOMENDADO
+
+### Para Midjourney v6:
+
+1. **Copiar prompt completo** do produto
+2. **Colar no Discord** `/imagine prompt: [PROMPT]`
+3. **Aguardar 4 gerações** (60-90 segundos)
+4. **Escolher melhor resultado** (U1, U2, U3, ou U4)
+5. **Upscale** (resolução 2x)
+6. **Download** da imagem
+7. **Pós-processar** no Lightroom/Photoshop
+8. **Exportar** como JPG 85-90% qualidade
+9. **Renomear** para o caminho especificado
+10. **Salvar** em `/public/images/products/`
+
+### Para DALL-E 3 (ChatGPT Plus):
+
+1. **Copiar prompt**
+2. **Colar no ChatGPT** com prefixo: "Generate an image: [PROMPT]"
+3. **Aguardar geração** (20-30 segundos)
+4. **Download** direto
+5. **Pós-processar** (menos necessário que Midjourney)
+6. **Exportar e salvar**
+
+### Para Leonardo AI:
+
+1. **Configurar:**
+   - Model: Leonardo Phoenix
+   - Aspect Ratio: 1:1
+   - Quality: High
+   - Style: Photography
+2. **Colar prompt**
+3. **Gerar 4 variações**
+4. **Escolher melhor**
+5. **Upscale com AI**
+6. **Processar e salvar**
+
+---
+
+## 💡 DICAS DE QUALIDADE
+
+### ✅ O QUE BUSCAR:
+
+- **Foco perfeito** no produto principal
+- **Iluminação natural** e equilibrada
+- **Cores fiéis** à paleta Versati (#C9A962 gold accent)
+- **Contexto realista** (banheiros, escritórios reais)
+- **Proporções corretas** (sem distorções)
+- **Reflexos naturais** no vidro
+
+### ❌ O QUE EVITAR:
+
+- Mãos ou pessoas visíveis (foco no produto)
+- Distorções arquitetônicas (linhas tortas)
+- Cores irreais ou supersaturadas
+- Elementos de IA óbvios (texto ilegível, anatomia estranha)
+- Sombras muito duras
+- Vidro opaco ou mal renderizado
+
+---
+
+## 📊 ESTIMATIVA FINAL
+
+| Fase                    | Produtos        | Tempo  | Custo   | Status      |
+| ----------------------- | --------------- | ------ | ------- | ----------- |
+| **P0 - Badge**          | 4 produtos      | 2h     | $20     | 🔴 Pendente |
+| **P1 - Principais**     | 6 produtos      | 3h     | $30     | 🔴 Pendente |
+| **P2 - Complementares** | 2 produtos      | 1h     | $10     | 🔴 Pendente |
+| **TOTAL**               | **12 produtos** | **6h** | **$60** | 🔴 Pendente |
+
+---
+
+## 🎯 PRÓXIMOS PASSOS IMEDIATOS
+
+1. ✅ **Documento criado** com prompts detalhados
+2. ⏳ **Gerar P0** (4 produtos com badge) - COMEÇAR AQUI
+3. ⏳ Revisar qualidade e ajustar prompts se necessário
+4. ⏳ Gerar P1 (6 produtos principais)
+5. ⏳ Gerar P2 (2 produtos complementares)
+6. ⏳ Pós-processar todas as imagens
+7. ⏳ Salvar em `/public/images/products/`
+8. ⏳ Testar no site
+
+---
+
+**Criado por:** Claude Code Agent
+**Plataforma:** Versati Glass
+**Versão:** 1.0
+**Data:** 17 Dezembro 2024
+
+_Este documento contém prompts prontos para uso em Midjourney v6, DALL-E 3, ou Leonardo AI. Todos os prompts foram otimizados para máxima qualidade e consistência com a identidade visual Versati Glass._

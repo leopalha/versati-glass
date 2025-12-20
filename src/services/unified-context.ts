@@ -64,12 +64,11 @@ export async function getUnifiedCustomerContext(params: {
         OR: [
           userId ? { userId } : undefined,
           sessionId ? { sessionId } : undefined,
-          phoneNumber ? { linkedPhone: phoneNumber } : undefined,
+          phoneNumber ? { customerPhone: phoneNumber } : undefined,
         ].filter(Boolean) as any[],
       },
       include: {
         messages: { select: { id: true } },
-        user: { select: { name: true, phone: true } },
       },
       orderBy: { createdAt: 'desc' },
     })
@@ -82,15 +81,16 @@ export async function getUnifiedCustomerContext(params: {
         OR: [
           userId ? { userId } : undefined,
           phoneNumber ? { phoneNumber } : undefined,
-          // Buscar por IDs linkados de conversas web
+          // Buscar por IDs linkados via quoteId
           webConversations.length > 0
-            ? { websiteChatId: { in: webConversations.map((c) => c.id) } }
+            ? {
+                quoteId: { in: webConversations.map((c) => c.quoteId).filter(Boolean) as string[] },
+              }
             : undefined,
         ].filter(Boolean) as any[],
       },
       include: {
         messages: { select: { id: true } },
-        user: { select: { name: true, phone: true } },
       },
       orderBy: { createdAt: 'desc' },
     })
@@ -123,14 +123,15 @@ export async function getUnifiedCustomerContext(params: {
     const mergedContext = mergeContexts(webConversations, whatsappConversations)
 
     // 5. Determinar dados primários
-    const primaryUser = webConversations[0]?.user || whatsappConversations[0]?.user
-    const primaryPhone = phoneNumber || primaryUser?.phone || whatsappConversations[0]?.phoneNumber
+    const primaryName = webConversations[0]?.customerName || whatsappConversations[0]?.customerName
+    const primaryPhone =
+      phoneNumber || webConversations[0]?.customerPhone || whatsappConversations[0]?.phoneNumber
 
     const context: UnifiedCustomerContext = {
       userId,
       sessionId,
       phoneNumber: primaryPhone,
-      customerName: primaryUser?.name || whatsappConversations[0]?.customerName || undefined,
+      customerName: primaryName || undefined,
 
       webConversations: webConversations.map((c) => ({
         id: c.id,
@@ -241,7 +242,7 @@ export async function linkWebChatToWhatsApp(
     // Atualizar AiConversation com telefone
     await prisma.aiConversation.update({
       where: { id: aiConversationId },
-      data: { linkedPhone: normalizedPhone },
+      data: { customerPhone: normalizedPhone },
     })
 
     // Buscar Conversation ativa no WhatsApp
@@ -255,17 +256,19 @@ export async function linkWebChatToWhatsApp(
     if (whatsappConvo) {
       logger.debug('[LINK WEB→WA] Found existing WhatsApp conversation:', whatsappConvo.id)
 
-      // Linkar bidirecional
-      await prisma.$transaction([
-        prisma.aiConversation.update({
-          where: { id: aiConversationId },
-          data: { whatsappConversationId: whatsappConvo.id },
-        }),
-        prisma.conversation.update({
+      // Link via shared quote if exists
+      const aiConvo = await prisma.aiConversation.findUnique({
+        where: { id: aiConversationId },
+        select: { quoteId: true },
+      })
+
+      if (aiConvo?.quoteId && !whatsappConvo.quoteId) {
+        // Update WhatsApp conversation with the same quoteId
+        await prisma.conversation.update({
           where: { id: whatsappConvo.id },
-          data: { websiteChatId: aiConversationId },
-        }),
-      ])
+          data: { quoteId: aiConvo.quoteId },
+        })
+      }
 
       return { success: true, whatsappConversationId: whatsappConvo.id }
     }
@@ -294,7 +297,7 @@ export async function transferContextToWhatsApp(
     // Buscar contexto do web chat
     const aiConvo = await prisma.aiConversation.findUnique({
       where: { id: aiConversationId },
-      select: { quoteContext: true, userId: true },
+      select: { quoteContext: true, customerName: true, customerEmail: true },
     })
 
     if (!aiConvo?.quoteContext) {
@@ -320,7 +323,7 @@ export async function transferContextToWhatsApp(
       where: { id: whatsappConversationId },
       data: {
         context: mergedContext,
-        userId: aiConvo.userId || undefined,
+        customerName: aiConvo.customerName || undefined,
       },
     })
 

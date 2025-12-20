@@ -212,13 +212,21 @@ export async function getLinkedConversations(params: {
     if (aiConversationId) {
       const aiConvo = await prisma.aiConversation.findUnique({
         where: { id: aiConversationId },
-        select: { whatsappConversationId: true },
+        select: { quoteId: true },
       })
 
-      if (aiConvo?.whatsappConversationId) {
-        return {
-          aiConversationId,
-          whatsappConversationId: aiConvo.whatsappConversationId,
+      if (aiConvo?.quoteId) {
+        // Find WhatsApp conversation with same quoteId
+        const whatsappConvo = await prisma.conversation.findFirst({
+          where: { quoteId: aiConvo.quoteId },
+          select: { id: true },
+        })
+
+        if (whatsappConvo) {
+          return {
+            aiConversationId,
+            whatsappConversationId: whatsappConvo.id,
+          }
         }
       }
     }
@@ -226,13 +234,21 @@ export async function getLinkedConversations(params: {
     if (whatsappConversationId) {
       const whatsappConvo = await prisma.conversation.findUnique({
         where: { id: whatsappConversationId },
-        select: { websiteChatId: true },
+        select: { quoteId: true },
       })
 
-      if (whatsappConvo?.websiteChatId) {
-        return {
-          aiConversationId: whatsappConvo.websiteChatId,
-          whatsappConversationId,
+      if (whatsappConvo?.quoteId) {
+        // Find AI conversation with same quoteId
+        const aiConvo = await prisma.aiConversation.findFirst({
+          where: { quoteId: whatsappConvo.quoteId },
+          select: { id: true },
+        })
+
+        if (aiConvo) {
+          return {
+            aiConversationId: aiConvo.id,
+            whatsappConversationId,
+          }
         }
       }
     }
