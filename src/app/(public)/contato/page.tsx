@@ -220,15 +220,19 @@ export default function ContatoPage() {
             </Card>
 
             {/* Map */}
-            <div className="bg-theme-elevated overflow-hidden rounded-2xl">
+            <div className="bg-theme-elevated overflow-hidden rounded-2xl shadow-lg">
               <div className="aspect-square w-full">
-                {/* Replace with actual Google Maps embed */}
-                <div className="text-theme-default flex h-full items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="mx-auto mb-4 h-12 w-12" />
-                    <p>Mapa em breve</p>
-                  </div>
-                </div>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.0165837839374!2d-43.348012324184455!3d-22.943172839203787!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9bd9f7c7f0f0f1%3A0x1234567890abcdef!2sVidra%C3%A7aria%20Versati%20Glass%20-%20Freguesia!5e0!3m2!1spt-BR!2sbr!4v1703090000000!5m2!1spt-BR!2sbr"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Localização Versati Glass - Estrada dos Três Rios, 1156 - Freguesia, Rio de Janeiro"
+                  className="h-full w-full"
+                />
               </div>
             </div>
           </div>
