@@ -236,6 +236,15 @@ describe('Products API Integration Tests', () => {
 
   describe('GET /api/products', () => {
     beforeAll(async () => {
+      // Clean up any existing test products first to avoid slug conflicts
+      await prisma.product.deleteMany({
+        where: {
+          slug: {
+            in: ['test-active-1', 'test-active-2', 'test-inactive-1'],
+          },
+        },
+      })
+
       // Create test products for listing
       await prisma.product.createMany({
         data: [
