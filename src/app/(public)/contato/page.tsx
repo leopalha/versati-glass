@@ -282,7 +282,7 @@ export default function ContatoPage() {
           </p>
           <Button asChild size="lg" className="bg-accent-500 hover:bg-accent-600">
             <a
-              href="https://g.page/r/CeO8t3cONNy9EBM/review"
+              href="https://search.google.com/local/writereview?placeid=ChIJzZYbGTzZmwAR48ymdw403Wg"
               target="_blank"
               rel="noopener noreferrer"
             >

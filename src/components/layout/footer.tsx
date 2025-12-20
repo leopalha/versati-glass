@@ -157,7 +157,7 @@ export function Footer() {
               Junte-se a 37 clientes satisfeitos que avaliaram nosso trabalho
             </p>
             <a
-              href="https://g.page/r/CeO8t3cONNy9EBM/review"
+              href="https://search.google.com/local/writereview?placeid=ChIJzZYbGTzZmwAR48ymdw403Wg"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:bg-accent-600 hover:shadow-xl"
