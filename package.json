@@ -69,7 +69,7 @@
     "groq-sdk": "^0.37.0",
     "ical-generator": "^10.0.0",
     "lucide-react": "^0.468.0",
-    "next": "^16.0.6",
+    "next": "16.1.0-canary.10",
     "next-auth": "^5.0.0-beta.25",
     "openai": "^6.9.1",
     "qrcode": "^1.5.4",
