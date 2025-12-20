@@ -34,6 +34,8 @@ const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   swcMinify: true,
+  // Output standalone for Vercel deployment
+  output: 'standalone',
   // Prevent client-reference-manifest errors in grouped routes
   webpack: (config, { isServer }) => {
     if (isServer) {
