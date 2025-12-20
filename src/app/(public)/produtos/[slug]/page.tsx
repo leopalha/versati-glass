@@ -51,6 +51,7 @@ const products = {
       'Box com vidro temperado 8mm incolor, acabamento padrão de alta qualidade. Ótima relação custo-benefício para seu banheiro.',
     price: 'A partir de R$ 1.490',
     image: '/images/products/box-incolor.jpg',
+    badge: undefined,
     features: [
       'Vidro temperado 8mm incolor',
       'Perfis em alumínio com acabamento padrão',
@@ -134,6 +135,7 @@ const products = {
       'Espelho com acabamento bisotado de 2cm em toda borda. Elegância clássica para qualquer ambiente.',
     price: 'A partir de R$ 450',
     image: '/images/products/espelho-bisotado.jpg',
+    badge: undefined,
     features: [
       'Bisotê de 2cm em toda a borda',
       'Espessura de 4mm',
@@ -161,6 +163,7 @@ const products = {
       'Divisória em vidro temperado 10mm com perfis de alumínio. Solução ideal para ambientes corporativos modernos.',
     price: 'A partir de R$ 690/m²',
     image: '/images/products/divisoria.jpg',
+    badge: undefined,
     features: [
       'Vidro temperado 10mm',
       'Perfis de alumínio anodizado',
@@ -188,6 +191,7 @@ const products = {
       'Porta de correr com vidro temperado e trilho superior. Design moderno e funcional.',
     price: 'A partir de R$ 2.190',
     image: '/images/products/porta-correr.jpg',
+    badge: undefined,
     features: [
       'Sistema de trilho superior',
       'Vidro temperado 8mm',
@@ -239,10 +243,10 @@ const products = {
     slug: 'tampo-vidro-mesa',
     name: 'Tampo de Vidro para Mesa',
     category: 'Outros',
-    description:
-      'Tampo de vidro temperado com bordas polidas. Sob medida para sua mesa.',
+    description: 'Tampo de vidro temperado com bordas polidas. Sob medida para sua mesa.',
     price: 'A partir de R$ 380',
     image: '/images/products/tampo.jpg',
+    badge: undefined,
     features: [
       'Vidro temperado de segurança',
       'Bordas polidas',
@@ -270,6 +274,7 @@ const products = {
       'Box de canto com porta de abrir, vidro temperado 8mm. Aproveitamento ideal para banheiros pequenos.',
     price: 'A partir de R$ 1.690',
     image: '/images/products/box-canto.jpg',
+    badge: undefined,
     features: [
       'Vidro temperado 8mm',
       'Porta de abrir',
@@ -293,10 +298,10 @@ const products = {
     slug: 'guarda-corpo-inox',
     name: 'Guarda-Corpo Misto (Vidro + Inox)',
     category: 'Guarda-Corpo',
-    description:
-      'Guarda-corpo com vidro laminado e corrimão em aço inox. Design moderno e seguro.',
+    description: 'Guarda-corpo com vidro laminado e corrimão em aço inox. Design moderno e seguro.',
     price: 'A partir de R$ 1.190/m',
     image: '/images/products/guarda-corpo-inox.jpg',
+    badge: undefined,
     features: [
       'Vidro laminado de segurança',
       'Corrimão em inox escovado',
@@ -324,6 +329,7 @@ const products = {
       'Janela maxim-ar com vidro temperado e perfil de alumínio. Ventilação controlada e segura.',
     price: 'A partir de R$ 890',
     image: '/images/products/janela.jpg',
+    badge: undefined,
     features: [
       'Abertura maxim-ar',
       'Perfil de alumínio',

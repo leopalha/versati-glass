@@ -206,7 +206,9 @@
       "Bash(tsx prisma/seed-products.ts:*)",
       "Bash(pnpm exec ts-node:*)",
       "Bash(node prisma/seed-products.js:*)",
-      "Bash(pnpm remove:*)"
+      "Bash(pnpm remove:*)",
+      "Bash(tsx:*)",
+      "Bash(pnpm exec tsx:*)"
     ]
   }
 }
