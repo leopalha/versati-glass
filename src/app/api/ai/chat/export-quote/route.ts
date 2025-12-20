@@ -34,7 +34,6 @@ export async function POST(request: NextRequest) {
       ? { id: conversationId }
       : {
           sessionId: sessionId || '',
-          userId: session?.user?.id || undefined,
         }
 
     const conversation = await prisma.aiConversation.findFirst({
@@ -153,7 +152,6 @@ export async function GET(request: NextRequest) {
       ? { id: conversationId }
       : {
           sessionId: sessionId || '',
-          userId: session?.user?.id || undefined,
         }
 
     const conversation = await prisma.aiConversation.findFirst({
