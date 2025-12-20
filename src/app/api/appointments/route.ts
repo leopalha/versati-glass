@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { logger } from '@/lib/logger'
+import { rateLimit, RATE_LIMITS } from '@/lib/rate-limit'
 import { sendWhatsAppMessage } from '@/services/whatsapp'
 import {
   appointmentScheduledTemplate,
@@ -124,6 +125,26 @@ export async function GET(request: NextRequest) {
 // Create appointment (for scheduling)
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting - 5 appointments per hour
+    const rateLimitResult = await rateLimit(request, RATE_LIMITS.moderate)
+
+    if (!rateLimitResult.success) {
+      const resetIn = Math.ceil(rateLimitResult.reset - Date.now() / 1000)
+
+      logger.warn('[API /appointments POST] Rate limit exceeded', {
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+        reset: rateLimitResult.reset,
+      })
+
+      return NextResponse.json(
+        {
+          error: 'Muitas solicitações',
+          message: `Você excedeu o limite de agendamentos. Tente novamente em ${resetIn} segundos.`,
+        },
+        { status: 429 }
+      )
+    }
+
     const session = await auth()
 
     if (!session?.user?.id) {

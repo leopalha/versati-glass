@@ -4,6 +4,7 @@ import OpenAI from 'openai'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { logger } from '@/lib/logger'
+import { rateLimit, RATE_LIMITS } from '@/lib/rate-limit'
 import {
   getUnifiedCustomerContext,
   generateContextSummary,
@@ -442,6 +443,26 @@ async function extractQuoteDataFromConversation(
 
 export async function POST(request: Request) {
   try {
+    // Rate limiting - 30 messages per hour for chat
+    const rateLimitResult = await rateLimit(request, RATE_LIMITS.lenient)
+
+    if (!rateLimitResult.success) {
+      const resetIn = Math.ceil(rateLimitResult.reset - Date.now() / 1000)
+
+      logger.warn('[API /ai/chat POST] Rate limit exceeded', {
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+        reset: rateLimitResult.reset,
+      })
+
+      return NextResponse.json(
+        {
+          error: 'Muitas mensagens',
+          message: `Você excedeu o limite de mensagens. Tente novamente em ${resetIn} segundos.`,
+        },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const { message, conversationId, sessionId, imageUrl, imageBase64 } = body
 
