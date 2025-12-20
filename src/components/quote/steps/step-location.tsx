@@ -20,7 +20,7 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { formatCEP } from '@/lib/utils'
-import { getRegionFromCEP, formatRegionDisplay, type RegionInfo } from '@/lib/region-pricing'
+import { analyzeLocation, type LocationAnalysis } from '@/lib/regional-pricing-complete'
 import { getWindZoneByCEP, getWindZoneDescription } from '@/lib/wind-zone-mapping'
 import {
   MapPin,
@@ -55,8 +55,8 @@ export function StepLocation() {
         }
       : null
   )
-  const [regionInfo, setRegionInfo] = useState<RegionInfo | null>(
-    locationData?.zipCode ? getRegionFromCEP(locationData.zipCode) : null
+  const [regionInfo, setRegionInfo] = useState<LocationAnalysis | null>(
+    locationData?.zipCode ? analyzeLocation(locationData.zipCode) : null
   )
 
   // Fetch address when CEP is complete
@@ -85,8 +85,8 @@ export function StepLocation() {
         state: data.uf || '',
       })
 
-      // Calculate region info
-      const region = getRegionFromCEP(cleanCep)
+      // Calculate region info using complete system
+      const region = analyzeLocation(cleanCep)
       setRegionInfo(region)
     } catch (err) {
       setError('Erro ao buscar CEP. Tente novamente.')
@@ -117,7 +117,7 @@ export function StepLocation() {
   const handleContinue = () => {
     if (!addressData || !regionInfo) return
 
-    // Save to store
+    // Save to store with complete pricing data (hidden from user)
     setLocationData({
       zipCode: cep,
       street: addressData.street,
@@ -125,9 +125,9 @@ export function StepLocation() {
       city: addressData.city,
       state: addressData.state,
       region: regionInfo.zone,
-      regionName: regionInfo.zoneName,
-      priceMultiplier: regionInfo.priceMultiplier,
-      windZone: getWindZoneByCEP(cep), // NEW LINE - Phase 3
+      regionName: regionInfo.neighborhood || regionInfo.city,
+      priceMultiplier: regionInfo.finalMultiplier, // Using complete multiplier
+      windZone: getWindZoneByCEP(cep),
     })
 
     nextStep()
@@ -221,7 +221,7 @@ export function StepLocation() {
               </p>
             </div>
 
-            {/* Region Info */}
+            {/* Region Info - INFORMAÇÕES PÚBLICAS APENAS (sem revelar regras de preço) */}
             {regionInfo && (
               <div
                 className={`rounded-lg p-4 ${
@@ -229,87 +229,52 @@ export function StepLocation() {
                 }`}
               >
                 <div className="mb-3 flex items-center gap-2">
-                  <Info className="h-4 w-4 text-accent-500" />
-                  <span className="text-sm font-medium text-accent-400">
-                    Informacoes da sua regiao
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <span className="text-sm font-medium text-green-400">
+                    Atendemos sua região!
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  {/* Zone */}
+                  {/* City/Region */}
                   <div className="flex items-start gap-2">
                     <MapPin className="h-4 w-4 flex-shrink-0 text-neutral-400" />
                     <div>
-                      <p className="text-xs text-neutral-400">Regiao</p>
-                      <p className="text-sm font-medium text-white">{regionInfo.zoneName}</p>
-                    </div>
-                  </div>
-
-                  {/* Price Impact */}
-                  <div className="flex items-start gap-2">
-                    <DollarSign className="h-4 w-4 flex-shrink-0 text-neutral-400" />
-                    <div>
-                      <p className="text-xs text-neutral-400">Ajuste de preco</p>
-                      <p
-                        className={`text-sm font-medium ${
-                          regionInfo.priceMultiplier > 1 ? 'text-yellow-400' : 'text-green-400'
-                        }`}
-                      >
-                        {regionInfo.priceMultiplier === 1
-                          ? 'Sem acrescimo'
-                          : `+${Math.round((regionInfo.priceMultiplier - 1) * 100)}%`}
+                      <p className="text-xs text-neutral-400">Localização</p>
+                      <p className="text-sm font-medium text-white">
+                        {regionInfo.neighborhood || regionInfo.city}
                       </p>
                     </div>
                   </div>
 
-                  {/* Delivery Time */}
+                  {/* Delivery Time - APENAS PRAZO, SEM PREÇO */}
                   <div className="flex items-start gap-2">
                     <Truck className="h-4 w-4 flex-shrink-0 text-neutral-400" />
                     <div>
                       <p className="text-xs text-neutral-400">Prazo estimado</p>
                       <p className="text-sm font-medium text-white">
-                        {regionInfo.deliveryDays} dias uteis
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Service Area */}
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2
-                      className={`h-4 w-4 flex-shrink-0 ${
-                        regionInfo.isServiceArea ? 'text-green-500' : 'text-yellow-500'
-                      }`}
-                    />
-                    <div>
-                      <p className="text-xs text-neutral-400">Atendimento</p>
-                      <p
-                        className={`text-sm font-medium ${
-                          regionInfo.isServiceArea ? 'text-green-400' : 'text-yellow-400'
-                        }`}
-                      >
-                        {regionInfo.isServiceArea ? 'Area atendida' : 'Sob consulta'}
+                        {regionInfo.deliveryDays} dias úteis
                       </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Wind Zone (Phase 3) */}
-                <div className="col-span-2 mt-3 flex items-start gap-2 border-t border-neutral-700 pt-3">
+                {/* Wind Zone - informação técnica pública */}
+                <div className="mt-3 flex items-start gap-2 border-t border-neutral-700 pt-3">
                   <Wind className="h-4 w-4 flex-shrink-0 text-blue-400" />
                   <div>
-                    <p className="text-xs text-neutral-400">Zona de Vento (NBR)</p>
+                    <p className="text-xs text-neutral-400">Zona de Vento (NBR 6123)</p>
                     <p className="text-sm font-medium text-blue-400">
                       {getWindZoneDescription(getWindZoneByCEP(cep))}
                     </p>
-                    <p className="mt-1 text-xs text-neutral-500">
-                      Usado para cálculo de espessura do vidro
-                    </p>
                   </div>
                 </div>
 
-                {/* Warning message if outside service area */}
-                {regionInfo.message && (
-                  <p className="mt-3 text-xs text-yellow-400">{regionInfo.message}</p>
+                {/* Warning apenas se fora da área de atendimento */}
+                {!regionInfo.isServiceArea && (
+                  <p className="mt-3 text-xs text-yellow-400">
+                    Atendemos sua região sob consulta. Entraremos em contato para confirmar.
+                  </p>
                 )}
               </div>
             )}
