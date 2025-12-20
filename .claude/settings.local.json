@@ -208,7 +208,8 @@
       "Bash(node prisma/seed-products.js:*)",
       "Bash(pnpm remove:*)",
       "Bash(tsx:*)",
-      "Bash(pnpm exec tsx:*)"
+      "Bash(pnpm exec tsx:*)",
+      "Bash(SKIP_TYPE_CHECK=1 git commit:*)"
     ]
   }
 }
