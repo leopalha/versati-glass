@@ -146,7 +146,7 @@ export function EditCustomerDialog({ customer }: EditCustomerDialogProps) {
                 <FormItem>
                   <FormLabel>Telefone</FormLabel>
                   <FormControl>
-                    <Input placeholder="(21) 99999-9999" {...field} />
+                    <Input placeholder="(21) 98253-6229" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

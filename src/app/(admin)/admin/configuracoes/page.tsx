@@ -325,7 +325,7 @@ export default function AdminConfiguracoesPage() {
                     value={companyData.whatsapp}
                     onChange={(e) => setCompanyData({ ...companyData, whatsapp: e.target.value })}
                     className="mt-1"
-                    placeholder="5521999999999"
+                    placeholder="5521982536229"
                   />
                 </div>
                 <div>

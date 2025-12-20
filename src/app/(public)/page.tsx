@@ -183,13 +183,18 @@ export default function HomePage() {
             premium, instalação impecável e atendimento personalizado.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button asChild size="lg" className="w-full sm:w-auto">
+            <Button asChild size="lg" className="w-full shadow-xl hover:shadow-2xl sm:w-auto">
               <Link href="/orcamento">
                 Fazer Orçamento Grátis
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="w-full border-2 border-white/90 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:border-white sm:w-auto"
+            >
               <Link href="/portfolio">Ver Portfólio</Link>
             </Button>
           </div>

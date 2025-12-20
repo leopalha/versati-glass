@@ -175,9 +175,7 @@ export default function PerfilPage() {
                     disabled
                   />
                 </div>
-                <p className="mt-1 text-xs text-neutral-600">
-                  O email nao pode ser alterado
-                </p>
+                <p className="mt-1 text-xs text-neutral-600">O email nao pode ser alterado</p>
               </div>
 
               <div>
@@ -188,7 +186,7 @@ export default function PerfilPage() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="(21) 99999-9999"
+                    placeholder="(21) 98253-6229"
                     className="pl-10"
                   />
                 </div>
@@ -209,9 +207,7 @@ export default function PerfilPage() {
           <Card className="p-6">
             <div className="mb-6 flex items-center gap-2">
               <MapPin className="h-5 w-5 text-gold-500" />
-              <h2 className="font-display text-lg font-semibold text-white">
-                Endereco
-              </h2>
+              <h2 className="font-display text-lg font-semibold text-white">Endereco</h2>
             </div>
 
             <form className="space-y-4">
@@ -228,26 +224,16 @@ export default function PerfilPage() {
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-2">
                   <label className="mb-2 block text-sm text-neutral-700">Rua</label>
-                  <Input
-                    name="street"
-                    value={formData.street}
-                    onChange={handleChange}
-                  />
+                  <Input name="street" value={formData.street} onChange={handleChange} />
                 </div>
                 <div>
                   <label className="mb-2 block text-sm text-neutral-700">Numero</label>
-                  <Input
-                    name="number"
-                    value={formData.number}
-                    onChange={handleChange}
-                  />
+                  <Input name="number" value={formData.number} onChange={handleChange} />
                 </div>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-neutral-700">
-                  Complemento
-                </label>
+                <label className="mb-2 block text-sm text-neutral-700">Complemento</label>
                 <Input
                   name="complement"
                   value={formData.complement}
@@ -258,21 +244,13 @@ export default function PerfilPage() {
 
               <div>
                 <label className="mb-2 block text-sm text-neutral-700">Bairro</label>
-                <Input
-                  name="neighborhood"
-                  value={formData.neighborhood}
-                  onChange={handleChange}
-                />
+                <Input name="neighborhood" value={formData.neighborhood} onChange={handleChange} />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="mb-2 block text-sm text-neutral-700">Cidade</label>
-                  <Input
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                  />
+                  <Input name="city" value={formData.city} onChange={handleChange} />
                 </div>
                 <div>
                   <label className="mb-2 block text-sm text-neutral-700">Estado</label>
@@ -291,17 +269,13 @@ export default function PerfilPage() {
           <Card className="p-6 lg:col-span-2">
             <div className="mb-6 flex items-center gap-2">
               <Lock className="h-5 w-5 text-gold-500" />
-              <h2 className="font-display text-lg font-semibold text-white">
-                Alterar Senha
-              </h2>
+              <h2 className="font-display text-lg font-semibold text-white">Alterar Senha</h2>
             </div>
 
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-700">
-                    Senha Atual
-                  </label>
+                  <label className="mb-2 block text-sm text-neutral-700">Senha Atual</label>
                   <Input
                     name="currentPassword"
                     type="password"
@@ -310,9 +284,7 @@ export default function PerfilPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-700">
-                    Nova Senha
-                  </label>
+                  <label className="mb-2 block text-sm text-neutral-700">Nova Senha</label>
                   <Input
                     name="newPassword"
                     type="password"

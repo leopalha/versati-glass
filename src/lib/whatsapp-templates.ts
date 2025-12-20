@@ -240,7 +240,7 @@ export function genericMessageTemplate(variables: {
 ${message}
 
 Versati Glass - Vidros Premium
-(21) 99999-8888`
+(21) 98253-6229`
   }
 
   return `${message}

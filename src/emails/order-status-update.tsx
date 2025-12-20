@@ -189,8 +189,8 @@ export const OrderStatusUpdateEmail = ({
                 <Text style={text}>
                   Agende a instalação pelo portal ou entre em contato conosco:
                   <br />
-                  📱 WhatsApp: +55 21 99999-9999
-                  <br />✉ Email: contato@versatiglass.com.br
+                  📱 WhatsApp: +55 (21) 98253-6229
+                  <br />✉ Email: versatiglass@gmail.com
                 </Text>
               </>
             )}
@@ -231,9 +231,9 @@ export const OrderStatusUpdateEmail = ({
               <br />
               Rio de Janeiro, RJ
               <br />
-              Tel: +55 21 99999-9999
+              Tel: +55 (21) 98253-6229
               <br />
-              Email: contato@versatiglass.com.br
+              Email: versatiglass@gmail.com
             </Text>
             <Text style={footerSmall}>
               Você está recebendo este email como atualização sobre seu pedido.

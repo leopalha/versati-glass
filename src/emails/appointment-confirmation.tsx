@@ -176,8 +176,8 @@ export const AppointmentConfirmationEmail = ({
             <Text style={text}>
               Dúvidas? Entre em contato:
               <br />
-              📱 WhatsApp: +55 21 99999-9999
-              <br />✉ Email: contato@versatiglass.com.br
+              📱 WhatsApp: +55 (21) 98253-6229
+              <br />✉ Email: versatiglass@gmail.com
             </Text>
           </Section>
 

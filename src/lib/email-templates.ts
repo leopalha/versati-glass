@@ -94,8 +94,8 @@ Acompanhe seu orçamento em: ${data.portalUrl}
 
 Versati Glass - Vidros Premium
 Rio de Janeiro, RJ
-Tel: +55 21 99999-9999
-Email: contato@versatiglass.com.br
+Tel: +55 (21) 98253-6229
+Email: versatiglass@gmail.com
   `.trim()
 
   return {
@@ -219,8 +219,8 @@ Ver detalhes: ${data.orderUrl}
 
 Versati Glass - Vidros Premium
 Rio de Janeiro, RJ
-Tel: +55 21 99999-9999
-Email: contato@versatiglass.com.br
+Tel: +55 (21) 98253-6229
+Email: versatiglass@gmail.com
   `.trim()
 
   return {
@@ -265,8 +265,8 @@ Importante:
 Reagendar: ${data.rescheduleUrl}
 
 Contato:
-Tel: +55 21 99999-9999
-Email: contato@versatiglass.com.br
+Tel: +55 (21) 98253-6229
+Email: versatiglass@gmail.com
   `.trim()
 
   calendar.createEvent({

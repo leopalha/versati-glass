@@ -109,9 +109,9 @@ export const QuoteCreatedEmail = ({
               <br />
               Rio de Janeiro, RJ
               <br />
-              Tel: +55 21 99999-9999
+              Tel: +55 (21) 98253-6229
               <br />
-              Email: contato@versatiglass.com.br
+              Email: versatiglass@gmail.com
             </Text>
             <Text style={footerSmall}>
               Você está recebendo este email porque solicitou um orçamento em nosso site.

@@ -259,7 +259,7 @@ export function SupplierFormDialog({ supplier, onSuccess }: SupplierFormDialogPr
                     <FormItem>
                       <FormLabel>WhatsApp</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="(21) 99999-8888" />
+                        <Input {...field} placeholder="(21) 98253-6229" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
