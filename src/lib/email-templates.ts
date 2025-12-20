@@ -156,8 +156,8 @@ Importante:
 Reagendar ou cancelar: ${data.rescheduleUrl}
 
 Dúvidas?
-📱 WhatsApp: +55 21 99999-9999
-✉ Email: contato@versatiglass.com.br
+📱 WhatsApp: +55 (21) 98253-6229
+✉ Email: versatiglass@gmail.com
 
 Versati Glass - Vidros Premium
   `.trim()

@@ -32,7 +32,7 @@ export function ContactHub({ showOnPages = 'all' }: ContactHubProps) {
   const [activeView, setActiveView] = useState<ActiveView>('closed')
 
   // WhatsApp business number (get from env)
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '5511999999999'
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '5521982536229'
 
   const openWhatsApp = (context?: string) => {
     const message = context
