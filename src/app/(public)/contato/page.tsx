@@ -223,7 +223,7 @@ export default function ContatoPage() {
             <div className="bg-theme-elevated overflow-hidden rounded-2xl shadow-lg">
               <div className="aspect-square w-full">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3674.0165837839374!2d-43.348012324184455!3d-22.943172839203787!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9bd9f7c7f0f0f1%3A0x1234567890abcdef!2sVidra%C3%A7aria%20Versati%20Glass%20-%20Freguesia!5e0!3m2!1spt-BR!2sbr!4v1703090000000!5m2!1spt-BR!2sbr"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.1916834785705!2d-43.33557422518658!3d-22.936472437914673!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9bd93c191b96cd%3A0x68dd340e77a6cce3!2sVidra%C3%A7aria%20Versati%20Glass%20-%20Freguesia!5e0!3m2!1spt-BR!2sbr!4v1734729600000!5m2!1spt-BR!2sbr"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -282,7 +282,7 @@ export default function ContatoPage() {
           </p>
           <Button asChild size="lg" className="bg-accent-500 hover:bg-accent-600">
             <a
-              href="https://search.google.com/local/writereview?placeid=ChIJAa_w8Mf_mQARYxg0fAHj-i8"
+              href="https://search.google.com/local/writereview?placeid=ChIJzZaWG8k8mQAR48asdzTgBOg"
               target="_blank"
               rel="noopener noreferrer"
             >

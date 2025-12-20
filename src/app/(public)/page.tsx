@@ -382,7 +382,7 @@ export default function HomePage() {
             </div>
             <div className="mt-4">
               <a
-                href="https://www.google.com/maps/search/?api=1&query=Vidra%C3%A7aria+Versati+Glass+Freguesia+Rio+de+Janeiro&query_place_id=ChIJAa_w8Mf_mQARYxg0fAHj-i8"
+                href="https://www.google.com/maps/place/Vidra%C3%A7aria+Versati+Glass+-+Freguesia/@-22.9364724,-43.3355742,17z/data=!3m1!4b1!4m6!3m5!1s0x9bd93c191b96cd:0x68dd340e77a6cce3!8m2!3d-22.9364724!4d-43.3329993!16s%2Fg%2F11v0k46lcq?entry=ttu"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm font-medium text-accent-400 transition-colors hover:text-accent-500 hover:underline"
@@ -417,7 +417,7 @@ export default function HomePage() {
             </p>
             <Button asChild size="lg" className="bg-accent-500 hover:bg-accent-600">
               <a
-                href="https://search.google.com/local/writereview?placeid=ChIJAa_w8Mf_mQARYxg0fAHj-i8"
+                href="https://search.google.com/local/writereview?placeid=ChIJzZaWG8k8mQAR48asdzTgBOg"
                 target="_blank"
                 rel="noopener noreferrer"
               >
