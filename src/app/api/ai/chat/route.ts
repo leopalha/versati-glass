@@ -758,10 +758,7 @@ export async function POST(request: Request) {
         visionCompletion.choices[0]?.message?.content || 'Desculpe, nao consegui analisar a imagem.'
       tokensUsed = visionCompletion.usage?.total_tokens || 0
     } else {
-      // Usar Groq para chat de texto
-      modelUsed = 'llama-3.3-70b-versatile'
-
-      // Montar historico de mensagens para o Groq
+      // Montar historico de mensagens
       const messages: ChatMessage[] = conversation.messages.map((msg) => ({
         role: msg.role.toLowerCase() as 'user' | 'assistant',
         content: msg.content,
@@ -770,25 +767,60 @@ export async function POST(request: Request) {
       // Adicionar nova mensagem do usuario
       messages.push({ role: 'user', content: message })
 
-      // Use withRetry for connection resilience
-      const completion = await withRetry(() =>
-        groq.chat.completions.create({
-          model: 'llama-3.3-70b-versatile',
-          max_tokens: 300, // UX: Respostas mais curtas e objetivas
-          temperature: 0.8, // UX: Mais natural e variado
-          messages: [
-            {
-              role: 'system',
-              content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary,
-            }, // FASE-5: Add unified context
-            ...messages,
-          ],
-        })
-      )
+      // Tentar Groq primeiro, fallback para OpenAI se falhar
+      try {
+        modelUsed = 'llama-3.3-70b-versatile'
 
-      assistantMessage =
-        completion.choices[0]?.message?.content || 'Desculpe, nao consegui processar sua mensagem.'
-      tokensUsed = completion.usage?.total_tokens || 0
+        const completion = await withRetry(() =>
+          groq.chat.completions.create({
+            model: 'llama-3.3-70b-versatile',
+            max_tokens: 300,
+            temperature: 0.8,
+            messages: [
+              {
+                role: 'system',
+                content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary,
+              },
+              ...messages,
+            ],
+          })
+        )
+
+        assistantMessage =
+          completion.choices[0]?.message?.content || 'Desculpe, nao consegui processar sua mensagem.'
+        tokensUsed = completion.usage?.total_tokens || 0
+      } catch (groqError) {
+        // Fallback para OpenAI GPT-4o-mini se Groq falhar
+        logger.warn('[AI CHAT] Groq failed, falling back to OpenAI', {
+          error: groqError instanceof Error ? groqError.message : 'Unknown error',
+        })
+
+        modelUsed = 'gpt-4o-mini'
+
+        const openaiMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+          {
+            role: 'system',
+            content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary,
+          },
+          ...messages.map((msg) => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content,
+          })),
+        ]
+
+        const completion = await withRetry(() =>
+          openai.chat.completions.create({
+            model: 'gpt-4o-mini',
+            max_tokens: 300,
+            temperature: 0.8,
+            messages: openaiMessages,
+          })
+        )
+
+        assistantMessage =
+          completion.choices[0]?.message?.content || 'Desculpe, nao consegui processar sua mensagem.'
+        tokensUsed = completion.usage?.total_tokens || 0
+      }
     }
 
     const responseTime = Date.now() - startTime
