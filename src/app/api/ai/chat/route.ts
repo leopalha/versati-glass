@@ -15,6 +15,8 @@ import { autoSyncAfterWebMessage } from '@/services/context-sync'
 // Configuracoes
 const MAX_MESSAGES_IN_CONTEXT = 20 // Limite de mensagens para enviar ao LLM
 const CONVERSATION_TIMEOUT_HOURS = 24 // Horas ate marcar como abandonada
+const MAX_RETRIES = 3 // Numero maximo de tentativas
+const INITIAL_RETRY_DELAY = 1000 // 1 segundo
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -23,6 +25,46 @@ const groq = new Groq({
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
+
+/**
+ * Retry helper with exponential backoff
+ */
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = MAX_RETRIES,
+  initialDelay: number = INITIAL_RETRY_DELAY
+): Promise<T> {
+  let lastError: Error | null = null
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await fn()
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error))
+
+      // Check if it's a connection error (retryable)
+      const isRetryable =
+        lastError.message.includes('Connection error') ||
+        lastError.message.includes('ECONNRESET') ||
+        lastError.message.includes('ETIMEDOUT') ||
+        lastError.message.includes('fetch failed') ||
+        lastError.message.includes('network')
+
+      if (!isRetryable || attempt === maxRetries - 1) {
+        throw lastError
+      }
+
+      // Exponential backoff
+      const delay = initialDelay * Math.pow(2, attempt)
+      logger.warn(`[AI CHAT] Retry attempt ${attempt + 1}/${maxRetries} after ${delay}ms`, {
+        error: lastError.message,
+      })
+      await new Promise((resolve) => setTimeout(resolve, delay))
+    }
+  }
+
+  throw lastError
+}
 
 /**
  * FASE-5: Detect phone number in user message
@@ -372,21 +414,24 @@ async function extractQuoteDataFromConversation(
       .map((msg) => `${msg.role === 'user' ? 'Cliente' : 'Assistente'}: ${msg.content}`)
       .join('\n')
 
-    const extractionCompletion = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
-      max_tokens: 2048,
-      temperature: 0.1, // Low temperature for precise extraction
-      messages: [
-        {
-          role: 'system',
-          content: EXTRACTION_PROMPT,
-        },
-        {
-          role: 'user',
-          content: conversationText,
-        },
-      ],
-    })
+    // Use withRetry for connection resilience
+    const extractionCompletion = await withRetry(() =>
+      groq.chat.completions.create({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 2048,
+        temperature: 0.1, // Low temperature for precise extraction
+        messages: [
+          {
+            role: 'system',
+            content: EXTRACTION_PROMPT,
+          },
+          {
+            role: 'user',
+            content: conversationText,
+          },
+        ],
+      })
+    )
 
     const extractedText = extractionCompletion.choices[0]?.message?.content?.trim()
 
@@ -678,12 +723,15 @@ export async function POST(request: Request) {
         },
       ]
 
-      const visionCompletion = await openai.chat.completions.create({
-        model: 'gpt-4o',
-        max_tokens: 300, // UX: Respostas mais curtas e objetivas
-        temperature: 0.8, // UX: Mais natural e variado
-        messages: visionMessages,
-      })
+      // Use withRetry for connection resilience
+      const visionCompletion = await withRetry(() =>
+        openai.chat.completions.create({
+          model: 'gpt-4o',
+          max_tokens: 300, // UX: Respostas mais curtas e objetivas
+          temperature: 0.8, // UX: Mais natural e variado
+          messages: visionMessages,
+        })
+      )
 
       assistantMessage =
         visionCompletion.choices[0]?.message?.content || 'Desculpe, nao consegui analisar a imagem.'
@@ -701,18 +749,21 @@ export async function POST(request: Request) {
       // Adicionar nova mensagem do usuario
       messages.push({ role: 'user', content: message })
 
-      const completion = await groq.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 300, // UX: Respostas mais curtas e objetivas
-        temperature: 0.8, // UX: Mais natural e variado
-        messages: [
-          {
-            role: 'system',
-            content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary,
-          }, // FASE-5: Add unified context
-          ...messages,
-        ],
-      })
+      // Use withRetry for connection resilience
+      const completion = await withRetry(() =>
+        groq.chat.completions.create({
+          model: 'llama-3.3-70b-versatile',
+          max_tokens: 300, // UX: Respostas mais curtas e objetivas
+          temperature: 0.8, // UX: Mais natural e variado
+          messages: [
+            {
+              role: 'system',
+              content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary,
+            }, // FASE-5: Add unified context
+            ...messages,
+          ],
+        })
+      )
 
       assistantMessage =
         completion.choices[0]?.message?.content || 'Desculpe, nao consegui processar sua mensagem.'
@@ -808,6 +859,22 @@ export async function POST(request: Request) {
       )
     }
 
+    // Verificar se e erro de conexao (Groq/OpenAI)
+    if (
+      error instanceof Error &&
+      (error.message.includes('Connection error') ||
+        error.message.includes('ECONNRESET') ||
+        error.message.includes('fetch failed'))
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            'Nosso assistente esta com dificuldade de conexao. Tente novamente em alguns segundos.',
+        },
+        { status: 503 }
+      )
+    }
+
     // Verificar se e erro de banco de dados
     if (
       error instanceof Error &&
@@ -822,8 +889,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          'Erro ao processar mensagem: ' +
-          (error instanceof Error ? error.message : 'Unknown error'),
+          'Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente ou entre em contato pelo WhatsApp.',
       },
       { status: 500 }
     )

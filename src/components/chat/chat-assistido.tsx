@@ -716,11 +716,19 @@ export function ChatAssistido({
         }),
       })
 
-      if (!response.ok) {
-        throw new Error('Erro ao enviar mensagem')
-      }
-
       const data = await response.json()
+
+      if (!response.ok) {
+        // Handle specific error types
+        if (response.status === 429) {
+          throw new Error(data.message || 'Limite de mensagens excedido. Aguarde um momento.')
+        } else if (response.status === 503) {
+          throw new Error('Servico de IA temporariamente indisponivel. Tente novamente em instantes.')
+        } else if (response.status === 500) {
+          throw new Error(data.error || 'Erro interno do servidor. Por favor, tente novamente.')
+        }
+        throw new Error(data.error || 'Erro ao enviar mensagem')
+      }
 
       // Atualizar conversationId se for nova conversa
       if (data.conversationId && !conversationId) {
@@ -741,15 +749,20 @@ export function ChatAssistido({
       }
 
       setMessages((prev) => [...prev, assistantMessage])
-    } catch {
-      // Adicionar mensagem de erro
+    } catch (error) {
+      // Adicionar mensagem de erro com detalhes
+      const errorMessage = error instanceof Error
+        ? error.message
+        : 'Desculpe, ocorreu um erro inesperado.'
+
+      console.error('[AI Chat] Error:', error)
+
       setMessages((prev) => [
         ...prev,
         {
           id: `error-${Date.now()}`,
           role: 'ASSISTANT',
-          content:
-            'Desculpe, ocorreu um erro. Por favor, tente novamente ou entre em contato pelo WhatsApp.',
+          content: `${errorMessage} Por favor, tente novamente ou entre em contato pelo WhatsApp.`,
           createdAt: new Date().toISOString(),
         },
       ])
