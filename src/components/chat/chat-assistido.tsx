@@ -1652,7 +1652,8 @@ export function ChatAssistido({
             )}
 
             {/* AI-CHAT Sprint P1.6: Finalize Quote Button */}
-            {canExportQuote && (
+            {/* Só mostra quando o orçamento está 100% completo */}
+            {quoteProgress >= 100 && (
               <div className="border-theme-default bg-accent-500/5 border-t p-3">
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
