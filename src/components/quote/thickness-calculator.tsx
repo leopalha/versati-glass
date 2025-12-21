@@ -1,17 +1,18 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
   calculateThickness,
   validateDimensions,
+  isExternalApplication,
   type GlassApplication,
   type ThicknessRecommendation,
   type ValidationResult,
 } from '@/lib/nbr-validations'
 import { NBRTooltip, ValidationTooltip } from '@/components/ui/tooltip'
-import { Calculator, AlertTriangle, CheckCircle2, Info } from 'lucide-react'
+import { Calculator, AlertTriangle, CheckCircle2, Info, Wind, Home } from 'lucide-react'
 
 interface ThicknessCalculatorProps {
   width: number
@@ -20,6 +21,7 @@ interface ThicknessCalculatorProps {
   currentThickness?: number
   windZone?: number
   onApplyThickness: (thickness: number) => void
+  onMinThicknessChange?: (minThickness: number) => void // Notify parent of min thickness for filtering options
   className?: string
 }
 
@@ -30,6 +32,7 @@ export function ThicknessCalculator({
   currentThickness,
   windZone = 2,
   onApplyThickness,
+  onMinThicknessChange,
   className = '',
 }: ThicknessCalculatorProps) {
   // Calculate recommended thickness
@@ -37,6 +40,13 @@ export function ThicknessCalculator({
     if (!width || !height || width <= 0 || height <= 0) return null
     return calculateThickness({ width, height }, application, windZone)
   }, [width, height, application, windZone])
+
+  // Notify parent of minimum thickness when it changes (for filtering options)
+  useEffect(() => {
+    if (recommendation && onMinThicknessChange) {
+      onMinThicknessChange(recommendation.minThickness)
+    }
+  }, [recommendation, onMinThicknessChange])
 
   // Validate current dimensions
   const validation = useMemo<ValidationResult | null>(() => {
@@ -50,7 +60,15 @@ export function ThicknessCalculator({
   }
 
   const area = width * height
-  const isCurrentThicknessOk = currentThickness && currentThickness >= recommendation.minThickness
+  // Ensure proper numeric comparison - currentThickness may be undefined or number
+  // The prop is typed as number but we add safety for edge cases
+  const isCurrentThicknessOk =
+    currentThickness !== undefined &&
+    currentThickness !== null &&
+    Number(currentThickness) >= recommendation.minThickness
+
+  // Determina se é área externa (sujeita a vento) ou interna
+  const isExternal = isExternalApplication(application)
 
   return (
     <Card className={`border-blue-500/30 bg-blue-500/5 p-4 ${className}`}>
@@ -60,8 +78,12 @@ export function ThicknessCalculator({
         <h3 className="text-theme-primary font-semibold">Calculadora de Espessura</h3>
         <NBRTooltip
           title="Cálculo Automático NBR 14488"
-          description="Espessura calculada com base nas dimensões, aplicação e zona de vento conforme normas brasileiras"
-          nbrReference="NBR 14488, NBR 14718, NBR 16259"
+          description={
+            isExternal
+              ? 'Espessura calculada com base nas dimensões, aplicação e zona de vento conforme normas brasileiras'
+              : 'Espessura calculada com base nas dimensões e aplicação. Área interna - sem fator de vento.'
+          }
+          nbrReference={isExternal ? 'NBR 14488, NBR 14718, NBR 16259' : 'NBR 14488, NBR 14718'}
         />
       </div>
 
@@ -77,17 +99,36 @@ export function ThicknessCalculator({
             {(Math.max(width, height) / Math.min(width, height)).toFixed(1)}:1
           </span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-theme-muted text-sm">Zona de Vento:</span>
-          <span className="text-theme-primary font-medium">
-            Zona {windZone}
-            <NBRTooltip
-              title="Zona de Vento"
-              description={getWindZoneDescription(windZone)}
-              nbrReference="NBR 16259"
-            />
-          </span>
-        </div>
+        {/* Mostrar zona de vento APENAS para áreas externas */}
+        {isExternal ? (
+          <div className="flex items-center justify-between">
+            <span className="text-theme-muted flex items-center gap-1 text-sm">
+              <Wind className="h-3 w-3" /> Zona de Vento:
+            </span>
+            <span className="text-theme-primary font-medium">
+              Zona {windZone}
+              <NBRTooltip
+                title="Zona de Vento (NBR 16259)"
+                description={getWindZoneDescription(windZone)}
+                nbrReference="NBR 16259"
+              />
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <span className="text-theme-muted flex items-center gap-1 text-sm">
+              <Home className="h-3 w-3" /> Ambiente:
+            </span>
+            <span className="font-medium text-green-400">
+              Área Interna
+              <NBRTooltip
+                title="Área Interna"
+                description="Ambientes internos não sofrem pressão de vento. O cálculo usa apenas dimensões e aplicação."
+                nbrReference="NBR 14488"
+              />
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Recommendation */}

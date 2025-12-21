@@ -44,6 +44,47 @@ export type GlassApplication =
   | 'TAMPO'
   | 'DIVISORIA'
   | 'FACHADA'
+  | 'ESPELHOS'
+  | 'CORTINAS_VIDRO'
+  | 'FECHAMENTOS'
+  | 'PERGOLADOS'
+  | 'VIDROS'
+  | 'TAMPOS_PRATELEIRAS'
+
+/**
+ * Categorias que são tipicamente para áreas EXTERNAS (sujeitas a vento)
+ * Zona de vento afeta significativamente o cálculo de espessura
+ */
+export const EXTERNAL_APPLICATIONS: GlassApplication[] = [
+  'FACHADA',
+  'COBERTURA',
+  'JANELA',
+  'GUARDA_CORPO', // Pode ser externo (sacada) ou interno (mezanino)
+  'CORTINAS_VIDRO', // Fechamento de sacadas - externo
+  'FECHAMENTOS', // Geralmente externo
+  'PERGOLADOS', // Externo
+]
+
+/**
+ * Categorias que são tipicamente para áreas INTERNAS (sem vento)
+ * Zona de vento NÃO afeta o cálculo - usa fator fixo mínimo
+ */
+export const INTERNAL_APPLICATIONS: GlassApplication[] = [
+  'BOX', // Banheiro - interno
+  'DIVISORIA', // Escritório - interno
+  'TAMPO', // Mesa - interno
+  'PORTA', // Geralmente interna
+  'ESPELHOS', // Interno
+  'VIDROS', // Depende, mas geralmente interno
+  'TAMPOS_PRATELEIRAS', // Interno
+]
+
+/**
+ * Verifica se a aplicação é tipicamente externa (sujeita a vento)
+ */
+export function isExternalApplication(application: GlassApplication): boolean {
+  return EXTERNAL_APPLICATIONS.includes(application)
+}
 
 // ============================================================================
 // CONSTANTS - NBR STANDARDS
@@ -81,13 +122,19 @@ const NBR_16259_WIND_ZONES = {
  */
 export const NBR_7199_SAFETY_REQUIRED = {
   PORTA: true,
-  BOX: true,
-  GUARDA_CORPO: true,
-  COBERTURA: true,
-  FACHADA: true,
+  BOX: true, // Área molhada + risco de choque térmico
+  GUARDA_CORPO: true, // Segurança contra queda
+  COBERTURA: true, // Fragmentos podem cair
+  FACHADA: true, // Altura + vento
+  CORTINAS_VIDRO: true, // Fechamento de sacadas - externo
+  FECHAMENTOS: true, // Geralmente externo
+  PERGOLADOS: true, // Cobertura - fragmentos podem cair
   JANELA: false, // Only if > 1.5m from floor
-  TAMPO: false,
-  DIVISORIA: false,
+  TAMPO: false, // Depende do uso
+  DIVISORIA: false, // Geralmente não obrigatório
+  ESPELHOS: false, // Interno, não estrutural
+  VIDROS: false, // Depende da aplicação específica
+  TAMPOS_PRATELEIRAS: false, // Interno
 } as const
 
 /**
@@ -115,13 +162,16 @@ const NBR_14488_ASPECT_RATIO_FACTOR = {
  * Where:
  * - t = thickness (mm)
  * - k = coefficient based on aspect ratio and support
- * - q = distributed load (kN/m²) - wind pressure
+ * - q = distributed load (kN/m²) - wind pressure (ONLY for external applications)
  * - a = smaller dimension (m)
  * - σ = allowable stress (MPa) - 24 MPa for tempered glass
  *
+ * IMPORTANTE: Zona de vento só é considerada para ÁREAS EXTERNAS.
+ * Áreas internas (BOX, DIVISÓRIA, TAMPO, etc.) usam fator fixo mínimo.
+ *
  * @param dimensions - Width and height in meters
  * @param application - Type of glass application
- * @param windZone - Wind zone (1-4)
+ * @param windZone - Wind zone (1-4) - IGNORED for internal applications
  * @returns Thickness recommendation with NBR reference
  */
 export function calculateThickness(
@@ -140,8 +190,15 @@ export function calculateThickness(
   // Get aspect ratio factor (k)
   const kFactor = getAspectRatioFactor(aspectRatio)
 
-  // Get wind load (q) based on zone
-  const windLoad = NBR_16259_WIND_ZONES[windZone as keyof typeof NBR_16259_WIND_ZONES] || 1.3
+  // Determina se é área externa (sujeita a vento) ou interna
+  const isExternal = isExternalApplication(application)
+
+  // Get load factor:
+  // - EXTERNO: usa zona de vento da região (NBR 16259)
+  // - INTERNO: usa fator mínimo de 0.5 kN/m² (apenas peso próprio + uso normal)
+  const loadFactor = isExternal
+    ? NBR_16259_WIND_ZONES[windZone as keyof typeof NBR_16259_WIND_ZONES] || 1.3
+    : 0.5 // Áreas internas: carga reduzida (sem vento)
 
   // Allowable stress for tempered glass (σ) - 24 MPa per NBR 7199
   const allowableStress = 24
@@ -149,7 +206,7 @@ export function calculateThickness(
   // Calculate minimum thickness using simplified formula
   // t = k * √((q * a²) / σ)
   const calculatedThickness =
-    kFactor * Math.sqrt((windLoad * Math.pow(shorterSide, 2)) / allowableStress)
+    kFactor * Math.sqrt((loadFactor * Math.pow(shorterSide, 2)) / allowableStress)
 
   // Round up to nearest available thickness
   const minThickness = roundToAvailableThickness(calculatedThickness)
@@ -170,12 +227,17 @@ export function calculateThickness(
     warning = `Proporção muito alongada (${aspectRatio.toFixed(1)}:1). Recomendamos avaliação estrutural.`
   }
 
+  // Build reason text based on application type
+  const reasonText = isExternal
+    ? `Área externa - cálculo com zona de vento ${windZone} (NBR 16259). Área ${area.toFixed(2)}m², proporção ${aspectRatio.toFixed(1)}:1`
+    : `Área interna - sem fator de vento. Área ${area.toFixed(2)}m², proporção ${aspectRatio.toFixed(1)}:1`
+
   return {
     minThickness,
     recommendedThickness,
     warning,
-    nbrReference: 'NBR 14488, NBR 14718, NBR 16259',
-    reason: `Cálculo baseado em área ${area.toFixed(2)}m², proporção ${aspectRatio.toFixed(1)}:1, zona de vento ${windZone}`,
+    nbrReference: isExternal ? 'NBR 14488, NBR 14718, NBR 16259' : 'NBR 14488, NBR 14718',
+    reason: reasonText,
   }
 }
 
