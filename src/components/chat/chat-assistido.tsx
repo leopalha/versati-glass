@@ -408,21 +408,22 @@ export function ChatAssistido({
   }, [])
 
   // AI-CHAT Sprint P2.4: Handle product selection
-  // MELHORADO: Agora pede confirmação ao invés de assumir que é o produto certo
+  // MELHORADO: Suporta múltiplos produtos - acumula no orçamento
   const handleSelectProduct = useCallback(
     async (product: ProductSuggestion) => {
       console.log('[CHAT] Product selected:', product.name)
 
-      // Toggle selection visual state
+      // Adiciona à lista (não remove se já selecionado - acumula)
       setSelectedProductIds((prev) => {
         if (prev.includes(product.id)) {
+          // Se já está selecionado, remove (toggle)
           return prev.filter((id) => id !== product.id)
         }
         return [...prev, product.id]
       })
 
-      // Mensagem indica interesse, mas pede confirmação das especificações
-      const selectionMessage = `Me interessei pelo ${product.name}. Quero saber mais sobre esse produto.`
+      // Mensagem clara de adição ao orçamento
+      const selectionMessage = `Quero adicionar: ${product.name}`
 
       // Add user message immediately
       const userMessage: Message = {
@@ -473,8 +474,8 @@ export function ChatAssistido({
 
         setMessages((prev) => [...prev, assistantMessage])
 
-        // Hide product suggestions after selection
-        setProductSuggestions([])
+        // NÃO esconde as sugestões - permite selecionar múltiplos produtos
+        // setProductSuggestions([])
       } catch (error) {
         console.error('[CHAT] Error sending product selection:', error)
         // Add error message
