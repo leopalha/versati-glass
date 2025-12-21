@@ -252,8 +252,8 @@ export function transformAiContextToQuoteData(
  * Validate if AI quote context has minimum required data
  * for creating a quote
  *
- * RELAXADO: Agora permite checkout assim que tiver produto + dimensões
- * O assistente coleta mais info durante o wizard de orçamento
+ * Agora exige: produto + dimensões + dados do cliente (nome OU telefone)
+ * O agente coleta esses dados durante a conversa antes de habilitar checkout
  */
 export function isQuoteContextComplete(quoteContext: AiQuoteContext | null | undefined): boolean {
   if (!quoteContext || !quoteContext.items || quoteContext.items.length === 0) {
@@ -263,16 +263,24 @@ export function isQuoteContextComplete(quoteContext: AiQuoteContext | null | und
   // Check if at least one item has:
   // 1. Category OR product name (required)
   // 2. At least ONE dimension (width OR height)
-  // Relaxado para permitir checkout mais cedo
   const hasMinimalItem = quoteContext.items.some((item) => {
     const hasCategory = !!item.category || !!item.productName
     const hasAnyDimension = (item.width && item.width > 0) || (item.height && item.height > 0)
     return hasCategory && hasAnyDimension
   })
 
-  // Se tem pelo menos um item com categoria e uma dimensão, permite checkout
-  // O wizard de orçamento coleta o resto das informações
-  return hasMinimalItem
+  if (!hasMinimalItem) {
+    return false
+  }
+
+  // NOVO: Exige dados do cliente (nome OU telefone)
+  const hasCustomerData = !!(
+    quoteContext.customerData &&
+    (quoteContext.customerData.name || quoteContext.customerData.phone)
+  )
+
+  // Só habilita checkout quando tem produto + dimensão + dados do cliente
+  return hasMinimalItem && hasCustomerData
 }
 
 /**

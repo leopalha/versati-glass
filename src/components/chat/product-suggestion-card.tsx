@@ -200,8 +200,8 @@ export function ProductSuggestions({
         Selecione um produto para adicionar ao seu orçamento:
       </p>
 
-      {/* Product Grid */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Product List - VERTICAL layout (um embaixo do outro) */}
+      <div className="flex flex-col gap-3">
         {products.map((product, index) => (
           <motion.div
             key={product.id}
@@ -220,7 +220,7 @@ export function ProductSuggestions({
 
       {/* Footer Hint */}
       <p className="text-theme-subtle mt-3 text-center text-xs">
-        💡 Você pode selecionar múltiplos produtos ou continuar descrevendo o que precisa
+        💡 Clique no produto que deseja para continuar
       </p>
     </motion.div>
   )

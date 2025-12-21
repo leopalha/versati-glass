@@ -408,6 +408,7 @@ export function ChatAssistido({
   }, [])
 
   // AI-CHAT Sprint P2.4: Handle product selection
+  // MELHORADO: Agora pede confirmação ao invés de assumir que é o produto certo
   const handleSelectProduct = useCallback(
     async (product: ProductSuggestion) => {
       console.log('[CHAT] Product selected:', product.name)
@@ -420,8 +421,8 @@ export function ChatAssistido({
         return [...prev, product.id]
       })
 
-      // Auto-send selection message
-      const selectionMessage = `Selecionei o produto: ${product.name}`
+      // Mensagem indica interesse, mas pede confirmação das especificações
+      const selectionMessage = `Me interessei pelo ${product.name}. Quero saber mais sobre esse produto.`
 
       // Add user message immediately
       const userMessage: Message = {
