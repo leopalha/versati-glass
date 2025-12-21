@@ -1674,33 +1674,48 @@ export function ChatAssistido({
                         setTimeout(() => scrollToBottom(), 100)
                         setIsProgressMinimized(true)
 
-                        // Tenta exportar os dados do orçamento
+                        // Tenta exportar os dados do orçamento - prioriza contexto local
                         let quoteData = null
-                        try {
-                          const exportResponse = await fetch('/api/ai/chat/export-quote', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ conversationId, sessionId }),
-                          })
-                          if (exportResponse.ok) {
-                            const result = await exportResponse.json()
-                            quoteData = result.data
+
+                        // PRIMEIRO: Usa contexto local se disponível (mais confiável)
+                        if (quoteContext) {
+                          try {
+                            const { transformAiContextToQuoteData } = await import(
+                              '@/lib/ai-quote-transformer'
+                            )
+                            quoteData = transformAiContextToQuoteData(quoteContext)
+                            console.log('[CHAT] Using local quoteContext:', quoteData)
+                          } catch (transformError) {
+                            console.warn('[CHAT] Transform failed:', transformError)
                           }
-                        } catch (exportError) {
-                          console.warn('[CHAT] Export failed, using local context:', exportError)
                         }
 
-                        // Fallback para contexto local
-                        if (!quoteData && quoteContext) {
-                          const { transformAiContextToQuoteData } = await import(
-                            '@/lib/ai-quote-transformer'
-                          )
-                          quoteData = transformAiContextToQuoteData(quoteContext)
+                        // SEGUNDO: Se contexto local falhou, tenta API
+                        if (!quoteData) {
+                          try {
+                            const exportResponse = await fetch('/api/ai/chat/export-quote', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ conversationId, sessionId }),
+                            })
+                            if (exportResponse.ok) {
+                              const result = await exportResponse.json()
+                              quoteData = result.data
+                              console.log('[CHAT] Using API export:', quoteData)
+                            } else {
+                              console.warn('[CHAT] API export returned error, continuing without data')
+                            }
+                          } catch (exportError) {
+                            console.warn('[CHAT] Export API failed:', exportError)
+                          }
                         }
 
-                        // Importa os dados para o wizard store
+                        // Importa os dados para o wizard store se tiver dados válidos
                         if (quoteData && quoteData.items && quoteData.items.length > 0) {
                           importFromAI(quoteData)
+                          console.log('[CHAT] Quote data imported to store')
+                        } else {
+                          console.log('[CHAT] No quote data to import, redirecting anyway')
                         }
 
                         // Minimiza o chat e redireciona
