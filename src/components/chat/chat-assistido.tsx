@@ -1024,6 +1024,13 @@ export function ChatAssistido({
         setProgressConfirmed(true)
       }
 
+      // IMPORTANTE: Atualiza progresso imediatamente da resposta da API
+      if (data.quoteContext) {
+        setQuoteContext(data.quoteContext)
+        const completion = getQuoteContextCompletion(data.quoteContext)
+        setQuoteProgress(completion)
+      }
+
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: 'ASSISTANT',
@@ -1555,91 +1562,6 @@ export function ChatAssistido({
 
                       {/* Action Buttons */}
                       <div className="mt-4 flex flex-col gap-2">
-                        {/* Go to Checkout - show when progress >= 40% */}
-                        {quoteProgress >= 40 && (
-                          <Button
-                            onClick={async () => {
-                              setIsLoading(true)
-
-                              try {
-                                // 1. Add system message (no AI response needed)
-                                const checkoutMessage: Message = {
-                                  id: `checkout-${Date.now()}`,
-                                  role: 'ASSISTANT',
-                                  content:
-                                    'Perfeito! Vou redirecionar você para o checkout agora. 🛒',
-                                  createdAt: new Date().toISOString(),
-                                }
-                                setMessages((prev) => [...prev, checkoutMessage])
-                                setTimeout(() => scrollToBottom(), 100)
-
-                                // 2. Minimize quote progress
-                                setIsProgressMinimized(true)
-
-                                // 3. Try to export quote data from conversation
-                                let quoteData = null
-                                try {
-                                  const exportResponse = await fetch('/api/ai/chat/export-quote', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ conversationId, sessionId }),
-                                  })
-
-                                  if (exportResponse.ok) {
-                                    const result = await exportResponse.json()
-                                    quoteData = result.data
-                                  }
-                                } catch (exportError) {
-                                  console.warn(
-                                    '[CHAT] Export failed, using local context:',
-                                    exportError
-                                  )
-                                }
-
-                                // 4. Fallback: use local quoteContext if export failed
-                                if (!quoteData && quoteContext) {
-                                  // Transform local context to quote data format
-                                  const { transformAiContextToQuoteData } =
-                                    await import('@/lib/ai-quote-transformer')
-                                  quoteData = transformAiContextToQuoteData(quoteContext)
-                                }
-
-                                // 5. Import to wizard store if we have data
-                                if (quoteData && quoteData.items && quoteData.items.length > 0) {
-                                  importFromAI(quoteData)
-                                }
-
-                                // 6. Minimize chat
-                                setIsMinimized(true)
-
-                                // 7. Navigate to wizard (will open at appropriate step)
-                                router.push('/orcamento')
-                              } catch (error) {
-                                console.error('[CHAT] Checkout redirect failed:', error)
-
-                                // Fallback: just navigate to orcamento page
-                                setIsMinimized(true)
-                                router.push('/orcamento')
-
-                                toast({
-                                  variant: 'default',
-                                  title: 'Redirecionando...',
-                                  description: 'Continue seu orçamento na página de produtos.',
-                                })
-                              } finally {
-                                setIsLoading(false)
-                              }
-                            }}
-                            variant="outline"
-                            size="sm"
-                            className="hover:bg-accent-500/10 w-full border-accent-500 text-accent-500"
-                            disabled={isLoading}
-                          >
-                            <ArrowRight className="mr-2 h-4 w-4" />
-                            Finalizar e Ir para Checkout
-                          </Button>
-                        )}
-
                         {/* Cancel/Reset Quote */}
                         <Button
                           onClick={async () => {
@@ -1750,13 +1672,13 @@ export function ChatAssistido({
                     ) : (
                       <>
                         <CheckCircle2 className="mr-2 h-4 w-4" />
-                        Finalizar Orçamento
+                        Finalizar e Ir para Checkout
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </>
                     )}
                   </Button>
                   <p className="text-theme-subtle mt-2 text-center text-xs">
-                    Revise os itens coletados e prossiga com o orçamento
+                    Clique para revisar e confirmar seu orçamento
                   </p>
                 </motion.div>
               </div>
