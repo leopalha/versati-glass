@@ -935,11 +935,11 @@ async function extractQuoteDataFromConversation(
 
       const parsed = JSON.parse(cleanJson)
 
-      // MELHORADO: Nao retornar null se tiver dados do cliente
-      // Isso permite que o progresso atualize quando cliente informa nome/telefone
+      // MELHORADO: Aceitar itens com apenas categoria OU medidas
+      // Isso permite progresso inicial quando cliente menciona produto
       const hasItems = parsed.items && Array.isArray(parsed.items) && parsed.items.length > 0
       const hasValidItem = hasItems && parsed.items.some(
-        (item: any) => item.category && (item.width || item.height)
+        (item: any) => item.category || item.productName || item.width || item.height
       )
       const hasCustomerData = parsed.customerData && (
         parsed.customerData.name ||
@@ -949,7 +949,7 @@ async function extractQuoteDataFromConversation(
         parsed.customerData.city
       )
 
-      // Retornar dados se tiver items validos OU dados do cliente
+      // Retornar dados se tiver items (mesmo parciais) OU dados do cliente
       if (!hasValidItem && !hasCustomerData) {
         return null
       }
