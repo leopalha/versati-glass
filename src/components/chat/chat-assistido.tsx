@@ -31,6 +31,7 @@ import {
   Calendar,
   ExternalLink,
 } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 // LocalStorage key for chat persistence
 const CHAT_STORAGE_KEY = 'versati-chat-session'
@@ -86,20 +87,23 @@ function clearChatStorage() {
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQuoteStore } from '@/store/quote-store'
 import type { AiQuoteData } from '@/store/quote-store'
-import { getQuoteContextCompletion } from '@/lib/ai-quote-transformer'
+import { getQuoteContextCompletion, getProgressDetails, type ProgressDetail } from '@/lib/ai-quote-transformer'
 import { VoiceChatButton } from '@/components/chat/voice-chat-button'
 import { useVoice } from '@/hooks/use-voice'
 import { useCrossChannelUpdates } from '@/hooks/use-cross-channel-updates'
 import { showCrossChannelNotification } from '@/components/chat/cross-channel-notification'
 import { QuoteTransitionModal } from '@/components/chat/quote-transition-modal'
+import { RegisterConfirmModal } from '@/components/chat/register-confirm-modal'
 import {
-  ProductSuggestions,
+  CollapsibleProductSuggestions,
+  CollapsibleMultiCategoryProductSuggestions,
   type ProductSuggestion,
 } from '@/components/chat/product-suggestion-card'
+import { useSession, signIn } from 'next-auth/react'
 
 interface Message {
   id: string
-  role: 'USER' | 'ASSISTANT'
+  role: 'USER' | 'ASSISTANT' | 'PRODUCT_SUGGESTIONS'
   content: string
   createdAt: string
   imageUrl?: string
@@ -115,6 +119,13 @@ interface Message {
     google: string
     outlook: string
     office365: string
+  }
+  // Product suggestions data (for role: 'PRODUCT_SUGGESTIONS')
+  productData?: {
+    products: ProductSuggestion[]
+    category: string
+    categories: string[]
+    isCollapsed: boolean
   }
 }
 
@@ -135,6 +146,7 @@ export function ChatAssistido({
 }: ChatAssistidoProps) {
   const router = useRouter()
   const { toast } = useToast()
+  const { data: session, status: sessionStatus } = useSession()
   const importFromAI = useQuoteStore((state) => state.importFromAI)
 
   const [isOpen, setIsOpen] = useState(initialOpen || showInitially)
@@ -165,9 +177,15 @@ export function ChatAssistido({
   const [showTransitionModal, setShowTransitionModal] = useState(false)
   const [pendingQuoteData, setPendingQuoteData] = useState<AiQuoteData | null>(null)
 
+  // Register confirmation modal state
+  const [showRegisterModal, setShowRegisterModal] = useState(false)
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false)
+
   // AI-CHAT Sprint P2.4: Product suggestions state
+  // MELHORADO: Suporta multiplas categorias simultaneamente
   const [productSuggestions, setProductSuggestions] = useState<ProductSuggestion[]>([])
   const [suggestedCategory, setSuggestedCategory] = useState<string | null>(null)
+  const [suggestedCategories, setSuggestedCategories] = useState<string[]>([]) // Multiplas categorias
   const [selectedProductIds, setSelectedProductIds] = useState<string[]>([])
 
   // Voice feature state
@@ -270,6 +288,7 @@ export function ChatAssistido({
     setCanExportQuote(false)
     setProductSuggestions([])
     setSuggestedCategory(null)
+    setSuggestedCategories([])
     setSelectedProductIds([])
     // Re-show welcome message
     setMessages([
@@ -390,6 +409,7 @@ export function ChatAssistido({
   }
 
   // AI-CHAT Sprint P2.4: Fetch product suggestions based on category
+  // MELHORADO: Adiciona produtos como mensagem inline no chat
   const fetchProductSuggestions = useCallback(async (category: string) => {
     try {
       const response = await fetch(`/api/ai/products/suggestions?category=${category}&limit=3`)
@@ -398,32 +418,126 @@ export function ChatAssistido({
         const data = await response.json()
 
         if (data.success && data.products.length > 0) {
-          setProductSuggestions(data.products)
+          // Adiciona produtos sem duplicar ao estado global
+          setProductSuggestions((prev) => {
+            const existingIds = prev.map((p) => p.id)
+            const newProducts = data.products.filter(
+              (p: ProductSuggestion) => !existingIds.includes(p.id)
+            )
+            return [...prev, ...newProducts]
+          })
           setSuggestedCategory(category)
+          // Adiciona categoria a lista de sugeridas
+          setSuggestedCategories((prev) => {
+            if (!prev.includes(category)) {
+              return [...prev, category]
+            }
+            return prev
+          })
+
+          // NOVO: Adiciona como mensagem inline para que suba com a conversa
+          const suggestionMessage: Message = {
+            id: `suggestions-${category}-${Date.now()}`,
+            role: 'PRODUCT_SUGGESTIONS',
+            content: `Sugestoes de ${category}`,
+            createdAt: new Date().toISOString(),
+            productData: {
+              products: data.products,
+              category: category,
+              categories: [category],
+              isCollapsed: false,
+            },
+          }
+
+          // Verifica se ja existe mensagem de sugestao para essa categoria
+          setMessages((prev) => {
+            const existingSuggestion = prev.find(
+              (m) => m.role === 'PRODUCT_SUGGESTIONS' && m.productData?.category === category
+            )
+            if (existingSuggestion) {
+              // Atualiza a mensagem existente com novos produtos
+              return prev.map((m) =>
+                m.id === existingSuggestion.id
+                  ? {
+                      ...m,
+                      productData: {
+                        ...m.productData!,
+                        products: [...m.productData!.products, ...data.products.filter(
+                          (p: ProductSuggestion) => !m.productData!.products.some(ep => ep.id === p.id)
+                        )],
+                      },
+                    }
+                  : m
+              )
+            }
+            // Adiciona nova mensagem de sugestao
+            return [...prev, suggestionMessage]
+          })
+
+          // Scroll para mostrar as sugestoes
+          setTimeout(() => scrollToBottom(), 100)
         }
       }
     } catch (error) {
       console.error('Error fetching product suggestions:', error)
     }
-  }, [])
+  }, [scrollToBottom])
+
+  // Buscar sugestoes para TODAS as categorias detectadas nos items
+  const fetchAllProductSuggestions = useCallback(
+    async (items: any[]) => {
+      if (!items || items.length === 0) return
+
+      // Extrair categorias unicas
+      const categories = [...new Set(items.map((item) => item.category).filter(Boolean))]
+
+      // Buscar produtos para cada categoria que ainda nao foi sugerida
+      for (const category of categories) {
+        if (!suggestedCategories.includes(category)) {
+          await fetchProductSuggestions(category)
+        }
+      }
+    },
+    [suggestedCategories, fetchProductSuggestions]
+  )
 
   // AI-CHAT Sprint P2.4: Handle product selection
-  // MELHORADO: Suporta múltiplos produtos - acumula no orçamento
+  // MELHORADO: Colapsa card apos selecao e sobe com a conversa
   const handleSelectProduct = useCallback(
     async (product: ProductSuggestion) => {
-      console.log('[CHAT] Product selected:', product.name)
+      logger.debug('[CHAT] Product selected:', { name: product.name })
 
-      // Adiciona à lista (não remove se já selecionado - acumula)
+      // Adiciona a lista (nao remove se ja selecionado - acumula)
       setSelectedProductIds((prev) => {
         if (prev.includes(product.id)) {
-          // Se já está selecionado, remove (toggle)
+          // Se ja esta selecionado, remove (toggle)
           return prev.filter((id) => id !== product.id)
         }
         return [...prev, product.id]
       })
 
-      // Mensagem clara de adição ao orçamento
-      const selectionMessage = `Quero adicionar: ${product.name}`
+      // NOVO: Colapsa a mensagem de sugestao da categoria desse produto
+      setMessages((prev) =>
+        prev.map((msg) => {
+          if (
+            msg.role === 'PRODUCT_SUGGESTIONS' &&
+            msg.productData?.category === product.category
+          ) {
+            return {
+              ...msg,
+              productData: {
+                ...msg.productData!,
+                isCollapsed: true,
+              },
+            }
+          }
+          return msg
+        })
+      )
+
+      // Mensagem clara de adicao ao orcamento
+      // Inclui slug e categoria para facilitar extracao pelo LLM
+      const selectionMessage = `Quero adicionar: ${product.name} (categoria: ${product.category}, slug: ${product.slug})`
 
       // Add user message immediately
       const userMessage: Message = {
@@ -440,7 +554,7 @@ export function ChatAssistido({
       setTimeout(() => scrollToBottom(), 100)
 
       try {
-        console.log('[CHAT] Sending product selection to API...')
+        logger.debug('[CHAT] Sending product selection to API...')
         const response = await fetch('/api/ai/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -458,7 +572,7 @@ export function ChatAssistido({
         }
 
         const data = await response.json()
-        console.log('[CHAT] AI response received')
+        logger.debug('[CHAT] AI response received')
 
         // Update conversationId if new conversation
         if (data.conversationId && !conversationId) {
@@ -474,8 +588,9 @@ export function ChatAssistido({
 
         setMessages((prev) => [...prev, assistantMessage])
 
-        // NÃO esconde as sugestões - permite selecionar múltiplos produtos
-        // setProductSuggestions([])
+        // MELHORADO: Atualiza progresso imediatamente apos selecionar produto
+        // (nao espera 2 segundos do useEffect)
+        setTimeout(() => checkExportStatus(), 500)
       } catch (error) {
         console.error('[CHAT] Error sending product selection:', error)
         // Add error message
@@ -519,25 +634,17 @@ export function ChatAssistido({
           const completion = getQuoteContextCompletion(data.quoteContext)
           setQuoteProgress(completion)
 
-          // AI-CHAT Sprint P2.4: Fetch product suggestions if category detected
-          if (
-            data.quoteContext.items &&
-            data.quoteContext.items.length > 0 &&
-            data.quoteContext.items[0].category
-          ) {
-            const category = data.quoteContext.items[0].category
-
-            // Only fetch if it's a new category
-            if (category !== suggestedCategory) {
-              fetchProductSuggestions(category)
-            }
+          // AI-CHAT Sprint P2.4: Fetch product suggestions for ALL categories detected
+          // MELHORADO: Suporta multiplos produtos (ex: "quero porta e espelho")
+          if (data.quoteContext.items && data.quoteContext.items.length > 0) {
+            fetchAllProductSuggestions(data.quoteContext.items)
           }
         }
       }
     } catch (error) {
       console.error('Error checking export status:', error)
     }
-  }, [conversationId, sessionId, suggestedCategory, fetchProductSuggestions])
+  }, [conversationId, sessionId, fetchAllProductSuggestions])
 
   // AI-CHAT Sprint P1.6: Check export status after each AI response
   useEffect(() => {
@@ -576,10 +683,18 @@ export function ChatAssistido({
       const { data } = await exportResponse.json()
       const quoteData = data as AiQuoteData
 
-      // Step 2: Show transition modal (P2.3)
+      // Step 2: Save pending data
       setPendingQuoteData(quoteData)
-      setShowTransitionModal(true)
       setIsExportingQuote(false)
+
+      // Step 3: Check if user is logged in
+      // If not logged in, show register modal first
+      if (!session?.user) {
+        setShowRegisterModal(true)
+      } else {
+        // User is logged in, show transition modal directly
+        setShowTransitionModal(true)
+      }
     } catch (error) {
       console.error('Error finalizing quote:', error)
       alert(
@@ -589,6 +704,80 @@ export function ChatAssistido({
       )
       setIsExportingQuote(false)
     }
+  }
+
+  // Handle quick registration from modal
+  const handleQuickRegister = async (email: string, password: string) => {
+    if (!pendingQuoteData?.customerData) {
+      throw new Error('Dados do cliente nao encontrados')
+    }
+
+    setIsRegisterLoading(true)
+
+    try {
+      const customerData = pendingQuoteData.customerData
+
+      // Call quick-register API
+      const response = await fetch('/api/auth/quick-register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: customerData.name || 'Cliente',
+          email,
+          password,
+          phone: customerData.phone,
+          cpfCnpj: customerData.cpfCnpj,
+          street: customerData.street,
+          number: customerData.number,
+          complement: customerData.complement,
+          neighborhood: customerData.neighborhood,
+          city: customerData.city,
+          state: customerData.state,
+          zipCode: customerData.zipCode,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Erro ao criar conta')
+      }
+
+      // Auto sign-in after registration
+      const signInResult = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (signInResult?.error) {
+        console.warn('Auto sign-in failed:', signInResult.error)
+        // Continue anyway - user can login later
+      }
+
+      toast({
+        title: 'Conta criada com sucesso!',
+        description: 'Verifique seu email para confirmar o cadastro.',
+        variant: 'success',
+      })
+
+      // Close register modal and show transition modal
+      setShowRegisterModal(false)
+      setShowTransitionModal(true)
+    } finally {
+      setIsRegisterLoading(false)
+    }
+  }
+
+  // Continue as guest (no registration)
+  const handleContinueAsGuest = () => {
+    setShowRegisterModal(false)
+    setShowTransitionModal(true)
+  }
+
+  // Cancel registration modal
+  const handleCancelRegister = () => {
+    setShowRegisterModal(false)
+    // Don't clear pendingQuoteData - user might want to try again
   }
 
   // AI-CHAT Sprint P2.3: Confirm transition and proceed to wizard
@@ -615,13 +804,13 @@ export function ChatAssistido({
           const autoQuoteData = await autoQuoteResponse.json()
           quoteCreated = true
           quoteNumber = autoQuoteData.quote?.number || ''
-          console.log('Quote auto-created:', autoQuoteData.quote)
+          logger.info('[CHAT] Quote auto-created', { quoteNumber: autoQuoteData.quote?.number })
         } else {
           const errorData = await autoQuoteResponse.json().catch(() => ({}))
-          console.warn('Failed to auto-create quote:', errorData)
+          logger.warn('[CHAT] Failed to auto-create quote', { error: errorData })
         }
       } catch (autoQuoteError) {
-        console.warn('Auto-quote creation error:', autoQuoteError)
+        logger.warn('[CHAT] Auto-quote creation error', { error: autoQuoteError })
       }
 
       // Step 2: Import data into quote store
@@ -770,6 +959,27 @@ export function ChatAssistido({
           variant: 'success',
         })
       }
+
+      // NOVO: Se o assistente menciona "Finalizar" ou "Checkout", maximizar o painel de progresso
+      const finalizePhrases = [
+        'finalizar',
+        'checkout',
+        'clica no botao',
+        'botao abaixo',
+        'ali embaixo',
+        'ir para checkout',
+        'finalizar orcamento',
+        'tudo certo',
+      ]
+      const assistantContent = data.message.toLowerCase()
+      const mentionsFinalize = finalizePhrases.some((phrase) => assistantContent.includes(phrase))
+      if (mentionsFinalize) {
+        setIsProgressMinimized(false) // Maximiza o painel para mostrar o botao
+      }
+
+      // MELHORADO: Atualiza progresso rapidamente apos cada mensagem
+      // (nao espera 2 segundos do useEffect)
+      setTimeout(() => checkExportStatus(), 500)
     } catch (error) {
       // Adicionar mensagem de erro com detalhes
       const errorMessage =
@@ -791,7 +1001,8 @@ export function ChatAssistido({
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  // Use onKeyDown instead of deprecated onKeyPress for better mobile support
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       sendMessage()
@@ -838,9 +1049,10 @@ export function ChatAssistido({
           'fixed z-50 flex flex-col shadow-2xl transition-all duration-300',
           positionClasses[position],
           // Responsivo: fullscreen no mobile, fixed size no desktop
+          // Usa env(safe-area-inset-bottom) para dispositivos com notch
           isMinimized
             ? 'bottom-4 h-14 w-72'
-            : 'bottom-0 left-0 right-0 h-[100dvh] w-full sm:bottom-4 sm:left-auto sm:right-4 sm:h-[600px] sm:max-h-[85vh] sm:w-[400px] sm:rounded-lg',
+            : 'bottom-0 left-0 right-0 h-[100dvh] w-full pb-[env(safe-area-inset-bottom)] sm:bottom-4 sm:left-auto sm:right-4 sm:h-[600px] sm:max-h-[85vh] sm:w-[400px] sm:rounded-lg sm:pb-0',
           // Remover border radius no mobile fullscreen
           !isMinimized && 'rounded-none sm:rounded-lg',
           className
@@ -899,7 +1111,57 @@ export function ChatAssistido({
             {/* Mensagens */}
             <div className="bg-theme-primary flex-1 space-y-4 overflow-y-auto p-4">
               <AnimatePresence mode="popLayout">
-                {messages.map((msg, index) => (
+                {messages.map((msg, index) => {
+                  // Renderizacao especial para mensagens de sugestao de produtos
+                  if (msg.role === 'PRODUCT_SUGGESTIONS' && msg.productData) {
+                    const { products, category, categories, isCollapsed } = msg.productData
+
+                    // Handler para toggle do collapse
+                    const handleToggleCollapse = () => {
+                      setMessages((prev) =>
+                        prev.map((m) =>
+                          m.id === msg.id
+                            ? {
+                                ...m,
+                                productData: {
+                                  ...m.productData!,
+                                  isCollapsed: !m.productData!.isCollapsed,
+                                },
+                              }
+                            : m
+                        )
+                      )
+                    }
+
+                    // Usa componente multi-categoria se tiver mais de uma
+                    if (categories.length > 1) {
+                      return (
+                        <CollapsibleMultiCategoryProductSuggestions
+                          key={msg.id}
+                          products={products}
+                          onSelectProduct={handleSelectProduct}
+                          selectedProductIds={selectedProductIds}
+                          isCollapsed={isCollapsed}
+                          onToggleCollapse={handleToggleCollapse}
+                        />
+                      )
+                    }
+
+                    return (
+                      <CollapsibleProductSuggestions
+                        key={msg.id}
+                        products={products}
+                        onSelectProduct={handleSelectProduct}
+                        selectedProductIds={selectedProductIds}
+                        category={category}
+                        isCollapsed={isCollapsed}
+                        onToggleCollapse={handleToggleCollapse}
+                      />
+                    )
+                  }
+
+                  // Renderizacao normal para USER e ASSISTANT
+                  return (
                   <motion.div
                     key={msg.id}
                     initial={{ opacity: 0, y: 10 }}
@@ -1023,7 +1285,8 @@ export function ChatAssistido({
                       </div>
                     )}
                   </motion.div>
-                ))}
+                  )
+                })}
               </AnimatePresence>
 
               {isLoading && (
@@ -1057,21 +1320,15 @@ export function ChatAssistido({
                 </motion.div>
               )}
 
-              {/* AI-CHAT Sprint P2.4: Product Suggestions */}
-              {productSuggestions.length > 0 && suggestedCategory && (
-                <ProductSuggestions
-                  products={productSuggestions}
-                  onSelectProduct={handleSelectProduct}
-                  selectedProductIds={selectedProductIds}
-                  category={suggestedCategory}
-                />
-              )}
+              {/* Cards de produtos agora sao renderizados inline como mensagens */}
+              {/* Isso faz com que subam junto com a conversa */}
 
               <div ref={messagesEndRef} />
             </div>
 
             {/* AI-CHAT Sprint P2.2: Progress Indicator */}
-            {quoteProgress > 0 && quoteProgress < 100 && (
+            {/* Mostra quando progresso > 0 - nao esconder em 100% para manter botao visivel */}
+            {quoteProgress > 0 && (
               <div className="border-theme-default bg-theme-elevated border-t p-3">
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
@@ -1081,9 +1338,13 @@ export function ChatAssistido({
                 >
                   {/* Progress Bar - Header with Minimize Button */}
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-theme-muted font-medium">Progresso do orçamento</span>
+                    <span className="text-theme-muted font-medium">
+                      {quoteProgress >= 100 ? 'Orcamento completo!' : 'Progresso do orcamento'}
+                    </span>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-accent-500">{quoteProgress}%</span>
+                      <span className={`font-bold ${quoteProgress >= 100 ? 'text-green-500' : 'text-accent-500'}`}>
+                        {quoteProgress >= 100 ? 'Pronto!' : `${quoteProgress}%`}
+                      </span>
                       <button
                         onClick={() => setIsProgressMinimized(!isProgressMinimized)}
                         className="hover:bg-accent-500/10 rounded p-1 text-accent-500 transition-colors"
@@ -1106,84 +1367,95 @@ export function ChatAssistido({
                     <>
                       <div className="bg-theme-default h-2 overflow-hidden rounded-full">
                         <motion.div
-                          className="h-full bg-accent-500"
+                          className={`h-full ${quoteProgress >= 100 ? 'bg-green-500' : 'bg-accent-500'}`}
                           initial={{ width: 0 }}
                           animate={{ width: `${quoteProgress}%` }}
                           transition={{ duration: 0.5, ease: 'easeOut' }}
                         />
                       </div>
 
-                      {/* Completion Checklist */}
-                      <div className="mt-3 space-y-1.5">
-                        <div className="flex items-center gap-2 text-xs">
-                          {quoteContext?.items?.length > 0 &&
-                          quoteContext.items.some((i: any) => i.category) ? (
-                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
-                          ) : (
-                            <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
-                          )}
-                          <span
-                            className={
-                              quoteContext?.items?.length > 0 &&
-                              quoteContext.items.some((i: any) => i.category)
-                                ? 'text-theme-primary'
-                                : 'text-theme-muted'
-                            }
-                          >
-                            <Package className="mr-1 inline h-3 w-3" />
-                            Produto selecionado
-                          </span>
-                        </div>
+                      {/* Dynamic Completion Checklist based on category */}
+                      {(() => {
+                        const progressDetails = getProgressDetails(quoteContext)
+                        const allFields = [
+                          ...progressDetails.productFields.filter(f => f.required || f.completed),
+                          ...progressDetails.contactFields.filter(f => f.required || f.completed),
+                        ]
 
-                        <div className="flex items-center gap-2 text-xs">
-                          {quoteContext?.items?.length > 0 &&
-                          quoteContext.items.some(
-                            (i: any) => (i.width && i.width > 0) || (i.height && i.height > 0)
-                          ) ? (
-                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
-                          ) : (
-                            <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
-                          )}
-                          <span
-                            className={
-                              quoteContext?.items?.length > 0 &&
-                              quoteContext.items.some(
-                                (i: any) => (i.width && i.width > 0) || (i.height && i.height > 0)
-                              )
-                                ? 'text-theme-primary'
-                                : 'text-theme-muted'
-                            }
-                          >
-                            <Ruler className="mr-1 inline h-3 w-3" />
-                            Medidas informadas
-                          </span>
-                        </div>
+                        // Se nao tem campos, mostra o basico
+                        if (allFields.length === 0) {
+                          return (
+                            <div className="mt-3 space-y-1.5">
+                              <div className="flex items-center gap-2 text-xs">
+                                <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
+                                <span className="text-theme-muted">
+                                  <Package className="mr-1 inline h-3 w-3" />
+                                  Aguardando selecao de produto
+                                </span>
+                              </div>
+                            </div>
+                          )
+                        }
 
-                        <div className="flex items-center gap-2 text-xs">
-                          {quoteContext?.customerData &&
-                          (quoteContext.customerData.name || quoteContext.customerData.phone) ? (
-                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
-                          ) : (
-                            <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
-                          )}
-                          <span
-                            className={
-                              quoteContext?.customerData &&
-                              (quoteContext.customerData.name || quoteContext.customerData.phone)
-                                ? 'text-theme-primary'
-                                : 'text-theme-muted'
-                            }
-                          >
-                            <UserCircle className="mr-1 inline h-3 w-3" />
-                            Dados de contato
-                          </span>
-                        </div>
-                      </div>
+                        return (
+                          <div className="mt-3 space-y-1.5">
+                            {/* Campos do produto */}
+                            {progressDetails.productFields
+                              .filter(f => f.required || f.completed)
+                              .map((field) => (
+                                <div key={field.key} className="flex items-center gap-2 text-xs">
+                                  {field.completed ? (
+                                    <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
+                                  ) : (
+                                    <Circle className={cn(
+                                      "h-3.5 w-3.5 flex-shrink-0",
+                                      field.required ? "text-amber-400" : "text-theme-muted"
+                                    )} />
+                                  )}
+                                  <span className={field.completed ? 'text-theme-primary' : 'text-theme-muted'}>
+                                    {field.label}
+                                    {field.required && !field.completed && (
+                                      <span className="ml-1 text-amber-400">*</span>
+                                    )}
+                                  </span>
+                                </div>
+                              ))}
+
+                            {/* Separador se tem campos de contato */}
+                            {progressDetails.contactFields.some(f => f.required || f.completed) && (
+                              <div className="border-theme-default my-2 border-t" />
+                            )}
+
+                            {/* Campos de contato */}
+                            {progressDetails.contactFields
+                              .filter(f => f.required || f.completed)
+                              .map((field) => (
+                                <div key={field.key} className="flex items-center gap-2 text-xs">
+                                  {field.completed ? (
+                                    <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
+                                  ) : (
+                                    <Circle className={cn(
+                                      "h-3.5 w-3.5 flex-shrink-0",
+                                      field.required ? "text-amber-400" : "text-theme-muted"
+                                    )} />
+                                  )}
+                                  <span className={field.completed ? 'text-theme-primary' : 'text-theme-muted'}>
+                                    <UserCircle className="mr-1 inline h-3 w-3" />
+                                    {field.label}
+                                    {field.required && !field.completed && (
+                                      <span className="ml-1 text-amber-400">*</span>
+                                    )}
+                                  </span>
+                                </div>
+                              ))}
+                          </div>
+                        )
+                      })()}
 
                       {/* Action Buttons */}
                       <div className="mt-4 flex flex-col gap-2">
-                        {/* Go to Checkout - only show if product and measurements are complete */}
-                        {quoteProgress >= 40 && quoteProgress < 100 && (
+                        {/* Go to Checkout - show when progress >= 40% */}
+                        {quoteProgress >= 40 && (
                           <Button
                             onClick={async () => {
                               setIsLoading(true)
@@ -1271,7 +1543,22 @@ export function ChatAssistido({
                         <Button
                           onClick={async () => {
                             if (confirm('Tem certeza que deseja cancelar este orçamento?')) {
-                              // Add cancellation message FIRST
+                              // IMEDIATAMENTE limpar todos os estados para evitar exibicao incorreta
+                              setQuoteContext(null)
+                              setQuoteProgress(0)
+                              setCanExportQuote(false)
+                              setProductSuggestions([])
+                              setSuggestedCategory(null)
+                              setSuggestedCategories([])
+                              setSelectedProductIds([])
+                              setIsProgressMinimized(true)
+
+                              // Remover mensagens de sugestao de produtos do historico
+                              setMessages((prev) =>
+                                prev.filter((m) => m.role !== 'PRODUCT_SUGGESTIONS')
+                              )
+
+                              // Add cancellation message
                               const cancelMessage: Message = {
                                 id: `user-${Date.now()}`,
                                 role: 'USER',
@@ -1281,9 +1568,6 @@ export function ChatAssistido({
 
                               setMessages((prev) => [...prev, cancelMessage])
                               setIsLoading(true)
-
-                              // Minimize progress to show it's being cancelled
-                              setIsProgressMinimized(true)
 
                               setTimeout(() => scrollToBottom(), 100)
 
@@ -1320,16 +1604,6 @@ export function ChatAssistido({
                                 if (isVoiceEnabled && data.message) {
                                   speak(data.message)
                                 }
-
-                                // Clear quote context AFTER getting response (so user sees the flow)
-                                setTimeout(() => {
-                                  setQuoteContext(null)
-                                  setQuoteProgress(0)
-                                  setCanExportQuote(false)
-                                  setProductSuggestions([])
-                                  setSuggestedCategory(null)
-                                  setSelectedProductIds([])
-                                }, 2000) // Wait 2 seconds to clear
                               } catch (error) {
                                 console.error('[CHAT] Error restarting conversation:', error)
                                 setMessages((prev) => [
@@ -1342,16 +1616,6 @@ export function ChatAssistido({
                                     createdAt: new Date().toISOString(),
                                   },
                                 ])
-
-                                // Still clear context even on error
-                                setTimeout(() => {
-                                  setQuoteContext(null)
-                                  setQuoteProgress(0)
-                                  setCanExportQuote(false)
-                                  setProductSuggestions([])
-                                  setSuggestedCategory(null)
-                                  setSelectedProductIds([])
-                                }, 2000)
                               } finally {
                                 setIsLoading(false)
                               }
@@ -1411,8 +1675,8 @@ export function ChatAssistido({
               </div>
             )}
 
-            {/* Input */}
-            <div className="border-theme-default bg-theme-secondary rounded-b-lg border-t p-3">
+            {/* Input - sticky at bottom with safe area padding on mobile */}
+            <div className="border-theme-default bg-theme-secondary sticky bottom-0 rounded-b-lg border-t p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-3">
               {/* Input de arquivo oculto */}
               <input
                 ref={fileInputRef}
@@ -1482,23 +1746,28 @@ export function ChatAssistido({
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyDown}
                   placeholder={
                     selectedImage ? 'Descreva o que precisa...' : 'Digite sua mensagem...'
                   }
                   disabled={isLoading}
-                  className="bg-theme-elevated text-theme-primary placeholder:text-theme-subtle flex-1 rounded-lg border border-neutral-600 px-4 py-2.5 text-sm focus:border-accent-500 focus:outline-none disabled:opacity-50"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="sentences"
+                  enterKeyHint="send"
+                  className="bg-theme-elevated text-theme-primary placeholder:text-theme-subtle flex-1 rounded-lg border border-neutral-600 px-4 py-2.5 text-base focus:border-accent-500 focus:outline-none disabled:opacity-50"
                 />
                 <Button
                   size="sm"
                   onClick={sendMessage}
                   disabled={(!input.trim() && !selectedImage) || isLoading}
-                  className="flex-shrink-0 px-4 py-2.5"
+                  className="flex-shrink-0 touch-manipulation px-4 py-3 sm:py-2.5"
+                  aria-label="Enviar mensagem"
                 >
                   {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-5 w-5 animate-spin sm:h-4 sm:w-4" />
                   ) : (
-                    <Send className="h-4 w-4" />
+                    <Send className="h-5 w-5 sm:h-4 sm:w-4" />
                   )}
                 </Button>
               </div>
@@ -1510,6 +1779,16 @@ export function ChatAssistido({
           </>
         )}
       </Card>
+
+      {/* Register Confirmation Modal - shown before transition if not logged in */}
+      <RegisterConfirmModal
+        isOpen={showRegisterModal}
+        customerData={pendingQuoteData?.customerData || null}
+        onConfirmRegister={handleQuickRegister}
+        onContinueAsGuest={handleContinueAsGuest}
+        onCancel={handleCancelRegister}
+        isLoading={isRegisterLoading}
+      />
 
       {/* AI-CHAT Sprint P2.3: Transition Modal */}
       <QuoteTransitionModal
