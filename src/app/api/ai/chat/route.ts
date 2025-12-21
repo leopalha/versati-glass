@@ -900,10 +900,10 @@ async function extractQuoteDataFromConversation(
       .map((msg) => `${msg.role === 'user' ? 'Cliente' : 'Assistente'}: ${msg.content}`)
       .join('\n')
 
-    // Use withRetry for connection resilience
+    // Use OpenAI for extraction (more reliable than Groq for structured data)
     const extractionCompletion = await withRetry(() =>
-      groq.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
+      openai.chat.completions.create({
+        model: 'gpt-4o-mini',
         max_tokens: 2048,
         temperature: 0.1, // Low temperature for precise extraction
         messages: [
