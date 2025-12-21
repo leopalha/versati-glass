@@ -28,6 +28,8 @@ import {
   Circle,
   Trash2,
   XCircle,
+  Calendar,
+  ExternalLink,
 } from 'lucide-react'
 
 // LocalStorage key for chat persistence
@@ -108,6 +110,11 @@ interface Message {
     confidence: 'low' | 'medium' | 'high'
     needsCalibration: boolean
     calibrationHelp?: string
+  }
+  calendarLinks?: {
+    google: string
+    outlook: string
+    office365: string
   }
 }
 
@@ -723,7 +730,9 @@ export function ChatAssistido({
         if (response.status === 429) {
           throw new Error(data.message || 'Limite de mensagens excedido. Aguarde um momento.')
         } else if (response.status === 503) {
-          throw new Error('Servico de IA temporariamente indisponivel. Tente novamente em instantes.')
+          throw new Error(
+            'Servico de IA temporariamente indisponivel. Tente novamente em instantes.'
+          )
         } else if (response.status === 500) {
           throw new Error(data.error || 'Erro interno do servidor. Por favor, tente novamente.')
         }
@@ -746,14 +755,23 @@ export function ChatAssistido({
         content: data.message,
         createdAt: new Date().toISOString(),
         measurements: data.measurements, // Include measurements if available
+        calendarLinks: data.calendarLinks || undefined, // Include calendar links if scheduling confirmed
       }
 
       setMessages((prev) => [...prev, assistantMessage])
+
+      // Show toast if scheduling was detected
+      if (data.schedulingDetected && data.calendarLinks) {
+        toast({
+          title: 'Visita agendada! 📅',
+          description: 'Use os links abaixo para adicionar ao seu calendario.',
+          variant: 'success',
+        })
+      }
     } catch (error) {
       // Adicionar mensagem de erro com detalhes
-      const errorMessage = error instanceof Error
-        ? error.message
-        : 'Desculpe, ocorreu um erro inesperado.'
+      const errorMessage =
+        error instanceof Error ? error.message : 'Desculpe, ocorreu um erro inesperado.'
 
       console.error('[AI Chat] Error:', error)
 
@@ -955,6 +973,47 @@ export function ChatAssistido({
                             )}
                         </div>
                       )}
+                      {/* Display calendar links if scheduling confirmed */}
+                      {msg.calendarLinks && (
+                        <div className="mt-3 space-y-2 rounded-lg border border-green-500/30 bg-green-500/10 p-3">
+                          <div className="flex items-center gap-2 font-semibold text-green-400">
+                            <Calendar className="h-4 w-4" />
+                            Adicione ao seu calendario:
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            <a
+                              href={msg.calendarLinks.google}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-white/20"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              Google
+                            </a>
+                            <a
+                              href={msg.calendarLinks.outlook}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-white/20"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              Outlook
+                            </a>
+                            <a
+                              href={msg.calendarLinks.office365}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-white/20"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              Office 365
+                            </a>
+                          </div>
+                          <p className="text-xs text-green-300/70">
+                            Clique para adicionar ao seu calendario
+                          </p>
+                        </div>
+                      )}
                     </div>
                     {msg.role === 'USER' && (
                       <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-neutral-600">
@@ -1054,233 +1113,235 @@ export function ChatAssistido({
 
                       {/* Completion Checklist */}
                       <div className="mt-3 space-y-1.5">
-                    <div className="flex items-center gap-2 text-xs">
-                      {quoteContext?.items?.length > 0 &&
-                      quoteContext.items.some((i: any) => i.category) ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
-                      ) : (
-                        <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
-                      )}
-                      <span
-                        className={
-                          quoteContext?.items?.length > 0 &&
-                          quoteContext.items.some((i: any) => i.category)
-                            ? 'text-theme-primary'
-                            : 'text-theme-muted'
-                        }
-                      >
-                        <Package className="mr-1 inline h-3 w-3" />
-                        Produto selecionado
-                      </span>
-                    </div>
+                        <div className="flex items-center gap-2 text-xs">
+                          {quoteContext?.items?.length > 0 &&
+                          quoteContext.items.some((i: any) => i.category) ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
+                          ) : (
+                            <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
+                          )}
+                          <span
+                            className={
+                              quoteContext?.items?.length > 0 &&
+                              quoteContext.items.some((i: any) => i.category)
+                                ? 'text-theme-primary'
+                                : 'text-theme-muted'
+                            }
+                          >
+                            <Package className="mr-1 inline h-3 w-3" />
+                            Produto selecionado
+                          </span>
+                        </div>
 
-                    <div className="flex items-center gap-2 text-xs">
-                      {quoteContext?.items?.length > 0 &&
-                      quoteContext.items.some(
-                        (i: any) => (i.width && i.width > 0) || (i.height && i.height > 0)
-                      ) ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
-                      ) : (
-                        <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
-                      )}
-                      <span
-                        className={
-                          quoteContext?.items?.length > 0 &&
+                        <div className="flex items-center gap-2 text-xs">
+                          {quoteContext?.items?.length > 0 &&
                           quoteContext.items.some(
                             (i: any) => (i.width && i.width > 0) || (i.height && i.height > 0)
-                          )
-                            ? 'text-theme-primary'
-                            : 'text-theme-muted'
-                        }
-                      >
-                        <Ruler className="mr-1 inline h-3 w-3" />
-                        Medidas informadas
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-xs">
-                      {quoteContext?.customerData &&
-                      (quoteContext.customerData.name || quoteContext.customerData.phone) ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
-                      ) : (
-                        <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
-                      )}
-                      <span
-                        className={
-                          quoteContext?.customerData &&
-                          (quoteContext.customerData.name || quoteContext.customerData.phone)
-                            ? 'text-theme-primary'
-                            : 'text-theme-muted'
-                        }
-                      >
-                        <UserCircle className="mr-1 inline h-3 w-3" />
-                        Dados de contato
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="mt-4 flex flex-col gap-2">
-                    {/* Go to Checkout - only show if product and measurements are complete */}
-                    {quoteProgress >= 40 && quoteProgress < 100 && (
-                      <Button
-                        onClick={async () => {
-                          setIsLoading(true)
-
-                          try {
-                            // 1. Add system message (no AI response needed)
-                            const checkoutMessage: Message = {
-                              id: `checkout-${Date.now()}`,
-                              role: 'ASSISTANT',
-                              content: 'Perfeito! Vou redirecionar você para o checkout agora. 🛒',
-                              createdAt: new Date().toISOString(),
+                          ) ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
+                          ) : (
+                            <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
+                          )}
+                          <span
+                            className={
+                              quoteContext?.items?.length > 0 &&
+                              quoteContext.items.some(
+                                (i: any) => (i.width && i.width > 0) || (i.height && i.height > 0)
+                              )
+                                ? 'text-theme-primary'
+                                : 'text-theme-muted'
                             }
-                            setMessages((prev) => [...prev, checkoutMessage])
-                            setTimeout(() => scrollToBottom(), 100)
+                          >
+                            <Ruler className="mr-1 inline h-3 w-3" />
+                            Medidas informadas
+                          </span>
+                        </div>
 
-                            // 2. Minimize quote progress
-                            setIsProgressMinimized(true)
-
-                            // 3. Export quote data from conversation
-                            const exportResponse = await fetch('/api/ai/chat/export-quote', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ conversationId }),
-                            })
-
-                            if (!exportResponse.ok) {
-                              throw new Error('Erro ao exportar orçamento')
+                        <div className="flex items-center gap-2 text-xs">
+                          {quoteContext?.customerData &&
+                          (quoteContext.customerData.name || quoteContext.customerData.phone) ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
+                          ) : (
+                            <Circle className="text-theme-muted h-3.5 w-3.5 flex-shrink-0" />
+                          )}
+                          <span
+                            className={
+                              quoteContext?.customerData &&
+                              (quoteContext.customerData.name || quoteContext.customerData.phone)
+                                ? 'text-theme-primary'
+                                : 'text-theme-muted'
                             }
+                          >
+                            <UserCircle className="mr-1 inline h-3 w-3" />
+                            Dados de contato
+                          </span>
+                        </div>
+                      </div>
 
-                            const { data: quoteData } = await exportResponse.json()
+                      {/* Action Buttons */}
+                      <div className="mt-4 flex flex-col gap-2">
+                        {/* Go to Checkout - only show if product and measurements are complete */}
+                        {quoteProgress >= 40 && quoteProgress < 100 && (
+                          <Button
+                            onClick={async () => {
+                              setIsLoading(true)
 
-                            // 4. Import to wizard store (sets step to 4)
-                            importFromAI(quoteData)
+                              try {
+                                // 1. Add system message (no AI response needed)
+                                const checkoutMessage: Message = {
+                                  id: `checkout-${Date.now()}`,
+                                  role: 'ASSISTANT',
+                                  content:
+                                    'Perfeito! Vou redirecionar você para o checkout agora. 🛒',
+                                  createdAt: new Date().toISOString(),
+                                }
+                                setMessages((prev) => [...prev, checkoutMessage])
+                                setTimeout(() => scrollToBottom(), 100)
 
-                            // 5. Minimize chat
-                            setIsMinimized(true)
+                                // 2. Minimize quote progress
+                                setIsProgressMinimized(true)
 
-                            // 6. Navigate to wizard (will open at Step 4)
-                            router.push('/orcamento')
-                          } catch (error) {
-                            console.error('[CHAT] Checkout redirect failed:', error)
-                            toast({
-                              variant: 'error',
-                              title: 'Erro',
-                              description: 'Erro ao redirecionar para checkout. Tente novamente.',
-                            })
-                          } finally {
-                            setIsLoading(false)
-                          }
-                        }}
-                        variant="outline"
-                        size="sm"
-                        className="hover:bg-accent-500/10 w-full border-accent-500 text-accent-500"
-                        disabled={isLoading}
-                      >
-                        <ArrowRight className="mr-2 h-4 w-4" />
-                        Finalizar e Ir para Checkout
-                      </Button>
-                    )}
+                                // 3. Export quote data from conversation
+                                const exportResponse = await fetch('/api/ai/chat/export-quote', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({ conversationId }),
+                                })
 
-                    {/* Cancel/Reset Quote */}
-                    <Button
-                      onClick={async () => {
-                        if (confirm('Tem certeza que deseja cancelar este orçamento?')) {
-                          // Add cancellation message FIRST
-                          const cancelMessage: Message = {
-                            id: `user-${Date.now()}`,
-                            role: 'USER',
-                            content: 'Quero cancelar este orçamento e começar de novo',
-                            createdAt: new Date().toISOString(),
-                          }
+                                if (!exportResponse.ok) {
+                                  throw new Error('Erro ao exportar orçamento')
+                                }
 
-                          setMessages((prev) => [...prev, cancelMessage])
-                          setIsLoading(true)
+                                const { data: quoteData } = await exportResponse.json()
 
-                          // Minimize progress to show it's being cancelled
-                          setIsProgressMinimized(true)
+                                // 4. Import to wizard store (sets step to 4)
+                                importFromAI(quoteData)
 
-                          setTimeout(() => scrollToBottom(), 100)
+                                // 5. Minimize chat
+                                setIsMinimized(true)
 
-                          try {
-                            // Send message to AI to restart conversation
-                            const response = await fetch('/api/ai/chat', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({
-                                message: 'Quero cancelar este orçamento e começar de novo',
-                                conversationId,
-                                sessionId,
-                                imageBase64: null,
-                                imageUrl: null,
-                              }),
-                            })
+                                // 6. Navigate to wizard (will open at Step 4)
+                                router.push('/orcamento')
+                              } catch (error) {
+                                console.error('[CHAT] Checkout redirect failed:', error)
+                                toast({
+                                  variant: 'error',
+                                  title: 'Erro',
+                                  description:
+                                    'Erro ao redirecionar para checkout. Tente novamente.',
+                                })
+                              } finally {
+                                setIsLoading(false)
+                              }
+                            }}
+                            variant="outline"
+                            size="sm"
+                            className="hover:bg-accent-500/10 w-full border-accent-500 text-accent-500"
+                            disabled={isLoading}
+                          >
+                            <ArrowRight className="mr-2 h-4 w-4" />
+                            Finalizar e Ir para Checkout
+                          </Button>
+                        )}
 
-                            if (!response.ok) {
-                              throw new Error('Erro ao enviar mensagem')
-                            }
-
-                            const data = await response.json()
-
-                            const assistantMessage: Message = {
-                              id: `assistant-${Date.now()}`,
-                              role: 'ASSISTANT',
-                              content: data.message,
-                              createdAt: new Date().toISOString(),
-                            }
-
-                            setMessages((prev) => [...prev, assistantMessage])
-
-                            // Speak response if voice enabled
-                            if (isVoiceEnabled && data.message) {
-                              speak(data.message)
-                            }
-
-                            // Clear quote context AFTER getting response (so user sees the flow)
-                            setTimeout(() => {
-                              setQuoteContext(null)
-                              setQuoteProgress(0)
-                              setCanExportQuote(false)
-                              setProductSuggestions([])
-                              setSuggestedCategory(null)
-                              setSelectedProductIds([])
-                            }, 2000) // Wait 2 seconds to clear
-                          } catch (error) {
-                            console.error('[CHAT] Error restarting conversation:', error)
-                            setMessages((prev) => [
-                              ...prev,
-                              {
-                                id: `error-${Date.now()}`,
-                                role: 'ASSISTANT',
-                                content:
-                                  'Tudo bem! Vamos começar de novo. Como posso ajudá-lo com seu novo orçamento?',
+                        {/* Cancel/Reset Quote */}
+                        <Button
+                          onClick={async () => {
+                            if (confirm('Tem certeza que deseja cancelar este orçamento?')) {
+                              // Add cancellation message FIRST
+                              const cancelMessage: Message = {
+                                id: `user-${Date.now()}`,
+                                role: 'USER',
+                                content: 'Quero cancelar este orçamento e começar de novo',
                                 createdAt: new Date().toISOString(),
-                              },
-                            ])
+                              }
 
-                            // Still clear context even on error
-                            setTimeout(() => {
-                              setQuoteContext(null)
-                              setQuoteProgress(0)
-                              setCanExportQuote(false)
-                              setProductSuggestions([])
-                              setSuggestedCategory(null)
-                              setSelectedProductIds([])
-                            }, 2000)
-                          } finally {
-                            setIsLoading(false)
-                          }
-                        }
-                      }}
-                      variant="outline"
-                      size="sm"
-                      className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10"
-                    >
-                      <XCircle className="mr-2 h-4 w-4" />
-                      Cancelar Orçamento
-                    </Button>
-                  </div>
+                              setMessages((prev) => [...prev, cancelMessage])
+                              setIsLoading(true)
+
+                              // Minimize progress to show it's being cancelled
+                              setIsProgressMinimized(true)
+
+                              setTimeout(() => scrollToBottom(), 100)
+
+                              try {
+                                // Send message to AI to restart conversation
+                                const response = await fetch('/api/ai/chat', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({
+                                    message: 'Quero cancelar este orçamento e começar de novo',
+                                    conversationId,
+                                    sessionId,
+                                    imageBase64: null,
+                                    imageUrl: null,
+                                  }),
+                                })
+
+                                if (!response.ok) {
+                                  throw new Error('Erro ao enviar mensagem')
+                                }
+
+                                const data = await response.json()
+
+                                const assistantMessage: Message = {
+                                  id: `assistant-${Date.now()}`,
+                                  role: 'ASSISTANT',
+                                  content: data.message,
+                                  createdAt: new Date().toISOString(),
+                                }
+
+                                setMessages((prev) => [...prev, assistantMessage])
+
+                                // Speak response if voice enabled
+                                if (isVoiceEnabled && data.message) {
+                                  speak(data.message)
+                                }
+
+                                // Clear quote context AFTER getting response (so user sees the flow)
+                                setTimeout(() => {
+                                  setQuoteContext(null)
+                                  setQuoteProgress(0)
+                                  setCanExportQuote(false)
+                                  setProductSuggestions([])
+                                  setSuggestedCategory(null)
+                                  setSelectedProductIds([])
+                                }, 2000) // Wait 2 seconds to clear
+                              } catch (error) {
+                                console.error('[CHAT] Error restarting conversation:', error)
+                                setMessages((prev) => [
+                                  ...prev,
+                                  {
+                                    id: `error-${Date.now()}`,
+                                    role: 'ASSISTANT',
+                                    content:
+                                      'Tudo bem! Vamos começar de novo. Como posso ajudá-lo com seu novo orçamento?',
+                                    createdAt: new Date().toISOString(),
+                                  },
+                                ])
+
+                                // Still clear context even on error
+                                setTimeout(() => {
+                                  setQuoteContext(null)
+                                  setQuoteProgress(0)
+                                  setCanExportQuote(false)
+                                  setProductSuggestions([])
+                                  setSuggestedCategory(null)
+                                  setSelectedProductIds([])
+                                }, 2000)
+                              } finally {
+                                setIsLoading(false)
+                              }
+                            }
+                          }}
+                          variant="outline"
+                          size="sm"
+                          className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10"
+                        >
+                          <XCircle className="mr-2 h-4 w-4" />
+                          Cancelar Orçamento
+                        </Button>
+                      </div>
 
                       {/* Hint message */}
                       {quoteProgress < 70 && (

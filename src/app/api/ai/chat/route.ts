@@ -11,6 +11,11 @@ import {
   linkWebChatToWhatsApp,
 } from '@/services/unified-context'
 import { autoSyncAfterWebMessage } from '@/services/context-sync'
+import {
+  generateAllCalendarLinks,
+  createVersatiAppointmentEvent,
+  formatCalendarLinksMessage,
+} from '@/lib/calendar-links'
 
 // Configuracoes
 const MAX_MESSAGES_IN_CONTEXT = 20 // Limite de mensagens para enviar ao LLM
@@ -64,6 +69,190 @@ async function withRetry<T>(
   }
 
   throw lastError
+}
+
+/**
+ * Detecta intencao de agendamento na mensagem
+ */
+function detectSchedulingIntent(message: string): boolean {
+  const lowerMessage = message.toLowerCase()
+  const schedulingKeywords = [
+    'agendar',
+    'agendamento',
+    'marcar',
+    'visita',
+    'visita tecnica',
+    'visita técnica',
+    'medicao',
+    'medir',
+    'instalacao',
+    'instalar',
+    'quando pode',
+    'quando voces podem',
+    'horario',
+    'horário',
+    'data',
+    'dia disponivel',
+    'qual dia',
+    'pode vir',
+    'mandar alguem',
+    'enviar tecnico',
+  ]
+  return schedulingKeywords.some((keyword) => lowerMessage.includes(keyword))
+}
+
+/**
+ * Detecta se cliente esta confirmando um agendamento
+ * Ex: "pode ser dia 23 as 10h", "segunda feira 14h", "amanha de manha"
+ */
+function detectSchedulingConfirmation(message: string): {
+  hasConfirmation: boolean
+  dayOfWeek?: string
+  time?: string
+  dateHint?: string
+} {
+  const lowerMessage = message.toLowerCase()
+
+  // Detectar dias da semana
+  const daysOfWeek = ['segunda', 'terca', 'quarta', 'quinta', 'sexta']
+  const dayMatch = daysOfWeek.find((day) => lowerMessage.includes(day))
+
+  // Detectar horarios (8h, 10:00, 14 horas, etc)
+  const timeRegex = /(\d{1,2})\s*(?:h|:00|horas?|hrs?)?/i
+  const timeMatch = lowerMessage.match(timeRegex)
+
+  // Detectar referencias de data
+  const dateHints = ['amanha', 'hoje', 'proxima semana', 'semana que vem']
+  const dateHint = dateHints.find((hint) => lowerMessage.includes(hint))
+
+  // Detectar dia numerico (dia 23, 15/01, etc)
+  const dayNumberRegex = /dia\s*(\d{1,2})/i
+  const dayNumberMatch = lowerMessage.match(dayNumberRegex)
+
+  const hasConfirmation = !!(
+    dayMatch ||
+    timeMatch ||
+    dateHint ||
+    dayNumberMatch ||
+    lowerMessage.includes('pode ser') ||
+    lowerMessage.includes('ok') ||
+    lowerMessage.includes('confirmo') ||
+    lowerMessage.includes('beleza')
+  )
+
+  return {
+    hasConfirmation,
+    dayOfWeek: dayMatch,
+    time: timeMatch ? `${timeMatch[1]}:00` : undefined,
+    dateHint: dateHint || (dayNumberMatch ? `dia ${dayNumberMatch[1]}` : undefined),
+  }
+}
+
+/**
+ * Converte descricao de dia para Date object
+ * Ex: "quarta-feira", "dia 23", "amanha", "segunda"
+ */
+function parseSchedulingDate(dayDescription: string): Date | null {
+  const today = new Date()
+  const lowerDay = dayDescription.toLowerCase()
+
+  // Mapeamento de dias da semana
+  const daysMap: Record<string, number> = {
+    domingo: 0,
+    segunda: 1,
+    terca: 2,
+    quarta: 3,
+    quinta: 4,
+    sexta: 5,
+    sabado: 6,
+  }
+
+  // Verificar "amanha" ou "hoje"
+  if (lowerDay.includes('amanha')) {
+    const tomorrow = new Date(today)
+    tomorrow.setDate(today.getDate() + 1)
+    return tomorrow
+  }
+
+  if (lowerDay.includes('hoje')) {
+    return today
+  }
+
+  // Verificar dia da semana
+  for (const [dayName, dayNum] of Object.entries(daysMap)) {
+    if (lowerDay.includes(dayName)) {
+      const result = new Date(today)
+      const currentDay = today.getDay()
+      let daysToAdd = dayNum - currentDay
+
+      // Se o dia ja passou essa semana, vai pra proxima
+      if (daysToAdd <= 0) {
+        daysToAdd += 7
+      }
+
+      result.setDate(today.getDate() + daysToAdd)
+      return result
+    }
+  }
+
+  // Verificar "dia X" (numero do dia)
+  const dayNumberMatch = lowerDay.match(/dia\s*(\d{1,2})/)
+  if (dayNumberMatch) {
+    const dayNumber = parseInt(dayNumberMatch[1])
+    const result = new Date(today)
+
+    // Se o dia ja passou esse mes, vai pro proximo mes
+    if (dayNumber <= today.getDate()) {
+      result.setMonth(result.getMonth() + 1)
+    }
+
+    result.setDate(dayNumber)
+    return result
+  }
+
+  // Tentar parse direto de data (DD/MM ou DD-MM)
+  const dateMatch = lowerDay.match(/(\d{1,2})[/-](\d{1,2})/)
+  if (dateMatch) {
+    const day = parseInt(dateMatch[1])
+    const month = parseInt(dateMatch[2]) - 1 // Meses em JS sao 0-indexed
+    const result = new Date(today.getFullYear(), month, day)
+
+    // Se a data ja passou, vai pro proximo ano
+    if (result < today) {
+      result.setFullYear(result.getFullYear() + 1)
+    }
+
+    return result
+  }
+
+  return null
+}
+
+/**
+ * Gera lista de horarios disponiveis para os proximos dias
+ */
+function generateAvailableSlots(): string {
+  const slots: string[] = []
+  const workingHours = ['08:00', '10:00', '14:00', '16:00']
+  const dayNames = ['Domingo', 'Segunda', 'Terca', 'Quarta', 'Quinta', 'Sexta', 'Sabado']
+
+  const today = new Date()
+
+  for (let i = 1; i <= 5; i++) {
+    const date = new Date(today)
+    date.setDate(date.getDate() + i)
+
+    const dayOfWeek = date.getDay()
+    // Pular sabado e domingo
+    if (dayOfWeek === 0 || dayOfWeek === 6) continue
+
+    const dayName = dayNames[dayOfWeek]
+    const dateStr = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+
+    slots.push(`• ${dayName} (${dateStr}): ${workingHours.join(', ')}`)
+  }
+
+  return slots.join('\n')
 }
 
 /**
@@ -312,21 +501,72 @@ Cliente: "E um espelho de 2m?"
 Voce: "Um espelho de 2 metros quadrados sai por volta de R$ 400 a R$ 800, dependendo do acabamento. Quer com bisote ou LED? Isso muda o valor."
 
 🎯 REGRAS DE OURO:
-1. NAO APRESSE O CLIENTE - essa e a regra mais importante!
-2. Uma pergunta por vez, sempre!
-3. SEMPRE pergunte "Mais alguma coisa?" antes de sugerir finalizar
-4. Confirme o que entendeu antes de prosseguir
-5. Seja breve - maximo 2-3 linhas por mensagem
-6. Use linguagem natural e amigavel
-7. Evite listas e textos longos
-8. Celebre cada informacao recebida ("Perfeito!", "Otimo!", "Entendi!")
-9. Mostre interesse genuino pelo projeto do cliente
+1. Uma pergunta por vez, sempre!
+2. Pergunte "Mais alguma coisa?" UMA VEZ apos coletar as infos principais
+3. Seja breve - maximo 2-3 linhas por mensagem
+4. Use linguagem natural e amigavel
+5. Celebre cada informacao recebida ("Perfeito!", "Otimo!", "Entendi!")
+
+🚨 DETECCAO DE FINALIZACAO - MUITO IMPORTANTE:
+Quando o cliente disser QUALQUER uma dessas frases, OFEREÇA CHECKOUT IMEDIATAMENTE:
+- "so isso", "e isso", "apenas isso", "nao preciso de mais nada"
+- "nao", "nao quero", "nao preciso", "ta bom assim"
+- "pode finalizar", "quero finalizar", "vamos fechar"
+- "ja decidi", "e so isso mesmo", "pronto"
+- "sim" (em resposta a "so isso?")
+- "confirma", "pode confirmar", "isso mesmo"
+
+⚡ RESPOSTA QUANDO CLIENTE QUER FINALIZAR:
+NAO confirme de novo! NAO pergunte mais nada! Responda DIRETO:
+"Perfeito! Clica em 'Finalizar Orcamento' ali embaixo pra gente continuar! 👇"
+
+Ou se ele pedir visita tecnica/agendamento:
+Use os horarios disponiveis abaixo e ofereca opcoes! Nao mande pro WhatsApp - agende aqui mesmo!
+
+❌ NAO FACA ISSO quando cliente quer finalizar:
+- NAO pergunte "so pra confirmar..."
+- NAO repita os itens do orcamento
+- NAO pergunte se quer mais alguma coisa DE NOVO
+- NAO diga "entendi, entao voce precisa de..."
+- APENAS direcione pro checkout ou WhatsApp!
 
 ⚠️ IMPORTANTE:
 - Sistema salva automaticamente os dados estruturados
-- Sua missao: coletar infos de forma natural, SEM PRESSA, e confirmar com o cliente
-- NUNCA mencione "Finalizar Orcamento" antes de ter todas as infos E perguntar se quer mais algo
+- Pergunte "mais alguma coisa?" apenas UMA VEZ
+- Quando cliente responder que nao quer mais nada, VA DIRETO pro checkout
 - Sempre sem acentos no texto (evita problemas de encoding)
+
+📅 AGENDAMENTO DE VISITA TECNICA:
+Quando cliente quiser agendar visita tecnica ou medicao, siga este fluxo:
+
+1. Pergunte qual dia/horario funciona melhor pra ele
+2. Ofereca opcoes dos horarios disponiveis (veja [SCHEDULING_SLOTS_PLACEHOLDER])
+3. Quando ele escolher, confirme dia e horario
+4. Pergunte o endereco completo (rua, numero, bairro, cidade)
+5. Apos ter tudo, diga: "Pronto! Agendado pra [DIA] as [HORA]. Vou mandar os links pra voce adicionar no seu calendario!"
+
+Exemplo de conversa de agendamento:
+
+Cliente: "Quero marcar visita tecnica"
+Voce: "Otimo! A visita tecnica e gratuita 😊 Qual dia funciona melhor pra voce? Temos horarios disponiveis de segunda a sexta, das 8h as 17h!"
+
+Cliente: "Pode ser quarta de manha"
+Voce: "Perfeito! Quarta-feira de manha. Prefere 8h ou 10h?"
+
+Cliente: "10h"
+Voce: "Show! Quarta as 10h entao. Me passa o endereco completo pra visita? Rua, numero, bairro e cidade."
+
+Cliente: "Rua das Flores 123, Copacabana, Rio de Janeiro"
+Voce: "Tudo certo! Agendado: Quarta-feira as 10h na Rua das Flores 123, Copacabana. Anotei aqui! O tecnico vai entrar em contato um dia antes pra confirmar. 📅✅"
+
+REGRAS DE AGENDAMENTO:
+- Horarios: 08:00, 10:00, 14:00, 16:00 (segunda a sexta)
+- Duracao: 2 horas para visita tecnica
+- Visita tecnica e GRATUITA - reforce isso!
+- Sempre confirme endereco completo antes de finalizar
+- Mencione que o tecnico confirma um dia antes
+
+[SCHEDULING_SLOTS_PLACEHOLDER]
 
 Seja sempre simpatica, paciente, atenciosa e conversacional! 😊`
 
@@ -335,33 +575,66 @@ Seja sempre simpatica, paciente, atenciosa e conversacional! 😊`
  */
 async function buildSystemPrompt(): Promise<string> {
   const catalogContext = await getProductCatalogContext()
-  return SYSTEM_PROMPT_BASE.replace('[PRODUCT_CATALOG_PLACEHOLDER]', catalogContext)
+  const schedulingSlots = generateAvailableSlots()
+
+  return SYSTEM_PROMPT_BASE.replace('[PRODUCT_CATALOG_PLACEHOLDER]', catalogContext).replace(
+    '[SCHEDULING_SLOTS_PLACEHOLDER]',
+    `\n📅 HORARIOS DISPONIVEIS ESTA SEMANA:\n${schedulingSlots}\n`
+  )
 }
 
-// UX: System prompt para analise de imagens - tom conversacional
-const VISION_SYSTEM_PROMPT = `Voce e Ana, da Versati Glass, analisando uma foto que o cliente enviou. Seja objetiva e amigavel!
+// UX: System prompt para analise de imagens com estimativa de medidas
+const VISION_SYSTEM_PROMPT = `Voce e Ana, da Versati Glass, especialista em analisar fotos e ESTIMAR MEDIDAS para orcamentos de vidros.
 
-🎯 COMO ANALISAR A IMAGEM:
-- Identifique o ambiente (banheiro, sala, varanda...)
-- Veja se ja tem algum vidro instalado
-- Estime tamanhos de forma aproximada
-- Sugira produtos que ficam legais ali
-- Seja breve - 2 ou 3 linhas no maximo!
+📐 COMO ESTIMAR MEDIDAS (SUA PRINCIPAL FUNCAO):
+1. Use objetos de referencia na imagem para calcular:
+   - Portas padrao: ~2,10m altura x 0,80m largura
+   - Interruptor de luz: ~1,10m do chao
+   - Tomadas: ~0,30m do chao
+   - Azulejos: tipicamente 30x30cm, 45x45cm ou 60x60cm
+   - Pia de banheiro: ~0,85m de altura
+   - Vaso sanitario: ~0,40m de altura
+   - Pessoa em pe: media 1,70m
+   - Janela residencial: ~1,20m x 1,00m tipicamente
+   - Bancada de cozinha: ~0,90m de altura
 
-💬 EXEMPLO DE RESPOSTA:
+2. SEMPRE forneca estimativas em metros:
+   - "Olhando as proporcoes, esse vao parece ter uns 1,20m de largura por 1,90m de altura"
+   - "Pela referencia da porta, estimo 2,50m de largura total"
+   - "Comparando com o azulejo, a area do box deve ter cerca de 1,00m x 1,80m"
 
-"Vi aqui, e um banheiro bem bacana! Pelo que da pra ver, cabe um box de correr de uns 1,20m. Quer cromado ou preto? 😊"
+3. Indique o nivel de confianca:
+   - "Com base na porta, tenho boa confianca que sao uns 1,50m"
+   - "Fica dificil precisar sem referencia, mas chuto entre 0,80m e 1,00m"
 
-Ou:
+🎯 FLUXO DE ANALISE:
+1. Identifique o ambiente (banheiro, sala, varanda...)
+2. Localize objetos de referencia (porta, azulejo, pia, etc.)
+3. ESTIME as medidas do espaco onde vai o vidro
+4. Sugira o produto adequado com as medidas estimadas
+5. Pergunte se as medidas fazem sentido pro cliente
 
-"Que varanda linda! Da pra fazer um guarda-corpo de vidro incolor ali. Fica super moderno. Qual a altura mais ou menos - uns 1 metro?"
+💬 EXEMPLOS DE RESPOSTAS BEM ESTRUTURADAS:
+
+"Vi aqui seu banheiro! Pela porta ao lado, estimo que o vao do box tem uns 1,20m de largura e 1,90m de altura. Um box de correr inox ficaria otimo. Essas medidas fazem sentido? 📐"
+
+"Linda varanda! Usando o piso como referencia (parecem ser 60x60), calculo uns 4 metros de largura. Pra um guarda-corpo de 1 metro de altura, ficaria show! Bate com o que voce tem ai?"
+
+"Pelo vaso sanitario como referencia, o espaco tem aproximadamente 0,90m de largura. Um espelho de 0,60m x 0,80m cairia bem em cima dessa pia. O que acha?"
+
+⚠️ IMPORTANTE:
+- SEMPRE tente estimar medidas - e sua funcao principal!
+- Use multiplas referencias quando possivel
+- Seja honesta sobre incertezas
+- Confirme com o cliente se as medidas parecem corretas
+- Mencione que a visita tecnica gratuita confirma tudo certinho
 
 ✅ LEMBRE-SE:
 - Seja conversacional e objetiva
-- Uma ou duas frases, no maximo
-- Faca uma pergunta pra continuar o dialogo
-- Mencione visita gratuita se cliente perguntar sobre valores
-- Sem listas, sem textos longos!`
+- Maximo 3-4 linhas por mensagem
+- SEMPRE inclua estimativa de medidas quando possivel
+- Pergunte se as medidas fazem sentido
+- Faca uma pergunta pra continuar o dialogo`
 
 // AI-CHAT Sprint P1.7: Extraction prompt for structured data
 const EXTRACTION_PROMPT = `Analise a conversa abaixo e extraia APENAS as informacoes estruturadas para um orcamento de vidracaria.
@@ -385,6 +658,18 @@ Retorne um JSON no seguinte formato (ou null se nao houver informacoes suficient
     "email": "email (se mencionado)",
     "city": "cidade (se mencionada)",
     "neighborhood": "bairro (se mencionado)"
+  },
+  "scheduling": {
+    "wantsVisit": true | false,
+    "preferredDay": "dia da semana ou data (se mencionado)",
+    "preferredTime": "horario preferido (se mencionado)",
+    "address": {
+      "street": "rua (se mencionado)",
+      "number": "numero (se mencionado)",
+      "neighborhood": "bairro (se mencionado)",
+      "city": "cidade (se mencionado)"
+    },
+    "confirmed": true | false
   }
 }
 
@@ -664,9 +949,7 @@ export async function POST(request: Request) {
     if (!conversation) {
       // Criar nova conversa com sessionId unico
       // Se sessionId ja existe (abandonada), gerar novo sessionId
-      const uniqueSessionId = sessionId
-        ? `${sessionId}-${Date.now()}`
-        : `anon-${Date.now()}`
+      const uniqueSessionId = sessionId ? `${sessionId}-${Date.now()}` : `anon-${Date.now()}`
 
       conversation = await prisma.aiConversation.create({
         data: {
@@ -748,8 +1031,8 @@ export async function POST(request: Request) {
       const visionCompletion = await withRetry(() =>
         openai.chat.completions.create({
           model: 'gpt-4o',
-          max_tokens: 300, // UX: Respostas mais curtas e objetivas
-          temperature: 0.8, // UX: Mais natural e variado
+          max_tokens: 500, // Aumentado para incluir estimativas de medidas detalhadas
+          temperature: 0.7, // Mais preciso para estimativas de medidas
           messages: visionMessages,
         })
       )
@@ -787,7 +1070,8 @@ export async function POST(request: Request) {
         )
 
         assistantMessage =
-          completion.choices[0]?.message?.content || 'Desculpe, nao consegui processar sua mensagem.'
+          completion.choices[0]?.message?.content ||
+          'Desculpe, nao consegui processar sua mensagem.'
         tokensUsed = completion.usage?.total_tokens || 0
       } catch (groqError) {
         // Fallback para OpenAI GPT-4o-mini se Groq falhar
@@ -818,7 +1102,8 @@ export async function POST(request: Request) {
         )
 
         assistantMessage =
-          completion.choices[0]?.message?.content || 'Desculpe, nao consegui processar sua mensagem.'
+          completion.choices[0]?.message?.content ||
+          'Desculpe, nao consegui processar sua mensagem.'
         tokensUsed = completion.usage?.total_tokens || 0
       }
     }
@@ -887,10 +1172,64 @@ export async function POST(request: Request) {
       hasImage: !!imageBase64,
     })
 
+    // Verificar se ha agendamento confirmado para gerar links de calendario
+    let calendarLinks = null
+    if (
+      extractedData?.scheduling?.confirmed &&
+      extractedData?.scheduling?.preferredDay &&
+      extractedData?.scheduling?.preferredTime &&
+      extractedData?.scheduling?.address
+    ) {
+      try {
+        // Calcular data do agendamento
+        const scheduledDate = parseSchedulingDate(extractedData.scheduling.preferredDay)
+        const scheduledTime = extractedData.scheduling.preferredTime
+
+        if (scheduledDate) {
+          const address = [
+            extractedData.scheduling.address.street,
+            extractedData.scheduling.address.number,
+            extractedData.scheduling.address.neighborhood,
+            extractedData.scheduling.address.city,
+          ]
+            .filter(Boolean)
+            .join(', ')
+
+          const eventData = createVersatiAppointmentEvent({
+            type: 'TECHNICAL_VISIT',
+            scheduledDate,
+            scheduledTime,
+            address,
+            customerName: extractedData.customerData?.name,
+          })
+
+          calendarLinks = generateAllCalendarLinks(eventData)
+
+          logger.info('[AI CHAT] Calendar links generated for scheduling', {
+            conversationId: conversation.id,
+            scheduledDate: scheduledDate.toISOString(),
+            scheduledTime,
+          })
+        }
+      } catch (calendarError) {
+        logger.warn('[AI CHAT] Failed to generate calendar links', {
+          error: calendarError,
+        })
+      }
+    }
+
     return NextResponse.json({
       message: assistantMessage,
       conversationId: conversation.id,
       model: modelUsed,
+      calendarLinks: calendarLinks
+        ? {
+            google: calendarLinks.google,
+            outlook: calendarLinks.outlook,
+            office365: calendarLinks.office365,
+          }
+        : null,
+      schedulingDetected: extractedData?.scheduling?.wantsVisit || false,
     })
   } catch (error) {
     logger.error('AI Chat error:', error)

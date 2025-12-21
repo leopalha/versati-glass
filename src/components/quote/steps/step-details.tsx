@@ -59,6 +59,7 @@ import {
   SERVICE_URGENCY,
   MATERIAL_TYPES,
   getMaterialsForCategory,
+  mapSubcategoryToModelId,
 } from '@/lib/catalog-options'
 // Phase 3 - NBR Validations & Smart Suggestions
 import { validateDimensions } from '@/lib/nbr-validations'
@@ -126,7 +127,10 @@ export function StepDetails() {
     'SERVICOS',
   ]
   const canUseProductSubcategory = category && categoriesWithModelField.includes(category)
-  const productModel = canUseProductSubcategory ? currentProduct?.subcategory || '' : ''
+  // Map subcategory (DB format like 'Frontal') to model ID (catalog format like 'FRONTAL')
+  const productModel = canUseProductSubcategory
+    ? mapSubcategoryToModelId(currentProduct?.subcategory)
+    : ''
 
   const [model, setModel] = useState(existingItem?.model || productModel || '')
   // Lock model field if it came from product selection
@@ -138,19 +142,9 @@ export function StepDetails() {
   const [description, setDescription] = useState(existingItem?.description || '')
   const [images, setImages] = useState<string[]>(existingItem?.images || [])
 
-  // Phase 4: "Sem Vidro" option - Allow customers to buy structure/hardware only
-  // Categories that can be sold without glass: BOX, PORTAS, JANELAS, GUARDA_CORPO, DIVISORIAS, FECHAMENTOS, PERGOLADOS
-  const categoriesWithOptionalGlass = [
-    'BOX',
-    'PORTAS',
-    'JANELAS',
-    'GUARDA_CORPO',
-    'DIVISORIAS',
-    'FECHAMENTOS',
-    'PERGOLADOS',
-  ]
-  const canBeSoldWithoutGlass = category && categoriesWithOptionalGlass.includes(category)
-  const [semVidro, setSemVidro] = useState(existingItem?.semVidro || false)
+  // Phase 4: Minimum thickness tracking from ThicknessCalculator
+  // Used to filter thickness options to only show >= minThickness
+  const [minThickness, setMinThickness] = useState<number | null>(null)
 
   // Phase 4: Material Type - Support for alternative materials (polycarbonate, acrylic, etc.)
   const [materialType, setMaterialType] = useState(existingItem?.materialType || 'VIDRO_TEMPERADO')
@@ -268,39 +262,65 @@ export function StepDetails() {
     return HARDWARE_COLORS
   }, [category])
 
-  // Opções de espessura baseadas na categoria
+  // Opções de espessura baseadas na categoria E na espessura mínima recomendada pelo ThicknessCalculator
+  // IMPORTANTE: value usa numericValue.toString() para compatibilidade com ThicknessCalculator
+  // O ThicknessCalculator retorna número (ex: 8) que é convertido para string "8"
+  // O select precisa ter value="8" para que a seleção funcione após clicar "Aplicar Espessura"
+  // Quando há uma espessura mínima recomendada (minThickness), só mostra opções >= minThickness
   const thicknessOptions = useMemo(() => {
+    // Helper function to filter by minThickness if set
+    const filterByMinThickness = <T extends { numericValue: number }>(options: T[]): T[] => {
+      if (minThickness === null) return options
+      return options.filter((t) => t.numericValue >= minThickness)
+    }
+
     if (category === 'ESPELHOS') {
-      return MIRROR_THICKNESSES.map((t) => ({
-        value: t.value,
+      // Espelhos usam MIRROR_THICKNESSES
+      const filtered = filterByMinThickness([...MIRROR_THICKNESSES])
+      return filtered.map((t) => ({
+        value: t.numericValue.toString(),
         label: `${t.value} - ${t.application}`,
       }))
     }
     if (category === 'BOX' || category === 'CORTINAS_VIDRO') {
-      return GLASS_THICKNESSES.filter((t) => ['8MM', '10MM'].includes(t.id)).map((t) => ({
-        value: t.value,
+      // BOX/Cortinas: base 8-10mm, mas respeita minThickness
+      const baseOptions = GLASS_THICKNESSES.filter((t) => ['8MM', '10MM'].includes(t.id))
+      const filtered = filterByMinThickness(baseOptions)
+      return filtered.map((t) => ({
+        value: t.numericValue.toString(),
         label: t.value,
       }))
     }
     if (category === 'GUARDA_CORPO') {
-      return GLASS_THICKNESSES.filter((t) => ['10MM', '12MM', '15MM', '19MM'].includes(t.id)).map(
-        (t) => ({ value: t.value, label: t.value })
+      // Guarda-corpo: 10-19mm (NBR exige mais resistência)
+      const baseOptions = GLASS_THICKNESSES.filter((t) =>
+        ['10MM', '12MM', '15MM', '19MM'].includes(t.id)
       )
+      const filtered = filterByMinThickness(baseOptions)
+      return filtered.map((t) => ({ value: t.numericValue.toString(), label: t.value }))
     }
     if (category === 'PORTAS' || category === 'DIVISORIAS') {
-      return GLASS_THICKNESSES.filter((t) => ['8MM', '10MM', '12MM'].includes(t.id)).map((t) => ({
-        value: t.value,
+      // Portas/Divisórias: 8-12mm
+      const baseOptions = GLASS_THICKNESSES.filter((t) => ['8MM', '10MM', '12MM'].includes(t.id))
+      const filtered = filterByMinThickness(baseOptions)
+      return filtered.map((t) => ({
+        value: t.numericValue.toString(),
         label: t.value,
       }))
     }
     if (category === 'JANELAS') {
-      return GLASS_THICKNESSES.filter((t) => ['6MM', '8MM'].includes(t.id)).map((t) => ({
-        value: t.value,
+      // Janelas: 6-8mm
+      const baseOptions = GLASS_THICKNESSES.filter((t) => ['6MM', '8MM'].includes(t.id))
+      const filtered = filterByMinThickness(baseOptions)
+      return filtered.map((t) => ({
+        value: t.numericValue.toString(),
         label: t.value,
       }))
     }
-    return GLASS_THICKNESSES.map((t) => ({ value: t.value, label: t.value }))
-  }, [category])
+    // Default: todas as espessuras, filtradas pelo mínimo se houver
+    const filtered = filterByMinThickness([...GLASS_THICKNESSES])
+    return filtered.map((t) => ({ value: t.numericValue.toString(), label: t.value }))
+  }, [category, minThickness])
 
   // Opções de acabamento baseadas na categoria
   const finishOptions = useMemo(() => {
@@ -457,8 +477,11 @@ export function StepDetails() {
       return
     }
 
-    // FQ.4.1: Validação de medidas (exceto para serviços)
-    if (category !== 'SERVICOS') {
+    // FQ.4.1: Validação de medidas (exceto para categorias sem dimensões)
+    // FERRAGENS e KITS são acessórios/peças que não têm dimensões
+    // SERVICOS também não requer dimensões (exceto TROCA_VIDRO que é tratado separadamente)
+    const categoriesWithoutDimensions = ['SERVICOS', 'FERRAGENS', 'KITS']
+    if (!categoriesWithoutDimensions.includes(category || '')) {
       if (!width || !height) {
         toast({
           variant: 'error',
@@ -505,8 +528,7 @@ export function StepDetails() {
     const heightNum = parseFloat(height) || 0
 
     // Phase 3: NBR Validation (BEFORE creating newItem)
-    // Phase 4: Only validate NBR if NOT "sem vidro" (glass-related validation)
-    if (!semVidro && width && height && thickness && category) {
+    if (width && height && thickness && category) {
       const w = parseFloat(width)
       const h = parseFloat(height)
       const t = parseInt(thickness)
@@ -550,10 +572,9 @@ export function StepDetails() {
       quantity: parseInt(quantity) || 1,
       color: color || undefined,
       finish: finish || undefined,
-      // Phase 4: Only include glass fields if NOT "sem vidro"
-      thickness: semVidro ? undefined : thickness || undefined,
-      glassType: semVidro ? undefined : glassType || undefined,
-      glassColor: semVidro ? undefined : glassColor || undefined,
+      thickness: thickness || undefined,
+      glassType: glassType || undefined,
+      glassColor: glassColor || undefined,
       model: model || undefined,
       finishLine: finishLine || undefined,
       ledTemp: ledTemp || undefined,
@@ -561,11 +582,10 @@ export function StepDetails() {
       bisoteWidth: bisoteWidth || undefined,
       description: description || descParts.filter(Boolean).join(' - '),
       images,
-      // Phase 4: "Sem Vidro" flag and Material Type
-      semVidro: semVidro || undefined,
+      // Phase 4: Material Type (alternative materials)
       materialType: materialType || undefined,
       // New conditional fields (Phase 1)
-      glassTexture: semVidro ? undefined : glassTexture || undefined,
+      glassTexture: glassTexture || undefined,
       hasteSize: hasteSize || undefined,
       pivotPosition: pivotPosition || undefined,
       handleType: handleType || undefined,
@@ -773,6 +793,10 @@ export function StepDetails() {
                   setThickness(thicknessValue)
                   logger.debug('[STEP-DETAILS] Applied thickness:', thicknessValue)
                 }}
+                onMinThicknessChange={(min) => {
+                  setMinThickness(min)
+                  logger.debug('[STEP-DETAILS] Min thickness updated:', min)
+                }}
               />
             )}
 
@@ -790,46 +814,8 @@ export function StepDetails() {
             showPresets={true}
           />
 
-          {/* Phase 4: "Sem Vidro" option for applicable categories */}
-          {canBeSoldWithoutGlass && (
-            <div className="bg-accent-500/10 border-accent-500/20 rounded-lg border p-4">
-              <div className="flex items-start gap-3">
-                <input
-                  type="checkbox"
-                  id="semVidro"
-                  checked={semVidro}
-                  onChange={(e) => setSemVidro(e.target.checked)}
-                  className="bg-theme-elevated border-theme-default focus:ring-accent-500/50 mt-1 h-4 w-4 rounded border accent-accent-500 focus:ring-2"
-                />
-                <div className="flex-1">
-                  <label
-                    htmlFor="semVidro"
-                    className="text-theme-primary block cursor-pointer font-medium"
-                  >
-                    Sem Vidro (Apenas Estrutura e Ferragens)
-                  </label>
-                  <p className="text-theme-muted mt-1 text-sm">
-                    {category === 'BOX' &&
-                      'Apenas trilhos, perfis e ferragens - sem as placas de vidro'}
-                    {category === 'PORTAS' &&
-                      'Apenas batente, ferragens e mola - sem a porta de vidro'}
-                    {category === 'JANELAS' && 'Apenas batente e ferragens - sem os vidros'}
-                    {category === 'GUARDA_CORPO' &&
-                      'Apenas estrutura metálica - sem os painéis de vidro'}
-                    {category === 'DIVISORIAS' &&
-                      'Apenas perfis e estrutura - sem os painéis de vidro'}
-                    {category === 'FECHAMENTOS' &&
-                      'Apenas estrutura e perfis - sem as placas de vidro'}
-                    {category === 'PERGOLADOS' &&
-                      'Apenas estrutura metálica - sem a cobertura de vidro'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Phase 4: Material Type Selection - Alternative materials (polycarbonate, acrylic, etc.) */}
-          {canSelectMaterial && !semVidro && availableMaterials.length > 1 && (
+          {canSelectMaterial && availableMaterials.length > 1 && (
             <div className="space-y-2">
               <label htmlFor="materialType" className="text-theme-primary block font-medium">
                 Tipo de Material *
@@ -1126,67 +1112,7 @@ export function StepDetails() {
             </div>
           )}
 
-          {/* GUARDA_CORPO: Sistema de Fixação + Corrimão */}
-          {category === 'GUARDA_CORPO' && (
-            <div className="space-y-4">
-              <div>
-                <label className="text-theme-muted mb-1 block text-sm">
-                  Sistema de Fixacao{' '}
-                  {isModelLocked && (
-                    <span className="text-xs text-accent-500">(selecionado na etapa anterior)</span>
-                  )}
-                </label>
-                <Select value={model} onValueChange={setModel} disabled={isModelLocked}>
-                  <SelectTrigger className={isModelLocked ? 'cursor-not-allowed opacity-60' : ''}>
-                    <SelectValue placeholder="Selecione o sistema" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {GUARD_RAIL_SYSTEMS.map((opt) => (
-                      <SelectItem key={opt.id} value={opt.id}>
-                        {opt.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Checkbox para corrimão */}
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="hasHandrail"
-                  checked={hasHandrail}
-                  onChange={(e) => {
-                    setHasHandrail(e.target.checked)
-                    if (!e.target.checked) setHandrailType('') // Reset se desmarcar
-                  }}
-                  className="bg-theme-elevated h-4 w-4 rounded border-neutral-600 text-accent-500 focus:ring-accent-500"
-                />
-                <label htmlFor="hasHandrail" className="text-theme-primary text-sm">
-                  Incluir Corrimão
-                </label>
-              </div>
-
-              {/* Se tiver corrimão, mostrar tipo */}
-              {hasHandrail && (
-                <div>
-                  <label className="text-theme-muted mb-1 block text-sm">Tipo de Corrimão</label>
-                  <Select value={handrailType} onValueChange={setHandrailType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {HANDRAIL_TYPES.map((opt) => (
-                        <SelectItem key={opt.id} value={opt.id}>
-                          {opt.name} - {opt.description}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-            </div>
-          )}
+          {/* NOTA: GUARDA_CORPO agora usa <GuardaCorpoFields> (linhas 923-943) */}
 
           {/* CORTINAS_VIDRO: Sistema */}
           {category === 'CORTINAS_VIDRO' && (
@@ -1504,9 +1430,8 @@ export function StepDetails() {
             </div>
           )}
 
-          {/* Phase 4: Tipo de Vidro (apenas se NÃO for "sem vidro" E material for vidro) */}
-          {!semVidro &&
-            isGlassMaterial &&
+          {/* Phase 4: Tipo de Vidro (se material for vidro) */}
+          {isGlassMaterial &&
             [
               'BOX',
               'PORTAS',
@@ -1572,27 +1497,30 @@ export function StepDetails() {
             </div>
           )}
 
-          {/* Phase 4: Opções comuns - Espessura apenas se não for "sem vidro" */}
-          {category !== 'SERVICOS' && (
+          {/* Phase 4: Opções comuns - Espessura/Acabamento (exceto SERVICOS, FERRAGENS, KITS que têm campos próprios) */}
+          {!['SERVICOS', 'FERRAGENS', 'KITS'].includes(category || '') && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {/* Espessura só aparece se tiver vidro OU for categoria que sempre tem vidro (ESPELHOS, FERRAGENS) */}
-              {(!canBeSoldWithoutGlass || !semVidro) && (
-                <div>
-                  <label className="text-theme-muted mb-1 block text-sm">Espessura</label>
-                  <Select value={thickness} onValueChange={setThickness}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {thicknessOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+              {/* Espessura - sempre mostra para categorias que têm vidro */}
+              <div>
+                <label className="text-theme-muted mb-1 block text-sm">
+                  Espessura
+                  {minThickness && (
+                    <span className="ml-1 text-xs text-blue-400">(mín. {minThickness}mm)</span>
+                  )}
+                </label>
+                <Select value={thickness} onValueChange={setThickness}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {thicknessOptions.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div>
                 <label className="text-theme-muted mb-1 block text-sm">Acabamento de Borda</label>
                 <Select value={finish} onValueChange={setFinish}>

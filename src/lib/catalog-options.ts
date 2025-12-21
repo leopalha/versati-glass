@@ -185,7 +185,16 @@ export const MATERIAL_TYPES = [
     id: 'VIDRO_TEMPERADO',
     name: 'Vidro Temperado',
     description: '5x mais resistente, segurança',
-    categories: ['BOX', 'PORTAS', 'JANELAS', 'GUARDA_CORPO', 'DIVISORIAS', 'FECHAMENTOS', 'TAMPOS_PRATELEIRAS', 'VIDROS'],
+    categories: [
+      'BOX',
+      'PORTAS',
+      'JANELAS',
+      'GUARDA_CORPO',
+      'DIVISORIAS',
+      'FECHAMENTOS',
+      'TAMPOS_PRATELEIRAS',
+      'VIDROS',
+    ],
   },
   {
     id: 'VIDRO_LAMINADO',
@@ -238,7 +247,15 @@ export const MATERIAL_TYPES = [
     id: 'ESTRUTURAL_ONLY',
     name: 'Apenas Estrutura',
     description: 'Perfis e ferragens sem vedação',
-    categories: ['BOX', 'PORTAS', 'JANELAS', 'GUARDA_CORPO', 'DIVISORIAS', 'FECHAMENTOS', 'PERGOLADOS'],
+    categories: [
+      'BOX',
+      'PORTAS',
+      'JANELAS',
+      'GUARDA_CORPO',
+      'DIVISORIAS',
+      'FECHAMENTOS',
+      'PERGOLADOS',
+    ],
   },
 ] as const
 
@@ -271,10 +288,10 @@ export const GLASS_THICKNESSES = [
 // ============================================
 
 export const MIRROR_THICKNESSES = [
-  { id: '3MM', value: '3mm', application: 'Pequenos espelhos, molduras' },
-  { id: '4MM', value: '4mm', application: 'Padrão banheiro/decoração' },
-  { id: '5MM', value: '5mm', application: 'Grandes dimensões' },
-  { id: '6MM', value: '6mm', application: 'Portas/painéis' },
+  { id: '3MM', value: '3mm', numericValue: 3, application: 'Pequenos espelhos, molduras' },
+  { id: '4MM', value: '4mm', numericValue: 4, application: 'Padrão banheiro/decoração' },
+  { id: '5MM', value: '5mm', numericValue: 5, application: 'Grandes dimensões' },
+  { id: '6MM', value: '6mm', numericValue: 6, application: 'Portas/painéis' },
 ] as const
 
 // ============================================
@@ -522,7 +539,11 @@ export const MAXIM_AR_HASTE_SIZES = [
 
 export const PIVOT_POSITIONS = [
   { id: 'CENTRAL', name: 'Pivô Central', description: 'Eixo no centro da porta' },
-  { id: 'DESLOCADO', name: 'Pivô Deslocado', description: 'Eixo a 1/3 da largura, economiza espaço' },
+  {
+    id: 'DESLOCADO',
+    name: 'Pivô Deslocado',
+    description: 'Eixo a 1/3 da largura, economiza espaço',
+  },
 ] as const
 
 // ============================================
@@ -793,4 +814,144 @@ export function getOptionsForCategory(categoryId: string) {
         hardwareColors: HARDWARE_COLORS,
       }
   }
+}
+
+// ============================================
+// MAPEAMENTO: Subcategory (DB) → Model ID (Catálogo)
+// ============================================
+
+/**
+ * Mapeia subcategory do banco de dados para o ID do modelo no catálogo
+ * Exemplo: 'Frontal' → 'FRONTAL', 'Walk-In' → 'WALK_IN'
+ */
+const SUBCATEGORY_TO_MODEL_ID: Record<string, string> = {
+  // BOX
+  Frontal: 'FRONTAL',
+  Canto: 'CANTO',
+  Abrir: 'ABRIR',
+  Articulado: 'ARTICULADO',
+  Pivotante: 'PIVOTANTE',
+  'Walk-In': 'WALK_IN',
+  Banheira: 'BANHEIRA',
+  Elegance: 'ELEGANCE',
+  Premium: 'PREMIUM',
+  Cristal: 'CRISTAL',
+
+  // ESPELHOS
+  Lapidado: 'LAPIDADO',
+  Bisotado: 'BISOTADO',
+  LED: 'LED',
+  Camarim: 'CAMARIM',
+  Colorido: 'COLORIDO',
+  Decorativo: 'DECORATIVO',
+  Jateado: 'JATEADO',
+
+  // VIDROS
+  Temperado: 'TEMPERADO',
+  Laminado: 'LAMINADO',
+  'Laminado Temperado': 'LAMINADO_TEMPERADO',
+  Acidato: 'ACIDATO',
+  Serigrafado: 'SERIGRAFADO',
+  'Extra Clear': 'EXTRA_CLEAR',
+  Reflectivo: 'REFLECTIVO',
+
+  // PORTAS
+  Correr: 'CORRER',
+  Camarao: 'CAMARAO',
+  Automatica: 'AUTOMATICA',
+
+  // JANELAS
+  'Maxim-Ar': 'MAXIM_AR',
+  Basculante: 'BASCULANTE',
+  Guilhotina: 'GUILHOTINA',
+
+  // GUARDA-CORPO
+  Autoportante: 'AUTOPORTANTE',
+  Torres: 'TORRES',
+  Bottons: 'BOTTONS',
+  Spider: 'SPIDER',
+  Gradil: 'GRADIL',
+
+  // CORTINAS DE VIDRO
+  Europeu: 'EUROPEU',
+  'Europeu Premium': 'EUROPEU_PREMIUM',
+  Stanley: 'STANLEY',
+  Automatizado: 'AUTOMATIZADO',
+
+  // PERGOLADOS
+  Cobertura: 'COBERTURA',
+  'Controle Solar': 'CONTROLE_SOLAR',
+  Pergolado: 'PERGOLADO',
+  'Pergolado Premium': 'PERGOLADO_PREMIUM',
+
+  // TAMPOS E PRATELEIRAS
+  Tampo: 'TAMPO',
+  'Tampo Premium': 'TAMPO_PREMIUM',
+  Prateleira: 'PRATELEIRA',
+
+  // DIVISÓRIAS
+  Escritorio: 'ESCRITORIO',
+  Acustica: 'ACUSTICA',
+  'Com Porta': 'COM_PORTA',
+  Painel: 'PAINEL',
+
+  // FECHAMENTOS
+  Sacada: 'SACADA',
+  'Area Gourmet': 'AREA_GOURMET',
+  'Area Servico': 'AREA_SERVICO',
+  Piscina: 'PISCINA',
+
+  // KITS
+  'Kit Porta': 'KIT_PORTA',
+  'Kit Box': 'KIT_BOX',
+  Puxador: 'PUXADOR',
+  Mola: 'MOLA',
+
+  // SERVIÇOS
+  Box: 'BOX',
+  Janela: 'JANELA',
+  Medicao: 'MEDICAO',
+  Instalacao: 'INSTALACAO',
+  Manutencao: 'MANUTENCAO',
+  Reposicao: 'REPOSICAO',
+  Emergencia: 'EMERGENCIA',
+}
+
+/**
+ * Converte subcategory do banco de dados para Model ID do catálogo
+ * @param subcategory - Valor da subcategory do produto (ex: 'Frontal', 'Walk-In')
+ * @returns Model ID para uso no select (ex: 'FRONTAL', 'WALK_IN')
+ */
+export function mapSubcategoryToModelId(subcategory: string | null | undefined): string {
+  if (!subcategory) return ''
+
+  // Primeiro tenta buscar no mapeamento direto
+  if (SUBCATEGORY_TO_MODEL_ID[subcategory]) {
+    return SUBCATEGORY_TO_MODEL_ID[subcategory]
+  }
+
+  // Fallback: converte para maiúsculas e substitui espaços/hífens por underscore
+  return subcategory.toUpperCase().replace(/\s+/g, '_').replace(/-/g, '_')
+}
+
+/**
+ * Converte Model ID do catálogo para subcategory legível
+ * @param modelId - ID do modelo (ex: 'FRONTAL', 'WALK_IN')
+ * @returns Subcategory legível (ex: 'Frontal', 'Walk-In')
+ */
+export function mapModelIdToSubcategory(modelId: string | null | undefined): string {
+  if (!modelId) return ''
+
+  // Busca reversa no mapeamento
+  for (const [subcategory, id] of Object.entries(SUBCATEGORY_TO_MODEL_ID)) {
+    if (id === modelId) {
+      return subcategory
+    }
+  }
+
+  // Fallback: formata o ID para formato legível
+  return modelId
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
 }
