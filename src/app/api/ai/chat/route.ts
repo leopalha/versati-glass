@@ -921,7 +921,13 @@ async function extractQuoteDataFromConversation(
 
     const extractedText = extractionCompletion.choices[0]?.message?.content?.trim()
 
+    logger.info('[EXTRACTION] Raw response from LLM', {
+      conversationId,
+      extractedText: extractedText?.substring(0, 500),
+    })
+
     if (!extractedText || extractedText === 'null') {
+      logger.info('[EXTRACTION] No data extracted (null or empty)')
       return null
     }
 
@@ -951,6 +957,13 @@ async function extractQuoteDataFromConversation(
 
       // Retornar dados se tiver items (mesmo parciais) OU dados do cliente
       if (!hasValidItem && !hasCustomerData) {
+        logger.info('[EXTRACTION] No valid items or customer data found', {
+          conversationId,
+          hasItems,
+          hasValidItem,
+          hasCustomerData,
+          parsedItems: parsed.items,
+        })
         return null
       }
 
