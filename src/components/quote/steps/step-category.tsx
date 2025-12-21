@@ -122,11 +122,39 @@ const categories = [
     color: 'text-green-400',
   },
   {
+    id: 'FERRAGENS',
+    name: 'Ferragens e Acessorios',
+    description: 'Puxadores, molas de piso e acessorios',
+    icon: 'Wrench',
+    color: 'text-purple-400',
+  },
+  {
+    id: 'KITS',
+    name: 'Kits',
+    description: 'Kits prontos para instalacao',
+    icon: 'Package',
+    color: 'text-yellow-400',
+  },
+  {
     id: 'SERVICOS',
     name: 'Servicos',
     description: 'Manutencao, reparos e instalacao',
     icon: 'Hammer',
     color: 'text-rose-400',
+  },
+  {
+    id: 'FACHADAS',
+    name: 'Fachadas de Vidro',
+    description: 'Fachadas comerciais e corporativas',
+    icon: 'LayoutGrid',
+    color: 'text-slate-400',
+  },
+  {
+    id: 'PAINEIS_DECORATIVOS',
+    name: 'Paineis Decorativos',
+    description: 'Paineis artisticos e decorativos',
+    icon: 'Square',
+    color: 'text-violet-400',
   },
 ]
 

@@ -13,6 +13,8 @@ import {
   Loader2,
   Bot,
   User,
+  ChevronDown,
+  ChevronUp,
   Minimize2,
   Maximize2,
   Image as ImageIcon,
@@ -99,6 +101,14 @@ interface Message {
   content: string
   createdAt: string
   imageUrl?: string
+  measurements?: {
+    width?: number
+    height?: number
+    referenceObject?: string
+    confidence: 'low' | 'medium' | 'high'
+    needsCalibration: boolean
+    calibrationHelp?: string
+  }
 }
 
 interface ChatAssistidoProps {
@@ -159,6 +169,9 @@ export function ChatAssistido({
 
   // Progress bar minimize state
   const [isProgressMinimized, setIsProgressMinimized] = useState(false)
+
+  // Progress confirmation state - only show after user confirms
+  const [progressConfirmed, setProgressConfirmed] = useState(false)
 
   // OMNICHANNEL Sprint 1 - Task 4: Cross-channel notifications
   // Memoize onUpdate to prevent infinite loop
@@ -714,11 +727,17 @@ export function ChatAssistido({
         setConversationId(data.conversationId)
       }
 
+      // Check if user confirmed to show progress widget
+      if (data.shouldShowProgress) {
+        setProgressConfirmed(true)
+      }
+
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: 'ASSISTANT',
         content: data.message,
         createdAt: new Date().toISOString(),
+        measurements: data.measurements, // Include measurements if available
       }
 
       setMessages((prev) => [...prev, assistantMessage])
@@ -844,116 +863,6 @@ export function ChatAssistido({
         {/* Conteudo (escondido quando minimizado) */}
         {!isMinimized && (
           <>
-            {/* AI-CHAT Sprint P3.2: Progress Indicator */}
-            {quoteProgress > 0 && (
-              <div className="border-theme-default bg-theme-secondary border-b p-3">
-                <div className="space-y-2">
-                  {/* Progress Bar - Header with Minimize Button */}
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-theme-subtle font-medium">Progresso do Orçamento</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-accent-500">{quoteProgress}%</span>
-                      <button
-                        onClick={() => setIsProgressMinimized(!isProgressMinimized)}
-                        className="rounded p-1 text-neutral-700 transition-colors hover:bg-neutral-600 hover:text-white"
-                        aria-label={
-                          isProgressMinimized ? 'Expandir progresso' : 'Minimizar progresso'
-                        }
-                        title={isProgressMinimized ? 'Expandir progresso' : 'Minimizar progresso'}
-                      >
-                        {isProgressMinimized ? (
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        ) : (
-                          <Minimize2 className="h-3.5 w-3.5" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Progress details - only show when not minimized */}
-                  {!isProgressMinimized && (
-                    <>
-                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-600">
-                        <motion.div
-                          className="h-full bg-gradient-to-r from-accent-500 to-gold-500"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${quoteProgress}%` }}
-                          transition={{ duration: 0.5, ease: 'easeOut' }}
-                        />
-                      </div>
-
-                      {/* Checklist */}
-                      <div className="mt-3 grid grid-cols-3 gap-2">
-                        {/* Items Check */}
-                        <div
-                          className={cn(
-                            'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
-                            quoteContext?.items && quoteContext.items.length > 0
-                              ? 'bg-green-500/10 text-green-400'
-                              : 'bg-neutral-600/20 text-neutral-600'
-                          )}
-                        >
-                          {quoteContext?.items && quoteContext.items.length > 0 ? (
-                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
-                          ) : (
-                            <Circle className="h-3.5 w-3.5 flex-shrink-0" />
-                          )}
-                          <span className="truncate">Produto</span>
-                        </div>
-
-                        {/* Dimensions Check */}
-                        <div
-                          className={cn(
-                            'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
-                            quoteContext?.items?.some((item: any) => item.width || item.height)
-                              ? 'bg-green-500/10 text-green-400'
-                              : 'bg-neutral-600/20 text-neutral-600'
-                          )}
-                        >
-                          {quoteContext?.items?.some((item: any) => item.width || item.height) ? (
-                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
-                          ) : (
-                            <Circle className="h-3.5 w-3.5 flex-shrink-0" />
-                          )}
-                          <span className="truncate">Medidas</span>
-                        </div>
-
-                        {/* Contact Check */}
-                        <div
-                          className={cn(
-                            'flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs',
-                            quoteContext?.customerData?.name || quoteContext?.customerData?.phone
-                              ? 'bg-green-500/10 text-green-400'
-                              : 'bg-neutral-600/20 text-neutral-600'
-                          )}
-                        >
-                          {quoteContext?.customerData?.name || quoteContext?.customerData?.phone ? (
-                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
-                          ) : (
-                            <Circle className="h-3.5 w-3.5 flex-shrink-0" />
-                          )}
-                          <span className="truncate">Contato</span>
-                        </div>
-                      </div>
-
-                      {/* Next Steps Hint */}
-                      {quoteProgress > 0 && quoteProgress < 100 && (
-                        <p className="text-theme-subtle mt-2 text-xs">
-                          {quoteProgress < 40 && '💡 Próximo: Especifique produto e medidas'}
-                          {quoteProgress >= 40 &&
-                            quoteProgress < 80 &&
-                            '💡 Próximo: Forneça seus dados de contato'}
-                          {quoteProgress >= 80 &&
-                            quoteProgress < 100 &&
-                            '💡 Quase lá! Verifique se falta algo'}
-                        </p>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
-
             {/* Mensagens */}
             <div className="bg-theme-primary flex-1 space-y-4 overflow-y-auto p-4">
               <AnimatePresence mode="popLayout">
@@ -991,6 +900,48 @@ export function ChatAssistido({
                         />
                       )}
                       <p className="whitespace-pre-wrap break-words">{msg.content}</p>
+                      {/* Display measurements if available */}
+                      {msg.measurements && (msg.measurements.width || msg.measurements.height) && (
+                        <div className="border-accent-500/30 bg-accent-500/10 mt-2 space-y-1 rounded border p-2 text-xs">
+                          <div className="font-semibold text-accent-600">
+                            📐 Medidas detectadas:
+                          </div>
+                          {msg.measurements.width && (
+                            <div>
+                              Largura: <span className="font-mono">{msg.measurements.width}m</span>
+                            </div>
+                          )}
+                          {msg.measurements.height && (
+                            <div>
+                              Altura: <span className="font-mono">{msg.measurements.height}m</span>
+                            </div>
+                          )}
+                          {msg.measurements.referenceObject && (
+                            <div className="text-neutral-600">
+                              ✓ Baseado em: {msg.measurements.referenceObject}
+                            </div>
+                          )}
+                          {/* Confidence indicator */}
+                          <div className="flex items-center gap-1">
+                            {msg.measurements.confidence === 'high' && (
+                              <span className="text-green-600">🟢 Alta precisão</span>
+                            )}
+                            {msg.measurements.confidence === 'medium' && (
+                              <span className="text-yellow-600">🟡 Precisão média</span>
+                            )}
+                            {msg.measurements.confidence === 'low' && (
+                              <span className="text-red-600">🔴 Precisão baixa</span>
+                            )}
+                          </div>
+                          {/* Calibration help */}
+                          {msg.measurements.needsCalibration &&
+                            msg.measurements.calibrationHelp && (
+                              <div className="mt-1 text-neutral-600">
+                                📏 {msg.measurements.calibrationHelp}
+                              </div>
+                            )}
+                        </div>
+                      )}
                     </div>
                     {msg.role === 'USER' && (
                       <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-neutral-600">
@@ -1054,22 +1005,42 @@ export function ChatAssistido({
                   exit={{ opacity: 0, height: 0 }}
                   className="space-y-2"
                 >
-                  {/* Progress Bar */}
+                  {/* Progress Bar - Header with Minimize Button */}
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-theme-muted">Progresso do orçamento</span>
-                    <span className="font-medium text-accent-500">{quoteProgress}%</span>
-                  </div>
-                  <div className="bg-theme-default h-2 overflow-hidden rounded-full">
-                    <motion.div
-                      className="h-full bg-accent-500"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${quoteProgress}%` }}
-                      transition={{ duration: 0.5, ease: 'easeOut' }}
-                    />
+                    <span className="text-theme-muted font-medium">Progresso do orçamento</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-accent-500">{quoteProgress}%</span>
+                      <button
+                        onClick={() => setIsProgressMinimized(!isProgressMinimized)}
+                        className="hover:bg-accent-500/10 rounded p-1 text-accent-500 transition-colors"
+                        aria-label={
+                          isProgressMinimized ? 'Expandir progresso' : 'Minimizar progresso'
+                        }
+                        title={isProgressMinimized ? 'Expandir progresso' : 'Minimizar progresso'}
+                      >
+                        {isProgressMinimized ? (
+                          <ChevronDown className="h-4 w-4" />
+                        ) : (
+                          <ChevronUp className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Completion Checklist */}
-                  <div className="mt-3 space-y-1.5">
+                  {/* Progress details - only show when not minimized */}
+                  {!isProgressMinimized && (
+                    <>
+                      <div className="bg-theme-default h-2 overflow-hidden rounded-full">
+                        <motion.div
+                          className="h-full bg-accent-500"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${quoteProgress}%` }}
+                          transition={{ duration: 0.5, ease: 'easeOut' }}
+                        />
+                      </div>
+
+                      {/* Completion Checklist */}
+                      <div className="mt-3 space-y-1.5">
                     <div className="flex items-center gap-2 text-xs">
                       {quoteContext?.items?.length > 0 &&
                       quoteContext.items.some((i: any) => i.category) ? (
@@ -1141,65 +1112,50 @@ export function ChatAssistido({
                     {quoteProgress >= 40 && quoteProgress < 100 && (
                       <Button
                         onClick={async () => {
-                          const checkoutMessage =
-                            'Quero finalizar meu orçamento e ir para o checkout'
-                          const userMessage: Message = {
-                            id: `user-${Date.now()}`,
-                            role: 'USER',
-                            content: checkoutMessage,
-                            createdAt: new Date().toISOString(),
-                          }
-                          setMessages((prev) => [...prev, userMessage])
-                          setInput('')
-                          setIsProgressMinimized(true)
                           setIsLoading(true)
-                          setTimeout(() => scrollToBottom(), 100)
 
                           try {
-                            // Send message to AI to finalize context
-                            const response = await fetch('/api/ai/chat', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({
-                                message: checkoutMessage,
-                                conversationId,
-                                sessionId,
-                                imageBase64: null,
-                                imageUrl: null,
-                              }),
-                            })
-
-                            if (!response.ok) {
-                              throw new Error('Erro ao enviar mensagem')
-                            }
-
-                            const data = await response.json()
-
-                            const assistantMessage: Message = {
-                              id: `assistant-${Date.now()}`,
+                            // 1. Add system message (no AI response needed)
+                            const checkoutMessage: Message = {
+                              id: `checkout-${Date.now()}`,
                               role: 'ASSISTANT',
-                              content: data.message,
+                              content: 'Perfeito! Vou redirecionar você para o checkout agora. 🛒',
                               createdAt: new Date().toISOString(),
                             }
+                            setMessages((prev) => [...prev, checkoutMessage])
+                            setTimeout(() => scrollToBottom(), 100)
 
-                            setMessages((prev) => [...prev, assistantMessage])
+                            // 2. Minimize quote progress
+                            setIsProgressMinimized(true)
 
-                            // Wait a bit for user to see the response
-                            setTimeout(() => {
-                              // Minimize chat
-                              setIsMinimized(true)
+                            // 3. Export quote data from conversation
+                            const exportResponse = await fetch('/api/ai/chat/export-quote', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ conversationId }),
+                            })
 
-                              // Redirect to checkout
-                              router.push('/orcamento')
-                            }, 2000) // 2 seconds delay
+                            if (!exportResponse.ok) {
+                              throw new Error('Erro ao exportar orçamento')
+                            }
+
+                            const { data: quoteData } = await exportResponse.json()
+
+                            // 4. Import to wizard store (sets step to 4)
+                            importFromAI(quoteData)
+
+                            // 5. Minimize chat
+                            setIsMinimized(true)
+
+                            // 6. Navigate to wizard (will open at Step 4)
+                            router.push('/orcamento')
                           } catch (error) {
-                            console.error('[CHAT] Error going to checkout:', error)
-
-                            // Still redirect even on error
-                            setTimeout(() => {
-                              setIsMinimized(true)
-                              router.push('/orcamento')
-                            }, 1500)
+                            console.error('[CHAT] Checkout redirect failed:', error)
+                            toast({
+                              variant: 'error',
+                              title: 'Erro',
+                              description: 'Erro ao redirecionar para checkout. Tente novamente.',
+                            })
                           } finally {
                             setIsLoading(false)
                           }
@@ -1207,9 +1163,10 @@ export function ChatAssistido({
                         variant="outline"
                         size="sm"
                         className="hover:bg-accent-500/10 w-full border-accent-500 text-accent-500"
+                        disabled={isLoading}
                       >
                         <ArrowRight className="mr-2 h-4 w-4" />
-                        Ir para Checkout
+                        Finalizar e Ir para Checkout
                       </Button>
                     )}
 
@@ -1312,11 +1269,13 @@ export function ChatAssistido({
                     </Button>
                   </div>
 
-                  {/* Hint message */}
-                  {quoteProgress < 70 && (
-                    <p className="text-theme-subtle mt-3 text-xs">
-                      💡 Continue conversando para completar seu orçamento...
-                    </p>
+                      {/* Hint message */}
+                      {quoteProgress < 70 && (
+                        <p className="text-theme-subtle mt-3 text-xs">
+                          💡 Continue conversando para completar seu orçamento...
+                        </p>
+                      )}
+                    </>
                   )}
                 </motion.div>
               </div>

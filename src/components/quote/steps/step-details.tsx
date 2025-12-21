@@ -15,6 +15,14 @@ import {
 } from '@/components/ui/select'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { ArrowLeft, Upload, X } from 'lucide-react'
+// Conditional fields system
+import { ConditionalField } from '@/components/quote/conditional-field'
+import { useConditionalFields } from '@/hooks/use-conditional-fields'
+// Critical category field groups
+import { FerragensFields } from '@/components/quote/field-groups/ferragens-fields'
+import { KitsFields } from '@/components/quote/field-groups/kits-fields'
+import { ServicosFields } from '@/components/quote/field-groups/servicos-fields'
+import { GuardaCorpoFields } from '@/components/quote/field-groups/guarda-corpo-fields'
 import {
   GLASS_TYPES,
   GLASS_COLORS,
@@ -49,6 +57,8 @@ import {
   CLOSING_TYPES,
   CLOSING_SYSTEMS,
   SERVICE_URGENCY,
+  MATERIAL_TYPES,
+  getMaterialsForCategory,
 } from '@/lib/catalog-options'
 // Phase 3 - NBR Validations & Smart Suggestions
 import { validateDimensions } from '@/lib/nbr-validations'
@@ -57,7 +67,6 @@ import { ThicknessCalculator } from '@/components/quote/thickness-calculator'
 import { SmartSuggestionsPanel } from '@/components/quote/smart-suggestions-panel'
 import { ProductReferenceImages } from '@/components/quote/product-reference-images'
 import { DimensionSlider } from '@/components/quote/dimension-slider'
-
 
 export function StepDetails() {
   const {
@@ -93,9 +102,6 @@ export function StepDetails() {
   // Category can come from editing item or current product
   const category = existingItem?.category || currentProduct?.category || currentItem?.category
 
-  // Phase 3: Helper for showing dimensions
-  const showDimensions = category !== 'SERVICOS' && category !== 'FERRAGENS' && category !== 'KITS'
-
   const [uploadingImages, setUploadingImages] = useState(false)
 
   // Estados do formulário - inicializa com valores existentes se estiver editando
@@ -107,13 +113,71 @@ export function StepDetails() {
   const [thickness, setThickness] = useState(existingItem?.thickness || '')
   const [glassType, setGlassType] = useState(existingItem?.glassType || '')
   const [glassColor, setGlassColor] = useState(existingItem?.glassColor || '')
-  const [model, setModel] = useState(existingItem?.model || '')
+  // Model can be pre-filled from product selection (Step 2)
+  // BUT only for categories where subcategory maps directly to model field
+  // Categories with model field: BOX, PORTAS, JANELAS, GUARDA_CORPO, CORTINAS_VIDRO, ESPELHOS, SERVICOS
+  const categoriesWithModelField = [
+    'BOX',
+    'PORTAS',
+    'JANELAS',
+    'GUARDA_CORPO',
+    'CORTINAS_VIDRO',
+    'ESPELHOS',
+    'SERVICOS',
+  ]
+  const canUseProductSubcategory = category && categoriesWithModelField.includes(category)
+  const productModel = canUseProductSubcategory ? currentProduct?.subcategory || '' : ''
+
+  const [model, setModel] = useState(existingItem?.model || productModel || '')
+  // Lock model field if it came from product selection
+  const isModelLocked = !isEditing && !!productModel
   const [finishLine, setFinishLine] = useState(existingItem?.finishLine || '')
   const [ledTemp, setLedTemp] = useState(existingItem?.ledTemp || '')
   const [shape, setShape] = useState(existingItem?.shape || '')
   const [bisoteWidth, setBisoteWidth] = useState(existingItem?.bisoteWidth || '')
   const [description, setDescription] = useState(existingItem?.description || '')
   const [images, setImages] = useState<string[]>(existingItem?.images || [])
+
+  // Phase 4: "Sem Vidro" option - Allow customers to buy structure/hardware only
+  // Categories that can be sold without glass: BOX, PORTAS, JANELAS, GUARDA_CORPO, DIVISORIAS, FECHAMENTOS, PERGOLADOS
+  const categoriesWithOptionalGlass = [
+    'BOX',
+    'PORTAS',
+    'JANELAS',
+    'GUARDA_CORPO',
+    'DIVISORIAS',
+    'FECHAMENTOS',
+    'PERGOLADOS',
+  ]
+  const canBeSoldWithoutGlass = category && categoriesWithOptionalGlass.includes(category)
+  const [semVidro, setSemVidro] = useState(existingItem?.semVidro || false)
+
+  // Phase 4: Material Type - Support for alternative materials (polycarbonate, acrylic, etc.)
+  const [materialType, setMaterialType] = useState(existingItem?.materialType || 'VIDRO_TEMPERADO')
+
+  // Get available materials for current category
+  const availableMaterials = useMemo(() => {
+    if (!category) return []
+    return getMaterialsForCategory(category)
+  }, [category])
+
+  // Determine if glass-specific fields should be shown
+  const isGlassMaterial = useMemo(() => {
+    return (
+      materialType === 'VIDRO_TEMPERADO' ||
+      materialType === 'VIDRO_LAMINADO' ||
+      materialType === 'VIDRO_COMUM'
+    )
+  }, [materialType])
+
+  // Categories that support material selection (not just glass)
+  const categoriesWithMaterialOptions = [
+    'DIVISORIAS',
+    'PERGOLADOS',
+    'FECHAMENTOS',
+    'TAMPOS_PRATELEIRAS',
+  ]
+  const canSelectMaterial = category && categoriesWithMaterialOptions.includes(category)
 
   // Novos campos condicionais (Fase 1)
   const [glassTexture, setGlassTexture] = useState('')
@@ -133,6 +197,39 @@ export function StepDetails() {
   const [closingType, setClosingType] = useState('')
   const [closingSystem, setClosingSystem] = useState('')
   const [serviceUrgency, setServiceUrgency] = useState('')
+  // Campos específicos FERRAGENS
+  const [molaCapacidade, setMolaCapacidade] = useState('')
+  const [puxadorTamanho, setPuxadorTamanho] = useState('')
+  // Cor da ferragem (usado por várias categorias)
+  const [hardwareColor, setHardwareColor] = useState(existingItem?.color || '')
+
+  // Conditional fields system - dynamically determines which fields to show
+  const currentFormValues = useMemo(
+    () => ({
+      model,
+      width: width ? parseFloat(width) : undefined,
+      height: height ? parseFloat(height) : undefined,
+      thickness: thickness ? parseInt(thickness) : undefined,
+      glassType,
+      glassColor,
+      color,
+      finish,
+      quantity: parseInt(quantity),
+    }),
+    [model, width, height, thickness, glassType, glassColor, color, finish, quantity]
+  )
+
+  const {
+    shouldShow,
+    isRequired,
+    requiredFields,
+    missingFields,
+    allRequiredFieldsFilled,
+    validations,
+    validateThickness,
+    validateDimensions: validateDimensionsConditional,
+  } = useConditionalFields(category || '', currentFormValues)
+
   // Phase 3: Context for smart suggestions
   const suggestionContext = useMemo<QuoteContext>(
     () => ({
@@ -148,9 +245,20 @@ export function StepDetails() {
       glassTexture,
       hasteSize,
     }),
-    [category, width, height, glassType, model, color, thickness, finish, glassColor, glassTexture, hasteSize]
+    [
+      category,
+      width,
+      height,
+      glassType,
+      model,
+      color,
+      thickness,
+      finish,
+      glassColor,
+      glassTexture,
+      hasteSize,
+    ]
   )
-
 
   // Opções de cor de ferragem baseadas na categoria
   const hardwareColorOptions = useMemo(() => {
@@ -337,7 +445,6 @@ export function StepDetails() {
     [toast]
   )
 
-
   const handleContinue = () => {
     // FQ.4.2: Validação de quantidade mínima
     const quantityNum = parseInt(quantity)
@@ -398,15 +505,13 @@ export function StepDetails() {
     const heightNum = parseFloat(height) || 0
 
     // Phase 3: NBR Validation (BEFORE creating newItem)
-    if (width && height && thickness && category) {
+    // Phase 4: Only validate NBR if NOT "sem vidro" (glass-related validation)
+    if (!semVidro && width && height && thickness && category) {
       const w = parseFloat(width)
       const h = parseFloat(height)
       const t = parseInt(thickness)
 
-      const validation = validateDimensions(
-        { width: w, height: h, thickness: t },
-        category as any
-      )
+      const validation = validateDimensions({ width: w, height: h, thickness: t }, category as any)
 
       if (!validation.valid) {
         toast({
@@ -445,9 +550,10 @@ export function StepDetails() {
       quantity: parseInt(quantity) || 1,
       color: color || undefined,
       finish: finish || undefined,
-      thickness: thickness || undefined,
-      glassType: glassType || undefined,
-      glassColor: glassColor || undefined,
+      // Phase 4: Only include glass fields if NOT "sem vidro"
+      thickness: semVidro ? undefined : thickness || undefined,
+      glassType: semVidro ? undefined : glassType || undefined,
+      glassColor: semVidro ? undefined : glassColor || undefined,
       model: model || undefined,
       finishLine: finishLine || undefined,
       ledTemp: ledTemp || undefined,
@@ -455,8 +561,11 @@ export function StepDetails() {
       bisoteWidth: bisoteWidth || undefined,
       description: description || descParts.filter(Boolean).join(' - '),
       images,
+      // Phase 4: "Sem Vidro" flag and Material Type
+      semVidro: semVidro || undefined,
+      materialType: materialType || undefined,
       // New conditional fields (Phase 1)
-      glassTexture: glassTexture || undefined,
+      glassTexture: semVidro ? undefined : glassTexture || undefined,
       hasteSize: hasteSize || undefined,
       pivotPosition: pivotPosition || undefined,
       handleType: handleType || undefined,
@@ -473,6 +582,10 @@ export function StepDetails() {
       closingType: closingType || undefined,
       closingSystem: closingSystem || undefined,
       serviceUrgency: serviceUrgency || undefined,
+      // Critical category fields
+      molaCapacidade: molaCapacidade || undefined,
+      puxadorTamanho: puxadorTamanho || undefined,
+      hardwareColor: hardwareColor || undefined,
     }
 
     if (isEditing) {
@@ -528,6 +641,10 @@ export function StepDetails() {
         setClosingType('')
         setClosingSystem('')
         setServiceUrgency('')
+        // Clear critical category fields
+        setMolaCapacidade('')
+        setPuxadorTamanho('')
+        setHardwareColor('')
 
         // Stay in Step 3 to detail next product
       }
@@ -590,7 +707,6 @@ export function StepDetails() {
             </p>
           </div>
 
-
           {/* Phase 3: Product Reference Images */}
           {category && (
             <ProductReferenceImages
@@ -601,73 +717,240 @@ export function StepDetails() {
             />
           )}
 
-          {/* Measurements - Seletores Híbridos com Slider */}
-          {category !== 'SERVICOS' && (
-            <div className="space-y-6">
-              <DimensionSlider
-                id="width"
-                label="Largura"
-                value={width}
-                onChange={setWidth}
-                min={0.3}
-                max={6.0}
-                step={0.05}
-                unit="m"
-                presets={[0.5, 1.0, 1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]}
-                showPresets={true}
+          {/* Measurements - Conditional based on category */}
+          <ConditionalField
+            category={category || ''}
+            fieldName="width"
+            currentValues={currentFormValues}
+          >
+            <DimensionSlider
+              id="width"
+              label="Largura"
+              value={width}
+              onChange={setWidth}
+              min={0.3}
+              max={6.0}
+              step={0.05}
+              unit="m"
+              presets={[0.5, 1.0, 1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]}
+              showPresets={true}
+            />
+          </ConditionalField>
+
+          <ConditionalField
+            category={category || ''}
+            fieldName="height"
+            currentValues={currentFormValues}
+          >
+            <DimensionSlider
+              id="height"
+              label="Altura"
+              value={height}
+              onChange={setHeight}
+              min={0.3}
+              max={6.0}
+              step={0.05}
+              unit="m"
+              presets={[0.5, 1.0, 1.5, 1.8, 2.0, 2.2, 2.5, 3.0]}
+              showPresets={true}
+            />
+          </ConditionalField>
+
+          {/* Phase 3: Thickness Calculator - Only for categories with thickness */}
+          {shouldShow('thickness') &&
+            width &&
+            height &&
+            parseFloat(width) > 0 &&
+            parseFloat(height) > 0 && (
+              <ThicknessCalculator
+                width={parseFloat(width)}
+                height={parseFloat(height)}
+                application={category as any}
+                currentThickness={thickness ? parseInt(thickness) : undefined}
+                windZone={locationData?.windZone || 2}
+                onApplyThickness={(t) => {
+                  const thicknessValue = t.toString()
+                  setThickness(thicknessValue)
+                  logger.debug('[STEP-DETAILS] Applied thickness:', thicknessValue)
+                }}
               />
-              <DimensionSlider
-                id="height"
-                label="Altura"
-                value={height}
-                onChange={setHeight}
-                min={0.3}
-                max={6.0}
-                step={0.05}
-                unit="m"
-                presets={[0.5, 1.0, 1.5, 1.8, 2.0, 2.2, 2.5, 3.0]}
-                showPresets={true}
-              />
+            )}
+
+          {/* Quantity - Interactive Slider */}
+          <DimensionSlider
+            id="quantity"
+            label="Quantidade"
+            value={quantity}
+            onChange={setQuantity}
+            min={1}
+            max={50}
+            step={1}
+            unit="un"
+            presets={[1, 2, 3, 4, 5, 10, 15, 20]}
+            showPresets={true}
+          />
+
+          {/* Phase 4: "Sem Vidro" option for applicable categories */}
+          {canBeSoldWithoutGlass && (
+            <div className="bg-accent-500/10 border-accent-500/20 rounded-lg border p-4">
+              <div className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  id="semVidro"
+                  checked={semVidro}
+                  onChange={(e) => setSemVidro(e.target.checked)}
+                  className="bg-theme-elevated border-theme-default focus:ring-accent-500/50 mt-1 h-4 w-4 rounded border accent-accent-500 focus:ring-2"
+                />
+                <div className="flex-1">
+                  <label
+                    htmlFor="semVidro"
+                    className="text-theme-primary block cursor-pointer font-medium"
+                  >
+                    Sem Vidro (Apenas Estrutura e Ferragens)
+                  </label>
+                  <p className="text-theme-muted mt-1 text-sm">
+                    {category === 'BOX' &&
+                      'Apenas trilhos, perfis e ferragens - sem as placas de vidro'}
+                    {category === 'PORTAS' &&
+                      'Apenas batente, ferragens e mola - sem a porta de vidro'}
+                    {category === 'JANELAS' && 'Apenas batente e ferragens - sem os vidros'}
+                    {category === 'GUARDA_CORPO' &&
+                      'Apenas estrutura metálica - sem os painéis de vidro'}
+                    {category === 'DIVISORIAS' &&
+                      'Apenas perfis e estrutura - sem os painéis de vidro'}
+                    {category === 'FECHAMENTOS' &&
+                      'Apenas estrutura e perfis - sem as placas de vidro'}
+                    {category === 'PERGOLADOS' &&
+                      'Apenas estrutura metálica - sem a cobertura de vidro'}
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 
+          {/* Phase 4: Material Type Selection - Alternative materials (polycarbonate, acrylic, etc.) */}
+          {canSelectMaterial && !semVidro && availableMaterials.length > 1 && (
+            <div className="space-y-2">
+              <label htmlFor="materialType" className="text-theme-primary block font-medium">
+                Tipo de Material *
+              </label>
+              <Select value={materialType} onValueChange={setMaterialType}>
+                <SelectTrigger id="materialType" className="bg-theme-elevated border-theme-default">
+                  <SelectValue placeholder="Selecione o material" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableMaterials.map((material) => (
+                    <SelectItem key={material.id} value={material.id}>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{material.name}</span>
+                        <span className="text-theme-muted text-xs">{material.description}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-theme-muted text-sm">
+                {category === 'DIVISORIAS' &&
+                  'Escolha entre vidro, policarbonato, acrílico ou outros materiais'}
+                {category === 'PERGOLADOS' &&
+                  'Vidro temperado, policarbonato compacto/alveolar ou acrílico'}
+                {category === 'FECHAMENTOS' && 'Vidro, policarbonato, acrílico ou tela de proteção'}
+                {category === 'TAMPOS_PRATELEIRAS' &&
+                  'Vidro temperado extra clear, vidro laminado ou acrílico'}
+              </p>
+            </div>
+          )}
 
-          {/* Phase 3: Thickness Calculator */}
-          {showDimensions && width && height && parseFloat(width) > 0 && parseFloat(height) > 0 && (
-            <ThicknessCalculator
-              width={parseFloat(width)}
-              height={parseFloat(height)}
-              application={category as any}
-              currentThickness={thickness ? parseInt(thickness) : undefined}
-              windZone={locationData?.windZone || 2}
-              onApplyThickness={(t) => setThickness(t.toString())}
+          {/* ========== CRITICAL CATEGORIES: Custom Field Groups ========== */}
+
+          {/* FERRAGENS - NO glass, NO dimensions */}
+          {category === 'FERRAGENS' && (
+            <FerragensFields
+              category={category}
+              currentValues={currentFormValues}
+              model={model}
+              setModel={setModel}
+              hardwareColor={hardwareColor}
+              setHardwareColor={setHardwareColor}
+              molaCapacidade={molaCapacidade}
+              setMolaCapacidade={setMolaCapacidade}
+              puxadorTamanho={puxadorTamanho}
+              setPuxadorTamanho={setPuxadorTamanho}
+              isEditing={isEditing}
+              isFromProductSelection={!!currentProduct}
             />
           )}
 
-          {/* Quantity */}
-          <div>
-            <label htmlFor="quantity" className="text-theme-muted mb-1 block text-sm">
-              Quantidade
-            </label>
-            <Input
-              id="quantity"
-              type="number"
-              min="1"
-              aria-label="Quantidade"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
+          {/* KITS - NO glass, NO dimensions */}
+          {category === 'KITS' && (
+            <KitsFields
+              category={category}
+              currentValues={currentFormValues}
+              model={model}
+              setModel={setModel}
+              hardwareColor={hardwareColor}
+              setHardwareColor={setHardwareColor}
+              isEditing={isEditing}
+              isFromProductSelection={!!currentProduct}
             />
-          </div>
+          )}
 
-          {/* Opções específicas por categoria */}
+          {/* SERVICOS - Conditional glass fields (only if TROCA_VIDRO) */}
+          {category === 'SERVICOS' && (
+            <ServicosFields
+              category={category}
+              currentValues={currentFormValues}
+              model={model}
+              setModel={setModel}
+              serviceUrgency={serviceUrgency}
+              setServiceUrgency={setServiceUrgency}
+              glassType={glassType}
+              setGlassType={setGlassType}
+              thickness={thickness}
+              setThickness={setThickness}
+              isEditing={isEditing}
+              isFromProductSelection={!!currentProduct}
+            />
+          )}
+
+          {/* GUARDA_CORPO - Conditional glass (NOT for GRADIL_INOX) */}
+          {category === 'GUARDA_CORPO' && (
+            <GuardaCorpoFields
+              category={category}
+              currentValues={currentFormValues}
+              model={model}
+              setModel={setModel}
+              hardwareColor={hardwareColor}
+              setHardwareColor={setHardwareColor}
+              glassType={glassType}
+              setGlassType={setGlassType}
+              glassColor={glassColor}
+              setGlassColor={setGlassColor}
+              thickness={thickness}
+              setThickness={setThickness}
+              hasHandrail={hasHandrail}
+              setHasHandrail={setHasHandrail}
+              handrailType={handrailType}
+              setHandrailType={setHandrailType}
+              isEditing={isEditing}
+              isFromProductSelection={!!currentProduct}
+            />
+          )}
+
+          {/* ========== OTHER CATEGORIES: Keep existing structure for now ========== */}
 
           {/* BOX: Modelo e Linha de Acabamento */}
           {category === 'BOX' && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Modelo do Box</label>
-                <Select value={model} onValueChange={setModel}>
-                  <SelectTrigger>
+                <label className="text-theme-muted mb-1 block text-sm">
+                  Modelo do Box{' '}
+                  {isModelLocked && (
+                    <span className="text-xs text-accent-500">(selecionado na etapa anterior)</span>
+                  )}
+                </label>
+                <Select value={model} onValueChange={setModel} disabled={isModelLocked}>
+                  <SelectTrigger className={isModelLocked ? 'cursor-not-allowed opacity-60' : ''}>
                     <SelectValue placeholder="Selecione o modelo" />
                   </SelectTrigger>
                   <SelectContent>
@@ -701,9 +984,14 @@ export function StepDetails() {
           {category === 'PORTAS' && (
             <div className="space-y-4">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Tipo de Porta</label>
-                <Select value={model} onValueChange={setModel}>
-                  <SelectTrigger>
+                <label className="text-theme-muted mb-1 block text-sm">
+                  Tipo de Porta{' '}
+                  {isModelLocked && (
+                    <span className="text-xs text-accent-500">(selecionado na etapa anterior)</span>
+                  )}
+                </label>
+                <Select value={model} onValueChange={setModel} disabled={isModelLocked}>
+                  <SelectTrigger className={isModelLocked ? 'cursor-not-allowed opacity-60' : ''}>
                     <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent>
@@ -778,9 +1066,14 @@ export function StepDetails() {
           {category === 'JANELAS' && (
             <div className="space-y-4">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Tipo de Janela</label>
-                <Select value={model} onValueChange={setModel}>
-                  <SelectTrigger>
+                <label className="text-theme-muted mb-1 block text-sm">
+                  Tipo de Janela{' '}
+                  {isModelLocked && (
+                    <span className="text-xs text-accent-500">(selecionado na etapa anterior)</span>
+                  )}
+                </label>
+                <Select value={model} onValueChange={setModel} disabled={isModelLocked}>
+                  <SelectTrigger className={isModelLocked ? 'cursor-not-allowed opacity-60' : ''}>
                     <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent>
@@ -837,9 +1130,14 @@ export function StepDetails() {
           {category === 'GUARDA_CORPO' && (
             <div className="space-y-4">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Sistema de Fixacao</label>
-                <Select value={model} onValueChange={setModel}>
-                  <SelectTrigger>
+                <label className="text-theme-muted mb-1 block text-sm">
+                  Sistema de Fixacao{' '}
+                  {isModelLocked && (
+                    <span className="text-xs text-accent-500">(selecionado na etapa anterior)</span>
+                  )}
+                </label>
+                <Select value={model} onValueChange={setModel} disabled={isModelLocked}>
+                  <SelectTrigger className={isModelLocked ? 'cursor-not-allowed opacity-60' : ''}>
                     <SelectValue placeholder="Selecione o sistema" />
                   </SelectTrigger>
                   <SelectContent>
@@ -862,7 +1160,7 @@ export function StepDetails() {
                     setHasHandrail(e.target.checked)
                     if (!e.target.checked) setHandrailType('') // Reset se desmarcar
                   }}
-                  className="h-4 w-4 rounded border-neutral-600 bg-theme-elevated text-accent-500 focus:ring-accent-500"
+                  className="bg-theme-elevated h-4 w-4 rounded border-neutral-600 text-accent-500 focus:ring-accent-500"
                 />
                 <label htmlFor="hasHandrail" className="text-theme-primary text-sm">
                   Incluir Corrimão
@@ -893,9 +1191,14 @@ export function StepDetails() {
           {/* CORTINAS_VIDRO: Sistema */}
           {category === 'CORTINAS_VIDRO' && (
             <div>
-              <label className="text-theme-muted mb-1 block text-sm">Sistema de Abertura</label>
-              <Select value={model} onValueChange={setModel}>
-                <SelectTrigger>
+              <label className="text-theme-muted mb-1 block text-sm">
+                Sistema de Abertura{' '}
+                {isModelLocked && (
+                  <span className="text-xs text-accent-500">(selecionado na etapa anterior)</span>
+                )}
+              </label>
+              <Select value={model} onValueChange={setModel} disabled={isModelLocked}>
+                <SelectTrigger className={isModelLocked ? 'cursor-not-allowed opacity-60' : ''}>
                   <SelectValue placeholder="Selecione o sistema" />
                 </SelectTrigger>
                 <SelectContent>
@@ -964,9 +1267,14 @@ export function StepDetails() {
           {category === 'ESPELHOS' && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Tipo de Espelho</label>
-                <Select value={model} onValueChange={setModel}>
-                  <SelectTrigger>
+                <label className="text-theme-muted mb-1 block text-sm">
+                  Tipo de Espelho{' '}
+                  {isModelLocked && (
+                    <span className="text-xs text-accent-500">(selecionado na etapa anterior)</span>
+                  )}
+                </label>
+                <Select value={model} onValueChange={setModel} disabled={isModelLocked}>
+                  <SelectTrigger className={isModelLocked ? 'cursor-not-allowed opacity-60' : ''}>
                     <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent>
@@ -1079,7 +1387,9 @@ export function StepDetails() {
                     </Select>
                   </div>
                   <div>
-                    <label className="text-theme-muted mb-1 block text-sm">Material do Suporte</label>
+                    <label className="text-theme-muted mb-1 block text-sm">
+                      Material do Suporte
+                    </label>
                     <Select value={shelfSupportMaterial} onValueChange={setShelfSupportMaterial}>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione" />
@@ -1157,9 +1467,14 @@ export function StepDetails() {
           {category === 'SERVICOS' && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-theme-muted mb-1 block text-sm">Tipo de Servico</label>
-                <Select value={model} onValueChange={setModel}>
-                  <SelectTrigger>
+                <label className="text-theme-muted mb-1 block text-sm">
+                  Tipo de Servico{' '}
+                  {isModelLocked && (
+                    <span className="text-xs text-accent-500">(selecionado na etapa anterior)</span>
+                  )}
+                </label>
+                <Select value={model} onValueChange={setModel} disabled={isModelLocked}>
+                  <SelectTrigger className={isModelLocked ? 'cursor-not-allowed opacity-60' : ''}>
                     <SelectValue placeholder="Selecione o servico" />
                   </SelectTrigger>
                   <SelectContent>
@@ -1189,52 +1504,54 @@ export function StepDetails() {
             </div>
           )}
 
-          {/* Tipo de Vidro (para categorias que usam) */}
-          {[
-            'BOX',
-            'PORTAS',
-            'JANELAS',
-            'GUARDA_CORPO',
-            'CORTINAS_VIDRO',
-            'PERGOLADOS',
-            'DIVISORIAS',
-            'FECHAMENTOS',
-            'VIDROS',
-            'TAMPOS_PRATELEIRAS',
-          ].includes(category || '') && (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label className="text-theme-muted mb-1 block text-sm">Tipo de Vidro</label>
-                <Select value={glassType} onValueChange={setGlassType}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {glassTypeOptions.map((opt) => (
-                      <SelectItem key={opt.id} value={opt.id}>
-                        {opt.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          {/* Phase 4: Tipo de Vidro (apenas se NÃO for "sem vidro" E material for vidro) */}
+          {!semVidro &&
+            isGlassMaterial &&
+            [
+              'BOX',
+              'PORTAS',
+              'JANELAS',
+              'GUARDA_CORPO',
+              'CORTINAS_VIDRO',
+              'PERGOLADOS',
+              'DIVISORIAS',
+              'FECHAMENTOS',
+              'VIDROS',
+              'TAMPOS_PRATELEIRAS',
+            ].includes(category || '') && (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="text-theme-muted mb-1 block text-sm">Tipo de Vidro</label>
+                  <Select value={glassType} onValueChange={setGlassType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {glassTypeOptions.map((opt) => (
+                        <SelectItem key={opt.id} value={opt.id}>
+                          {opt.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-theme-muted mb-1 block text-sm">Cor do Vidro</label>
+                  <Select value={glassColor} onValueChange={setGlassColor}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a cor" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {glassColorOptions.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div>
-                <label className="text-theme-muted mb-1 block text-sm">Cor do Vidro</label>
-                <Select value={glassColor} onValueChange={setGlassColor}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a cor" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {glassColorOptions.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          )}
+            )}
 
           {/* Cor de Espelho (para categoria ESPELHOS) */}
           {category === 'ESPELHOS' && (
@@ -1255,24 +1572,27 @@ export function StepDetails() {
             </div>
           )}
 
-          {/* Opções comuns: Espessura, Acabamento, Cor da Ferragem */}
+          {/* Phase 4: Opções comuns - Espessura apenas se não for "sem vidro" */}
           {category !== 'SERVICOS' && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div>
-                <label className="text-theme-muted mb-1 block text-sm">Espessura</label>
-                <Select value={thickness} onValueChange={setThickness}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {thicknessOptions.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {/* Espessura só aparece se tiver vidro OU for categoria que sempre tem vidro (ESPELHOS, FERRAGENS) */}
+              {(!canBeSoldWithoutGlass || !semVidro) && (
+                <div>
+                  <label className="text-theme-muted mb-1 block text-sm">Espessura</label>
+                  <Select value={thickness} onValueChange={setThickness}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {thicknessOptions.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
               <div>
                 <label className="text-theme-muted mb-1 block text-sm">Acabamento de Borda</label>
                 <Select value={finish} onValueChange={setFinish}>
@@ -1374,7 +1694,6 @@ export function StepDetails() {
               </label>
             )}
           </div>
-
 
           {/* Phase 3: Smart Suggestions */}
           <SmartSuggestionsPanel

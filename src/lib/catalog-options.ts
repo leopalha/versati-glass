@@ -172,6 +172,84 @@ export const MIRROR_COLORS = [
 ] as const
 
 // ============================================
+// TIPOS DE MATERIAL (Phase 4 - Alternativas ao vidro)
+// ============================================
+
+/**
+ * Materiais disponíveis para diferentes categorias de produtos
+ * Baseado no mercado de vidraçaria e serralheria
+ */
+export const MATERIAL_TYPES = [
+  // VIDROS (padrão para maioria dos produtos)
+  {
+    id: 'VIDRO_TEMPERADO',
+    name: 'Vidro Temperado',
+    description: '5x mais resistente, segurança',
+    categories: ['BOX', 'PORTAS', 'JANELAS', 'GUARDA_CORPO', 'DIVISORIAS', 'FECHAMENTOS', 'TAMPOS_PRATELEIRAS', 'VIDROS'],
+  },
+  {
+    id: 'VIDRO_LAMINADO',
+    name: 'Vidro Laminado',
+    description: 'Máxima segurança, não estilhaça',
+    categories: ['PERGOLADOS', 'GUARDA_CORPO', 'DIVISORIAS', 'TAMPOS_PRATELEIRAS', 'VIDROS'],
+  },
+  {
+    id: 'VIDRO_COMUM',
+    name: 'Vidro Comum (Float)',
+    description: 'Econômico, uso interno',
+    categories: ['DIVISORIAS', 'VIDROS'],
+  },
+
+  // POLICARBONATO (alternativa resistente)
+  {
+    id: 'POLICARBONATO_COMPACTO',
+    name: 'Policarbonato Compacto',
+    description: '6mm, 8mm, 10mm - resistente a impactos',
+    categories: ['PERGOLADOS', 'DIVISORIAS', 'FECHAMENTOS', 'PORTAS', 'JANELAS'],
+    thicknessOptions: ['6mm', '8mm', '10mm'],
+  },
+  {
+    id: 'POLICARBONATO_ALVEOLAR',
+    name: 'Policarbonato Alveolar',
+    description: '6mm, 10mm, 16mm - isolamento térmico',
+    categories: ['PERGOLADOS', 'FECHAMENTOS'],
+    thicknessOptions: ['6mm', '10mm', '16mm'],
+  },
+
+  // ACRÍLICO (alternativa econômica)
+  {
+    id: 'ACRILICO',
+    name: 'Acrílico (PMMA)',
+    description: 'Transparente, leve, econômico',
+    categories: ['DIVISORIAS', 'TAMPOS_PRATELEIRAS', 'PERGOLADOS'],
+    thicknessOptions: ['3mm', '5mm', '8mm', '10mm'],
+  },
+
+  // TELA/REDE (proteção sem vedação)
+  {
+    id: 'TELA_REDE',
+    name: 'Tela/Rede de Proteção',
+    description: 'Proteção contra quedas, ventilação',
+    categories: ['FECHAMENTOS'],
+  },
+
+  // ESTRUTURAL (sem material de vedação)
+  {
+    id: 'ESTRUTURAL_ONLY',
+    name: 'Apenas Estrutura',
+    description: 'Perfis e ferragens sem vedação',
+    categories: ['BOX', 'PORTAS', 'JANELAS', 'GUARDA_CORPO', 'DIVISORIAS', 'FECHAMENTOS', 'PERGOLADOS'],
+  },
+] as const
+
+/**
+ * Helper: Obter materiais disponíveis para uma categoria
+ */
+export function getMaterialsForCategory(category: string) {
+  return MATERIAL_TYPES.filter((mat) => (mat.categories as readonly string[]).includes(category))
+}
+
+// ============================================
 // ESPESSURAS DE VIDRO
 // ============================================
 
