@@ -7,6 +7,7 @@
 
 import { QuoteItem } from '@/store/quote-store'
 import type { AiQuoteData } from '@/store/quote-store'
+import { formatCEP, formatPhone, formatCPFOrCNPJ } from '@/lib/utils'
 
 // AI quoteContext structure (what the AI saves)
 export interface AiQuoteContext {
@@ -213,15 +214,15 @@ export function transformAiContextToQuoteData(
       customerData = {
         name,
         email,
-        phone,
-        cpfCnpj,
+        phone: phone ? formatPhone(phone) : undefined,
+        cpfCnpj: cpfCnpj ? formatCPFOrCNPJ(cpfCnpj) : undefined,
         street,
         number: num,
         complement,
         neighborhood,
         city,
         state,
-        zipCode,
+        zipCode: zipCode ? formatCEP(zipCode) : undefined,
       }
     }
   }
@@ -322,51 +323,73 @@ export function isQuoteContextFullyComplete(
  * Get completion percentage of quote context (0-100)
  * Useful for progress indicators
  *
- * Campos OBRIGATÓRIOS para chegar a 100%:
- * - Produto/categoria selecionado: 25%
- * - AMBAS as medidas (largura E altura): 25%
- * - Telefone do cliente: 25%
- * - Nome do cliente: 25%
+ * Campos OBRIGATÓRIOS para chegar a 100% (cada um vale ~14%):
+ * - Produto/categoria selecionado: 14%
+ * - AMBAS as medidas (largura E altura): 14%
+ * - Nome do cliente: 14%
+ * - Telefone do cliente: 14%
+ * - CPF/CNPJ: 14%
+ * - CEP + Endereço (rua, cidade, estado): 15%
+ * - Número do endereço: 15%
  *
- * Campos opcionais não contam para os 100%
  * Isso garante que só mostra checkout quando tem TUDO preenchido
  */
 export function getQuoteContextCompletion(quoteContext: AiQuoteContext | null | undefined): number {
   if (!quoteContext) return 0
 
   let earnedPoints = 0
+  const TOTAL_FIELDS = 7
 
-  // Produto (50% - obrigatório)
+  // Produto (obrigatório)
   if (quoteContext.items && quoteContext.items.length > 0) {
     const firstItem = quoteContext.items[0]
 
-    // Categoria/produto selecionado: 25%
+    // Categoria/produto selecionado
     if (firstItem.category || firstItem.productName) {
-      earnedPoints += 25
+      earnedPoints += 1
     }
 
-    // AMBAS as medidas (obrigatório): 25%
-    // Só ganha pontos se tiver AMBAS as dimensões
+    // AMBAS as medidas (obrigatório)
     if (firstItem.width && firstItem.width > 0 && firstItem.height && firstItem.height > 0) {
-      earnedPoints += 25
+      earnedPoints += 1
     }
-    // Se tiver só uma dimensão, não ganha pontos completos - precisa das duas
   }
 
-  // Dados do cliente (50% - obrigatório)
+  // Dados do cliente (obrigatório)
   if (quoteContext.customerData) {
-    // Telefone (OBRIGATÓRIO): 25%
-    if (quoteContext.customerData.phone) {
-      earnedPoints += 25
+    // Nome
+    if (quoteContext.customerData.name) {
+      earnedPoints += 1
     }
 
-    // Nome (OBRIGATÓRIO): 25%
-    if (quoteContext.customerData.name) {
-      earnedPoints += 25
+    // Telefone
+    if (quoteContext.customerData.phone) {
+      earnedPoints += 1
+    }
+
+    // CPF/CNPJ
+    if (quoteContext.customerData.cpfCnpj) {
+      earnedPoints += 1
+    }
+
+    // CEP + Endereço (rua, cidade, estado)
+    if (
+      quoteContext.customerData.zipCode &&
+      quoteContext.customerData.street &&
+      quoteContext.customerData.city &&
+      quoteContext.customerData.state
+    ) {
+      earnedPoints += 1
+    }
+
+    // Número do endereço
+    if (quoteContext.customerData.number) {
+      earnedPoints += 1
     }
   }
 
-  return earnedPoints
+  // Calcula porcentagem (arredonda para evitar decimais)
+  return Math.round((earnedPoints / TOTAL_FIELDS) * 100)
 }
 
 /**
@@ -513,13 +536,13 @@ export function getProgressDetails(quoteContext: AiQuoteContext | null | undefin
     required: field.required || false,
   }))
 
-  // Campos de contato (sempre os mesmos)
+  // Campos de contato (obrigatórios para checkout)
   result.contactFields = [
     {
       key: 'name',
       label: 'Nome',
       completed: !!quoteContext.customerData?.name,
-      required: false,
+      required: true,
     },
     {
       key: 'phone',
@@ -528,10 +551,26 @@ export function getProgressDetails(quoteContext: AiQuoteContext | null | undefin
       required: true,
     },
     {
-      key: 'email',
-      label: 'Email',
-      completed: !!quoteContext.customerData?.email,
-      required: false,
+      key: 'cpfCnpj',
+      label: 'CPF/CNPJ',
+      completed: !!quoteContext.customerData?.cpfCnpj,
+      required: true,
+    },
+    {
+      key: 'address',
+      label: 'Endereço (via CEP)',
+      completed: !!(
+        quoteContext.customerData?.zipCode &&
+        quoteContext.customerData?.street &&
+        quoteContext.customerData?.city
+      ),
+      required: true,
+    },
+    {
+      key: 'number',
+      label: 'Número',
+      completed: !!quoteContext.customerData?.number,
+      required: true,
     },
   ]
 

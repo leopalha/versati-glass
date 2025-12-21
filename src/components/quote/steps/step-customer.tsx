@@ -52,7 +52,8 @@ type CustomerFormData = z.infer<typeof customerSchema>
 export function StepCustomer() {
   const { data: session, status } = useSession()
   const { customerData, locationData, setCustomerData, nextStep, prevStep } = useQuoteStore()
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [pendingFormData, setPendingFormData] = useState<CustomerFormData | null>(null)
 
   const {
     register,
@@ -192,9 +193,43 @@ export function StepCustomer() {
   }
 
   const onSubmit = (data: CustomerFormData) => {
+    // Se não está logado, mostrar modal de autenticação
+    if (!session?.user) {
+      setPendingFormData(data)
+      setShowAuthModal(true)
+      return
+    }
+
     setCustomerData(data)
     nextStep()
   }
+
+  // Recuperar dados salvos no localStorage após login
+  useEffect(() => {
+    if (session?.user) {
+      const savedData = localStorage.getItem('pendingQuoteCustomerData')
+      if (savedData) {
+        try {
+          const parsedData = JSON.parse(savedData) as CustomerFormData
+          localStorage.removeItem('pendingQuoteCustomerData')
+          setCustomerData(parsedData)
+          nextStep()
+        } catch (e) {
+          logger.error('[StepCustomer] Error parsing saved customer data:', e)
+          localStorage.removeItem('pendingQuoteCustomerData')
+        }
+      }
+    }
+  }, [session, setCustomerData, nextStep])
+
+  // Quando o usuário faz login e volta (via state), continuar o fluxo
+  useEffect(() => {
+    if (session?.user && pendingFormData) {
+      setCustomerData(pendingFormData)
+      setPendingFormData(null)
+      nextStep()
+    }
+  }, [session, pendingFormData, setCustomerData, nextStep])
 
   // Handle login redirect
   const handleLogin = () => {
@@ -480,12 +515,55 @@ export function StepCustomer() {
         </form>
       </Card>
 
-      {/* Info about account creation */}
-      {!session?.user && (
-        <p className="text-theme-subtle mt-4 text-center text-xs">
-          Ao continuar, uma conta sera criada automaticamente para voce acompanhar seu orcamento.
-          Voce recebera um email com os dados de acesso.
-        </p>
+      {/* Auth Modal - Required before continuing */}
+      {showAuthModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <Card className="mx-4 max-w-md p-6">
+            <div className="mb-6 text-center">
+              <User className="mx-auto mb-4 h-12 w-12 text-accent-500" />
+              <h3 className="text-theme-primary text-xl font-bold">Entre ou crie sua conta</h3>
+              <p className="text-theme-muted mt-2 text-sm">
+                Para continuar com seu orcamento, voce precisa estar logado. Isso permite acompanhar
+                o status do seu pedido.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <Button
+                onClick={() => {
+                  // Salvar dados do formulário no localStorage antes de redirecionar
+                  if (pendingFormData) {
+                    localStorage.setItem(
+                      'pendingQuoteCustomerData',
+                      JSON.stringify(pendingFormData)
+                    )
+                  }
+                  signIn(undefined, { callbackUrl: '/orcamento' })
+                }}
+                className="w-full"
+                size="lg"
+              >
+                <LogIn className="mr-2 h-5 w-5" />
+                Entrar com minha conta
+              </Button>
+
+              <Link href="/registro?redirect=/orcamento" className="block">
+                <Button variant="outline" className="w-full" size="lg">
+                  <UserPlus className="mr-2 h-5 w-5" />
+                  Criar conta gratuita
+                </Button>
+              </Link>
+            </div>
+
+            <Button
+              variant="ghost"
+              className="text-theme-muted mt-4 w-full"
+              onClick={() => setShowAuthModal(false)}
+            >
+              Voltar e editar dados
+            </Button>
+          </Card>
+        </div>
       )}
     </div>
   )

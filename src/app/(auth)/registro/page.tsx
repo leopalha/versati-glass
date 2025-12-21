@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -35,6 +35,8 @@ type RegisterFormData = z.infer<typeof registerSchema>
 
 export default function RegisterPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectUrl = searchParams.get('redirect') || '/portal'
   const { toast } = useToast()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -101,8 +103,8 @@ export default function RegisterPage() {
           title: 'Bem-vindo!',
           description: 'Sua conta foi criada com sucesso',
         })
-        // Redirect to portal (new users are always CUSTOMER role)
-        router.push('/portal')
+        // Redirect to the page the user came from (or portal)
+        router.push(redirectUrl)
         router.refresh()
       }
     } catch {
@@ -119,7 +121,7 @@ export default function RegisterPage() {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
     try {
-      await signIn('google', { callbackUrl: '/login' })
+      await signIn('google', { callbackUrl: redirectUrl })
     } catch {
       toast({
         variant: 'error',
