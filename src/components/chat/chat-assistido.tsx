@@ -30,6 +30,10 @@ import {
   XCircle,
   Calendar,
   ExternalLink,
+  Mic,
+  Square,
+  Play,
+  Volume2,
 } from 'lucide-react'
 import { logger } from '@/lib/logger'
 
@@ -92,8 +96,7 @@ import {
   getProgressDetails,
   type ProgressDetail,
 } from '@/lib/ai-quote-transformer'
-import { VoiceChatButton } from '@/components/chat/voice-chat-button'
-import { useVoice } from '@/hooks/use-voice'
+// VoiceChatButton removed - using native audio recording instead
 import { useCrossChannelUpdates } from '@/hooks/use-cross-channel-updates'
 import { showCrossChannelNotification } from '@/components/chat/cross-channel-notification'
 import { QuoteTransitionModal } from '@/components/chat/quote-transition-modal'
@@ -107,6 +110,7 @@ interface Message {
   content: string
   createdAt: string
   imageUrl?: string
+  imageUrls?: string[] // Support for multiple images
   measurements?: {
     width?: number
     height?: number
@@ -120,6 +124,8 @@ interface Message {
     outlook: string
     office365: string
   }
+  // Audio support for TTS playback
+  audioUrl?: string
 }
 
 interface ChatAssistidoProps {
@@ -151,11 +157,15 @@ export function ChatAssistido({
   const [sessionId] = useState(
     () => `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
   )
-  const [selectedImage, setSelectedImage] = useState<{
-    file: File
-    preview: string
-    base64: string
-  } | null>(null)
+  // Support for multiple images (up to 10)
+  const [selectedImages, setSelectedImages] = useState<
+    Array<{
+      file: File
+      preview: string
+      base64: string
+    }>
+  >([])
+  const MAX_IMAGES = 10
   const [isUploadingImage, setIsUploadingImage] = useState(false)
 
   // AI-CHAT Sprint P1.6: Quote export state
@@ -176,15 +186,26 @@ export function ChatAssistido({
 
   // Product suggestions removed - using conversational flow instead
 
-  // Voice feature state
-  const [isVoiceEnabled, setIsVoiceEnabled] = useState(false)
-  const { speak, stopSpeaking, isSpeaking } = useVoice({ language: 'pt-BR' })
+  // Old voice feature removed - now using per-message audio playback
 
   // Progress bar minimize state
   const [isProgressMinimized, setIsProgressMinimized] = useState(false)
 
   // Progress confirmation state - only show after user confirms
   const [progressConfirmed, setProgressConfirmed] = useState(false)
+
+  // Audio recording state
+  const [isRecording, setIsRecording] = useState(false)
+  const [recordingTime, setRecordingTime] = useState(0)
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
+  const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const audioChunksRef = useRef<Blob[]>([])
+  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Audio playback state for agent messages
+  const [playingMessageId, setPlayingMessageId] = useState<string | null>(null)
+  const audioPlayerRef = useRef<HTMLAudioElement | null>(null)
 
   // OMNICHANNEL Sprint 1 - Task 4: Cross-channel notifications
   // Memoize onUpdate to prevent infinite loop
@@ -280,7 +301,7 @@ export function ChatAssistido({
         id: 'welcome',
         role: 'ASSISTANT',
         content:
-          'Ola! Sou o assistente virtual da Versati Glass. Como posso ajudar voce hoje? Posso tirar duvidas sobre nossos produtos ou ajudar a fazer um orcamento.',
+          'Oi! Sou a Ana, da Versati Glass 😊\n\nPosso te ajudar a fazer um orçamento ou tirar dúvidas sobre nossos produtos.\n\n📸 Dica: Se quiser, pode me enviar fotos do local - assim consigo entender melhor o que você precisa!',
         createdAt: new Date().toISOString(),
       },
     ])
@@ -311,86 +332,336 @@ export function ChatAssistido({
           id: 'welcome',
           role: 'ASSISTANT',
           content:
-            'Ola! Sou o assistente virtual da Versati Glass. Como posso ajudar voce hoje? Posso tirar duvidas sobre nossos produtos ou ajudar a fazer um orcamento.',
+            'Oi! Sou a Ana, da Versati Glass 😊\n\nPosso te ajudar a fazer um orçamento ou tirar dúvidas sobre nossos produtos.\n\n📸 Dica: Se quiser, pode me enviar fotos do local - assim consigo entender melhor o que você precisa!',
           createdAt: new Date().toISOString(),
         },
       ])
     }
   }, [isOpen, messages.length])
 
-  // Auto-speak AI responses when voice is enabled
-  useEffect(() => {
-    if (!isVoiceEnabled || !messages.length) return
+  // Old auto-speak removed - now using per-message play button
 
-    const lastMessage = messages[messages.length - 1]
-    if (lastMessage.role === 'ASSISTANT' && !isSpeaking && !isLoading) {
-      // Speak the last AI response
-      speak(lastMessage.content, {
-        rate: 1.0,
-        pitch: 1.0,
-        volume: 1.0,
-      })
-    }
-  }, [messages, isVoiceEnabled, speak, isSpeaking, isLoading])
-
-  // Stop speaking when voice is disabled
-  useEffect(() => {
-    if (!isVoiceEnabled && isSpeaking) {
-      stopSpeaking()
-    }
-  }, [isVoiceEnabled, isSpeaking, stopSpeaking])
-
-  // Handler para selecionar imagem
+  // Handler para selecionar múltiplas imagens
   const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const files = e.target.files
+    if (!files || files.length === 0) return
 
-    // Validar tipo
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
-    if (!allowedTypes.includes(file.type)) {
-      alert('Formato nao suportado. Use JPG, PNG, WebP ou GIF.')
+    const remainingSlots = MAX_IMAGES - selectedImages.length
+
+    if (remainingSlots <= 0) {
+      alert(`Máximo de ${MAX_IMAGES} imagens permitido.`)
       return
     }
 
-    // Validar tamanho (10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      alert('Imagem muito grande. Maximo 10MB.')
-      return
-    }
-
+    const filesToProcess = Array.from(files).slice(0, remainingSlots)
     setIsUploadingImage(true)
 
     try {
-      // Converter para base64
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        const base64 = reader.result as string
-        setSelectedImage({
-          file,
-          preview: URL.createObjectURL(file),
-          base64,
+      const newImages = await Promise.all(
+        filesToProcess.map(async (file) => {
+          // Validar tipo
+          if (!allowedTypes.includes(file.type)) {
+            console.warn(`Formato não suportado: ${file.name}`)
+            return null
+          }
+          // Validar tamanho (10MB)
+          if (file.size > 10 * 1024 * 1024) {
+            console.warn(`Imagem muito grande: ${file.name}`)
+            return null
+          }
+
+          return new Promise<{ file: File; preview: string; base64: string } | null>((resolve) => {
+            const reader = new FileReader()
+            reader.onloadend = () => {
+              resolve({
+                file,
+                preview: URL.createObjectURL(file),
+                base64: reader.result as string,
+              })
+            }
+            reader.onerror = () => resolve(null)
+            reader.readAsDataURL(file)
+          })
         })
-        setIsUploadingImage(false)
+      )
+
+      const validImages = newImages.filter((img): img is NonNullable<typeof img> => img !== null)
+      if (validImages.length > 0) {
+        setSelectedImages((prev) => [...prev, ...validImages])
       }
-      reader.readAsDataURL(file)
+      if (validImages.length < filesToProcess.length) {
+        alert('Algumas imagens não puderam ser processadas (formato ou tamanho inválido).')
+      }
     } catch {
-      alert('Erro ao processar imagem.')
+      alert('Erro ao processar imagens.')
+    } finally {
       setIsUploadingImage(false)
-    }
-
-    // Limpar input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
     }
   }
 
-  // Remover imagem selecionada
-  const removeSelectedImage = () => {
-    if (selectedImage?.preview) {
-      URL.revokeObjectURL(selectedImage.preview)
-    }
-    setSelectedImage(null)
+  // Remover uma imagem específica
+  const removeImage = (index: number) => {
+    setSelectedImages((prev) => {
+      const imageToRemove = prev[index]
+      if (imageToRemove?.preview) {
+        URL.revokeObjectURL(imageToRemove.preview)
+      }
+      return prev.filter((_, i) => i !== index)
+    })
   }
+
+  // Remover todas as imagens
+  const removeAllImages = () => {
+    selectedImages.forEach((img) => {
+      if (img.preview) {
+        URL.revokeObjectURL(img.preview)
+      }
+    })
+    setSelectedImages([])
+  }
+
+  // Start audio recording
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mediaRecorder = new MediaRecorder(stream)
+      mediaRecorderRef.current = mediaRecorder
+      audioChunksRef.current = []
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data)
+        }
+      }
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
+        setAudioBlob(audioBlob)
+        const url = URL.createObjectURL(audioBlob)
+        setAudioPreviewUrl(url)
+
+        // Stop all tracks
+        stream.getTracks().forEach((track) => track.stop())
+      }
+
+      mediaRecorder.start(100)
+      setIsRecording(true)
+      setRecordingTime(0)
+
+      // Start timer
+      recordingTimerRef.current = setInterval(() => {
+        setRecordingTime((prev) => prev + 1)
+      }, 1000)
+    } catch (error) {
+      console.error('Error starting recording:', error)
+      toast({
+        title: 'Erro ao gravar',
+        description: 'Permita o acesso ao microfone para gravar.',
+        variant: 'error',
+      })
+    }
+  }
+
+  // Stop audio recording
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop()
+      setIsRecording(false)
+
+      if (recordingTimerRef.current) {
+        clearInterval(recordingTimerRef.current)
+        recordingTimerRef.current = null
+      }
+    }
+  }
+
+  // Cancel/remove recorded audio
+  const removeAudio = () => {
+    if (audioPreviewUrl) {
+      URL.revokeObjectURL(audioPreviewUrl)
+    }
+    setAudioBlob(null)
+    setAudioPreviewUrl(null)
+    setRecordingTime(0)
+  }
+
+  // Format recording time
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
+  // Send audio message (transcribe and send)
+  const sendAudioMessage = async () => {
+    if (!audioBlob) return
+
+    setIsLoading(true)
+
+    try {
+      // Convert blob to base64
+      const reader = new FileReader()
+      const base64Promise = new Promise<string>((resolve) => {
+        reader.onloadend = () => resolve(reader.result as string)
+        reader.readAsDataURL(audioBlob)
+      })
+      const audioBase64 = await base64Promise
+
+      // Add user message with audio indicator
+      const userMessage: Message = {
+        id: `user-${Date.now()}`,
+        role: 'USER',
+        content: '🎤 Mensagem de voz enviada...',
+        createdAt: new Date().toISOString(),
+      }
+      setMessages((prev) => [...prev, userMessage])
+      removeAudio()
+
+      // Send to transcription API
+      const response = await fetch('/api/ai/transcribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ audioBase64 }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Erro ao transcrever audio')
+      }
+
+      const { text } = await response.json()
+
+      // Update user message with transcribed text
+      setMessages((prev) =>
+        prev.map((msg) => (msg.id === userMessage.id ? { ...msg, content: `🎤 "${text}"` } : msg))
+      )
+
+      // Now send the transcribed text to AI
+      const aiResponse = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          conversationId,
+          sessionId,
+          imageBase64: null,
+          imageUrl: null,
+        }),
+      })
+
+      const aiData = await aiResponse.json()
+
+      if (!aiResponse.ok) {
+        throw new Error(aiData.error || 'Erro ao processar mensagem')
+      }
+
+      // Update conversationId if new
+      if (aiData.conversationId && !conversationId) {
+        setConversationId(aiData.conversationId)
+      }
+
+      const assistantMessage: Message = {
+        id: `assistant-${Date.now()}`,
+        role: 'ASSISTANT',
+        content: aiData.message,
+        createdAt: new Date().toISOString(),
+      }
+
+      setMessages((prev) => [...prev, assistantMessage])
+
+      // Check progress
+      setTimeout(() => checkExportStatus(), 500)
+    } catch (error) {
+      console.error('[Audio] Error:', error)
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `error-${Date.now()}`,
+          role: 'ASSISTANT',
+          content: 'Desculpe, nao consegui processar seu audio. Tente digitar sua mensagem.',
+          createdAt: new Date().toISOString(),
+        },
+      ])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Text-to-speech for agent messages
+  const playMessageAudio = async (messageId: string, content: string) => {
+    // If already playing this message, stop it
+    if (playingMessageId === messageId) {
+      if (audioPlayerRef.current) {
+        audioPlayerRef.current.pause()
+        audioPlayerRef.current.currentTime = 0
+      }
+      setPlayingMessageId(null)
+      return
+    }
+
+    // Stop any currently playing audio
+    if (audioPlayerRef.current) {
+      audioPlayerRef.current.pause()
+    }
+
+    setPlayingMessageId(messageId)
+
+    try {
+      // Use browser's built-in speech synthesis
+      if ('speechSynthesis' in window) {
+        // Stop any ongoing speech
+        window.speechSynthesis.cancel()
+
+        const utterance = new SpeechSynthesisUtterance(content)
+        utterance.lang = 'pt-BR'
+        utterance.rate = 1.0
+        utterance.pitch = 1.0
+
+        utterance.onend = () => {
+          setPlayingMessageId(null)
+        }
+
+        utterance.onerror = () => {
+          setPlayingMessageId(null)
+        }
+
+        window.speechSynthesis.speak(utterance)
+      }
+    } catch (error) {
+      console.error('Error playing audio:', error)
+      setPlayingMessageId(null)
+    }
+  }
+
+  // Stop message audio playback
+  const stopMessageAudio = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+    }
+    if (audioPlayerRef.current) {
+      audioPlayerRef.current.pause()
+      audioPlayerRef.current.currentTime = 0
+    }
+    setPlayingMessageId(null)
+  }
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (recordingTimerRef.current) {
+        clearInterval(recordingTimerRef.current)
+      }
+      if (audioPreviewUrl) {
+        URL.revokeObjectURL(audioPreviewUrl)
+      }
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel()
+      }
+    }
+  }, [audioPreviewUrl])
 
   // AI-CHAT Sprint P1.6 + P3.2: Check export status and update progress
   const checkExportStatus = useCallback(async () => {
@@ -657,26 +928,31 @@ export function ChatAssistido({
   }
 
   const sendMessage = async () => {
-    if ((!input.trim() && !selectedImage) || isLoading) return
+    if ((!input.trim() && selectedImages.length === 0) || isLoading) return
 
+    const hasImages = selectedImages.length > 0
     const messageContent =
-      input.trim() || (selectedImage ? 'Analise esta imagem do meu espaco, por favor.' : '')
+      input.trim() || (hasImages ? 'Analise estas imagens do meu espaco, por favor.' : '')
 
     const userMessage: Message = {
       id: `user-${Date.now()}`,
       role: 'USER',
       content: messageContent,
       createdAt: new Date().toISOString(),
-      imageUrl: selectedImage?.preview,
+      imageUrl: hasImages ? selectedImages[0]?.preview : undefined,
+      imageUrls: hasImages ? selectedImages.map((img) => img.preview) : undefined,
     }
 
     setMessages((prev) => [...prev, userMessage])
     setInput('')
-    const imageToSend = selectedImage
-    setSelectedImage(null)
+    const imagesToSend = [...selectedImages]
+    removeAllImages()
     setIsLoading(true)
 
     try {
+      // Send the first image for AI analysis (API currently supports single image)
+      // Future: can extend API to support multiple images
+      const primaryImage = imagesToSend[0]
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -684,8 +960,8 @@ export function ChatAssistido({
           message: messageContent,
           conversationId,
           sessionId,
-          imageBase64: imageToSend?.base64 || null,
-          imageUrl: imageToSend?.preview || null,
+          imageBase64: primaryImage?.base64 || null,
+          imageUrl: primaryImage?.preview || null,
         }),
       })
 
@@ -913,15 +1189,63 @@ export function ChatAssistido({
                             : 'bg-theme-secondary text-theme-primary'
                         )}
                       >
-                        {msg.imageUrl && (
+                        {/* Show multiple images or single image */}
+                        {msg.imageUrls && msg.imageUrls.length > 0 ? (
+                          <div className="mb-2 flex flex-wrap gap-1">
+                            {msg.imageUrls.map((url, idx) => (
+                              <img
+                                key={idx}
+                                src={url}
+                                alt={`Imagem ${idx + 1}`}
+                                className="h-auto max-w-full rounded-md"
+                                style={{ maxHeight: msg.imageUrls!.length > 1 ? '80px' : '150px' }}
+                              />
+                            ))}
+                          </div>
+                        ) : msg.imageUrl ? (
                           <img
                             src={msg.imageUrl}
                             alt="Imagem enviada"
                             className="mb-2 h-auto max-w-full rounded-md"
                             style={{ maxHeight: '150px' }}
                           />
-                        )}
+                        ) : null}
                         <p className="whitespace-pre-wrap break-words">{msg.content}</p>
+
+                        {/* Audio play button for agent messages */}
+                        {msg.role === 'ASSISTANT' && msg.content && msg.id !== 'welcome' && (
+                          <button
+                            onClick={() => {
+                              if (playingMessageId === msg.id) {
+                                stopMessageAudio()
+                              } else {
+                                playMessageAudio(msg.id, msg.content)
+                              }
+                            }}
+                            className={cn(
+                              'mt-2 flex items-center gap-1.5 rounded-md px-2 py-1 text-xs transition-colors',
+                              playingMessageId === msg.id
+                                ? 'bg-accent-500/30 text-accent-400'
+                                : 'text-theme-muted bg-white/10 hover:bg-white/20 hover:text-accent-400'
+                            )}
+                            aria-label={
+                              playingMessageId === msg.id ? 'Parar audio' : 'Ouvir mensagem'
+                            }
+                          >
+                            {playingMessageId === msg.id ? (
+                              <>
+                                <Square className="h-3 w-3" />
+                                <span>Parar</span>
+                              </>
+                            ) : (
+                              <>
+                                <Volume2 className="h-3 w-3" />
+                                <span>Ouvir</span>
+                              </>
+                            )}
+                          </button>
+                        )}
+
                         {/* Display measurements if available */}
                         {msg.measurements &&
                           (msg.measurements.width || msg.measurements.height) && (
@@ -1334,11 +1658,6 @@ export function ChatAssistido({
                                 }
 
                                 setMessages((prev) => [...prev, assistantMessage])
-
-                                // Speak response if voice enabled
-                                if (isVoiceEnabled && data.message) {
-                                  speak(data.message)
-                                }
                               } catch (error) {
                                 console.error('[CHAT] Error restarting conversation:', error)
                                 setMessages((prev) => [
@@ -1412,31 +1731,103 @@ export function ChatAssistido({
 
             {/* Input - sticky at bottom with safe area padding on mobile */}
             <div className="border-theme-default bg-theme-secondary sticky bottom-0 rounded-b-lg border-t p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-3">
-              {/* Input de arquivo oculto */}
+              {/* Input de arquivo oculto - suporta múltiplas imagens */}
               <input
                 ref={fileInputRef}
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 onChange={handleImageSelect}
+                multiple
                 className="hidden"
-                aria-label="Selecionar imagem"
+                aria-label="Selecionar imagens"
               />
 
-              {/* Preview da imagem selecionada */}
-              {selectedImage && (
-                <div className="relative mb-3 inline-block">
-                  <img
-                    src={selectedImage.preview}
-                    alt="Imagem selecionada"
-                    className="h-20 w-auto rounded-md border border-neutral-600"
-                  />
+              {/* Preview do audio gravado */}
+              {audioPreviewUrl && (
+                <div className="bg-theme-elevated mb-3 flex items-center gap-2 rounded-lg p-2">
+                  <audio src={audioPreviewUrl} className="hidden" />
+                  <div className="flex flex-1 items-center gap-2">
+                    <Mic className="h-4 w-4 text-accent-500" />
+                    <span className="text-theme-primary text-sm">
+                      Audio gravado ({formatTime(recordingTime)})
+                    </span>
+                  </div>
                   <button
-                    onClick={removeSelectedImage}
-                    className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white transition-colors hover:bg-red-600"
-                    aria-label="Remover imagem"
+                    onClick={sendAudioMessage}
+                    disabled={isLoading}
+                    className="rounded-full bg-accent-500 p-2 text-neutral-900 transition-colors hover:bg-accent-600 disabled:opacity-50"
+                    aria-label="Enviar audio"
                   >
-                    <XIcon className="h-3 w-3" />
+                    <Send className="h-4 w-4" />
                   </button>
+                  <button
+                    onClick={removeAudio}
+                    className="rounded-full bg-red-500/20 p-2 text-red-400 transition-colors hover:bg-red-500/30"
+                    aria-label="Cancelar audio"
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* Indicador de gravacao em andamento */}
+              {isRecording && (
+                <div className="mb-3 flex items-center gap-2 rounded-lg bg-red-500/20 p-2">
+                  <div className="h-3 w-3 animate-pulse rounded-full bg-red-500" />
+                  <span className="flex-1 text-sm text-red-400">
+                    Gravando... {formatTime(recordingTime)}
+                  </span>
+                  <button
+                    onClick={stopRecording}
+                    className="rounded-full bg-red-500 p-2 text-white transition-colors hover:bg-red-600"
+                    aria-label="Parar gravacao"
+                  >
+                    <Square className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* Preview das imagens selecionadas - grid */}
+              {selectedImages.length > 0 && (
+                <div className="mb-3">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-theme-muted text-xs">
+                      {selectedImages.length} de {MAX_IMAGES} imagens
+                    </span>
+                    <button
+                      onClick={removeAllImages}
+                      className="text-xs text-red-400 transition-colors hover:text-red-300"
+                    >
+                      Remover todas
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedImages.map((img, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={img.preview}
+                          alt={`Imagem ${index + 1}`}
+                          className="h-16 w-16 rounded-md border border-neutral-600 object-cover"
+                        />
+                        <button
+                          onClick={() => removeImage(index)}
+                          className="absolute -right-1 -top-1 rounded-full bg-red-500 p-0.5 text-white transition-colors hover:bg-red-600"
+                          aria-label={`Remover imagem ${index + 1}`}
+                        >
+                          <XIcon className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
+                    {selectedImages.length < MAX_IMAGES && (
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        className="flex h-16 w-16 items-center justify-center rounded-md border-2 border-dashed border-neutral-600 text-neutral-500 transition-colors hover:border-accent-500 hover:text-accent-500"
+                        aria-label="Adicionar mais imagens"
+                      >
+                        <ImageIcon className="h-5 w-5" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -1445,7 +1836,7 @@ export function ChatAssistido({
                 {/* Botao de anexar imagem */}
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  disabled={isLoading || isUploadingImage}
+                  disabled={isLoading || isUploadingImage || isRecording}
                   className="bg-theme-elevated text-theme-subtle flex items-center gap-2 rounded-lg border border-neutral-600 px-3 py-2 text-sm transition-colors hover:border-accent-500 hover:text-accent-500 disabled:opacity-50"
                   aria-label="Anexar imagem"
                   title="Enviar foto do espaço para análise"
@@ -1458,20 +1849,24 @@ export function ChatAssistido({
                   <span className="hidden sm:inline">Imagem</span>
                 </button>
 
-                {/* Voice Chat Button */}
-                <VoiceChatButton
-                  onTranscript={(text) => {
-                    setInput(text)
-                    // Auto-send voice messages
-                    setTimeout(() => {
-                      if (text.trim()) {
-                        sendMessage()
-                      }
-                    }, 500)
-                  }}
-                  onVoiceStateChange={setIsVoiceEnabled}
-                  className="flex-shrink-0"
-                />
+                {/* Botao de gravar audio - estilo WhatsApp */}
+                <button
+                  onClick={isRecording ? stopRecording : startRecording}
+                  disabled={isLoading || !!audioPreviewUrl}
+                  className={cn(
+                    'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors disabled:opacity-50',
+                    isRecording
+                      ? 'border-red-500 bg-red-500 text-white hover:bg-red-600'
+                      : 'bg-theme-elevated text-theme-subtle border-neutral-600 hover:border-accent-500 hover:text-accent-500'
+                  )}
+                  aria-label={isRecording ? 'Parar gravação' : 'Gravar áudio'}
+                  title={isRecording ? 'Parar gravação' : 'Gravar mensagem de voz'}
+                >
+                  {isRecording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                  <span className="hidden sm:inline">
+                    {isRecording ? formatTime(recordingTime) : 'Audio'}
+                  </span>
+                </button>
               </div>
 
               {/* Input de texto e botão enviar */}
@@ -1483,7 +1878,9 @@ export function ChatAssistido({
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={
-                    selectedImage ? 'Descreva o que precisa...' : 'Digite sua mensagem...'
+                    selectedImages.length > 0
+                      ? 'Descreva o que precisa...'
+                      : 'Digite sua mensagem...'
                   }
                   disabled={isLoading}
                   autoComplete="off"
@@ -1495,7 +1892,7 @@ export function ChatAssistido({
                 <Button
                   size="sm"
                   onClick={sendMessage}
-                  disabled={(!input.trim() && !selectedImage) || isLoading}
+                  disabled={(!input.trim() && selectedImages.length === 0) || isLoading}
                   className="flex-shrink-0 touch-manipulation px-4 py-3 sm:py-2.5"
                   aria-label="Enviar mensagem"
                 >
