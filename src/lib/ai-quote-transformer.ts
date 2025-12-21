@@ -322,76 +322,51 @@ export function isQuoteContextFullyComplete(
  * Get completion percentage of quote context (0-100)
  * Useful for progress indicators
  *
- * Sistema simplificado:
- * - Produto selecionado: 20%
- * - Medidas informadas: 20%
- * - Detalhes do produto (espessura/cor/tipo): 10%
- * - Nome do cliente: 15%
- * - Telefone/email: 25%
- * - Endereco: 10%
+ * Campos OBRIGATÓRIOS para chegar a 100%:
+ * - Produto/categoria selecionado: 25%
+ * - AMBAS as medidas (largura E altura): 25%
+ * - Telefone do cliente: 25%
+ * - Nome do cliente: 25%
+ *
+ * Campos opcionais não contam para os 100%
+ * Isso garante que só mostra checkout quando tem TUDO preenchido
  */
 export function getQuoteContextCompletion(quoteContext: AiQuoteContext | null | undefined): number {
   if (!quoteContext) return 0
 
   let earnedPoints = 0
 
-  // Produto (40%)
+  // Produto (50% - obrigatório)
   if (quoteContext.items && quoteContext.items.length > 0) {
     const firstItem = quoteContext.items[0]
 
-    // Categoria/produto selecionado: 20%
+    // Categoria/produto selecionado: 25%
     if (firstItem.category || firstItem.productName) {
-      earnedPoints += 20
+      earnedPoints += 25
     }
 
-    // Medidas informadas: 20%
+    // AMBAS as medidas (obrigatório): 25%
+    // Só ganha pontos se tiver AMBAS as dimensões
     if (firstItem.width && firstItem.width > 0 && firstItem.height && firstItem.height > 0) {
-      earnedPoints += 20
-    } else if (
-      (firstItem.width && firstItem.width > 0) ||
-      (firstItem.height && firstItem.height > 0)
-    ) {
-      earnedPoints += 10 // Apenas uma dimensao
+      earnedPoints += 25
     }
-
-    // Detalhes do produto (espessura, cor do vidro, tipo): 10%
-    const hasDetails =
-      firstItem.thickness ||
-      firstItem.glassType ||
-      firstItem.glassColor ||
-      firstItem.color ||
-      firstItem.finish ||
-      firstItem.model
-    if (hasDetails) {
-      earnedPoints += 10
-    }
+    // Se tiver só uma dimensão, não ganha pontos completos - precisa das duas
   }
 
-  // Dados do cliente (50%)
+  // Dados do cliente (50% - obrigatório)
   if (quoteContext.customerData) {
-    // Nome: 15%
-    if (quoteContext.customerData.name) {
-      earnedPoints += 15
-    }
-
-    // Telefone ou email: 25%
+    // Telefone (OBRIGATÓRIO): 25%
     if (quoteContext.customerData.phone) {
       earnedPoints += 25
-    } else if (quoteContext.customerData.email) {
-      earnedPoints += 20 // Email vale um pouco menos que telefone
     }
 
-    // Endereco: 10%
-    if (
-      quoteContext.customerData.street ||
-      quoteContext.customerData.city ||
-      quoteContext.customerData.zipCode
-    ) {
-      earnedPoints += 10
+    // Nome (OBRIGATÓRIO): 25%
+    if (quoteContext.customerData.name) {
+      earnedPoints += 25
     }
   }
 
-  return Math.min(100, earnedPoints)
+  return earnedPoints
 }
 
 /**
