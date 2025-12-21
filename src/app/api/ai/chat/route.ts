@@ -149,6 +149,65 @@ function detectSchedulingConfirmation(message: string): {
 }
 
 /**
+ * Detecta CEP na mensagem e busca endereco via ViaCEP
+ * Retorna os dados do endereco se encontrado
+ */
+async function detectAndFetchCep(message: string): Promise<{
+  hasCep: boolean
+  cep?: string
+  address?: {
+    street: string
+    neighborhood: string
+    city: string
+    state: string
+    zipCode: string
+  }
+  error?: string
+}> {
+  // Regex para detectar CEP (com ou sem hifen)
+  const cepRegex = /\b(\d{5})-?(\d{3})\b/
+  const match = message.match(cepRegex)
+
+  if (!match) {
+    return { hasCep: false }
+  }
+
+  const cep = `${match[1]}${match[2]}` // Remove hifen se houver
+
+  try {
+    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+    })
+
+    if (!response.ok) {
+      return { hasCep: true, cep, error: 'Erro ao buscar CEP' }
+    }
+
+    const data = await response.json()
+
+    if (data.erro) {
+      return { hasCep: true, cep, error: 'CEP nao encontrado' }
+    }
+
+    return {
+      hasCep: true,
+      cep,
+      address: {
+        street: data.logradouro || '',
+        neighborhood: data.bairro || '',
+        city: data.localidade || '',
+        state: data.uf || '',
+        zipCode: cep,
+      },
+    }
+  } catch (error) {
+    logger.error('[CEP] Error fetching address:', error)
+    return { hasCep: true, cep, error: 'Erro ao buscar CEP' }
+  }
+}
+
+/**
  * Converte descricao de dia para Date object
  * Ex: "quarta-feira", "dia 23", "amanha", "segunda"
  */
@@ -454,30 +513,78 @@ const SYSTEM_PROMPT_BASE = `Voce e Ana, a assistente virtual da Versati Glass. S
 7. NOME do cliente (pergunte de forma natural: "E qual seu nome pra gente registrar?")
 8. TELEFONE do cliente (pergunte: "Me passa seu WhatsApp pra gente entrar em contato?")
 
-📱 COLETA DE DADOS DO CLIENTE - MUITO IMPORTANTE:
-Antes de direcionar pro checkout, SEMPRE colete:
+📱 COLETA PROGRESSIVA DE DADOS DO CLIENTE - MUITO IMPORTANTE:
+
+FASE 1 - DADOS BASICOS (antes do checkout):
 - Nome: "Qual seu nome pra eu registrar aqui?"
 - Telefone: "Me passa seu WhatsApp pra nossa equipe entrar em contato?"
 
 Isso e OBRIGATORIO antes de finalizar. Sem nome e telefone, nao direcione pro checkout!
 
-Exemplo de fluxo correto:
+FASE 2 - DADOS COMPLETOS (quando cliente confirmar que quer finalizar):
+Apos ter nome e telefone, pergunte DE FORMA NATURAL:
+- CPF/CNPJ: "Pra emitir a nota fiscal, qual seu CPF? (ou CNPJ se for empresa)"
+- CEP (PRIMEIRO!): "Qual o CEP do local de instalacao?"
+- IMPORTANTE: O sistema busca automaticamente o endereco pelo CEP! Quando o cliente informar o CEP, voce recebera os dados do endereco (rua, bairro, cidade, estado).
+- Complemento/Numero: "E qual o numero e complemento? (ex: 123, apto 401)"
+
+FLUXO DE CEP - MUITO IMPORTANTE:
+1. Pergunte o CEP: "Qual o CEP do local?"
+2. Cliente informa CEP (ex: "22041080" ou "22041-080")
+3. Confirme o endereco buscado: "Ah, Rua Figueiredo Magalhaes, Copacabana - RJ. Qual o numero?"
+4. Cliente informa numero/complemento
+5. Pronto! Dados completos.
+
+SE O CEP FOR INVALIDO: "Hmm, nao encontrei esse CEP. Pode verificar e me passar novamente?"
+
+DICA: Se o cliente ja mencionou bairro/cidade durante a conversa (ex: "moro em Copacabana"), ainda pergunte o CEP pra confirmar e pegar endereco completo.
+
+Exemplo de fluxo COMPLETO:
 1. Cliente: "Quero um box 1,50 x 1,90"
-2. Voce: "Perfeito! Box de 1,50m x 1,90m. Qual acabamento voce prefere - cromado, preto ou dourado?"
+2. Voce: "Perfeito! Box de 1,50m x 1,90m. Qual acabamento - cromado, preto ou dourado?"
 3. Cliente: "Cromado"
 4. Voce: "Otimo! Mais alguma coisa ou e so isso?"
 5. Cliente: "So isso"
-6. Voce: "Beleza! Pra eu registrar seu orcamento, qual seu nome?"
+6. Voce: "Beleza! Pra registrar, qual seu nome?"
 7. Cliente: "Joao"
-8. Voce: "Prazer, Joao! Me passa seu WhatsApp pra nossa equipe entrar em contato?"
+8. Voce: "Prazer, Joao! Me passa seu WhatsApp?"
 9. Cliente: "21999999999"
-10. Voce: "Perfeito, Joao! Clica no botao 'Finalizar e Ir para Checkout' ali embaixo! 👇"
+10. Voce: "Perfeito! Pra emitir nota e agendar instalacao, qual seu CPF?"
+11. Cliente: "123.456.789-00"
+12. Voce: "Anotado! Qual o CEP do local de instalacao?"
+13. Cliente: "22041-080"
+14. Voce: "Rua Figueiredo Magalhaes, Copacabana - Rio de Janeiro/RJ. Qual o numero e apartamento?"
+15. Cliente: "123, apto 401"
+16. Voce: "Show, Joao! Tudo certo. Clica no botao 'Finalizar' ali embaixo! 👇"
+
+🎯 QUANDO CLIENTE DESCREVE UM PRODUTO (ex: "quero um vidro 2x2"):
+O sistema mostra cards de sugestao automaticamente. Sua resposta deve:
+
+1. CONFIRMAR o que ele quer: "Perfeito! Um vidro de 2m x 2m."
+2. PERGUNTAR SE QUER ADICIONAR: "Quer adicionar o Vidro Temperado Incolor ao seu orcamento?"
+3. NAO apenas mostrar opcoes - seja proativo e sugira o produto mais adequado!
+
+EXEMPLOS:
+Cliente: "Quero um vidro 2 por 2 pro quarto"
+Voce: "Otimo! Um vidro de 2m x 2m pro quarto. O Vidro Temperado 8mm Incolor e perfeito pra isso! Quer adicionar ao orcamento? 😊"
+
+Cliente: "Preciso de um espelho pro banheiro"
+Voce: "Legal! Espelho pro banheiro. O Espelho Bisotado e muito popular, mas tambem temos com LED se preferir algo mais moderno. Qual te interessa mais?"
+
+IMPORTANTE: Se o cliente ja deu medidas, JA ADICIONE ao orcamento e confirme:
+Cliente: "Quero um box 1,50 x 1,90"
+Voce: "Perfeito! Ja anotei: Box de 1,50m x 1,90m. Qual acabamento - cromado, preto ou dourado?"
 
 🎯 QUANDO CLIENTE SELECIONA PRODUTO VIA CARDS:
 Quando a mensagem for "Quero adicionar: [PRODUTO]" ou "Me interessei pelo [PRODUTO]":
 
+MUITO IMPORTANTE: Quando cliente clica no card, ele JA DECIDIU que quer esse produto!
+- NAO pergunte "quer adicionar?" - ele ja clicou!
+- CONFIRME a adicao: "Adicionei o [PRODUTO] ao seu orcamento! 👍"
+- VA DIRETO para medidas: "Qual o tamanho que voce precisa?"
+
 PRIMEIRO PRODUTO:
-1. Confirme: "Otima escolha! O [PRODUTO] e muito procurado."
+1. Confirme: "Otima escolha! Adicionei o [PRODUTO] ao seu orcamento."
 2. Pergunte medidas: "Qual o tamanho que voce precisa? (largura x altura)"
 3. Pergunte acabamento/cor se relevante
 4. Pergunte: "Quer adicionar mais algum produto ou e so isso?"
@@ -701,16 +808,22 @@ const VISION_SYSTEM_PROMPT = `Voce e Ana, da Versati Glass, especialista em anal
 - Faca uma pergunta pra continuar o dialogo`
 
 // AI-CHAT Sprint P1.7: Extraction prompt for structured data
-const EXTRACTION_PROMPT = `Analise a conversa abaixo e extraia APENAS as informacoes estruturadas para um orcamento de vidracaria.
+const EXTRACTION_PROMPT = `Analise a conversa abaixo e extraia TODAS as informacoes estruturadas para um orcamento de vidracaria.
+
+IMPORTANTE: Extraia TODOS os produtos mencionados na conversa, incluindo:
+- Produtos descritos pelo cliente (ex: "quero um vidro 2x2")
+- Produtos selecionados via card (ex: "Quero adicionar: Vidro Temperado 8mm (categoria: VIDROS, slug: vidro-temperado-8mm)")
 
 Retorne um JSON no seguinte formato (ou null se nao houver informacoes suficientes):
 {
   "items": [{
-    "category": "BOX" | "ESPELHOS" | "VIDROS" | "PORTAS" | "JANELAS" | "GUARDA_CORPOS" | "TAMPOS" | "DIVISORIAS" | "OUTROS",
+    "category": "BOX" | "ESPELHOS" | "VIDROS" | "PORTAS" | "JANELAS" | "GUARDA_CORPO" | "CORTINAS_VIDRO" | "PERGOLADOS" | "TAMPOS_PRATELEIRAS" | "DIVISORIAS" | "FECHAMENTOS" | "FACHADAS" | "FERRAGENS" | "KITS" | "SERVICOS" | "OUTROS",
     "productName": "Nome descritivo do produto",
+    "productSlug": "slug do produto (se informado na mensagem)",
     "width": numero em metros,
     "height": numero em metros,
     "quantity": numero inteiro,
+    "thickness": "espessura do vidro (ex: 4mm, 6mm, 8mm, 10mm)",
     "glassType": "Temperado" | "Laminado" | "Comum",
     "glassColor": "Incolor" | "Fume" | "Bronze" | "Verde",
     "color": "cor da ferragem (opcional)",
@@ -720,8 +833,14 @@ Retorne um JSON no seguinte formato (ou null se nao houver informacoes suficient
     "name": "nome completo (se mencionado)",
     "phone": "telefone (se mencionado)",
     "email": "email (se mencionado)",
+    "cpfCnpj": "CPF ou CNPJ (se mencionado, apenas numeros)",
+    "street": "rua/logradouro (se mencionado)",
+    "number": "numero da casa/apartamento (se mencionado)",
+    "complement": "complemento/apartamento (se mencionado)",
+    "neighborhood": "bairro (se mencionado)",
     "city": "cidade (se mencionada)",
-    "neighborhood": "bairro (se mencionado)"
+    "state": "estado/UF (se mencionado, ex: RJ, SP)",
+    "zipCode": "CEP (se mencionado, apenas numeros)"
   },
   "scheduling": {
     "wantsVisit": true | false,
@@ -739,11 +858,29 @@ Retorne um JSON no seguinte formato (ou null se nao houver informacoes suficient
 
 REGRAS CRITICAS:
 1. Retorne APENAS o JSON, sem texto adicional
-2. Se nao houver informacoes suficientes (sem categoria OU sem medidas), retorne null
+2. Extraia TODOS os produtos mencionados - mesmo que ainda nao tenham medidas!
 3. Converta todas as medidas para numeros (ex: "1.20m" -> 1.2, "um metro e meio" -> 1.5)
 4. Use apenas as categorias listadas acima
 5. Quantity default e 1 se nao especificado
 6. Nao invente informacoes que nao foram mencionadas
+7. Se cliente disse "Quero adicionar: [PRODUTO]", extraia esse produto como um item SEPARADO
+8. Cada produto mencionado deve ser um item diferente no array, NAO junte em um so
+9. Se tiver medidas diferentes, sao produtos diferentes (ex: "vidro 2x2" e "vidro 1x1" = 2 items)
+
+EXEMPLO de multiplos produtos:
+Cliente: "quero um vidro 2x2 pro quarto"
+Assistente: "Perfeito! ..."
+Cliente: "Quero adicionar: Vidro Temperado 8mm (categoria: VIDROS, slug: vidro-temperado-8mm)"
+Assistente: "Adicionei! Qual o tamanho?"
+Cliente: "1 por 1"
+
+Resultado esperado:
+{
+  "items": [
+    { "category": "VIDROS", "productName": "Vidro para quarto", "width": 2, "height": 2 },
+    { "category": "VIDROS", "productName": "Vidro Temperado 8mm", "productSlug": "vidro-temperado-8mm", "width": 1, "height": 1 }
+  ]
+}
 
 Conversa:`
 
@@ -798,23 +935,30 @@ async function extractQuoteDataFromConversation(
 
       const parsed = JSON.parse(cleanJson)
 
-      // Validate that we have at least one item with category and dimensions
-      if (!parsed.items || !Array.isArray(parsed.items) || parsed.items.length === 0) {
-        return null
-      }
-
-      const hasValidItem = parsed.items.some(
+      // MELHORADO: Nao retornar null se tiver dados do cliente
+      // Isso permite que o progresso atualize quando cliente informa nome/telefone
+      const hasItems = parsed.items && Array.isArray(parsed.items) && parsed.items.length > 0
+      const hasValidItem = hasItems && parsed.items.some(
         (item: any) => item.category && (item.width || item.height)
       )
+      const hasCustomerData = parsed.customerData && (
+        parsed.customerData.name ||
+        parsed.customerData.phone ||
+        parsed.customerData.email ||
+        parsed.customerData.street ||
+        parsed.customerData.city
+      )
 
-      if (!hasValidItem) {
+      // Retornar dados se tiver items validos OU dados do cliente
+      if (!hasValidItem && !hasCustomerData) {
         return null
       }
 
       logger.info('Quote data extracted from conversation', {
         conversationId,
-        itemCount: parsed.items.length,
-        hasCustomerData: !!parsed.customerData,
+        itemCount: parsed.items?.length || 0,
+        hasCustomerData: !!hasCustomerData,
+        hasValidItem,
       })
 
       return parsed
@@ -1042,6 +1186,32 @@ export async function POST(request: Request) {
       await linkWebChatToWhatsApp(conversation.id, detectedPhone)
     }
 
+    // CEP Detection and Address Lookup
+    let cepContext = ''
+    const cepResult = await detectAndFetchCep(message)
+    if (cepResult.hasCep) {
+      if (cepResult.address) {
+        // CEP valido - adicionar endereco ao contexto
+        cepContext = `\n\n[SISTEMA: CEP ${cepResult.cep} detectado. Endereco encontrado: ${cepResult.address.street}, ${cepResult.address.neighborhood}, ${cepResult.address.city}/${cepResult.address.state}. Confirme o endereco com o cliente e pergunte o numero/complemento.]\n`
+
+        logger.info('[CEP] Address found', {
+          conversationId: conversation.id,
+          cep: cepResult.cep,
+          city: cepResult.address.city,
+          state: cepResult.address.state,
+        })
+      } else if (cepResult.error) {
+        // CEP invalido - informar ao agente
+        cepContext = `\n\n[SISTEMA: CEP ${cepResult.cep} informado pelo cliente nao foi encontrado. Peca para o cliente verificar e informar novamente.]\n`
+
+        logger.warn('[CEP] Invalid CEP', {
+          conversationId: conversation.id,
+          cep: cepResult.cep,
+          error: cepResult.error,
+        })
+      }
+    }
+
     // FASE-5: Fetch unified context across channels
     const unifiedContext = await getUnifiedCustomerContext({
       userId: userId || undefined,
@@ -1126,7 +1296,7 @@ export async function POST(request: Request) {
             messages: [
               {
                 role: 'system',
-                content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary,
+                content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary + cepContext,
               },
               ...messages,
             ],
@@ -1148,7 +1318,7 @@ export async function POST(request: Request) {
         const openaiMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
           {
             role: 'system',
-            content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary,
+            content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary + cepContext,
           },
           ...messages.map((msg) => ({
             role: msg.role as 'user' | 'assistant',
@@ -1191,7 +1361,7 @@ export async function POST(request: Request) {
 
     // AI-CHAT Sprint P1.7: Extract structured data from conversation
     // Use Groq to analyze the conversation and extract quote data
-    const extractedData = await extractQuoteDataFromConversation(conversation.id, [
+    let extractedData = await extractQuoteDataFromConversation(conversation.id, [
       ...conversation.messages,
       {
         id: 'temp',
@@ -1213,12 +1383,100 @@ export async function POST(request: Request) {
       },
     ])
 
+    // Enrich extracted data with CEP lookup results
+    if (cepResult.hasCep && cepResult.address && extractedData) {
+      extractedData = {
+        ...extractedData,
+        customerData: {
+          ...extractedData.customerData,
+          street: cepResult.address.street || extractedData.customerData?.street,
+          neighborhood: cepResult.address.neighborhood || extractedData.customerData?.neighborhood,
+          city: cepResult.address.city || extractedData.customerData?.city,
+          state: cepResult.address.state || extractedData.customerData?.state,
+          zipCode: cepResult.address.zipCode || extractedData.customerData?.zipCode,
+        },
+      }
+
+      logger.info('[CEP] Enriched extractedData with address', {
+        conversationId: conversation.id,
+        city: cepResult.address.city,
+      })
+    }
+
+    // Detectar se usuario quer cancelar/reiniciar o orcamento
+    const isCancellation = message.toLowerCase().match(
+      /\b(cancelar|reiniciar|começar de novo|comecar de novo|desistir|novo orçamento|novo orcamento)\b/
+    )
+
+    // MELHORADO: Mesclar dados extraidos com contexto anterior
+    // Isso garante que dados do cliente (nome, telefone) nao sejam perdidos
+    // e que multiplos produtos sejam ACUMULADOS (nao substituidos)
+    let mergedQuoteContext = extractedData || conversation.quoteContext
+
+    if (extractedData && conversation.quoteContext) {
+      const existingContext = conversation.quoteContext as any
+
+      // CORRECAO: Acumular items em vez de substituir
+      // Usa productName + category como chave unica para evitar duplicatas
+      // Cria copia do array para evitar mutacao
+      let mergedItems = [...(existingContext.items || [])]
+
+      if (extractedData.items?.length > 0) {
+        for (const newItem of extractedData.items) {
+          // Verifica se item ja existe (mesmo produto/categoria com medidas similares)
+          const existingIndex = mergedItems.findIndex((existing: any) => {
+            const sameProduct = (
+              (existing.productName && newItem.productName &&
+               existing.productName.toLowerCase() === newItem.productName.toLowerCase()) ||
+              (existing.category === newItem.category &&
+               existing.width === newItem.width &&
+               existing.height === newItem.height)
+            )
+            return sameProduct
+          })
+
+          if (existingIndex >= 0) {
+            // Atualiza item existente com novos dados (merge)
+            mergedItems[existingIndex] = {
+              ...mergedItems[existingIndex],
+              ...newItem,
+            }
+          } else {
+            // Adiciona novo item
+            mergedItems.push(newItem)
+          }
+        }
+      }
+
+      mergedQuoteContext = {
+        // Items acumulados
+        items: mergedItems,
+        // Mesclar customerData (manter dados anteriores, sobrescrever com novos)
+        customerData: {
+          ...existingContext.customerData,
+          ...extractedData.customerData,
+        },
+        // Mesclar scheduling
+        scheduling: extractedData.scheduling || existingContext.scheduling,
+      }
+
+      logger.debug('[AI CHAT] Merged quoteContext', {
+        conversationId: conversation.id,
+        existingItemCount: existingContext.items?.length || 0,
+        newItemCount: extractedData.items?.length || 0,
+        mergedItemCount: mergedItems.length,
+        hasExistingCustomer: !!existingContext.customerData,
+        hasNewCustomer: !!extractedData.customerData,
+      })
+    }
+
     // Atualizar conversa com quoteContext
+    // Se cancelamento, limpar quoteContext para nao exibir progresso/finalizar
     await prisma.aiConversation.update({
       where: { id: conversation.id },
       data: {
         updatedAt: new Date(),
-        quoteContext: extractedData || conversation.quoteContext,
+        quoteContext: isCancellation ? null : mergedQuoteContext,
       },
     })
 
@@ -1286,6 +1544,7 @@ export async function POST(request: Request) {
       message: assistantMessage,
       conversationId: conversation.id,
       model: modelUsed,
+      quoteContext: isCancellation ? null : mergedQuoteContext,
       calendarLinks: calendarLinks
         ? {
             google: calendarLinks.google,
