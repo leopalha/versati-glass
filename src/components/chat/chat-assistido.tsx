@@ -1201,34 +1201,55 @@ export function ChatAssistido({
                                 // 2. Minimize quote progress
                                 setIsProgressMinimized(true)
 
-                                // 3. Export quote data from conversation
-                                const exportResponse = await fetch('/api/ai/chat/export-quote', {
-                                  method: 'POST',
-                                  headers: { 'Content-Type': 'application/json' },
-                                  body: JSON.stringify({ conversationId }),
-                                })
+                                // 3. Try to export quote data from conversation
+                                let quoteData = null
+                                try {
+                                  const exportResponse = await fetch('/api/ai/chat/export-quote', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ conversationId, sessionId }),
+                                  })
 
-                                if (!exportResponse.ok) {
-                                  throw new Error('Erro ao exportar orçamento')
+                                  if (exportResponse.ok) {
+                                    const result = await exportResponse.json()
+                                    quoteData = result.data
+                                  }
+                                } catch (exportError) {
+                                  console.warn(
+                                    '[CHAT] Export failed, using local context:',
+                                    exportError
+                                  )
                                 }
 
-                                const { data: quoteData } = await exportResponse.json()
+                                // 4. Fallback: use local quoteContext if export failed
+                                if (!quoteData && quoteContext) {
+                                  // Transform local context to quote data format
+                                  const { transformAiContextToQuoteData } =
+                                    await import('@/lib/ai-quote-transformer')
+                                  quoteData = transformAiContextToQuoteData(quoteContext)
+                                }
 
-                                // 4. Import to wizard store (sets step to 4)
-                                importFromAI(quoteData)
+                                // 5. Import to wizard store if we have data
+                                if (quoteData && quoteData.items && quoteData.items.length > 0) {
+                                  importFromAI(quoteData)
+                                }
 
-                                // 5. Minimize chat
+                                // 6. Minimize chat
                                 setIsMinimized(true)
 
-                                // 6. Navigate to wizard (will open at Step 4)
+                                // 7. Navigate to wizard (will open at appropriate step)
                                 router.push('/orcamento')
                               } catch (error) {
                                 console.error('[CHAT] Checkout redirect failed:', error)
+
+                                // Fallback: just navigate to orcamento page
+                                setIsMinimized(true)
+                                router.push('/orcamento')
+
                                 toast({
-                                  variant: 'error',
-                                  title: 'Erro',
-                                  description:
-                                    'Erro ao redirecionar para checkout. Tente novamente.',
+                                  variant: 'default',
+                                  title: 'Redirecionando...',
+                                  description: 'Continue seu orçamento na página de produtos.',
                                 })
                               } finally {
                                 setIsLoading(false)
