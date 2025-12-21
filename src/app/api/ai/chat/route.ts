@@ -617,7 +617,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // Buscar ou criar conversa
+    // Buscar conversa existente - primeiro por ID, depois por sessionId
     let conversation = conversationId
       ? await prisma.aiConversation.findUnique({
           where: { id: conversationId },
@@ -630,26 +630,47 @@ export async function POST(request: Request) {
         })
       : null
 
+    // Se nao encontrou por conversationId, buscar por sessionId
+    if (!conversation && sessionId) {
+      conversation = await prisma.aiConversation.findFirst({
+        where: {
+          sessionId: sessionId,
+          status: 'ACTIVE',
+        },
+        include: {
+          messages: {
+            orderBy: { createdAt: 'desc' },
+            take: MAX_MESSAGES_IN_CONTEXT,
+          },
+        },
+      })
+    }
+
     // Verificar se conversa esta abandonada (timeout)
     if (conversation) {
       const lastUpdate = new Date(conversation.updatedAt)
       const hoursAgo = (Date.now() - lastUpdate.getTime()) / (1000 * 60 * 60)
 
       if (hoursAgo > CONVERSATION_TIMEOUT_HOURS && conversation.status === 'ACTIVE') {
-        // Marcar como abandonada e criar nova
+        // Marcar como abandonada - mas nao criar nova ainda
         await prisma.aiConversation.update({
           where: { id: conversation.id },
           data: { status: 'ABANDONED' },
         })
-        conversation = null // Forcar criacao de nova conversa
+        conversation = null // Forcar criacao de nova conversa com novo sessionId
       }
     }
 
     if (!conversation) {
-      // Criar nova conversa
+      // Criar nova conversa com sessionId unico
+      // Se sessionId ja existe (abandonada), gerar novo sessionId
+      const uniqueSessionId = sessionId
+        ? `${sessionId}-${Date.now()}`
+        : `anon-${Date.now()}`
+
       conversation = await prisma.aiConversation.create({
         data: {
-          sessionId: sessionId || `anon-${Date.now()}`,
+          sessionId: uniqueSessionId,
           status: 'ACTIVE',
         },
         include: {
