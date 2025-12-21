@@ -26,6 +26,8 @@ export async function GET(request: Request) {
       | 'TAMPOS_PRATELEIRAS'
       | 'DIVISORIAS'
       | 'FECHAMENTOS'
+      | 'FACHADAS'
+      | 'PAINEIS_DECORATIVOS'
       | 'FERRAGENS'
       | 'KITS'
       | 'SERVICOS'
@@ -43,6 +45,8 @@ export async function GET(request: Request) {
       'TAMPOS_PRATELEIRAS',
       'DIVISORIAS',
       'FECHAMENTOS',
+      'FACHADAS',
+      'PAINEIS_DECORATIVOS',
       'FERRAGENS',
       'KITS',
       'SERVICOS',

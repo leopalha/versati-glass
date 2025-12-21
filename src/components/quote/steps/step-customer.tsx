@@ -88,6 +88,26 @@ export function StepCustomer() {
     }
   }, [session, customerData, setValue])
 
+  // Pre-fill from AI chat customerData (may have partial data like name/phone only)
+  useEffect(() => {
+    if (customerData) {
+      // Preenche campos que vieram do chat AI
+      if (customerData.name) setValue('name', customerData.name)
+      if (customerData.email) setValue('email', customerData.email)
+      if (customerData.phone) setValue('phone', formatPhone(customerData.phone))
+      if (customerData.cpfCnpj) setValue('cpfCnpj', formatCPFOrCNPJ(customerData.cpfCnpj))
+      if (customerData.street) setValue('street', customerData.street)
+      if (customerData.number) setValue('number', customerData.number)
+      if (customerData.complement) setValue('complement', customerData.complement)
+      if (customerData.neighborhood) setValue('neighborhood', customerData.neighborhood)
+      if (customerData.city) setValue('city', customerData.city)
+      if (customerData.state) setValue('state', customerData.state)
+      if (customerData.zipCode) setValue('zipCode', customerData.zipCode)
+
+      logger.debug('[StepCustomer] Pre-filled from AI chat:', customerData)
+    }
+  }, [customerData, setValue])
+
   // Pre-fill from locationData (Step 0)
   useEffect(() => {
     if (locationData && !customerData) {
@@ -102,6 +122,7 @@ export function StepCustomer() {
   const zipCode = watch('zipCode')
 
   // Auto-fill address from CEP (only if not pre-filled from locationData)
+  // Uses ViaCEP as primary, BrasilAPI as fallback
   useEffect(() => {
     // Skip if we already have location data and CEP matches
     if (locationData?.zipCode === zipCode?.replace(/\D/g, '')) return
@@ -109,20 +130,42 @@ export function StepCustomer() {
     const fetchAddress = async () => {
       const cleanCep = zipCode?.replace(/\D/g, '')
       if (cleanCep?.length === 8) {
+        // Try ViaCEP first
         try {
-          const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`)
-          const data = await response.json()
+          const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`, {
+            signal: AbortSignal.timeout(5000),
+          })
 
-          if (!data.erro) {
-            setValue('street', data.logradouro || '')
-            setValue('neighborhood', data.bairro || '')
-            setValue('city', data.localidade || '')
-            setValue('state', data.uf || '')
+          if (response.ok) {
+            const data = await response.json()
+            if (!data.erro) {
+              setValue('street', data.logradouro || '')
+              setValue('neighborhood', data.bairro || '')
+              setValue('city', data.localidade || '')
+              setValue('state', data.uf || '')
+              return
+            }
+          }
+        } catch {
+          // ViaCEP failed, try fallback
+        }
+
+        // Fallback: BrasilAPI
+        try {
+          const response = await fetch(`https://brasilapi.com.br/api/cep/v1/${cleanCep}`, {
+            signal: AbortSignal.timeout(5000),
+          })
+
+          if (response.ok) {
+            const data = await response.json()
+            setValue('street', data.street || '')
+            setValue('neighborhood', data.neighborhood || '')
+            setValue('city', data.city || '')
+            setValue('state', data.state || '')
           }
         } catch (error) {
-          // ARCH-P1-2: Standardized error handling
           const errorMsg = getErrorMessage(error)
-          logger.error('[CUSTOMER] Error fetching address from ViaCEP:', {
+          logger.error('[CUSTOMER] Error fetching address:', {
             error: errorMsg,
             zipCode,
           })

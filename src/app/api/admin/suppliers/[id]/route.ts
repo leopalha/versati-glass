@@ -27,10 +27,7 @@ const updateSupplierSchema = z.object({
 })
 
 // GET - Buscar fornecedor por ID
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -38,8 +35,10 @@ export async function GET(
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
+    const { id } = await params
+
     const supplier = await prisma.supplier.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         supplierQuotes: {
           include: {
@@ -92,10 +91,7 @@ export async function GET(
 }
 
 // PUT - Atualizar fornecedor
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -103,12 +99,13 @@ export async function PUT(
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await request.json()
     const validatedData = updateSupplierSchema.parse(body)
 
     // Verificar se fornecedor existe
     const existingSupplier = await prisma.supplier.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!existingSupplier) {
@@ -120,12 +117,15 @@ export async function PUT(
       const emailExists = await prisma.supplier.findFirst({
         where: {
           email: validatedData.email,
-          id: { not: params.id },
+          id: { not: id },
         },
       })
 
       if (emailExists) {
-        return NextResponse.json({ error: 'Email já cadastrado para outro fornecedor' }, { status: 400 })
+        return NextResponse.json(
+          { error: 'Email já cadastrado para outro fornecedor' },
+          { status: 400 }
+        )
       }
     }
 
@@ -134,17 +134,20 @@ export async function PUT(
       const cnpjExists = await prisma.supplier.findFirst({
         where: {
           cnpj: validatedData.cnpj,
-          id: { not: params.id },
+          id: { not: id },
         },
       })
 
       if (cnpjExists) {
-        return NextResponse.json({ error: 'CNPJ já cadastrado para outro fornecedor' }, { status: 400 })
+        return NextResponse.json(
+          { error: 'CNPJ já cadastrado para outro fornecedor' },
+          { status: 400 }
+        )
       }
     }
 
     const supplier = await prisma.supplier.update({
-      where: { id: params.id },
+      where: { id },
       data: validatedData,
     })
 
@@ -168,7 +171,7 @@ export async function PUT(
 // DELETE - Excluir fornecedor
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth()
@@ -177,9 +180,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
+    const { id } = await params
+
     // Verificar se fornecedor existe
     const supplier = await prisma.supplier.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         _count: {
           select: {
@@ -198,7 +203,7 @@ export async function DELETE(
     if (supplier._count.supplierQuotes > 0 || supplier._count.orders > 0) {
       // Ao invés de deletar, desativar
       await prisma.supplier.update({
-        where: { id: params.id },
+        where: { id },
         data: { isActive: false },
       })
 
@@ -209,7 +214,7 @@ export async function DELETE(
 
     // Deletar se não tiver dependências
     await prisma.supplier.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     logger.info(`Fornecedor deletado: ${supplier.name}`, { supplierId: supplier.id })

@@ -321,38 +321,244 @@ export function isQuoteContextFullyComplete(
 /**
  * Get completion percentage of quote context (0-100)
  * Useful for progress indicators
+ *
+ * Sistema simplificado:
+ * - Produto selecionado: 20%
+ * - Medidas informadas: 20%
+ * - Detalhes do produto (espessura/cor/tipo): 10%
+ * - Nome do cliente: 15%
+ * - Telefone/email: 25%
+ * - Endereco: 10%
  */
 export function getQuoteContextCompletion(quoteContext: AiQuoteContext | null | undefined): number {
   if (!quoteContext) return 0
 
-  let totalPoints = 0
   let earnedPoints = 0
 
-  // Items (40 points)
-  totalPoints += 40
+  // Produto (40%)
   if (quoteContext.items && quoteContext.items.length > 0) {
-    earnedPoints += 20 // Has items
-
     const firstItem = quoteContext.items[0]
-    if (firstItem.category) earnedPoints += 5
-    if (firstItem.width && firstItem.height) earnedPoints += 10
-    if (firstItem.quantity) earnedPoints += 5
+
+    // Categoria/produto selecionado: 20%
+    if (firstItem.category || firstItem.productName) {
+      earnedPoints += 20
+    }
+
+    // Medidas informadas: 20%
+    if (firstItem.width && firstItem.width > 0 && firstItem.height && firstItem.height > 0) {
+      earnedPoints += 20
+    } else if (
+      (firstItem.width && firstItem.width > 0) ||
+      (firstItem.height && firstItem.height > 0)
+    ) {
+      earnedPoints += 10 // Apenas uma dimensao
+    }
+
+    // Detalhes do produto (espessura, cor do vidro, tipo): 10%
+    const hasDetails =
+      firstItem.thickness ||
+      firstItem.glassType ||
+      firstItem.glassColor ||
+      firstItem.color ||
+      firstItem.finish ||
+      firstItem.model
+    if (hasDetails) {
+      earnedPoints += 10
+    }
   }
 
-  // Customer data (40 points)
-  totalPoints += 40
+  // Dados do cliente (50%)
   if (quoteContext.customerData) {
-    if (quoteContext.customerData.name) earnedPoints += 10
-    if (quoteContext.customerData.phone || quoteContext.customerData.email) earnedPoints += 15
-    if (quoteContext.customerData.street && quoteContext.customerData.city) earnedPoints += 15
+    // Nome: 15%
+    if (quoteContext.customerData.name) {
+      earnedPoints += 15
+    }
+
+    // Telefone ou email: 25%
+    if (quoteContext.customerData.phone) {
+      earnedPoints += 25
+    } else if (quoteContext.customerData.email) {
+      earnedPoints += 20 // Email vale um pouco menos que telefone
+    }
+
+    // Endereco: 10%
+    if (
+      quoteContext.customerData.street ||
+      quoteContext.customerData.city ||
+      quoteContext.customerData.zipCode
+    ) {
+      earnedPoints += 10
+    }
   }
 
-  // Schedule data (20 points)
-  totalPoints += 20
-  if (quoteContext.scheduleData) {
-    if (quoteContext.scheduleData.type) earnedPoints += 10
-    if (quoteContext.scheduleData.date) earnedPoints += 10
+  return Math.min(100, earnedPoints)
+}
+
+/**
+ * Campos de progresso por categoria
+ * Define quais campos sao relevantes para cada tipo de produto
+ */
+export const CATEGORY_PROGRESS_FIELDS: Record<
+  string,
+  Array<{
+    key: string
+    label: string
+    check: (item: NonNullable<AiQuoteContext['items']>[0]) => boolean
+    required?: boolean
+  }>
+> = {
+  BOX: [
+    { key: 'category', label: 'Tipo de box', check: (i) => !!i.category, required: true },
+    { key: 'model', label: 'Modelo selecionado', check: (i) => !!i.model },
+    {
+      key: 'dimensions',
+      label: 'Medidas informadas',
+      check: (i) => !!(i.width && i.height),
+      required: true,
+    },
+    { key: 'thickness', label: 'Espessura definida', check: (i) => !!i.thickness },
+    { key: 'glassType', label: 'Tipo de vidro', check: (i) => !!i.glassType },
+    { key: 'color', label: 'Cor da ferragem', check: (i) => !!i.color },
+  ],
+  ESPELHOS: [
+    { key: 'category', label: 'Tipo de espelho', check: (i) => !!i.category, required: true },
+    { key: 'model', label: 'Modelo selecionado', check: (i) => !!i.model },
+    {
+      key: 'dimensions',
+      label: 'Medidas informadas',
+      check: (i) => !!(i.width && i.height),
+      required: true,
+    },
+    { key: 'finish', label: 'Acabamento', check: (i) => !!i.finish },
+    { key: 'ledTemp', label: 'Temperatura LED', check: (i) => !!i.ledTemp },
+    { key: 'bisoteWidth', label: 'Largura do bisote', check: (i) => !!i.bisoteWidth },
+  ],
+  VIDROS: [
+    { key: 'category', label: 'Tipo de vidro', check: (i) => !!i.category, required: true },
+    { key: 'glassType', label: 'Tipo especifico', check: (i) => !!i.glassType },
+    {
+      key: 'dimensions',
+      label: 'Medidas informadas',
+      check: (i) => !!(i.width && i.height),
+      required: true,
+    },
+    { key: 'thickness', label: 'Espessura definida', check: (i) => !!i.thickness, required: true },
+    { key: 'glassColor', label: 'Cor do vidro', check: (i) => !!i.glassColor },
+  ],
+  PORTAS: [
+    { key: 'category', label: 'Tipo de porta', check: (i) => !!i.category, required: true },
+    { key: 'model', label: 'Modelo selecionado', check: (i) => !!i.model },
+    {
+      key: 'dimensions',
+      label: 'Medidas informadas',
+      check: (i) => !!(i.width && i.height),
+      required: true,
+    },
+    { key: 'glassType', label: 'Tipo de vidro', check: (i) => !!i.glassType },
+    { key: 'color', label: 'Cor da ferragem', check: (i) => !!i.color },
+  ],
+  JANELAS: [
+    { key: 'category', label: 'Tipo de janela', check: (i) => !!i.category, required: true },
+    { key: 'model', label: 'Modelo selecionado', check: (i) => !!i.model },
+    {
+      key: 'dimensions',
+      label: 'Medidas informadas',
+      check: (i) => !!(i.width && i.height),
+      required: true,
+    },
+    { key: 'glassType', label: 'Tipo de vidro', check: (i) => !!i.glassType },
+    { key: 'thickness', label: 'Espessura definida', check: (i) => !!i.thickness },
+  ],
+  GUARDA_CORPO: [
+    { key: 'category', label: 'Tipo de guarda-corpo', check: (i) => !!i.category, required: true },
+    { key: 'model', label: 'Modelo selecionado', check: (i) => !!i.model },
+    {
+      key: 'dimensions',
+      label: 'Medidas informadas',
+      check: (i) => !!(i.width && i.height),
+      required: true,
+    },
+    { key: 'glassType', label: 'Tipo de vidro', check: (i) => !!i.glassType, required: true },
+    { key: 'color', label: 'Cor da ferragem', check: (i) => !!i.color },
+  ],
+  DEFAULT: [
+    { key: 'category', label: 'Produto selecionado', check: (i) => !!i.category, required: true },
+    {
+      key: 'dimensions',
+      label: 'Medidas informadas',
+      check: (i) => !!(i.width && i.height),
+      required: true,
+    },
+    { key: 'thickness', label: 'Espessura definida', check: (i) => !!i.thickness },
+    { key: 'color', label: 'Cor/acabamento', check: (i) => !!i.color || !!i.finish },
+  ],
+}
+
+/**
+ * Interface para detalhes de progresso
+ */
+export interface ProgressDetail {
+  key: string
+  label: string
+  completed: boolean
+  required: boolean
+}
+
+/**
+ * Obter detalhes do progresso por categoria
+ * Retorna lista de campos com status de preenchimento
+ */
+export function getProgressDetails(quoteContext: AiQuoteContext | null | undefined): {
+  productFields: ProgressDetail[]
+  contactFields: ProgressDetail[]
+  category: string | null
+} {
+  const result = {
+    productFields: [] as ProgressDetail[],
+    contactFields: [] as ProgressDetail[],
+    category: null as string | null,
   }
 
-  return Math.round((earnedPoints / totalPoints) * 100)
+  if (!quoteContext || !quoteContext.items || quoteContext.items.length === 0) {
+    return result
+  }
+
+  const firstItem = quoteContext.items[0]
+  const category = firstItem.category?.toUpperCase() || 'DEFAULT'
+  result.category = category
+
+  // Obter campos relevantes para a categoria
+  const fields = CATEGORY_PROGRESS_FIELDS[category] || CATEGORY_PROGRESS_FIELDS.DEFAULT
+
+  // Mapear campos do produto
+  result.productFields = fields.map((field) => ({
+    key: field.key,
+    label: field.label,
+    completed: field.check(firstItem),
+    required: field.required || false,
+  }))
+
+  // Campos de contato (sempre os mesmos)
+  result.contactFields = [
+    {
+      key: 'name',
+      label: 'Nome',
+      completed: !!quoteContext.customerData?.name,
+      required: false,
+    },
+    {
+      key: 'phone',
+      label: 'Telefone',
+      completed: !!quoteContext.customerData?.phone,
+      required: true,
+    },
+    {
+      key: 'email',
+      label: 'Email',
+      completed: !!quoteContext.customerData?.email,
+      required: false,
+    },
+  ]
+
+  return result
 }

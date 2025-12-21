@@ -34,6 +34,8 @@ async function getProduct(id: string) {
       | 'TAMPOS_PRATELEIRAS'
       | 'DIVISORIAS'
       | 'FECHAMENTOS'
+      | 'FACHADAS'
+      | 'PAINEIS_DECORATIVOS'
       | 'FERRAGENS'
       | 'KITS'
       | 'SERVICOS'

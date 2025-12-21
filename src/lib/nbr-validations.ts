@@ -212,7 +212,8 @@ export function calculateThickness(
   const minThickness = roundToAvailableThickness(calculatedThickness)
 
   // Get recommended thickness (usually one step above minimum for safety)
-  const recommendedThickness = getRecommendedThickness(minThickness, application, area)
+  // Pass longerSide to ensure NBR 14718 dimension limits are checked
+  const recommendedThickness = getRecommendedThickness(minThickness, application, area, longerSide)
 
   // Determine warnings
   let warning: string | undefined
@@ -271,29 +272,46 @@ function roundToAvailableThickness(calculated: number): number {
 
 /**
  * Get recommended thickness (safety margin above minimum)
+ * Also ensures thickness meets NBR 14718 area/dimension limits
  */
 function getRecommendedThickness(
   minThickness: number,
   application: GlassApplication,
-  area: number
+  area: number,
+  longerSide?: number
 ): number {
   const availableThicknesses = [4, 5, 6, 8, 10, 12, 15, 19]
-  const minIndex = availableThicknesses.indexOf(minThickness)
+  let currentIndex = availableThicknesses.indexOf(minThickness)
+
+  // IMPORTANT: Ensure thickness meets NBR 14718 area and dimension limits
+  // Keep increasing thickness until area/side limits are satisfied
+  while (currentIndex < availableThicknesses.length - 1) {
+    const thickness = availableThicknesses[currentIndex]
+    const limits = NBR_14718_MAX_DIMENSIONS[thickness as keyof typeof NBR_14718_MAX_DIMENSIONS]
+
+    if (limits) {
+      const areaOk = area <= limits.maxArea
+      const sideOk = !longerSide || longerSide <= limits.maxSide
+
+      if (areaOk && sideOk) {
+        break // Found suitable thickness
+      }
+    }
+    currentIndex++ // Try next thickness
+  }
+
+  let recommendedIndex = currentIndex
 
   // Safety-critical applications: recommend +1 step
   if (application === 'GUARDA_CORPO' || application === 'COBERTURA') {
-    const safeIndex = Math.min(minIndex + 1, availableThicknesses.length - 1)
-    return availableThicknesses[safeIndex]
+    recommendedIndex = Math.min(currentIndex + 1, availableThicknesses.length - 1)
   }
-
   // Large areas: recommend +1 step for stability
-  if (area > 3.0) {
-    const safeIndex = Math.min(minIndex + 1, availableThicknesses.length - 1)
-    return availableThicknesses[safeIndex]
+  else if (area > 3.0) {
+    recommendedIndex = Math.min(currentIndex + 1, availableThicknesses.length - 1)
   }
 
-  // Standard applications: minimum is ok
-  return minThickness
+  return availableThicknesses[recommendedIndex]
 }
 
 // ============================================================================

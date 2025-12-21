@@ -102,6 +102,12 @@ const INSTALLATION_MULTIPLIERS: Record<string, number> = {
   VIDROS: 0.2,
   FECHAMENTOS: 0.4,
   PERGOLADOS: 0.6, // 60% (complex structural)
+  FACHADAS: 0.7, // 70% (complex facades with engineering)
+  PAINEIS_DECORATIVOS: 0.35, // 35% (decorative panels)
+  CORTINAS_VIDRO: 0.5, // 50% (glass curtain systems)
+  KITS: 0.0, // 0% (hardware kits, DIY or separate service)
+  FERRAGENS: 0.0, // 0% (hardware items only)
+  SERVICOS: 1.0, // 100% (labor is the service)
   default: 0.35,
 }
 
@@ -120,6 +126,12 @@ const HARDWARE_COSTS: Record<string, { min: number; max: number }> = {
   VIDROS: { min: 30, max: 100 }, // Baguetes, silicone
   FECHAMENTOS: { min: 500, max: 1500 }, // Perfis, vedações
   PERGOLADOS: { min: 800, max: 2000 }, // Estrutura, fixações
+  FACHADAS: { min: 1000, max: 3000 }, // Perfis, fixadores, silicone estrutural
+  PAINEIS_DECORATIVOS: { min: 100, max: 300 }, // Suportes, colagem
+  CORTINAS_VIDRO: { min: 600, max: 1500 }, // Perfis, roldanas, trilhos
+  KITS: { min: 0, max: 0 }, // Já incluso no produto
+  FERRAGENS: { min: 0, max: 0 }, // Já é a ferragem
+  SERVICOS: { min: 0, max: 0 }, // Sem ferragens
   default: { min: 100, max: 300 },
 }
 
@@ -135,6 +147,14 @@ const CATEGORY_BASE_PRICES: Record<string, { min: number; max: number }> = {
   TAMPOS_PRATELEIRAS: { min: 200, max: 500 }, // per m²
   DIVISORIAS: { min: 300, max: 600 }, // per m²
   VIDROS: { min: 180, max: 450 }, // per m²
+  FACHADAS: { min: 800, max: 2500 }, // per m² - varies by system type
+  PAINEIS_DECORATIVOS: { min: 280, max: 900 }, // per m² - painted/mirror panels
+  FECHAMENTOS: { min: 600, max: 1200 }, // per m² - enclosures
+  CORTINAS_VIDRO: { min: 700, max: 1400 }, // per m² - glass curtains
+  PERGOLADOS: { min: 800, max: 1800 }, // per m² - pergolas/covers
+  KITS: { min: 30, max: 800 }, // per unit - hardware kits
+  FERRAGENS: { min: 50, max: 1200 }, // per unit - hardware items
+  SERVICOS: { min: 0, max: 500 }, // per unit - services
 }
 
 /**

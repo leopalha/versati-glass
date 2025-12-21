@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { AdminHeader } from '@/components/admin/admin-header'
 import {
   LayoutDashboard,
   FileText,
@@ -277,214 +278,213 @@ const tips = [
 
 export default function AdminManualPage() {
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="font-display text-3xl font-bold text-white">Manual do Administrador</h1>
-        <p className="mt-2 text-neutral-400">
-          Guia completo para utilizar o painel administrativo da Versati Glass
-        </p>
-      </div>
+    <div>
+      <AdminHeader
+        title="Manual do Administrador"
+        subtitle="Guia completo para utilizar o painel administrativo da Versati Glass"
+      />
 
-      {/* Quick Tips */}
-      <div className="grid gap-4 md:grid-cols-3">
-        {tips.map((tip) => (
-          <div
-            key={tip.title}
-            className={`rounded-lg border p-4 ${
-              tip.type === 'success'
-                ? 'border-green-500/30 bg-green-500/10'
-                : tip.type === 'warning'
-                  ? 'border-yellow-500/30 bg-yellow-500/10'
-                  : 'border-blue-500/30 bg-blue-500/10'
-            }`}
-          >
-            <div className="mb-3 flex items-center gap-2">
-              <tip.icon
-                className={`h-5 w-5 ${
-                  tip.type === 'success'
-                    ? 'text-green-500'
-                    : tip.type === 'warning'
-                      ? 'text-yellow-500'
-                      : 'text-blue-500'
-                }`}
-              />
-              <h3 className="font-medium text-white">{tip.title}</h3>
-            </div>
-            <ul className="space-y-2">
-              {tip.items.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-neutral-300">
-                  <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      {/* Navigation */}
-      <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-4">
-        <h2 className="mb-4 font-display text-lg font-semibold text-white">Indice</h2>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          {sections.map((section) => (
-            <a
-              key={section.id}
-              href={`#${section.id}`}
-              className="flex items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-800 p-3 text-neutral-300 transition-colors hover:border-gold-500 hover:text-white"
+      <div className="space-y-8 p-6">
+        {/* Quick Tips */}
+        <div className="grid gap-4 md:grid-cols-3">
+          {tips.map((tip) => (
+            <div
+              key={tip.title}
+              className={`rounded-lg border p-4 ${
+                tip.type === 'success'
+                  ? 'border-green-500/30 bg-green-500/10'
+                  : tip.type === 'warning'
+                    ? 'border-yellow-500/30 bg-yellow-500/10'
+                    : 'border-blue-500/30 bg-blue-500/10'
+              }`}
             >
-              <section.icon className="h-5 w-5 text-gold-500" />
-              <span className="text-sm font-medium">{section.title}</span>
-            </a>
+              <div className="mb-3 flex items-center gap-2">
+                <tip.icon
+                  className={`h-5 w-5 ${
+                    tip.type === 'success'
+                      ? 'text-green-500'
+                      : tip.type === 'warning'
+                        ? 'text-yellow-500'
+                        : 'text-blue-500'
+                  }`}
+                />
+                <h3 className="font-medium text-white">{tip.title}</h3>
+              </div>
+              <ul className="space-y-2">
+                {tip.items.map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2 text-sm text-neutral-300">
+                    <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
-      </div>
 
-      {/* Content Sections */}
-      <div className="space-y-8">
-        {sections.map((section) => (
-          <section
-            key={section.id}
-            id={section.id}
-            className="scroll-mt-4 rounded-lg border border-neutral-800 bg-neutral-900"
-          >
-            <div className="flex items-center gap-3 border-b border-neutral-800 p-4">
-              <div className="rounded-lg bg-gold-500/10 p-2">
-                <section.icon className="h-6 w-6 text-gold-500" />
+        {/* Navigation */}
+        <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-4">
+          <h2 className="mb-4 font-display text-lg font-semibold text-white">Indice</h2>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            {sections.map((section) => (
+              <a
+                key={section.id}
+                href={`#${section.id}`}
+                className="flex items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-800 p-3 text-neutral-300 transition-colors hover:border-gold-500 hover:text-white"
+              >
+                <section.icon className="h-5 w-5 text-gold-500" />
+                <span className="text-sm font-medium">{section.title}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Content Sections */}
+        <div className="space-y-8">
+          {sections.map((section) => (
+            <section
+              key={section.id}
+              id={section.id}
+              className="scroll-mt-4 rounded-lg border border-neutral-800 bg-neutral-900"
+            >
+              <div className="flex items-center gap-3 border-b border-neutral-800 p-4">
+                <div className="rounded-lg bg-gold-500/10 p-2">
+                  <section.icon className="h-6 w-6 text-gold-500" />
+                </div>
+                <h2 className="font-display text-xl font-semibold text-white">{section.title}</h2>
               </div>
-              <h2 className="font-display text-xl font-semibold text-white">{section.title}</h2>
-            </div>
-            <div className="p-4">
-              <div className="prose prose-invert max-w-none">
-                {section.content.split('\n\n').map((paragraph, idx) => {
-                  if (paragraph.startsWith('**') && paragraph.includes(':**')) {
-                    // Section header
-                    const [title, ...rest] = paragraph.split(':')
+              <div className="p-4">
+                <div className="prose prose-invert max-w-none">
+                  {section.content.split('\n\n').map((paragraph, idx) => {
+                    if (paragraph.startsWith('**') && paragraph.includes(':**')) {
+                      // Section header
+                      const [title, ...rest] = paragraph.split(':')
+                      return (
+                        <div key={idx} className="mb-4">
+                          <h3 className="mb-2 text-lg font-semibold text-gold-400">
+                            {title.replace(/\*\*/g, '')}
+                          </h3>
+                          {rest.join(':').trim() && (
+                            <p className="text-neutral-300">{rest.join(':').trim()}</p>
+                          )}
+                        </div>
+                      )
+                    }
+                    if (paragraph.startsWith('-')) {
+                      // List
+                      const items = paragraph.split('\n').filter(Boolean)
+                      return (
+                        <ul key={idx} className="mb-4 space-y-1">
+                          {items.map((item, itemIdx) => (
+                            <li key={itemIdx} className="flex items-start gap-2 text-neutral-300">
+                              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-500" />
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: item
+                                    .replace(/^- /, '')
+                                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
+                                }}
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      )
+                    }
+                    if (paragraph.match(/^\d+\./)) {
+                      // Numbered list
+                      const items = paragraph.split('\n').filter(Boolean)
+                      return (
+                        <ol key={idx} className="mb-4 space-y-1">
+                          {items.map((item, itemIdx) => (
+                            <li key={itemIdx} className="flex items-start gap-2 text-neutral-300">
+                              <span className="shrink-0 font-semibold text-gold-500">
+                                {itemIdx + 1}.
+                              </span>
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: item
+                                    .replace(/^\d+\.\s*/, '')
+                                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
+                                }}
+                              />
+                            </li>
+                          ))}
+                        </ol>
+                      )
+                    }
+                    // Regular paragraph
                     return (
-                      <div key={idx} className="mb-4">
-                        <h3 className="mb-2 text-lg font-semibold text-gold-400">
-                          {title.replace(/\*\*/g, '')}
-                        </h3>
-                        {rest.join(':').trim() && (
-                          <p className="text-neutral-300">{rest.join(':').trim()}</p>
-                        )}
-                      </div>
+                      <p
+                        key={idx}
+                        className="mb-4 text-neutral-300"
+                        dangerouslySetInnerHTML={{
+                          __html: paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
+                        }}
+                      />
                     )
-                  }
-                  if (paragraph.startsWith('-')) {
-                    // List
-                    const items = paragraph.split('\n').filter(Boolean)
-                    return (
-                      <ul key={idx} className="mb-4 space-y-1">
-                        {items.map((item, itemIdx) => (
-                          <li key={itemIdx} className="flex items-start gap-2 text-neutral-300">
-                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-500" />
-                            <span
-                              dangerouslySetInnerHTML={{
-                                __html: item
-                                  .replace(/^- /, '')
-                                  .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
-                              }}
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    )
-                  }
-                  if (paragraph.match(/^\d+\./)) {
-                    // Numbered list
-                    const items = paragraph.split('\n').filter(Boolean)
-                    return (
-                      <ol key={idx} className="mb-4 space-y-1">
-                        {items.map((item, itemIdx) => (
-                          <li key={itemIdx} className="flex items-start gap-2 text-neutral-300">
-                            <span className="shrink-0 font-semibold text-gold-500">
-                              {itemIdx + 1}.
-                            </span>
-                            <span
-                              dangerouslySetInnerHTML={{
-                                __html: item
-                                  .replace(/^\d+\.\s*/, '')
-                                  .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
-                              }}
-                            />
-                          </li>
-                        ))}
-                      </ol>
-                    )
-                  }
-                  // Regular paragraph
-                  return (
-                    <p
-                      key={idx}
-                      className="mb-4 text-neutral-300"
-                      dangerouslySetInnerHTML={{
-                        __html: paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
-                      }}
-                    />
-                  )
-                })}
+                  })}
+                </div>
               </div>
+            </section>
+          ))}
+        </div>
+
+        {/* Security Section */}
+        <section className="rounded-lg border border-red-500/30 bg-red-500/10 p-6">
+          <div className="flex items-center gap-3">
+            <Shield className="h-8 w-8 text-red-500" />
+            <div>
+              <h2 className="font-display text-xl font-semibold text-white">Seguranca</h2>
+              <p className="text-neutral-400">Informacoes importantes sobre seguranca</p>
             </div>
-          </section>
-        ))}
+          </div>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div>
+              <h3 className="mb-2 font-semibold text-white">Acesso ao Sistema</h3>
+              <ul className="space-y-1 text-sm text-neutral-300">
+                <li>• Use senhas fortes (minimo 8 caracteres)</li>
+                <li>• Nao compartilhe credenciais de acesso</li>
+                <li>• Faca logout ao sair do computador</li>
+                <li>• Reporte acessos suspeitos imediatamente</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-2 font-semibold text-white">Dados dos Clientes</h3>
+              <ul className="space-y-1 text-sm text-neutral-300">
+                <li>• Proteja informacoes pessoais (LGPD)</li>
+                <li>• Nao exporte dados sem autorizacao</li>
+                <li>• Atenda solicitacoes de exclusao</li>
+                <li>• Use apenas para fins comerciais</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Help */}
+        <section className="rounded-lg border border-neutral-800 bg-neutral-900 p-6">
+          <div className="flex items-center gap-3">
+            <HelpCircle className="h-8 w-8 text-gold-500" />
+            <div>
+              <h2 className="font-display text-xl font-semibold text-white">Precisa de Ajuda?</h2>
+              <p className="text-neutral-400">Entre em contato com o suporte tecnico</p>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-4">
+            <a
+              href="mailto:suporte@versatiglass.com.br"
+              className="rounded-lg bg-neutral-800 px-4 py-2 text-sm text-white hover:bg-neutral-700"
+            >
+              suporte@versatiglass.com.br
+            </a>
+            <a
+              href="https://wa.me/5521982536229"
+              className="rounded-lg bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
+            >
+              WhatsApp Suporte
+            </a>
+          </div>
+        </section>
       </div>
-
-      {/* Security Section */}
-      <section className="rounded-lg border border-red-500/30 bg-red-500/10 p-6">
-        <div className="flex items-center gap-3">
-          <Shield className="h-8 w-8 text-red-500" />
-          <div>
-            <h2 className="font-display text-xl font-semibold text-white">Seguranca</h2>
-            <p className="text-neutral-400">Informacoes importantes sobre seguranca</p>
-          </div>
-        </div>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <div>
-            <h3 className="mb-2 font-semibold text-white">Acesso ao Sistema</h3>
-            <ul className="space-y-1 text-sm text-neutral-300">
-              <li>• Use senhas fortes (minimo 8 caracteres)</li>
-              <li>• Nao compartilhe credenciais de acesso</li>
-              <li>• Faca logout ao sair do computador</li>
-              <li>• Reporte acessos suspeitos imediatamente</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="mb-2 font-semibold text-white">Dados dos Clientes</h3>
-            <ul className="space-y-1 text-sm text-neutral-300">
-              <li>• Proteja informacoes pessoais (LGPD)</li>
-              <li>• Nao exporte dados sem autorizacao</li>
-              <li>• Atenda solicitacoes de exclusao</li>
-              <li>• Use apenas para fins comerciais</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Help */}
-      <section className="rounded-lg border border-neutral-800 bg-neutral-900 p-6">
-        <div className="flex items-center gap-3">
-          <HelpCircle className="h-8 w-8 text-gold-500" />
-          <div>
-            <h2 className="font-display text-xl font-semibold text-white">Precisa de Ajuda?</h2>
-            <p className="text-neutral-400">Entre em contato com o suporte tecnico</p>
-          </div>
-        </div>
-        <div className="mt-4 flex flex-wrap gap-4">
-          <a
-            href="mailto:suporte@versatiglass.com.br"
-            className="rounded-lg bg-neutral-800 px-4 py-2 text-sm text-white hover:bg-neutral-700"
-          >
-            suporte@versatiglass.com.br
-          </a>
-          <a
-            href="https://wa.me/5521982536229"
-            className="rounded-lg bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
-          >
-            WhatsApp Suporte
-          </a>
-        </div>
-      </section>
     </div>
   )
 }

@@ -15,6 +15,7 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
 } from '@/components/ui/alert-dialog'
+import { logger } from '@/lib/logger'
 
 interface ProductReferenceImagesProps {
   category: string
@@ -35,13 +36,26 @@ export function ProductReferenceImages({
 }: ProductReferenceImagesProps) {
   const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null)
 
+  // Normalize category to uppercase (catalog uses uppercase)
+  const normalizedCategory = category?.toUpperCase() || ''
+
   // Get relevant images
   const images =
     subcategory || model
-      ? getImagesForSubcategory(category, subcategory || model || '')
-      : getImagesForCategory(category)
+      ? getImagesForSubcategory(normalizedCategory, subcategory || model || '')
+      : getImagesForCategory(normalizedCategory)
 
   const displayImages = images.slice(0, maxImages)
+
+  // Debug log
+  logger.debug('[PRODUCT-REF-IMAGES] Rendering', {
+    originalCategory: category,
+    normalizedCategory,
+    subcategory,
+    model,
+    totalImages: images.length,
+    displayImages: displayImages.length,
+  })
 
   if (displayImages.length === 0) {
     return null
@@ -66,19 +80,14 @@ export function ProductReferenceImages({
               type="button"
             >
               <div className="relative h-full w-full">
-                {/* Placeholder for when actual images are available */}
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-neutral-700 to-neutral-800">
-                  <ImageIcon className="h-12 w-12 text-neutral-600" />
-                </div>
-                {/* Uncomment when images are ready:
                 <Image
                   src={image.url}
                   alt={image.alt}
                   fill
                   className="object-cover"
                   sizes="(max-width: 640px) 50vw, 25vw"
+                  unoptimized
                 />
-                */}
               </div>
 
               {/* Hover overlay */}
@@ -132,11 +141,6 @@ function ImageZoomDialog({ image, onClose }: ImageZoomDialogProps) {
           <AlertDialogTitle className="mb-4 text-xl">{image.alt}</AlertDialogTitle>
 
           <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-neutral-800">
-            {/* Placeholder for when actual images are available */}
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-neutral-700 to-neutral-800">
-              <ImageIcon className="h-24 w-24 text-neutral-600" />
-            </div>
-            {/* Uncomment when images are ready:
             <Image
               src={image.url}
               alt={image.alt}
@@ -144,8 +148,8 @@ function ImageZoomDialog({ image, onClose }: ImageZoomDialogProps) {
               className="object-contain"
               sizes="(max-width: 1024px) 100vw, 1024px"
               priority
+              unoptimized
             />
-            */}
           </div>
 
           {image.description && (
@@ -178,9 +182,12 @@ export function CompactImageCarousel({
   subcategory,
   maxImages = 3,
 }: CompactImageCarouselProps) {
+  // Normalize category to uppercase
+  const normalizedCategory = category?.toUpperCase() || ''
+
   const images = subcategory
-    ? getImagesForSubcategory(category, subcategory)
-    : getImagesForCategory(category)
+    ? getImagesForSubcategory(normalizedCategory, subcategory)
+    : getImagesForCategory(normalizedCategory)
 
   const displayImages = images.slice(0, maxImages)
 
@@ -195,19 +202,14 @@ export function CompactImageCarousel({
           key={image.id}
           className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-neutral-800"
         >
-          {/* Placeholder */}
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-neutral-700 to-neutral-800">
-            <ImageIcon className="h-8 w-8 text-neutral-600" />
-          </div>
-          {/* Uncomment when images are ready:
           <Image
             src={image.url}
             alt={image.alt}
             fill
             className="object-cover"
             sizes="80px"
+            unoptimized
           />
-          */}
         </div>
       ))}
     </div>

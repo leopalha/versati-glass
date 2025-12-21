@@ -28,6 +28,8 @@ export const createProductSchema = z
         'TAMPOS_PRATELEIRAS',
         'DIVISORIAS',
         'FECHAMENTOS',
+        'FACHADAS',
+        'PAINEIS_DECORATIVOS',
         'FERRAGENS',
         'KITS',
         'SERVICOS',
@@ -39,8 +41,24 @@ export const createProductSchema = z
     ),
     subcategory: z.string().optional(),
 
-    images: z.array(z.string().url('URL de imagem inválida')).default([]),
-    thumbnail: z.string().url('URL de thumbnail inválida').optional(),
+    images: z
+      .array(
+        z
+          .string()
+          .refine(
+            (val) => val.startsWith('/') || val.startsWith('http://') || val.startsWith('https://'),
+            'Caminho de imagem inválido'
+          )
+      )
+      .default([]),
+    thumbnail: z
+      .string()
+      .refine(
+        (val) =>
+          !val || val.startsWith('/') || val.startsWith('http://') || val.startsWith('https://'),
+        'Caminho de thumbnail inválido'
+      )
+      .optional(),
 
     priceType: z.enum(['FIXED', 'PER_M2', 'QUOTE_ONLY'], {
       errorMap: () => ({ message: 'Tipo de preço inválido' }),
@@ -129,12 +147,12 @@ export const createProductSchema = z
   )
 
 /**
- * Schema base para produto (sem refines)
+ * Schema base para produto (update - campos opcionais com validação condicional)
  */
 const productBaseSchema = z.object({
-  name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
+  name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres').optional(),
   slug: z.string().optional(),
-  description: z.string().min(10, 'Descrição deve ter no mínimo 10 caracteres'),
+  description: z.string().min(10, 'Descrição deve ter no mínimo 10 caracteres').optional(),
   shortDescription: z.string().optional(),
   category: z
     .enum([
@@ -149,6 +167,8 @@ const productBaseSchema = z.object({
       'TAMPOS_PRATELEIRAS',
       'DIVISORIAS',
       'FECHAMENTOS',
+      'FACHADAS',
+      'PAINEIS_DECORATIVOS',
       'FERRAGENS',
       'KITS',
       'SERVICOS',
@@ -156,8 +176,28 @@ const productBaseSchema = z.object({
     ])
     .optional(),
   subcategory: z.string().optional(),
-  images: z.array(z.string().url('URL de imagem inválida')).optional(),
-  thumbnail: z.string().url('URL de thumbnail inválida').optional().nullable(),
+  images: z
+    .array(
+      z
+        .string()
+        .refine(
+          (val) =>
+            !val || val.startsWith('/') || val.startsWith('http://') || val.startsWith('https://'),
+          'Caminho de imagem inválido'
+        )
+    )
+    .optional()
+    .nullable(),
+  thumbnail: z
+    .string()
+    .refine(
+      (val) =>
+        !val || val.startsWith('/') || val.startsWith('http://') || val.startsWith('https://'),
+      'Caminho de thumbnail inválido'
+    )
+    .optional()
+    .nullable()
+    .or(z.literal('')),
   priceType: z.enum(['FIXED', 'PER_M2', 'QUOTE_ONLY']).optional(),
   basePrice: z.number().min(0).optional().nullable(),
   pricePerM2: z.number().min(0).optional().nullable(),
@@ -174,10 +214,10 @@ const productBaseSchema = z.object({
 
 /**
  * Schema para atualizar um produto existente
- * Todos os campos são opcionais
+ * Todos os campos são opcionais, id é opcional (passado pela URL)
  */
 export const updateProductSchema = productBaseSchema.extend({
-  id: z.string().cuid('ID de produto inválido'),
+  id: z.string().cuid('ID de produto inválido').optional(),
 })
 
 /**
@@ -197,6 +237,8 @@ export const productQuerySchema = z.object({
       'TAMPOS_PRATELEIRAS',
       'DIVISORIAS',
       'FECHAMENTOS',
+      'FACHADAS',
+      'PAINEIS_DECORATIVOS',
       'FERRAGENS',
       'KITS',
       'SERVICOS',

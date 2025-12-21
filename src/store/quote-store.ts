@@ -50,6 +50,11 @@ export interface QuoteItem {
   ledTemp?: string // Temperatura LED (espelhos)
   shape?: string // Formato (espelhos, tampos)
   bisoteWidth?: string // Largura do bisotê (espelhos)
+  // Phase 4: Opções avançadas
+  semVidro?: boolean // Apenas estrutura/ferragens, sem vidro
+  materialType?: string // Tipo de material (vidro temperado, policarbonato, etc)
+  // Phase 5: Hardware inclusion (for categories where it's optional like VIDROS)
+  includeHardware?: boolean // Se inclui ferragem/kit (true) ou apenas o vidro (false)
   // Mídia
   images: string[]
   estimatedPrice?: number
@@ -314,7 +319,12 @@ export const useQuoteStore = create<QuoteState>()(
               productSlug: item.productSlug,
             },
             selectedProducts: [item.productId], // Restaurar seleção para edit flow
+            // Limpar estados de seleção anterior para evitar interferência
+            selectedCategories: [item.category],
+            productsToDetail: [],
+            currentProductIndex: 0,
             step: 3, // Pula direto para Step 3 (detalhes) ao editar
+            ...updateActivity(),
           })
         }
       },
@@ -325,7 +335,11 @@ export const useQuoteStore = create<QuoteState>()(
           editingIndex: null,
           currentItem: null,
           selectedProducts: [], // Limpar produtos selecionados ao cancelar
-          step: items.length > 0 ? 4 : 1, // Se tem itens, vai pro resumo
+          selectedCategories: [], // Limpar categorias também
+          productsToDetail: [],
+          currentProductIndex: 0,
+          step: items.length > 0 ? 4 : 0, // Se tem itens, vai pro resumo; se não, volta ao início
+          ...updateActivity(),
         })
       },
 

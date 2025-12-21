@@ -79,6 +79,8 @@ export type CategoryFieldConfig = {
   // Validações específicas (espessuras permitidas, etc)
   validations?: {
     thicknessOptions?: number[]
+    minWidth?: number
+    maxWidth?: number
     minHeight?: number
     maxHeight?: number
     requiredGlassType?: string

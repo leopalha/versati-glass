@@ -87,23 +87,23 @@ function clearChatStorage() {
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQuoteStore } from '@/store/quote-store'
 import type { AiQuoteData } from '@/store/quote-store'
-import { getQuoteContextCompletion, getProgressDetails, type ProgressDetail } from '@/lib/ai-quote-transformer'
+import {
+  getQuoteContextCompletion,
+  getProgressDetails,
+  type ProgressDetail,
+} from '@/lib/ai-quote-transformer'
 import { VoiceChatButton } from '@/components/chat/voice-chat-button'
 import { useVoice } from '@/hooks/use-voice'
 import { useCrossChannelUpdates } from '@/hooks/use-cross-channel-updates'
 import { showCrossChannelNotification } from '@/components/chat/cross-channel-notification'
 import { QuoteTransitionModal } from '@/components/chat/quote-transition-modal'
 import { RegisterConfirmModal } from '@/components/chat/register-confirm-modal'
-import {
-  CollapsibleProductSuggestions,
-  CollapsibleMultiCategoryProductSuggestions,
-  type ProductSuggestion,
-} from '@/components/chat/product-suggestion-card'
+// Product suggestion imports removed - using conversational flow instead
 import { useSession, signIn } from 'next-auth/react'
 
 interface Message {
   id: string
-  role: 'USER' | 'ASSISTANT' | 'PRODUCT_SUGGESTIONS'
+  role: 'USER' | 'ASSISTANT'
   content: string
   createdAt: string
   imageUrl?: string
@@ -119,13 +119,6 @@ interface Message {
     google: string
     outlook: string
     office365: string
-  }
-  // Product suggestions data (for role: 'PRODUCT_SUGGESTIONS')
-  productData?: {
-    products: ProductSuggestion[]
-    category: string
-    categories: string[]
-    isCollapsed: boolean
   }
 }
 
@@ -181,12 +174,7 @@ export function ChatAssistido({
   const [showRegisterModal, setShowRegisterModal] = useState(false)
   const [isRegisterLoading, setIsRegisterLoading] = useState(false)
 
-  // AI-CHAT Sprint P2.4: Product suggestions state
-  // MELHORADO: Suporta multiplas categorias simultaneamente
-  const [productSuggestions, setProductSuggestions] = useState<ProductSuggestion[]>([])
-  const [suggestedCategory, setSuggestedCategory] = useState<string | null>(null)
-  const [suggestedCategories, setSuggestedCategories] = useState<string[]>([]) // Multiplas categorias
-  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([])
+  // Product suggestions removed - using conversational flow instead
 
   // Voice feature state
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false)
@@ -286,10 +274,6 @@ export function ChatAssistido({
     setQuoteContext(null)
     setQuoteProgress(0)
     setCanExportQuote(false)
-    setProductSuggestions([])
-    setSuggestedCategory(null)
-    setSuggestedCategories([])
-    setSelectedProductIds([])
     // Re-show welcome message
     setMessages([
       {
@@ -408,209 +392,6 @@ export function ChatAssistido({
     setSelectedImage(null)
   }
 
-  // AI-CHAT Sprint P2.4: Fetch product suggestions based on category
-  // MELHORADO: Adiciona produtos como mensagem inline no chat
-  const fetchProductSuggestions = useCallback(async (category: string) => {
-    try {
-      const response = await fetch(`/api/ai/products/suggestions?category=${category}&limit=3`)
-
-      if (response.ok) {
-        const data = await response.json()
-
-        if (data.success && data.products.length > 0) {
-          // Adiciona produtos sem duplicar ao estado global
-          setProductSuggestions((prev) => {
-            const existingIds = prev.map((p) => p.id)
-            const newProducts = data.products.filter(
-              (p: ProductSuggestion) => !existingIds.includes(p.id)
-            )
-            return [...prev, ...newProducts]
-          })
-          setSuggestedCategory(category)
-          // Adiciona categoria a lista de sugeridas
-          setSuggestedCategories((prev) => {
-            if (!prev.includes(category)) {
-              return [...prev, category]
-            }
-            return prev
-          })
-
-          // NOVO: Adiciona como mensagem inline para que suba com a conversa
-          const suggestionMessage: Message = {
-            id: `suggestions-${category}-${Date.now()}`,
-            role: 'PRODUCT_SUGGESTIONS',
-            content: `Sugestoes de ${category}`,
-            createdAt: new Date().toISOString(),
-            productData: {
-              products: data.products,
-              category: category,
-              categories: [category],
-              isCollapsed: false,
-            },
-          }
-
-          // Verifica se ja existe mensagem de sugestao para essa categoria
-          setMessages((prev) => {
-            const existingSuggestion = prev.find(
-              (m) => m.role === 'PRODUCT_SUGGESTIONS' && m.productData?.category === category
-            )
-            if (existingSuggestion) {
-              // Atualiza a mensagem existente com novos produtos
-              return prev.map((m) =>
-                m.id === existingSuggestion.id
-                  ? {
-                      ...m,
-                      productData: {
-                        ...m.productData!,
-                        products: [...m.productData!.products, ...data.products.filter(
-                          (p: ProductSuggestion) => !m.productData!.products.some(ep => ep.id === p.id)
-                        )],
-                      },
-                    }
-                  : m
-              )
-            }
-            // Adiciona nova mensagem de sugestao
-            return [...prev, suggestionMessage]
-          })
-
-          // Scroll para mostrar as sugestoes
-          setTimeout(() => scrollToBottom(), 100)
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching product suggestions:', error)
-    }
-  }, [scrollToBottom])
-
-  // Buscar sugestoes para TODAS as categorias detectadas nos items
-  const fetchAllProductSuggestions = useCallback(
-    async (items: any[]) => {
-      if (!items || items.length === 0) return
-
-      // Extrair categorias unicas
-      const categories = [...new Set(items.map((item) => item.category).filter(Boolean))]
-
-      // Buscar produtos para cada categoria que ainda nao foi sugerida
-      for (const category of categories) {
-        if (!suggestedCategories.includes(category)) {
-          await fetchProductSuggestions(category)
-        }
-      }
-    },
-    [suggestedCategories, fetchProductSuggestions]
-  )
-
-  // AI-CHAT Sprint P2.4: Handle product selection
-  // MELHORADO: Colapsa card apos selecao e sobe com a conversa
-  const handleSelectProduct = useCallback(
-    async (product: ProductSuggestion) => {
-      logger.debug('[CHAT] Product selected:', { name: product.name })
-
-      // Adiciona a lista (nao remove se ja selecionado - acumula)
-      setSelectedProductIds((prev) => {
-        if (prev.includes(product.id)) {
-          // Se ja esta selecionado, remove (toggle)
-          return prev.filter((id) => id !== product.id)
-        }
-        return [...prev, product.id]
-      })
-
-      // NOVO: Colapsa a mensagem de sugestao da categoria desse produto
-      setMessages((prev) =>
-        prev.map((msg) => {
-          if (
-            msg.role === 'PRODUCT_SUGGESTIONS' &&
-            msg.productData?.category === product.category
-          ) {
-            return {
-              ...msg,
-              productData: {
-                ...msg.productData!,
-                isCollapsed: true,
-              },
-            }
-          }
-          return msg
-        })
-      )
-
-      // Mensagem clara de adicao ao orcamento
-      // Inclui slug e categoria para facilitar extracao pelo LLM
-      const selectionMessage = `Quero adicionar: ${product.name} (categoria: ${product.category}, slug: ${product.slug})`
-
-      // Add user message immediately
-      const userMessage: Message = {
-        id: `user-${Date.now()}`,
-        role: 'USER',
-        content: selectionMessage,
-        createdAt: new Date().toISOString(),
-      }
-
-      setMessages((prev) => [...prev, userMessage])
-      setIsLoading(true)
-
-      // Scroll to bottom to show new message
-      setTimeout(() => scrollToBottom(), 100)
-
-      try {
-        logger.debug('[CHAT] Sending product selection to API...')
-        const response = await fetch('/api/ai/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: selectionMessage,
-            conversationId,
-            sessionId,
-            imageBase64: null,
-            imageUrl: null,
-          }),
-        })
-
-        if (!response.ok) {
-          throw new Error('Erro ao enviar mensagem')
-        }
-
-        const data = await response.json()
-        logger.debug('[CHAT] AI response received')
-
-        // Update conversationId if new conversation
-        if (data.conversationId && !conversationId) {
-          setConversationId(data.conversationId)
-        }
-
-        const assistantMessage: Message = {
-          id: `assistant-${Date.now()}`,
-          role: 'ASSISTANT',
-          content: data.message,
-          createdAt: new Date().toISOString(),
-        }
-
-        setMessages((prev) => [...prev, assistantMessage])
-
-        // MELHORADO: Atualiza progresso imediatamente apos selecionar produto
-        // (nao espera 2 segundos do useEffect)
-        setTimeout(() => checkExportStatus(), 500)
-      } catch (error) {
-        console.error('[CHAT] Error sending product selection:', error)
-        // Add error message
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: `error-${Date.now()}`,
-            role: 'ASSISTANT',
-            content:
-              'Desculpe, ocorreu um erro. Por favor, tente novamente ou entre em contato pelo WhatsApp.',
-            createdAt: new Date().toISOString(),
-          },
-        ])
-      } finally {
-        setIsLoading(false)
-      }
-    },
-    [conversationId, sessionId, scrollToBottom]
-  )
-
   // AI-CHAT Sprint P1.6 + P3.2: Check export status and update progress
   const checkExportStatus = useCallback(async () => {
     if (!conversationId && !sessionId) return
@@ -633,18 +414,12 @@ export function ChatAssistido({
           setQuoteContext(data.quoteContext)
           const completion = getQuoteContextCompletion(data.quoteContext)
           setQuoteProgress(completion)
-
-          // AI-CHAT Sprint P2.4: Fetch product suggestions for ALL categories detected
-          // MELHORADO: Suporta multiplos produtos (ex: "quero porta e espelho")
-          if (data.quoteContext.items && data.quoteContext.items.length > 0) {
-            fetchAllProductSuggestions(data.quoteContext.items)
-          }
         }
       }
     } catch (error) {
       console.error('Error checking export status:', error)
     }
-  }, [conversationId, sessionId, fetchAllProductSuggestions])
+  }, [conversationId, sessionId])
 
   // AI-CHAT Sprint P1.6: Check export status after each AI response
   useEffect(() => {
@@ -1112,179 +887,134 @@ export function ChatAssistido({
             <div className="bg-theme-primary flex-1 space-y-4 overflow-y-auto p-4">
               <AnimatePresence mode="popLayout">
                 {messages.map((msg, index) => {
-                  // Renderizacao especial para mensagens de sugestao de produtos
-                  if (msg.role === 'PRODUCT_SUGGESTIONS' && msg.productData) {
-                    const { products, category, categories, isCollapsed } = msg.productData
-
-                    // Handler para toggle do collapse
-                    const handleToggleCollapse = () => {
-                      setMessages((prev) =>
-                        prev.map((m) =>
-                          m.id === msg.id
-                            ? {
-                                ...m,
-                                productData: {
-                                  ...m.productData!,
-                                  isCollapsed: !m.productData!.isCollapsed,
-                                },
-                              }
-                            : m
-                        )
-                      )
-                    }
-
-                    // Usa componente multi-categoria se tiver mais de uma
-                    if (categories.length > 1) {
-                      return (
-                        <CollapsibleMultiCategoryProductSuggestions
-                          key={msg.id}
-                          products={products}
-                          onSelectProduct={handleSelectProduct}
-                          selectedProductIds={selectedProductIds}
-                          isCollapsed={isCollapsed}
-                          onToggleCollapse={handleToggleCollapse}
-                        />
-                      )
-                    }
-
-                    return (
-                      <CollapsibleProductSuggestions
-                        key={msg.id}
-                        products={products}
-                        onSelectProduct={handleSelectProduct}
-                        selectedProductIds={selectedProductIds}
-                        category={category}
-                        isCollapsed={isCollapsed}
-                        onToggleCollapse={handleToggleCollapse}
-                      />
-                    )
-                  }
-
                   // Renderizacao normal para USER e ASSISTANT
                   return (
-                  <motion.div
-                    key={msg.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2, delay: index === messages.length - 1 ? 0 : 0 }}
-                    className={cn(
-                      'flex gap-2',
-                      msg.role === 'USER' ? 'justify-end' : 'justify-start'
-                    )}
-                  >
-                    {msg.role === 'ASSISTANT' && (
-                      <div className="bg-accent-500/20 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
-                        <Bot className="h-4 w-4 text-accent-500" />
-                      </div>
-                    )}
-                    <div
+                    <motion.div
+                      key={msg.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2, delay: index === messages.length - 1 ? 0 : 0 }}
                       className={cn(
-                        'max-w-[80%] overflow-hidden rounded-lg px-3 py-2 text-sm',
-                        msg.role === 'USER'
-                          ? 'bg-accent-500 text-neutral-900'
-                          : 'bg-theme-secondary text-theme-primary'
+                        'flex gap-2',
+                        msg.role === 'USER' ? 'justify-end' : 'justify-start'
                       )}
                     >
-                      {msg.imageUrl && (
-                        <img
-                          src={msg.imageUrl}
-                          alt="Imagem enviada"
-                          className="mb-2 h-auto max-w-full rounded-md"
-                          style={{ maxHeight: '150px' }}
-                        />
+                      {msg.role === 'ASSISTANT' && (
+                        <div className="bg-accent-500/20 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
+                          <Bot className="h-4 w-4 text-accent-500" />
+                        </div>
                       )}
-                      <p className="whitespace-pre-wrap break-words">{msg.content}</p>
-                      {/* Display measurements if available */}
-                      {msg.measurements && (msg.measurements.width || msg.measurements.height) && (
-                        <div className="border-accent-500/30 bg-accent-500/10 mt-2 space-y-1 rounded border p-2 text-xs">
-                          <div className="font-semibold text-accent-600">
-                            📐 Medidas detectadas:
-                          </div>
-                          {msg.measurements.width && (
-                            <div>
-                              Largura: <span className="font-mono">{msg.measurements.width}m</span>
-                            </div>
-                          )}
-                          {msg.measurements.height && (
-                            <div>
-                              Altura: <span className="font-mono">{msg.measurements.height}m</span>
-                            </div>
-                          )}
-                          {msg.measurements.referenceObject && (
-                            <div className="text-neutral-600">
-                              ✓ Baseado em: {msg.measurements.referenceObject}
-                            </div>
-                          )}
-                          {/* Confidence indicator */}
-                          <div className="flex items-center gap-1">
-                            {msg.measurements.confidence === 'high' && (
-                              <span className="text-green-600">🟢 Alta precisão</span>
-                            )}
-                            {msg.measurements.confidence === 'medium' && (
-                              <span className="text-yellow-600">🟡 Precisão média</span>
-                            )}
-                            {msg.measurements.confidence === 'low' && (
-                              <span className="text-red-600">🔴 Precisão baixa</span>
-                            )}
-                          </div>
-                          {/* Calibration help */}
-                          {msg.measurements.needsCalibration &&
-                            msg.measurements.calibrationHelp && (
-                              <div className="mt-1 text-neutral-600">
-                                📏 {msg.measurements.calibrationHelp}
+                      <div
+                        className={cn(
+                          'max-w-[80%] overflow-hidden rounded-lg px-3 py-2 text-sm',
+                          msg.role === 'USER'
+                            ? 'bg-accent-500 text-neutral-900'
+                            : 'bg-theme-secondary text-theme-primary'
+                        )}
+                      >
+                        {msg.imageUrl && (
+                          <img
+                            src={msg.imageUrl}
+                            alt="Imagem enviada"
+                            className="mb-2 h-auto max-w-full rounded-md"
+                            style={{ maxHeight: '150px' }}
+                          />
+                        )}
+                        <p className="whitespace-pre-wrap break-words">{msg.content}</p>
+                        {/* Display measurements if available */}
+                        {msg.measurements &&
+                          (msg.measurements.width || msg.measurements.height) && (
+                            <div className="border-accent-500/30 bg-accent-500/10 mt-2 space-y-1 rounded border p-2 text-xs">
+                              <div className="font-semibold text-accent-600">
+                                📐 Medidas detectadas:
                               </div>
-                            )}
-                        </div>
-                      )}
-                      {/* Display calendar links if scheduling confirmed */}
-                      {msg.calendarLinks && (
-                        <div className="mt-3 space-y-2 rounded-lg border border-green-500/30 bg-green-500/10 p-3">
-                          <div className="flex items-center gap-2 font-semibold text-green-400">
-                            <Calendar className="h-4 w-4" />
-                            Adicione ao seu calendario:
+                              {msg.measurements.width && (
+                                <div>
+                                  Largura:{' '}
+                                  <span className="font-mono">{msg.measurements.width}m</span>
+                                </div>
+                              )}
+                              {msg.measurements.height && (
+                                <div>
+                                  Altura:{' '}
+                                  <span className="font-mono">{msg.measurements.height}m</span>
+                                </div>
+                              )}
+                              {msg.measurements.referenceObject && (
+                                <div className="text-neutral-600">
+                                  ✓ Baseado em: {msg.measurements.referenceObject}
+                                </div>
+                              )}
+                              {/* Confidence indicator */}
+                              <div className="flex items-center gap-1">
+                                {msg.measurements.confidence === 'high' && (
+                                  <span className="text-green-600">🟢 Alta precisão</span>
+                                )}
+                                {msg.measurements.confidence === 'medium' && (
+                                  <span className="text-yellow-600">🟡 Precisão média</span>
+                                )}
+                                {msg.measurements.confidence === 'low' && (
+                                  <span className="text-red-600">🔴 Precisão baixa</span>
+                                )}
+                              </div>
+                              {/* Calibration help */}
+                              {msg.measurements.needsCalibration &&
+                                msg.measurements.calibrationHelp && (
+                                  <div className="mt-1 text-neutral-600">
+                                    📏 {msg.measurements.calibrationHelp}
+                                  </div>
+                                )}
+                            </div>
+                          )}
+                        {/* Display calendar links if scheduling confirmed */}
+                        {msg.calendarLinks && (
+                          <div className="mt-3 space-y-2 rounded-lg border border-green-500/30 bg-green-500/10 p-3">
+                            <div className="flex items-center gap-2 font-semibold text-green-400">
+                              <Calendar className="h-4 w-4" />
+                              Adicione ao seu calendario:
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              <a
+                                href={msg.calendarLinks.google}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-white/20"
+                              >
+                                <ExternalLink className="h-3 w-3" />
+                                Google
+                              </a>
+                              <a
+                                href={msg.calendarLinks.outlook}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-white/20"
+                              >
+                                <ExternalLink className="h-3 w-3" />
+                                Outlook
+                              </a>
+                              <a
+                                href={msg.calendarLinks.office365}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-white/20"
+                              >
+                                <ExternalLink className="h-3 w-3" />
+                                Office 365
+                              </a>
+                            </div>
+                            <p className="text-xs text-green-300/70">
+                              Clique para adicionar ao seu calendario
+                            </p>
                           </div>
-                          <div className="flex flex-wrap gap-2">
-                            <a
-                              href={msg.calendarLinks.google}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-white/20"
-                            >
-                              <ExternalLink className="h-3 w-3" />
-                              Google
-                            </a>
-                            <a
-                              href={msg.calendarLinks.outlook}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-white/20"
-                            >
-                              <ExternalLink className="h-3 w-3" />
-                              Outlook
-                            </a>
-                            <a
-                              href={msg.calendarLinks.office365}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-white/20"
-                            >
-                              <ExternalLink className="h-3 w-3" />
-                              Office 365
-                            </a>
-                          </div>
-                          <p className="text-xs text-green-300/70">
-                            Clique para adicionar ao seu calendario
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    {msg.role === 'USER' && (
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-neutral-600">
-                        <User className="h-4 w-4 text-neutral-300" />
+                        )}
                       </div>
-                    )}
-                  </motion.div>
+                      {msg.role === 'USER' && (
+                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-neutral-600">
+                          <User className="h-4 w-4 text-neutral-300" />
+                        </div>
+                      )}
+                    </motion.div>
                   )
                 })}
               </AnimatePresence>
@@ -1342,7 +1072,9 @@ export function ChatAssistido({
                       {quoteProgress >= 100 ? 'Orcamento completo!' : 'Progresso do orcamento'}
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className={`font-bold ${quoteProgress >= 100 ? 'text-green-500' : 'text-accent-500'}`}>
+                      <span
+                        className={`font-bold ${quoteProgress >= 100 ? 'text-green-500' : 'text-accent-500'}`}
+                      >
                         {quoteProgress >= 100 ? 'Pronto!' : `${quoteProgress}%`}
                       </span>
                       <button
@@ -1378,8 +1110,8 @@ export function ChatAssistido({
                       {(() => {
                         const progressDetails = getProgressDetails(quoteContext)
                         const allFields = [
-                          ...progressDetails.productFields.filter(f => f.required || f.completed),
-                          ...progressDetails.contactFields.filter(f => f.required || f.completed),
+                          ...progressDetails.productFields.filter((f) => f.required || f.completed),
+                          ...progressDetails.contactFields.filter((f) => f.required || f.completed),
                         ]
 
                         // Se nao tem campos, mostra o basico
@@ -1401,18 +1133,24 @@ export function ChatAssistido({
                           <div className="mt-3 space-y-1.5">
                             {/* Campos do produto */}
                             {progressDetails.productFields
-                              .filter(f => f.required || f.completed)
+                              .filter((f) => f.required || f.completed)
                               .map((field) => (
                                 <div key={field.key} className="flex items-center gap-2 text-xs">
                                   {field.completed ? (
                                     <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
                                   ) : (
-                                    <Circle className={cn(
-                                      "h-3.5 w-3.5 flex-shrink-0",
-                                      field.required ? "text-amber-400" : "text-theme-muted"
-                                    )} />
+                                    <Circle
+                                      className={cn(
+                                        'h-3.5 w-3.5 flex-shrink-0',
+                                        field.required ? 'text-amber-400' : 'text-theme-muted'
+                                      )}
+                                    />
                                   )}
-                                  <span className={field.completed ? 'text-theme-primary' : 'text-theme-muted'}>
+                                  <span
+                                    className={
+                                      field.completed ? 'text-theme-primary' : 'text-theme-muted'
+                                    }
+                                  >
                                     {field.label}
                                     {field.required && !field.completed && (
                                       <span className="ml-1 text-amber-400">*</span>
@@ -1422,24 +1160,30 @@ export function ChatAssistido({
                               ))}
 
                             {/* Separador se tem campos de contato */}
-                            {progressDetails.contactFields.some(f => f.required || f.completed) && (
-                              <div className="border-theme-default my-2 border-t" />
-                            )}
+                            {progressDetails.contactFields.some(
+                              (f) => f.required || f.completed
+                            ) && <div className="border-theme-default my-2 border-t" />}
 
                             {/* Campos de contato */}
                             {progressDetails.contactFields
-                              .filter(f => f.required || f.completed)
+                              .filter((f) => f.required || f.completed)
                               .map((field) => (
                                 <div key={field.key} className="flex items-center gap-2 text-xs">
                                   {field.completed ? (
                                     <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-accent-500" />
                                   ) : (
-                                    <Circle className={cn(
-                                      "h-3.5 w-3.5 flex-shrink-0",
-                                      field.required ? "text-amber-400" : "text-theme-muted"
-                                    )} />
+                                    <Circle
+                                      className={cn(
+                                        'h-3.5 w-3.5 flex-shrink-0',
+                                        field.required ? 'text-amber-400' : 'text-theme-muted'
+                                      )}
+                                    />
                                   )}
-                                  <span className={field.completed ? 'text-theme-primary' : 'text-theme-muted'}>
+                                  <span
+                                    className={
+                                      field.completed ? 'text-theme-primary' : 'text-theme-muted'
+                                    }
+                                  >
                                     <UserCircle className="mr-1 inline h-3 w-3" />
                                     {field.label}
                                     {field.required && !field.completed && (
@@ -1547,16 +1291,7 @@ export function ChatAssistido({
                               setQuoteContext(null)
                               setQuoteProgress(0)
                               setCanExportQuote(false)
-                              setProductSuggestions([])
-                              setSuggestedCategory(null)
-                              setSuggestedCategories([])
-                              setSelectedProductIds([])
                               setIsProgressMinimized(true)
-
-                              // Remover mensagens de sugestao de produtos do historico
-                              setMessages((prev) =>
-                                prev.filter((m) => m.role !== 'PRODUCT_SUGGESTIONS')
-                              )
 
                               // Add cancellation message
                               const cancelMessage: Message = {

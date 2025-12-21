@@ -16,10 +16,20 @@ export const aiQuoteItemSchema = z.object({
       'VIDROS',
       'PORTAS',
       'JANELAS',
-      'GUARDA_CORPOS',
-      'CORRIMAOS',
-      'TAMPOS',
+      'GUARDA_CORPO',
+      'GUARDA_CORPOS', // alias
+      'CORTINAS_VIDRO',
+      'PERGOLADOS',
+      'TAMPOS_PRATELEIRAS',
+      'TAMPOS', // alias
       'DIVISORIAS',
+      'FECHAMENTOS',
+      'FACHADAS',
+      'PAINEIS_DECORATIVOS',
+      'FERRAGENS',
+      'KITS',
+      'SERVICOS',
+      'CORRIMAOS',
       'OUTROS',
     ])
     .optional(),

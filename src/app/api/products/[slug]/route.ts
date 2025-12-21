@@ -90,10 +90,11 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
     // Parsear e validar dados
     const body = await request.json()
-    const validatedData = updateProductSchema.parse({
-      ...body,
-      id: existingProduct.id,
-    })
+
+    // Log para debug
+    logger.debug('PUT /api/products/[slug] - body recebido:', JSON.stringify(body, null, 2))
+
+    const validatedData = updateProductSchema.parse(body)
 
     // Se name mudou, gerar novo slug
     let newSlug = slug
@@ -108,15 +109,20 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
         if (slugExists) {
           return NextResponse.json(
-            { error: 'Já existe um produto com este nome. Tente um nome diferente.' },
+            { error: 'Ja existe um produto com este nome. Tente um nome diferente.' },
             { status: 409 }
           )
         }
       }
     }
 
-    // Remover id do objeto de atualização
-    const { id, ...dataToUpdate } = validatedData
+    // Remover id e campos undefined do objeto de atualizacao
+    const { id, ...rawDataToUpdate } = validatedData
+
+    // Filtrar campos undefined para não sobrescrever valores existentes com undefined
+    const dataToUpdate = Object.fromEntries(
+      Object.entries(rawDataToUpdate).filter(([, value]) => value !== undefined)
+    )
 
     // Atualizar produto
     const updatedProduct = await prisma.product.update({

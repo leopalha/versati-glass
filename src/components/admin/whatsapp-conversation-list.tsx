@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { useToast } from '@/components/ui/toast/use-toast'
+import { logger } from '@/lib/logger'
 
 interface Message {
   id: string
@@ -70,7 +71,7 @@ export function WhatsAppConversationList({
         eventSource = new EventSource('/api/whatsapp/stream')
 
         eventSource.onopen = () => {
-          console.log('[SSE] Conectado ao stream de WhatsApp')
+          logger.debug('[SSE] Conectado ao stream de WhatsApp')
           setIsConnected(true)
           setConnectionStatus('connected')
         }
@@ -80,9 +81,9 @@ export function WhatsAppConversationList({
             const data = JSON.parse(event.data)
 
             if (data.type === 'connected') {
-              console.log('[SSE] Conexão confirmada:', data.timestamp)
+              logger.debug('[SSE] Conexão confirmada', { timestamp: data.timestamp })
             } else if (data.type === 'new_message') {
-              console.log('[SSE] Nova mensagem:', data.data)
+              logger.debug('[SSE] Nova mensagem recebida')
 
               // Mostrar notificação toast para mensagens INBOUND
               if (data.data.direction === 'INBOUND') {
@@ -140,12 +141,12 @@ export function WhatsAppConversationList({
               })
             }
           } catch (error) {
-            console.error('[SSE] Erro ao processar mensagem:', error)
+            logger.error('[SSE] Erro ao processar mensagem', { error })
           }
         }
 
         eventSource.onerror = (error) => {
-          console.error('[SSE] Erro de conexão:', error)
+          logger.error('[SSE] Erro de conexão', { error })
           setIsConnected(false)
           setConnectionStatus('disconnected')
           eventSource?.close()
@@ -153,13 +154,13 @@ export function WhatsAppConversationList({
           // Reconectar após 5 segundos
           setTimeout(() => {
             if (connectionStatus !== 'connected') {
-              console.log('[SSE] Tentando reconectar...')
+              logger.debug('[SSE] Tentando reconectar...')
               connect()
             }
           }, 5000)
         }
       } catch (error) {
-        console.error('[SSE] Erro ao criar conexão:', error)
+        logger.error('[SSE] Erro ao criar conexão', { error })
         setConnectionStatus('disconnected')
       }
     }
@@ -169,7 +170,7 @@ export function WhatsAppConversationList({
     // Cleanup ao desmontar
     return () => {
       if (eventSource) {
-        console.log('[SSE] Fechando conexão')
+        logger.debug('[SSE] Fechando conexão')
         eventSource.close()
       }
     }

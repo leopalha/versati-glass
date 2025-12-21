@@ -137,7 +137,7 @@ export default async function AdminPedidosPage({ searchParams }: AdminPedidosPag
                 <Link
                   key={status}
                   href={`/admin/pedidos?status=${status}`}
-                  className="hover:bg-neutral-250 rounded-lg bg-neutral-200 px-3 py-1.5 text-sm text-neutral-700 hover:text-white"
+                  className="rounded-lg bg-neutral-800 px-3 py-1.5 text-sm text-neutral-300 hover:bg-neutral-700 hover:text-white"
                 >
                   {label} ({count})
                 </Link>
@@ -149,7 +149,7 @@ export default async function AdminPedidosPage({ searchParams }: AdminPedidosPag
         {/* Active filters display */}
         {hasFilters && (
           <div className="mb-4 flex flex-wrap gap-2">
-            <p className="text-sm text-neutral-700">Filtros ativos:</p>
+            <p className="text-sm text-neutral-400">Filtros ativos:</p>
             {params.search && (
               <span className="rounded-lg bg-gold-500/10 px-3 py-1 text-sm text-gold-500">
                 Busca: {params.search}
@@ -177,7 +177,7 @@ export default async function AdminPedidosPage({ searchParams }: AdminPedidosPag
             )}
             <Link
               href="/admin/pedidos"
-              className="rounded-lg px-3 py-1 text-sm text-neutral-700 underline hover:text-white"
+              className="rounded-lg px-3 py-1 text-sm text-neutral-400 underline hover:text-white"
             >
               Limpar filtros
             </Link>
@@ -190,53 +190,53 @@ export default async function AdminPedidosPage({ searchParams }: AdminPedidosPag
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               {hasFilters ? 'Nenhum pedido encontrado' : 'Nenhum pedido'}
             </h3>
-            <p className="text-neutral-700">
+            <p className="text-neutral-400">
               {hasFilters
                 ? 'Tente ajustar os filtros para encontrar o que procura'
                 : 'Os pedidos aparecerao aqui'}
             </p>
           </Card>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-neutral-400">
+          <div className="overflow-hidden rounded-lg border border-neutral-700">
             <table className="w-full">
-              <thead className="bg-neutral-200">
+              <thead className="bg-neutral-800">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-300">
                     Pedido
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-300">
                     Cliente
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-300">
                     Status
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-300">
                     Pagamento
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-300">
                     Total
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-700">Data</th>
-                  <th className="px-4 py-3 text-right text-sm font-medium text-neutral-700">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-neutral-300">Data</th>
+                  <th className="px-4 py-3 text-right text-sm font-medium text-neutral-300">
                     Acoes
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-300">
+              <tbody className="divide-y divide-neutral-700">
                 {orders.map((order) => (
-                  <tr key={order.id} className="hover:bg-neutral-200/50">
+                  <tr key={order.id} className="hover:bg-neutral-800">
                     <td className="px-4 py-3">
                       <p className="font-medium text-white">#{order.number}</p>
-                      <p className="text-xs text-neutral-600">{order.items.length} item(s)</p>
+                      <p className="text-xs text-neutral-400">{order.items.length} item(s)</p>
                     </td>
                     <td className="px-4 py-3">
                       <p className="text-white">{order.user.name}</p>
-                      <p className="text-xs text-neutral-600">{order.user.email}</p>
+                      <p className="text-xs text-neutral-400">{order.user.email}</p>
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-full px-2 py-1 text-xs font-medium ${
-                          statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-700'
+                          statusLabels[order.status]?.color || 'bg-neutral-500/20 text-neutral-400'
                         }`}
                       >
                         {statusLabels[order.status]?.label || order.status}
@@ -246,7 +246,7 @@ export default async function AdminPedidosPage({ searchParams }: AdminPedidosPag
                       <span
                         className={`rounded-full px-2 py-1 text-xs font-medium ${
                           paymentLabels[order.paymentStatus]?.color ||
-                          'bg-neutral-500/20 text-neutral-700'
+                          'bg-neutral-500/20 text-neutral-400'
                         }`}
                       >
                         {paymentLabels[order.paymentStatus]?.label || order.paymentStatus}
@@ -258,7 +258,7 @@ export default async function AdminPedidosPage({ searchParams }: AdminPedidosPag
                       </p>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-1 text-sm text-neutral-700">
+                      <div className="flex items-center gap-1 text-sm text-neutral-400">
                         <Calendar className="h-4 w-4" />
                         {new Date(order.createdAt).toLocaleDateString('pt-BR')}
                       </div>

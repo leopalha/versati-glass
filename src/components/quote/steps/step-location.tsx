@@ -60,36 +60,63 @@ export function StepLocation() {
   )
 
   // Fetch address when CEP is complete
+  // Uses ViaCEP as primary, BrasilAPI as fallback
   const fetchAddress = useCallback(async (cleanCep: string) => {
     if (cleanCep.length !== 8) return
 
     setIsLoading(true)
     setError(null)
 
+    // Try ViaCEP first
     try {
-      const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`)
-      const data = await response.json()
-
-      if (data.erro) {
-        setError('CEP nao encontrado. Verifique e tente novamente.')
-        setAddressData(null)
-        setRegionInfo(null)
-        return
-      }
-
-      // Set address data
-      setAddressData({
-        street: data.logradouro || '',
-        neighborhood: data.bairro || '',
-        city: data.localidade || '',
-        state: data.uf || '',
+      const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`, {
+        signal: AbortSignal.timeout(5000), // 5s timeout
       })
 
-      // Calculate region info using complete system
+      if (response.ok) {
+        const data = await response.json()
+
+        if (!data.erro) {
+          // ViaCEP success
+          setAddressData({
+            street: data.logradouro || '',
+            neighborhood: data.bairro || '',
+            city: data.localidade || '',
+            state: data.uf || '',
+          })
+          const region = analyzeLocation(cleanCep)
+          setRegionInfo(region)
+          setIsLoading(false)
+          return
+        }
+      }
+    } catch {
+      // ViaCEP failed, try fallback
+    }
+
+    // Fallback: BrasilAPI
+    try {
+      const response = await fetch(`https://brasilapi.com.br/api/cep/v1/${cleanCep}`, {
+        signal: AbortSignal.timeout(5000),
+      })
+
+      if (!response.ok) {
+        throw new Error('CEP not found')
+      }
+
+      const data = await response.json()
+
+      setAddressData({
+        street: data.street || '',
+        neighborhood: data.neighborhood || '',
+        city: data.city || '',
+        state: data.state || '',
+      })
+
       const region = analyzeLocation(cleanCep)
       setRegionInfo(region)
-    } catch (err) {
-      setError('Erro ao buscar CEP. Tente novamente.')
+    } catch {
+      setError('CEP nao encontrado. Verifique e tente novamente.')
       setAddressData(null)
       setRegionInfo(null)
     } finally {
@@ -230,9 +257,7 @@ export function StepLocation() {
               >
                 <div className="mb-3 flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
-                  <span className="text-sm font-medium text-green-400">
-                    Atendemos sua região!
-                  </span>
+                  <span className="text-sm font-medium text-green-400">Atendemos sua região!</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Menu, X, User, LogOut, ShoppingCart, LayoutDashboard } from 'lucide-react'
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/shared/logo'
@@ -28,17 +28,23 @@ const navigation = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isSigningOut, setIsSigningOut] = useState(false)
   const { data: session, status } = useSession()
-  const isLoading = status === 'loading'
+  // Mostrar loading durante o carregamento inicial OU durante o logout
+  const isLoading = status === 'loading' || isSigningOut
   const { items, setStep } = useQuoteStore()
   const cartItemsCount = items.length
 
+  // Cache das iniciais para evitar mudança visual durante logout
+  const cachedInitialsRef = useRef<string>('')
+
   const handleSignOut = useCallback(async () => {
+    setIsSigningOut(true)
     await signOut({ callbackUrl: '/' })
   }, [])
 
   const getInitials = useCallback((name?: string | null) => {
-    if (!name) return 'U'
+    if (!name) return ''
     return name
       .split(' ')
       .map((n) => n[0])
@@ -47,10 +53,18 @@ export function Header() {
       .slice(0, 2)
   }, [])
 
-  const userInitials = useMemo(
-    () => getInitials(session?.user?.name),
-    [session?.user?.name, getInitials]
-  )
+  // Atualizar cache das iniciais quando a sessão muda (mas não limpar durante logout)
+  useEffect(() => {
+    if (session?.user?.name && !isSigningOut) {
+      cachedInitialsRef.current = getInitials(session.user.name)
+    }
+  }, [session?.user?.name, isSigningOut, getInitials])
+
+  // Usar iniciais cacheadas para evitar flash de 'U' durante logout
+  const userInitials = useMemo(() => {
+    if (isSigningOut) return cachedInitialsRef.current
+    return getInitials(session?.user?.name) || cachedInitialsRef.current
+  }, [session?.user?.name, getInitials, isSigningOut])
 
   return (
     <header className="bg-theme-header fixed left-0 right-0 top-0 z-40 border-b border-white/10 backdrop-blur-sm">

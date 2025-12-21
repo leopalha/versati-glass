@@ -43,6 +43,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 }
 
 // Categorias principais para o Quote Wizard (mais relevantes para cotação)
+// Ordem: Produtos principais primeiro, Serviços por último
 const categories = [
   {
     id: 'BOX',
@@ -101,11 +102,18 @@ const categories = [
     color: 'text-lime-400',
   },
   {
-    id: 'TAMPOS_PRATELEIRAS',
-    name: 'Tampos e Prateleiras',
-    description: 'Tampos de mesa e prateleiras de vidro',
-    icon: 'RectangleHorizontal',
-    color: 'text-indigo-400',
+    id: 'FACHADAS',
+    name: 'Fachadas de Vidro',
+    description: 'Fachadas comerciais e corporativas',
+    icon: 'LayoutGrid',
+    color: 'text-slate-400',
+  },
+  {
+    id: 'FECHAMENTOS',
+    name: 'Fechamentos em Vidro',
+    description: 'Fechamento de varanda, area gourmet e piscina',
+    icon: 'Grid3x3',
+    color: 'text-green-400',
   },
   {
     id: 'DIVISORIAS',
@@ -115,11 +123,18 @@ const categories = [
     color: 'text-pink-400',
   },
   {
-    id: 'FECHAMENTOS',
-    name: 'Fechamentos em Vidro',
-    description: 'Fechamento de varanda, area gourmet e piscina',
-    icon: 'Grid3x3',
-    color: 'text-green-400',
+    id: 'PAINEIS_DECORATIVOS',
+    name: 'Paineis Decorativos',
+    description: 'Paineis artisticos e decorativos',
+    icon: 'Square',
+    color: 'text-violet-400',
+  },
+  {
+    id: 'TAMPOS_PRATELEIRAS',
+    name: 'Tampos e Prateleiras',
+    description: 'Tampos de mesa e prateleiras de vidro',
+    icon: 'RectangleHorizontal',
+    color: 'text-indigo-400',
   },
   {
     id: 'FERRAGENS',
@@ -130,7 +145,7 @@ const categories = [
   },
   {
     id: 'KITS',
-    name: 'Kits',
+    name: 'Kits Completos',
     description: 'Kits prontos para instalacao',
     icon: 'Package',
     color: 'text-yellow-400',
@@ -142,32 +157,16 @@ const categories = [
     icon: 'Hammer',
     color: 'text-rose-400',
   },
-  {
-    id: 'FACHADAS',
-    name: 'Fachadas de Vidro',
-    description: 'Fachadas comerciais e corporativas',
-    icon: 'LayoutGrid',
-    color: 'text-slate-400',
-  },
-  {
-    id: 'PAINEIS_DECORATIVOS',
-    name: 'Paineis Decorativos',
-    description: 'Paineis artisticos e decorativos',
-    icon: 'Square',
-    color: 'text-violet-400',
-  },
 ]
 
 export function StepCategory() {
   const {
     nextStep,
-    currentItem,
     items,
     cancelEditItem,
     editingIndex,
     selectedCategories,
     toggleCategorySelection,
-    setSelectedCategories,
   } = useQuoteStore()
 
   const isEditing = editingIndex !== null

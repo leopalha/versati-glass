@@ -74,14 +74,12 @@ export function StepDetails() {
     currentItem,
     locationData, // Phase 3
     addItem,
-    updateItem,
     editingIndex,
     saveEditItem,
     cancelEditItem,
     nextStep,
     prevStep,
     items,
-    selectedProducts,
     clearSelectedProducts,
     productsToDetail,
     currentProductIndex,
@@ -148,6 +146,11 @@ export function StepDetails() {
 
   // Phase 4: Material Type - Support for alternative materials (polycarbonate, acrylic, etc.)
   const [materialType, setMaterialType] = useState(existingItem?.materialType || 'VIDRO_TEMPERADO')
+
+  // Phase 5: Hardware inclusion toggle for categories where it's optional
+  // Categories that NEVER need hardware: ESPELHOS, TAMPOS_PRATELEIRAS, SERVICOS
+  // Categories where hardware is OPTIONAL: VIDROS (can be just the glass)
+  const [includeHardware, setIncludeHardware] = useState(existingItem?.includeHardware ?? true)
 
   // Get available materials for current category
   const availableMaterials = useMemo(() => {
@@ -254,13 +257,36 @@ export function StepDetails() {
     ]
   )
 
+  // Categorias que NUNCA precisam de ferragem
+  const categoriesWithoutHardware = [
+    'ESPELHOS',
+    'TAMPOS_PRATELEIRAS',
+    'SERVICOS',
+    'FERRAGENS',
+    'KITS',
+  ]
+
+  // Categorias onde ferragem é OPCIONAL (cliente pode escolher)
+  const categoriesWithOptionalHardware = ['VIDROS']
+
+  // Determina se deve mostrar opções de ferragem
+  const shouldShowHardware = useMemo(() => {
+    if (!category) return false
+    // Nunca mostra para categorias sem ferragem
+    if (categoriesWithoutHardware.includes(category)) return false
+    // Para VIDROS, depende da escolha do cliente
+    if (categoriesWithOptionalHardware.includes(category)) return includeHardware
+    // Para outras categorias, sempre mostra
+    return true
+  }, [category, includeHardware])
+
   // Opções de cor de ferragem baseadas na categoria
   const hardwareColorOptions = useMemo(() => {
-    if (category === 'ESPELHOS') {
-      return [] // Espelhos não têm ferragem
+    if (!shouldShowHardware) {
+      return [] // Não mostra ferragem
     }
     return HARDWARE_COLORS
-  }, [category])
+  }, [shouldShowHardware])
 
   // Opções de espessura baseadas na categoria E na espessura mínima recomendada pelo ThicknessCalculator
   // IMPORTANTE: value usa numericValue.toString() para compatibilidade com ThicknessCalculator
@@ -606,6 +632,10 @@ export function StepDetails() {
       molaCapacidade: molaCapacidade || undefined,
       puxadorTamanho: puxadorTamanho || undefined,
       hardwareColor: hardwareColor || undefined,
+      // Phase 5: Hardware inclusion toggle (for VIDROS category)
+      includeHardware: categoriesWithOptionalHardware.includes(category || '')
+        ? includeHardware
+        : undefined,
     }
 
     if (isEditing) {
@@ -1497,6 +1527,35 @@ export function StepDetails() {
             </div>
           )}
 
+          {/* Toggle para incluir ferragem (apenas para VIDROS) */}
+          {categoriesWithOptionalHardware.includes(category || '') && (
+            <div className="rounded-lg border border-neutral-600 bg-neutral-800/50 p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-theme-primary text-sm font-medium">
+                    Incluir ferragem/kit de instalacao?
+                  </label>
+                  <p className="text-theme-muted mt-1 text-xs">
+                    Desmarque se deseja apenas o vidro (ex: tampo de mesa, reposicao)
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIncludeHardware(!includeHardware)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    includeHardware ? 'bg-accent-500' : 'bg-neutral-600'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      includeHardware ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Phase 4: Opções comuns - Espessura/Acabamento (exceto SERVICOS, FERRAGENS, KITS que têm campos próprios) */}
           {!['SERVICOS', 'FERRAGENS', 'KITS'].includes(category || '') && (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -1536,7 +1595,7 @@ export function StepDetails() {
                   </SelectContent>
                 </Select>
               </div>
-              {hardwareColorOptions.length > 0 && category !== 'ESPELHOS' && (
+              {shouldShowHardware && (
                 <div>
                   <label className="text-theme-muted mb-1 block text-sm">Cor da Ferragem</label>
                   <Select value={color} onValueChange={setColor}>

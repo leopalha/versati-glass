@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { slugify } from '@/lib/utils'
-import { createProductSchema } from '@/lib/validations/product'
+import { createProductSchema, updateProductSchema } from '@/lib/validations/product'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -31,10 +31,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ImageUpload } from '@/components/admin/image-upload'
 import { logger } from '@/lib/logger'
 
-type ProductFormData = z.infer<typeof createProductSchema>
+type CreateProductFormData = z.infer<typeof createProductSchema>
+type UpdateProductFormData = z.infer<typeof updateProductSchema>
+type ProductFormData = CreateProductFormData | UpdateProductFormData
 
 interface ProductFormProps {
-  initialData?: Partial<ProductFormData> & { id?: string; slug?: string }
+  initialData?: Partial<CreateProductFormData> & { id?: string; slug?: string }
   mode: 'create' | 'edit'
 }
 
@@ -43,8 +45,11 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [generatedSlug, setGeneratedSlug] = useState(initialData?.slug || '')
 
+  // Use schema apropriado para criar vs editar
+  const schema = mode === 'create' ? createProductSchema : updateProductSchema
+
   const form = useForm<ProductFormData>({
-    resolver: zodResolver(createProductSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: initialData?.name || '',
       description: initialData?.description || '',
@@ -110,68 +115,73 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Informações Básicas */}
         <Card>
           <CardHeader>
             <CardTitle>Informações Básicas</CardTitle>
             <CardDescription>Dados principais do produto</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome do Produto *</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: Box Elegance 8mm" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Slug gerado:{' '}
-                    <code className="rounded bg-neutral-100 px-2 py-1 text-xs dark:bg-neutral-800">
-                      {generatedSlug || 'produto-exemplo'}
-                    </code>
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Categoria *</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <CardContent className="space-y-6">
+            {/* Grid para Nome e Categoria */}
+            <div className="grid gap-6 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome do Produto *</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione uma categoria" />
-                      </SelectTrigger>
+                      <Input placeholder="Ex: Box Elegance 8mm" {...field} />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="BOX">Box para Banheiro</SelectItem>
-                      <SelectItem value="ESPELHOS">Espelhos</SelectItem>
-                      <SelectItem value="VIDROS">Vidros</SelectItem>
-                      <SelectItem value="PORTAS">Portas de Vidro</SelectItem>
-                      <SelectItem value="JANELAS">Janelas de Vidro</SelectItem>
-                      <SelectItem value="GUARDA_CORPO">Guarda-Corpo</SelectItem>
-                      <SelectItem value="CORTINAS_VIDRO">Cortinas de Vidro</SelectItem>
-                      <SelectItem value="PERGOLADOS">Pergolados e Coberturas</SelectItem>
-                      <SelectItem value="TAMPOS_PRATELEIRAS">Tampos e Prateleiras</SelectItem>
-                      <SelectItem value="DIVISORIAS">Divisorias e Paineis</SelectItem>
-                      <SelectItem value="FECHAMENTOS">Fechamentos em Vidro</SelectItem>
-                      <SelectItem value="FERRAGENS">Ferragens e Acessorios</SelectItem>
-                      <SelectItem value="KITS">Kits Completos</SelectItem>
-                      <SelectItem value="SERVICOS">Servicos</SelectItem>
-                      <SelectItem value="OUTROS">Outros</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormDescription>
+                      Slug:{' '}
+                      <code className="rounded bg-neutral-100 px-2 py-1 text-xs dark:bg-neutral-800">
+                        {generatedSlug || 'produto-exemplo'}
+                      </code>
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Categoria *</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione uma categoria" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="BOX">Box para Banheiro</SelectItem>
+                        <SelectItem value="ESPELHOS">Espelhos</SelectItem>
+                        <SelectItem value="VIDROS">Vidros</SelectItem>
+                        <SelectItem value="PORTAS">Portas de Vidro</SelectItem>
+                        <SelectItem value="JANELAS">Janelas de Vidro</SelectItem>
+                        <SelectItem value="GUARDA_CORPO">Guarda-Corpo</SelectItem>
+                        <SelectItem value="CORTINAS_VIDRO">Cortinas de Vidro</SelectItem>
+                        <SelectItem value="PERGOLADOS">Pergolados e Coberturas</SelectItem>
+                        <SelectItem value="TAMPOS_PRATELEIRAS">Tampos e Prateleiras</SelectItem>
+                        <SelectItem value="DIVISORIAS">Divisorias e Paineis</SelectItem>
+                        <SelectItem value="FECHAMENTOS">Fechamentos em Vidro</SelectItem>
+                        <SelectItem value="FACHADAS">Fachadas de Vidro</SelectItem>
+                        <SelectItem value="PAINEIS_DECORATIVOS">Paineis Decorativos</SelectItem>
+                        <SelectItem value="FERRAGENS">Ferragens e Acessorios</SelectItem>
+                        <SelectItem value="KITS">Kits Completos</SelectItem>
+                        <SelectItem value="SERVICOS">Servicos</SelectItem>
+                        <SelectItem value="OUTROS">Outros</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -260,7 +270,7 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
             <CardTitle>Preços</CardTitle>
             <CardDescription>Configure o tipo de precificação</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <FormField
               control={form.control}
               name="priceType"
@@ -403,7 +413,7 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
           <CardHeader>
             <CardTitle>Status</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <FormField
               control={form.control}
               name="isActive"
@@ -439,7 +449,7 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
         </Card>
 
         {/* Ações */}
-        <div className="flex justify-end gap-4">
+        <div className="flex items-center justify-end gap-4 border-t pt-6">
           <Button
             type="button"
             variant="outline"

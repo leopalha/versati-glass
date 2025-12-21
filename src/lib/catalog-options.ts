@@ -356,10 +356,12 @@ export const BOX_FINISH_LINES = [
 export const HARDWARE_COLORS = [
   { id: 'BRANCO', name: 'Branco', code: 'BC' },
   { id: 'PRETO', name: 'Preto', code: 'PT' },
+  { id: 'PRETO_FOSCO', name: 'Preto Fosco', code: 'PF' },
   { id: 'FOSCO', name: 'Fosco/Natural', code: 'FO' },
   { id: 'CROMADO', name: 'Cromado', code: 'CR' },
   { id: 'BRONZE', name: 'Bronze', code: 'BZ' },
   { id: 'DOURADO', name: 'Dourado', code: 'DR' },
+  { id: 'DOURADO_FOSCO', name: 'Dourado Fosco', code: 'DF' },
   { id: 'CHAMPANHE', name: 'Champanhe', code: 'CH' },
   { id: 'INOX_POLIDO', name: 'Inox Polido', code: 'IP' },
   { id: 'INOX_ESCOVADO', name: 'Inox Escovado', code: 'IE' },
@@ -425,6 +427,7 @@ export const MIRROR_TYPES = [
   { id: 'LAPIDADO', name: 'Espelho Lapidado', description: 'Bordas retas e polidas' },
   { id: 'BISOTADO', name: 'Espelho Bisotado', description: 'Bordas chanfradas' },
   { id: 'LED', name: 'Espelho com LED', description: 'Iluminação integrada' },
+  { id: 'COLORIDO', name: 'Espelho Colorido', description: 'Fumê, Bronze, Rosa ou Azul' },
   { id: 'DECORATIVO', name: 'Espelho Decorativo', description: 'Formas especiais' },
   { id: 'JATEADO', name: 'Espelho Jateado', description: 'Com áreas foscas' },
   { id: 'CAMARIM', name: 'Espelho Camarim', description: 'Estilo Hollywood com lâmpadas' },
@@ -822,99 +825,165 @@ export function getOptionsForCategory(categoryId: string) {
 
 /**
  * Mapeia subcategory do banco de dados para o ID do modelo no catálogo
- * Exemplo: 'Frontal' → 'FRONTAL', 'Walk-In' → 'WALK_IN'
+ * Agora aceita tanto formatos legíveis ('Frontal') quanto IDs ('FRONTAL')
  */
 const SUBCATEGORY_TO_MODEL_ID: Record<string, string> = {
-  // BOX
+  // BOX - Formatos legíveis (legacy) e IDs maiúsculos (novo padrão)
   Frontal: 'FRONTAL',
+  FRONTAL: 'FRONTAL',
   Canto: 'CANTO',
+  CANTO: 'CANTO',
   Abrir: 'ABRIR',
+  ABRIR: 'ABRIR',
   Articulado: 'ARTICULADO',
+  ARTICULADO: 'ARTICULADO',
   Pivotante: 'PIVOTANTE',
+  PIVOTANTE: 'PIVOTANTE',
   'Walk-In': 'WALK_IN',
+  WALK_IN: 'WALK_IN',
   Banheira: 'BANHEIRA',
+  BANHEIRA: 'BANHEIRA',
+  // Elegance/Premium/Cristal são linhas de acabamento (finishLine), não subcategorias
+  // Mantidos para compatibilidade retroativa
   Elegance: 'ELEGANCE',
+  ELEGANCE: 'ELEGANCE',
   Premium: 'PREMIUM',
+  PREMIUM: 'PREMIUM',
   Cristal: 'CRISTAL',
+  CRISTAL: 'CRISTAL',
 
   // ESPELHOS
   Lapidado: 'LAPIDADO',
+  LAPIDADO: 'LAPIDADO',
   Bisotado: 'BISOTADO',
+  BISOTADO: 'BISOTADO',
   LED: 'LED',
   Camarim: 'CAMARIM',
+  CAMARIM: 'CAMARIM',
   Colorido: 'COLORIDO',
+  COLORIDO: 'COLORIDO',
   Decorativo: 'DECORATIVO',
+  DECORATIVO: 'DECORATIVO',
   Jateado: 'JATEADO',
+  JATEADO: 'JATEADO',
 
   // VIDROS
   Temperado: 'TEMPERADO',
+  TEMPERADO: 'TEMPERADO',
   Laminado: 'LAMINADO',
+  LAMINADO: 'LAMINADO',
   'Laminado Temperado': 'LAMINADO_TEMPERADO',
+  LAMINADO_TEMPERADO: 'LAMINADO_TEMPERADO',
   Acidato: 'ACIDATO',
+  ACIDATO: 'ACIDATO',
   Serigrafado: 'SERIGRAFADO',
+  SERIGRAFADO: 'SERIGRAFADO',
   'Extra Clear': 'EXTRA_CLEAR',
+  EXTRA_CLEAR: 'EXTRA_CLEAR',
   Reflectivo: 'REFLECTIVO',
+  REFLECTIVO: 'REFLECTIVO',
 
   // PORTAS
   Correr: 'CORRER',
+  CORRER: 'CORRER',
   Camarao: 'CAMARAO',
+  CAMARAO: 'CAMARAO',
   Automatica: 'AUTOMATICA',
+  AUTOMATICA: 'AUTOMATICA',
 
   // JANELAS
   'Maxim-Ar': 'MAXIM_AR',
+  MAXIM_AR: 'MAXIM_AR',
   Basculante: 'BASCULANTE',
+  BASCULANTE: 'BASCULANTE',
   Guilhotina: 'GUILHOTINA',
+  GUILHOTINA: 'GUILHOTINA',
 
   // GUARDA-CORPO
   Autoportante: 'AUTOPORTANTE',
+  AUTOPORTANTE: 'AUTOPORTANTE',
   Torres: 'TORRES',
+  TORRES: 'TORRES',
   Bottons: 'BOTTONS',
+  BOTTONS: 'BOTTONS',
   Spider: 'SPIDER',
+  SPIDER: 'SPIDER',
   Gradil: 'GRADIL',
+  GRADIL: 'GRADIL',
 
   // CORTINAS DE VIDRO
   Europeu: 'EUROPEU',
+  EUROPEU: 'EUROPEU',
   'Europeu Premium': 'EUROPEU_PREMIUM',
+  EUROPEU_PREMIUM: 'EUROPEU_PREMIUM',
   Stanley: 'STANLEY',
+  STANLEY: 'STANLEY',
   Automatizado: 'AUTOMATIZADO',
+  AUTOMATIZADO: 'AUTOMATIZADO',
 
   // PERGOLADOS
   Cobertura: 'COBERTURA',
+  COBERTURA: 'COBERTURA',
   'Controle Solar': 'CONTROLE_SOLAR',
+  CONTROLE_SOLAR: 'CONTROLE_SOLAR',
   Pergolado: 'PERGOLADO',
+  PERGOLADO: 'PERGOLADO',
   'Pergolado Premium': 'PERGOLADO_PREMIUM',
+  PERGOLADO_PREMIUM: 'PERGOLADO_PREMIUM',
 
   // TAMPOS E PRATELEIRAS
   Tampo: 'TAMPO',
+  TAMPO: 'TAMPO',
   'Tampo Premium': 'TAMPO_PREMIUM',
+  TAMPO_PREMIUM: 'TAMPO_PREMIUM',
   Prateleira: 'PRATELEIRA',
+  PRATELEIRA: 'PRATELEIRA',
 
   // DIVISÓRIAS
   Escritorio: 'ESCRITORIO',
+  ESCRITORIO: 'ESCRITORIO',
   Acustica: 'ACUSTICA',
+  ACUSTICA: 'ACUSTICA',
   'Com Porta': 'COM_PORTA',
+  COM_PORTA: 'COM_PORTA',
   Painel: 'PAINEL',
+  PAINEL: 'PAINEL',
 
   // FECHAMENTOS
   Sacada: 'SACADA',
+  SACADA: 'SACADA',
   'Area Gourmet': 'AREA_GOURMET',
+  AREA_GOURMET: 'AREA_GOURMET',
   'Area Servico': 'AREA_SERVICO',
+  AREA_SERVICO: 'AREA_SERVICO',
   Piscina: 'PISCINA',
+  PISCINA: 'PISCINA',
 
-  // KITS
+  // KITS E FERRAGENS
   'Kit Porta': 'KIT_PORTA',
+  KIT_PORTA: 'KIT_PORTA',
   'Kit Box': 'KIT_BOX',
+  KIT_BOX: 'KIT_BOX',
   Puxador: 'PUXADOR',
+  PUXADOR: 'PUXADOR',
   Mola: 'MOLA',
+  MOLA: 'MOLA',
 
   // SERVIÇOS
   Box: 'BOX',
+  BOX: 'BOX',
   Janela: 'JANELA',
+  JANELA: 'JANELA',
   Medicao: 'MEDICAO',
+  MEDICAO: 'MEDICAO',
   Instalacao: 'INSTALACAO',
+  INSTALACAO: 'INSTALACAO',
   Manutencao: 'MANUTENCAO',
+  MANUTENCAO: 'MANUTENCAO',
   Reposicao: 'REPOSICAO',
+  REPOSICAO: 'REPOSICAO',
   Emergencia: 'EMERGENCIA',
+  EMERGENCIA: 'EMERGENCIA',
 }
 
 /**

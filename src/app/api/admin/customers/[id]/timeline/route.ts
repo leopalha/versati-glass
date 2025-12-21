@@ -15,7 +15,7 @@ export interface TimelineEvent {
   status?: string
 }
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -23,7 +23,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    const userId = params.id
+    const { id: userId } = await params
 
     // Fetch user
     const user = await prisma.user.findUnique({

@@ -8,10 +8,7 @@ const selectSupplierSchema = z.object({
   supplierId: z.string(),
 })
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -19,12 +16,13 @@ export async function POST(
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await request.json()
     const { supplierId } = selectSupplierSchema.parse(body)
 
     // Buscar orçamento
     const quote = await prisma.quote.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         supplierQuotes: true,
       },
@@ -35,7 +33,7 @@ export async function POST(
     }
 
     // Verificar se o fornecedor respondeu
-    const supplierQuote = quote.supplierQuotes.find(sq => sq.supplierId === supplierId)
+    const supplierQuote = quote.supplierQuotes.find((sq) => sq.supplierId === supplierId)
 
     if (!supplierQuote) {
       return NextResponse.json({ error: 'Cotação do fornecedor não encontrada' }, { status: 404 })
@@ -70,7 +68,7 @@ export async function POST(
 
     // Atualizar o Quote com o fornecedor selecionado e valores
     const updatedQuote = await prisma.quote.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         selectedSupplierId: supplierId,
         subtotal: supplierQuote.subtotal || supplierQuote.total,

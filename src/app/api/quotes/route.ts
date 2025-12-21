@@ -15,12 +15,12 @@ const quoteItemSchema = z.object({
   width: z
     .number()
     .min(0.01, 'Largura deve ser maior que 0')
-    .max(100, 'Largura máxima: 100m')
+    .max(20, 'Largura máxima: 20m')
     .optional(),
   height: z
     .number()
     .min(0.01, 'Altura deve ser maior que 0')
-    .max(100, 'Altura máxima: 100m')
+    .max(20, 'Altura máxima: 20m')
     .optional(),
   quantity: z
     .number()
@@ -60,6 +60,11 @@ const createQuoteSchema = z.object({
   customerNotes: z
     .string()
     .max(1000, 'Observações muito longas (máximo 1000 caracteres)')
+    .optional(),
+  discount: z
+    .number()
+    .min(0, 'Desconto não pode ser negativo')
+    .max(100, 'Desconto máximo: 100%')
     .optional(),
 })
 
@@ -145,9 +150,11 @@ export async function POST(request: Request) {
 
     const data = parsed.data
 
-    // Calculate totals
+    // Calculate totals with discount
     const subtotal = data.items.reduce((acc, item) => acc + item.totalPrice, 0)
-    const total = subtotal
+    const discountPercent = data.discount || 0
+    const discountAmount = subtotal * (discountPercent / 100)
+    const total = subtotal - discountAmount
 
     logger.debug('[API /quotes POST] Payload validated', {
       customerEmail: data.customerEmail,
@@ -224,6 +231,7 @@ export async function POST(request: Request) {
         serviceState: data.serviceState,
         serviceZipCode: data.serviceZipCode,
         subtotal,
+        discount: discountPercent,
         total,
         status: 'DRAFT',
         validUntil,

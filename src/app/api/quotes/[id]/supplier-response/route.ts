@@ -15,10 +15,7 @@ const supplierResponseSchema = z.object({
   supplierNotes: z.string().optional(),
 })
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -26,12 +23,13 @@ export async function POST(
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await request.json()
     const validatedData = supplierResponseSchema.parse(body)
 
     // Buscar orçamento
     const quote = await prisma.quote.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!quote) {

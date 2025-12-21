@@ -9,7 +9,7 @@ const sendToSuppliersSchema = z.object({
   supplierIds: z.array(z.string()).min(1, 'Selecione pelo menos um fornecedor'),
 })
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -17,12 +17,13 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await request.json()
     const { supplierIds } = sendToSuppliersSchema.parse(body)
 
     // Buscar orçamento
     const quote = await prisma.quote.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         items: {
           include: {

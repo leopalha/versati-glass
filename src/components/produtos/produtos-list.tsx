@@ -1,144 +1,96 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { formatCurrency } from '@/lib/utils'
 
-const products = [
-  {
-    id: 1,
-    slug: 'box-premium',
-    name: 'Box de Vidro Premium',
-    category: 'box',
-    description: 'Box sob medida com vidro temperado 8mm, perfis em alumínio',
-    price: 'A partir de R$ 1.890',
-    image: '/images/products/box-premium.jpg',
-    badge: 'Mais Vendido',
-    features: ['Vidro temperado 8mm', 'Perfis em alumínio', 'Garantia vitalícia'],
-  },
-  {
-    id: 2,
-    slug: 'box-incolor',
-    name: 'Box Incolor Padrão',
-    category: 'box',
-    description: 'Box com vidro temperado 8mm incolor, acabamento padrão',
-    price: 'A partir de R$ 1.490',
-    image: '/images/products/box-incolor.jpg',
-    features: ['Vidro temperado 8mm', 'Acabamento padrão', '2 anos de garantia'],
-  },
-  {
-    id: 3,
-    slug: 'guarda-corpo-vidro',
-    name: 'Guarda-Corpo de Vidro',
-    category: 'guarda-corpo',
-    description: 'Guarda-corpo com vidro laminado 10mm, fixação por botões',
-    price: 'A partir de R$ 890/m',
-    image: '/images/products/guarda-corpo.jpg',
-    badge: 'Premium',
-    features: ['Vidro laminado 10mm', 'Fixação invisível', 'Alta resistência'],
-  },
-  {
-    id: 4,
-    slug: 'espelho-led',
-    name: 'Espelho com LED Integrado',
-    category: 'espelhos',
-    description: 'Espelho decorativo com iluminação LED de alta eficiência',
-    price: 'A partir de R$ 850',
-    image: '/images/products/espelho-led.jpg',
-    badge: 'Destaque',
-    features: ['Iluminação LED', 'Sensor touch', 'Antiembaçante'],
-  },
-  {
-    id: 5,
-    slug: 'espelho-bisotado',
-    name: 'Espelho Bisotado',
-    category: 'espelhos',
-    description: 'Espelho com acabamento bisotado de 2cm em toda borda',
-    price: 'A partir de R$ 450',
-    image: '/images/products/espelho-bisotado.jpg',
-    features: ['Bisotê 2cm', 'Espessura 4mm', 'Fixação inclusa'],
-  },
-  {
-    id: 6,
-    slug: 'divisoria-escritorio',
-    name: 'Divisória para Escritório',
-    category: 'divisorias',
-    description: 'Divisória em vidro temperado 10mm com perfis de alumínio',
-    price: 'A partir de R$ 690/m²',
-    image: '/images/products/divisoria.jpg',
-    features: ['Vidro temperado 10mm', 'Perfis de alumínio', 'Acústica'],
-  },
-  {
-    id: 7,
-    slug: 'porta-vidro-correr',
-    name: 'Porta de Vidro de Correr',
-    category: 'portas',
-    description: 'Porta de correr com vidro temperado e trilho superior',
-    price: 'A partir de R$ 2.190',
-    image: '/images/products/porta-correr.jpg',
-    features: ['Sistema de trilho', 'Vidro temperado', 'Fechadura inclusa'],
-  },
-  {
-    id: 8,
-    slug: 'fachada-comercial',
-    name: 'Fachada de Vidro Comercial',
-    category: 'fachadas',
-    description: 'Fachada estrutural com vidro de controle solar',
-    price: 'Sob Consulta',
-    image: '/images/products/fachada.jpg',
-    badge: 'Corporativo',
-    features: ['Controle solar', 'Alta performance', 'Estrutura reforçada'],
-  },
-  {
-    id: 9,
-    slug: 'tampo-vidro-mesa',
-    name: 'Tampo de Vidro para Mesa',
-    category: 'outros',
-    description: 'Tampo de vidro temperado com bordas polidas',
-    price: 'A partir de R$ 380',
-    image: '/images/products/tampo.jpg',
-    features: ['Vidro temperado', 'Bordas polidas', 'Sob medida'],
-  },
-  {
-    id: 10,
-    slug: 'box-canto',
-    name: 'Box de Canto',
-    category: 'box',
-    description: 'Box de canto com porta de abrir, vidro temperado 8mm',
-    price: 'A partir de R$ 1.690',
-    image: '/images/products/box-canto.jpg',
-    features: ['Vidro temperado 8mm', 'Porta de abrir', 'Dobradiças premium'],
-  },
-  {
-    id: 11,
-    slug: 'guarda-corpo-inox',
-    name: 'Guarda-Corpo Misto (Vidro + Inox)',
-    category: 'guarda-corpo',
-    description: 'Guarda-corpo com vidro e corrimão em aço inox',
-    price: 'A partir de R$ 1.190/m',
-    image: '/images/products/guarda-corpo-inox.jpg',
-    features: ['Vidro laminado', 'Corrimão inox', 'Design moderno'],
-  },
-  {
-    id: 12,
-    slug: 'janela-maxim-ar',
-    name: 'Janela Maxim-Ar de Vidro',
-    category: 'outros',
-    description: 'Janela maxim-ar com vidro temperado e perfil de alumínio',
-    price: 'A partir de R$ 890',
-    image: '/images/products/janela.jpg',
-    features: ['Abertura maxim-ar', 'Perfil de alumínio', 'Vidro temperado'],
-  },
-]
+interface Product {
+  id: string
+  slug: string
+  name: string
+  category: string
+  shortDescription: string | null
+  priceType: string
+  basePrice: number | null
+  pricePerM2: number | null
+  priceRangeMin: number | null
+  priceRangeMax: number | null
+  thumbnail: string | null
+  isFeatured: boolean
+  thicknesses: string[]
+  finishes: string[]
+}
+
+const categoryLabels: Record<string, string> = {
+  BOX: 'Box de Vidro',
+  ESPELHOS: 'Espelhos',
+  VIDROS: 'Vidros',
+  PORTAS: 'Portas',
+  JANELAS: 'Janelas',
+  GUARDA_CORPO: 'Guarda-Corpo',
+  CORTINAS_VIDRO: 'Cortinas de Vidro',
+  PERGOLADOS: 'Pergolados',
+  TAMPOS_PRATELEIRAS: 'Tampos e Prateleiras',
+  DIVISORIAS: 'Divisórias',
+  FECHAMENTOS: 'Fechamentos',
+  FACHADAS: 'Fachadas',
+  PAINEIS_DECORATIVOS: 'Painéis Decorativos',
+  FERRAGENS: 'Ferragens',
+  KITS: 'Kits',
+  SERVICOS: 'Serviços',
+  OUTROS: 'Outros',
+}
+
+function getPriceDisplay(product: Product): string {
+  if (product.priceType === 'QUOTE_ONLY') {
+    return 'Sob Consulta'
+  }
+  if (product.priceType === 'PER_M2' && product.pricePerM2) {
+    return `A partir de ${formatCurrency(Number(product.pricePerM2))}/m²`
+  }
+  if (product.basePrice) {
+    return `A partir de ${formatCurrency(Number(product.basePrice))}`
+  }
+  if (product.priceRangeMin && product.priceRangeMax) {
+    return `${formatCurrency(Number(product.priceRangeMin))} - ${formatCurrency(Number(product.priceRangeMax))}`
+  }
+  return 'Sob Consulta'
+}
 
 export function ProdutosList() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await fetch('/api/products?active=true')
+        if (res.ok) {
+          const data = await res.json()
+          setProducts(data.products || data)
+        }
+      } catch (error) {
+        console.error('Erro ao carregar produtos:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProducts()
+  }, [])
+
+  // Get unique categories from products
+  const categories = useMemo(() => {
+    const cats = new Set(products.map((p) => p.category))
+    return Array.from(cats).sort()
+  }, [products])
 
   // Filter products based on search and category
   const filteredProducts = useMemo(() => {
@@ -146,13 +98,22 @@ export function ProdutosList() {
       const matchesSearch =
         searchTerm === '' ||
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        (product.shortDescription?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
 
       const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory
 
       return matchesSearch && matchesCategory
     })
-  }, [searchTerm, selectedCategory])
+  }, [products, searchTerm, selectedCategory])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-accent-500" />
+        <span className="text-theme-muted ml-3">Carregando produtos...</span>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -170,14 +131,15 @@ export function ProdutosList() {
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
         >
-          <option value="all">Todas as Categorias</option>
-          <option value="box">Box de Vidro</option>
-          <option value="espelhos">Espelhos</option>
-          <option value="guarda-corpo">Guarda-Corpos</option>
-          <option value="divisorias">Divisórias</option>
-          <option value="portas">Portas de Vidro</option>
-          <option value="fachadas">Fachadas</option>
-          <option value="outros">Outros</option>
+          <option value="all">Todas as Categorias ({products.length})</option>
+          {categories.map((cat) => {
+            const count = products.filter((p) => p.category === cat).length
+            return (
+              <option key={cat} value={cat}>
+                {categoryLabels[cat] || cat} ({count})
+              </option>
+            )
+          })}
         </select>
       </div>
 
@@ -191,33 +153,58 @@ export function ProdutosList() {
       </div>
 
       {/* Products Grid */}
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredProducts.map((product) => (
           <Card key={product.id} variant="hover" className="group overflow-hidden">
             <div className="bg-theme-elevated relative aspect-square overflow-hidden">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              {product.badge && (
+              {product.thumbnail ? (
+                <Image
+                  src={product.thumbnail}
+                  alt={product.name}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-neutral-800">
+                  <span className="text-neutral-500">Sem imagem</span>
+                </div>
+              )}
+              {product.isFeatured && (
                 <Badge variant="gold" className="absolute right-4 top-4">
-                  {product.badge}
+                  Destaque
                 </Badge>
               )}
+              <Badge
+                variant="outline"
+                className="absolute left-4 top-4 border-white/30 bg-black/50 text-white"
+              >
+                {categoryLabels[product.category] || product.category}
+              </Badge>
             </div>
             <div className="p-6">
-              <h3 className="text-theme-primary mb-2 text-xl font-bold">{product.name}</h3>
-              <p className="text-theme-muted mb-4 text-sm">{product.description}</p>
-              <ul className="mb-4 space-y-1">
-                {product.features.map((feature, idx) => (
-                  <li key={idx} className="text-theme-subtle text-xs">
-                    • {feature}
-                  </li>
-                ))}
-              </ul>
-              <p className="mb-4 text-lg font-semibold text-accent-400">{product.price}</p>
+              <h3 className="text-theme-primary mb-2 line-clamp-1 text-lg font-bold">
+                {product.name}
+              </h3>
+              <p className="text-theme-muted mb-4 line-clamp-2 text-sm">
+                {product.shortDescription || 'Produto de alta qualidade'}
+              </p>
+              {(product.thicknesses?.length > 0 || product.finishes?.length > 0) && (
+                <ul className="mb-4 space-y-1">
+                  {product.thicknesses?.slice(0, 2).map((t, idx) => (
+                    <li key={idx} className="text-theme-subtle text-xs">
+                      • {t}
+                    </li>
+                  ))}
+                  {product.finishes?.slice(0, 2).map((f, idx) => (
+                    <li key={idx} className="text-theme-subtle text-xs">
+                      • {f}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <p className="mb-4 text-lg font-semibold text-accent-400">
+                {getPriceDisplay(product)}
+              </p>
               <div className="grid gap-2">
                 <Button asChild className="w-full">
                   <Link href={`/produtos/${product.slug}`}>

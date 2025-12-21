@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { AdminHeader } from '@/components/admin/admin-header'
 import { formatCurrency } from '@/lib/utils'
 import { Plus, Package, TrendingUp, Eye, EyeOff } from 'lucide-react'
 
@@ -61,6 +62,8 @@ export default async function ProdutosPage() {
     TAMPOS_PRATELEIRAS: 'Tampos/Prateleiras',
     DIVISORIAS: 'Divisorias',
     FECHAMENTOS: 'Fechamentos',
+    FACHADAS: 'Fachadas',
+    PAINEIS_DECORATIVOS: 'Painéis Decorativos',
     FERRAGENS: 'Ferragens',
     KITS: 'Kits',
     SERVICOS: 'Servicos',
@@ -74,157 +77,158 @@ export default async function ProdutosPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Produtos</h1>
-          <p className="text-neutral-500 dark:text-neutral-400">Gerencie o catálogo de produtos</p>
+    <div>
+      <AdminHeader
+        title="Produtos"
+        subtitle="Gerencie o catálogo de produtos"
+        actions={
+          <Link href="/admin/produtos/novo">
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Produto
+            </Button>
+          </Link>
+        }
+      />
+
+      <div className="space-y-6 p-6">
+        {/* Stats */}
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card className="border-neutral-700 bg-neutral-800">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-neutral-300">Total</CardTitle>
+              <Package className="h-4 w-4 text-neutral-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">{stats.total}</div>
+              <p className="text-xs text-neutral-500">produtos cadastrados</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-neutral-700 bg-neutral-800">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-neutral-300">Ativos</CardTitle>
+              <Eye className="h-4 w-4 text-green-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">{stats.active}</div>
+              <p className="text-xs text-neutral-500">visíveis para clientes</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-neutral-700 bg-neutral-800">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-neutral-300">Destaques</CardTitle>
+              <TrendingUp className="h-4 w-4 text-gold-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">{stats.featured}</div>
+              <p className="text-xs text-neutral-500">em destaque na home</p>
+            </CardContent>
+          </Card>
         </div>
-        <Link href="/admin/produtos/novo">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Produto
-          </Button>
-        </Link>
-      </div>
 
-      {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total</CardTitle>
-            <Package className="h-4 w-4 text-neutral-500" />
+        {/* Lista de Produtos */}
+        <Card className="border-neutral-700 bg-neutral-800">
+          <CardHeader>
+            <CardTitle className="text-white">Todos os Produtos</CardTitle>
+            <CardDescription className="text-neutral-400">
+              {products.length} produto{products.length !== 1 ? 's' : ''} encontrado
+              {products.length !== 1 ? 's' : ''}
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
-            <p className="text-xs text-neutral-500">produtos cadastrados</p>
-          </CardContent>
-        </Card>
+            {products.length === 0 ? (
+              <div className="py-12 text-center">
+                <Package className="mx-auto h-12 w-12 text-neutral-500" />
+                <h3 className="mt-4 text-lg font-medium text-white">Nenhum produto cadastrado</h3>
+                <p className="mt-2 text-sm text-neutral-400">Comece criando seu primeiro produto</p>
+                <Link href="/admin/produtos/novo">
+                  <Button className="mt-4">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Criar Primeiro Produto
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {products.map((product) => {
+                  const usage = product._count.orderItems + product._count.quoteItems
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ativos</CardTitle>
-            <Eye className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.active}</div>
-            <p className="text-xs text-neutral-500">visíveis para clientes</p>
-          </CardContent>
-        </Card>
+                  let priceDisplay = 'Sob consulta'
+                  if (product.priceType === 'FIXED' && product.basePrice) {
+                    priceDisplay = formatCurrency(Number(product.basePrice))
+                  } else if (product.priceType === 'PER_M2' && product.pricePerM2) {
+                    priceDisplay = `${formatCurrency(Number(product.pricePerM2))}/m²`
+                  } else if (product.priceRangeMin && product.priceRangeMax) {
+                    priceDisplay = `${formatCurrency(Number(product.priceRangeMin))} - ${formatCurrency(Number(product.priceRangeMax))}`
+                  }
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Destaques</CardTitle>
-            <TrendingUp className="h-4 w-4 text-gold-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.featured}</div>
-            <p className="text-xs text-neutral-500">em destaque na home</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Lista de Produtos */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Todos os Produtos</CardTitle>
-          <CardDescription>
-            {products.length} produto{products.length !== 1 ? 's' : ''} encontrado
-            {products.length !== 1 ? 's' : ''}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {products.length === 0 ? (
-            <div className="py-12 text-center">
-              <Package className="mx-auto h-12 w-12 text-neutral-400" />
-              <h3 className="mt-4 text-lg font-medium">Nenhum produto cadastrado</h3>
-              <p className="mt-2 text-sm text-neutral-500">Comece criando seu primeiro produto</p>
-              <Link href="/admin/produtos/novo">
-                <Button className="mt-4">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Criar Primeiro Produto
-                </Button>
-              </Link>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {products.map((product) => {
-                const usage = product._count.orderItems + product._count.quoteItems
-
-                let priceDisplay = 'Sob consulta'
-                if (product.priceType === 'FIXED' && product.basePrice) {
-                  priceDisplay = formatCurrency(Number(product.basePrice))
-                } else if (product.priceType === 'PER_M2' && product.pricePerM2) {
-                  priceDisplay = `${formatCurrency(Number(product.pricePerM2))}/m²`
-                } else if (product.priceRangeMin && product.priceRangeMax) {
-                  priceDisplay = `${formatCurrency(Number(product.priceRangeMin))} - ${formatCurrency(Number(product.priceRangeMax))}`
-                }
-
-                return (
-                  <div
-                    key={product.id}
-                    className="flex items-center justify-between rounded-lg border border-neutral-200 p-4 transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
-                  >
-                    <div className="flex flex-1 items-center gap-4">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800">
-                        {product.thumbnail ? (
-                          <img
-                            src={product.thumbnail}
-                            alt={product.name}
-                            className="h-full w-full rounded-lg object-cover"
-                          />
-                        ) : (
-                          <Package className="h-8 w-8 text-neutral-400" />
-                        )}
-                      </div>
-
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-medium">{product.name}</h3>
-                          {!product.isActive && (
-                            <Badge variant="outline" className="border-red-500 text-red-500">
-                              <EyeOff className="mr-1 h-3 w-3" />
-                              Inativo
-                            </Badge>
-                          )}
-                          {product.isFeatured && (
-                            <Badge variant="outline" className="border-gold-500 text-gold-500">
-                              <TrendingUp className="mr-1 h-3 w-3" />
-                              Destaque
-                            </Badge>
+                  return (
+                    <div
+                      key={product.id}
+                      className="flex items-center justify-between rounded-lg border border-neutral-700 bg-neutral-900 p-4 transition-colors hover:border-neutral-600 hover:bg-neutral-800"
+                    >
+                      <div className="flex flex-1 items-center gap-4">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-neutral-800">
+                          {product.thumbnail ? (
+                            <img
+                              src={product.thumbnail}
+                              alt={product.name}
+                              className="h-full w-full rounded-lg object-cover"
+                            />
+                          ) : (
+                            <Package className="h-8 w-8 text-neutral-500" />
                           )}
                         </div>
-                        <div className="mt-1 flex items-center gap-4 text-sm text-neutral-500">
-                          <span>{categoryLabels[product.category]}</span>
-                          <span>•</span>
-                          <span>
-                            {priceTypeLabels[product.priceType]}: {priceDisplay}
-                          </span>
-                          {usage > 0 && (
-                            <>
-                              <span>•</span>
-                              <span>
-                                {usage} uso{usage !== 1 ? 's' : ''}
-                              </span>
-                            </>
-                          )}
+
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-medium text-white">{product.name}</h3>
+                            {!product.isActive && (
+                              <Badge variant="outline" className="border-red-500 text-red-500">
+                                <EyeOff className="mr-1 h-3 w-3" />
+                                Inativo
+                              </Badge>
+                            )}
+                            {product.isFeatured && (
+                              <Badge variant="outline" className="border-gold-500 text-gold-500">
+                                <TrendingUp className="mr-1 h-3 w-3" />
+                                Destaque
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="mt-1 flex items-center gap-4 text-sm text-neutral-400">
+                            <span>{categoryLabels[product.category]}</span>
+                            <span>•</span>
+                            <span>
+                              {priceTypeLabels[product.priceType]}: {priceDisplay}
+                            </span>
+                            {usage > 0 && (
+                              <>
+                                <span>•</span>
+                                <span>
+                                  {usage} uso{usage !== 1 ? 's' : ''}
+                                </span>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
+
+                      <Link href={`/admin/produtos/${product.id}`}>
+                        <Button variant="outline" size="sm">
+                          Editar
+                        </Button>
+                      </Link>
                     </div>
-
-                    <Link href={`/admin/produtos/${product.id}`}>
-                      <Button variant="outline" size="sm">
-                        Editar
-                      </Button>
-                    </Link>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                  )
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

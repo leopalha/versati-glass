@@ -40,6 +40,8 @@ const categoryNames: Record<string, string> = {
   TAMPOS_PRATELEIRAS: 'Tampo/Prateleira',
   DIVISORIAS: 'Divisoria',
   FECHAMENTOS: 'Fechamento em Vidro',
+  FACHADAS: 'Fachada de Vidro',
+  PAINEIS_DECORATIVOS: 'Painel Decorativo',
   FERRAGENS: 'Ferragem/Acessorio',
   KITS: 'Kit Completo',
   SERVICOS: 'Servico',
@@ -56,7 +58,6 @@ export function StepProduct() {
     editingIndex,
     selectedProducts,
     toggleProductSelection,
-    clearSelectedProducts,
     selectedCategories,
     setProductsToDetail,
   } = useQuoteStore()

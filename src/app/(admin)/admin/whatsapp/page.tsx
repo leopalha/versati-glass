@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
+import { AdminHeader } from '@/components/admin/admin-header'
 import { WhatsAppConversationList } from '@/components/admin/whatsapp-conversation-list'
 
 export const metadata: Metadata = {
@@ -91,13 +92,15 @@ export default async function WhatsAppPage() {
   const conversations = await getConversations()
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold">Conversas WhatsApp</h1>
-        <p className="text-muted-foreground">Gerenciar conversas com clientes via WhatsApp</p>
-      </div>
+    <div>
+      <AdminHeader
+        title="Conversas WhatsApp"
+        subtitle="Gerenciar conversas com clientes via WhatsApp"
+      />
 
-      <WhatsAppConversationList conversations={conversations} />
+      <div className="p-6">
+        <WhatsAppConversationList conversations={conversations} />
+      </div>
     </div>
   )
 }

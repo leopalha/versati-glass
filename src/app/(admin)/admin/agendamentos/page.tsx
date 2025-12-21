@@ -105,7 +105,7 @@ export default async function AdminAgendamentosPage() {
                 <Calendar className="h-5 w-5 text-yellow-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-700">Hoje</p>
+                <p className="text-sm text-neutral-400">Hoje</p>
                 <p className="text-xl font-bold text-white">{todayAppointments.length}</p>
               </div>
             </div>
@@ -116,7 +116,7 @@ export default async function AdminAgendamentosPage() {
                 <Clock className="h-5 w-5 text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-700">Agendados</p>
+                <p className="text-sm text-neutral-400">Agendados</p>
                 <p className="text-xl font-bold text-white">{scheduledCount}</p>
               </div>
             </div>
@@ -127,7 +127,7 @@ export default async function AdminAgendamentosPage() {
                 <CheckCircle className="h-5 w-5 text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-700">Confirmados</p>
+                <p className="text-sm text-neutral-400">Confirmados</p>
                 <p className="text-xl font-bold text-white">{confirmedCount}</p>
               </div>
             </div>
@@ -138,7 +138,7 @@ export default async function AdminAgendamentosPage() {
                 <CheckCircle className="h-5 w-5 text-purple-400" />
               </div>
               <div>
-                <p className="text-sm text-neutral-700">Concluidos</p>
+                <p className="text-sm text-neutral-400">Concluidos</p>
                 <p className="text-xl font-bold text-white">{completedCount}</p>
               </div>
             </div>
@@ -154,7 +154,7 @@ export default async function AdminAgendamentosPage() {
           {todayAppointments.length === 0 ? (
             <Card className="p-6 text-center">
               <Calendar className="mx-auto mb-3 h-12 w-12 text-neutral-600" />
-              <p className="text-neutral-700">Nenhum agendamento para hoje</p>
+              <p className="text-neutral-400">Nenhum agendamento para hoje</p>
             </Card>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -162,7 +162,7 @@ export default async function AdminAgendamentosPage() {
                 const statusInfo = statusLabels[appointment.status] || statusLabels.SCHEDULED
                 const typeInfo = typeLabels[appointment.type] || {
                   label: appointment.type,
-                  color: 'bg-neutral-500/20 text-neutral-700',
+                  color: 'bg-neutral-500/20 text-neutral-400',
                 }
                 const StatusIcon = statusInfo.icon
 
@@ -187,19 +187,19 @@ export default async function AdminAgendamentosPage() {
                         <Clock className="h-4 w-4 text-gold-500" />
                         <span className="font-medium text-white">{appointment.scheduledTime}</span>
                         {appointment.estimatedDuration && (
-                          <span className="text-xs text-neutral-600">
+                          <span className="text-xs text-neutral-500">
                             (~{appointment.estimatedDuration} min)
                           </span>
                         )}
                       </div>
 
-                      <div className="flex items-center gap-2 text-neutral-800">
-                        <User className="h-4 w-4 text-neutral-600" />
+                      <div className="flex items-center gap-2 text-neutral-300">
+                        <User className="h-4 w-4 text-neutral-500" />
                         <span>{appointment.user.name}</span>
                       </div>
 
-                      <div className="flex items-start gap-2 text-sm text-neutral-700">
-                        <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-neutral-600" />
+                      <div className="flex items-start gap-2 text-sm text-neutral-400">
+                        <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-neutral-500" />
                         <span>
                           {appointment.addressStreet}, {appointment.addressNumber}
                           <br />
@@ -217,13 +217,13 @@ export default async function AdminAgendamentosPage() {
                       )}
 
                       {appointment.assignedTo && (
-                        <p className="text-xs text-neutral-600">
+                        <p className="text-xs text-neutral-500">
                           Tecnico: {appointment.assignedTo.name}
                         </p>
                       )}
                     </div>
 
-                    <div className="mt-4 border-t border-neutral-300 pt-4">
+                    <div className="mt-4 border-t border-neutral-700 pt-4">
                       <AppointmentActions
                         appointmentId={appointment.id}
                         currentStatus={appointment.status}
@@ -248,7 +248,7 @@ export default async function AdminAgendamentosPage() {
                 const statusInfo = statusLabels[appointment.status] || statusLabels.SCHEDULED
                 const typeInfo = typeLabels[appointment.type] || {
                   label: appointment.type,
-                  color: 'bg-neutral-500/20 text-neutral-700',
+                  color: 'bg-neutral-500/20 text-neutral-400',
                 }
 
                 return (
@@ -259,7 +259,7 @@ export default async function AdminAgendamentosPage() {
                           <p className="text-2xl font-bold text-white">
                             {new Date(appointment.scheduledDate).getDate()}
                           </p>
-                          <p className="text-xs text-neutral-700">
+                          <p className="text-xs text-neutral-400">
                             {new Date(appointment.scheduledDate).toLocaleDateString('pt-BR', {
                               month: 'short',
                             })}
@@ -272,12 +272,12 @@ export default async function AdminAgendamentosPage() {
                             >
                               {typeInfo.label}
                             </span>
-                            <span className="text-sm text-neutral-700">
+                            <span className="text-sm text-neutral-400">
                               {appointment.scheduledTime}
                             </span>
                           </div>
                           <p className="font-medium text-white">{appointment.user.name}</p>
-                          <p className="text-sm text-neutral-600">
+                          <p className="text-sm text-neutral-500">
                             {appointment.addressNeighborhood}, {appointment.addressCity}
                           </p>
                         </div>
