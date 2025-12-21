@@ -1660,11 +1660,70 @@ export function ChatAssistido({
                   exit={{ opacity: 0, y: -10 }}
                 >
                   <Button
-                    onClick={handleFinalizeQuote}
-                    disabled={isExportingQuote}
+                    onClick={async () => {
+                      setIsLoading(true)
+                      try {
+                        // Adiciona mensagem de checkout
+                        const checkoutMessage: Message = {
+                          id: `checkout-${Date.now()}`,
+                          role: 'ASSISTANT',
+                          content: 'Perfeito! Vou redirecionar você para o checkout agora. 🛒',
+                          createdAt: new Date().toISOString(),
+                        }
+                        setMessages((prev) => [...prev, checkoutMessage])
+                        setTimeout(() => scrollToBottom(), 100)
+                        setIsProgressMinimized(true)
+
+                        // Tenta exportar os dados do orçamento
+                        let quoteData = null
+                        try {
+                          const exportResponse = await fetch('/api/ai/chat/export-quote', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ conversationId, sessionId }),
+                          })
+                          if (exportResponse.ok) {
+                            const result = await exportResponse.json()
+                            quoteData = result.data
+                          }
+                        } catch (exportError) {
+                          console.warn('[CHAT] Export failed, using local context:', exportError)
+                        }
+
+                        // Fallback para contexto local
+                        if (!quoteData && quoteContext) {
+                          const { transformAiContextToQuoteData } = await import(
+                            '@/lib/ai-quote-transformer'
+                          )
+                          quoteData = transformAiContextToQuoteData(quoteContext)
+                        }
+
+                        // Importa os dados para o wizard store
+                        if (quoteData && quoteData.items && quoteData.items.length > 0) {
+                          importFromAI(quoteData)
+                        }
+
+                        // Minimiza o chat e redireciona
+                        setIsMinimized(true)
+                        router.push('/orcamento')
+                      } catch (error) {
+                        console.error('[CHAT] Checkout redirect failed:', error)
+                        // Mesmo com erro, redireciona
+                        setIsMinimized(true)
+                        router.push('/orcamento')
+                        toast({
+                          variant: 'default',
+                          title: 'Redirecionando...',
+                          description: 'Continue seu orçamento na página de produtos.',
+                        })
+                      } finally {
+                        setIsLoading(false)
+                      }
+                    }}
+                    disabled={isLoading}
                     className="w-full bg-accent-500 py-2.5 font-medium text-neutral-900 hover:bg-accent-600"
                   >
-                    {isExportingQuote ? (
+                    {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Preparando orçamento...
