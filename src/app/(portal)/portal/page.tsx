@@ -13,6 +13,7 @@ import {
   CheckCircle,
   ArrowRight,
 } from 'lucide-react'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
 async function getDashboardData(userId: string) {
@@ -90,7 +91,7 @@ export default async function PortalDashboardPage() {
   const session = await auth()
 
   if (!session?.user?.id) {
-    return null
+    redirect("/login?callbackUrl=/portal")
   }
 
   const { orders, quotes, appointments, stats } = await getDashboardData(session.user.id)
