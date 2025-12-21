@@ -590,13 +590,14 @@ export function ChatAssistido({
     }
   }
 
-  // Text-to-speech for agent messages
+  // Text-to-speech for agent messages using OpenAI TTS (natural female voice)
   const playMessageAudio = async (messageId: string, content: string) => {
     // If already playing this message, stop it
     if (playingMessageId === messageId) {
       if (audioPlayerRef.current) {
         audioPlayerRef.current.pause()
         audioPlayerRef.current.currentTime = 0
+        audioPlayerRef.current = null
       }
       setPlayingMessageId(null)
       return
@@ -605,45 +606,73 @@ export function ChatAssistido({
     // Stop any currently playing audio
     if (audioPlayerRef.current) {
       audioPlayerRef.current.pause()
+      audioPlayerRef.current = null
     }
 
     setPlayingMessageId(messageId)
 
     try {
-      // Use browser's built-in speech synthesis
-      if ('speechSynthesis' in window) {
-        // Stop any ongoing speech
-        window.speechSynthesis.cancel()
+      // Use OpenAI TTS API for natural female voice (nova)
+      const response = await fetch('/api/ai/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: content,
+          voice: 'nova', // Natural female voice
+        }),
+      })
 
-        const utterance = new SpeechSynthesisUtterance(content)
-        utterance.lang = 'pt-BR'
-        utterance.rate = 1.0
-        utterance.pitch = 1.0
-
-        utterance.onend = () => {
-          setPlayingMessageId(null)
-        }
-
-        utterance.onerror = () => {
-          setPlayingMessageId(null)
-        }
-
-        window.speechSynthesis.speak(utterance)
+      if (!response.ok) {
+        throw new Error('TTS failed')
       }
+
+      // Get audio blob and create URL
+      const audioBlob = await response.blob()
+      const audioUrl = URL.createObjectURL(audioBlob)
+
+      // Create audio element and play
+      const audio = new Audio(audioUrl)
+      audioPlayerRef.current = audio
+
+      audio.onended = () => {
+        URL.revokeObjectURL(audioUrl)
+        audioPlayerRef.current = null
+        setPlayingMessageId(null)
+      }
+
+      audio.onerror = () => {
+        URL.revokeObjectURL(audioUrl)
+        audioPlayerRef.current = null
+        setPlayingMessageId(null)
+      }
+
+      await audio.play()
     } catch (error) {
       console.error('Error playing audio:', error)
       setPlayingMessageId(null)
+
+      // Fallback to browser TTS if API fails
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel()
+        const utterance = new SpeechSynthesisUtterance(content)
+        utterance.lang = 'pt-BR'
+        utterance.rate = 1.0
+        utterance.onend = () => setPlayingMessageId(null)
+        utterance.onerror = () => setPlayingMessageId(null)
+        window.speechSynthesis.speak(utterance)
+      }
     }
   }
 
   // Stop message audio playback
   const stopMessageAudio = () => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel()
-    }
     if (audioPlayerRef.current) {
       audioPlayerRef.current.pause()
       audioPlayerRef.current.currentTime = 0
+      audioPlayerRef.current = null
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
     }
     setPlayingMessageId(null)
   }
@@ -656,6 +685,10 @@ export function ChatAssistido({
       }
       if (audioPreviewUrl) {
         URL.revokeObjectURL(audioPreviewUrl)
+      }
+      if (audioPlayerRef.current) {
+        audioPlayerRef.current.pause()
+        audioPlayerRef.current = null
       }
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel()
