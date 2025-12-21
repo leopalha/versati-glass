@@ -2,7 +2,7 @@
 // This is needed because route groups (public) don't automatically map to /
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
-import { WhatsAppButton } from '@/components/shared/whatsapp-button'
+import { ContactHub } from '@/components/shared/contact-hub'
 import { LocalBusinessSchema } from '@/components/seo/local-business-schema'
 import { ConsentBanner } from '@/components/gdpr/consent-banner'
 import PublicHomePage from './(public)/page'
@@ -18,7 +18,7 @@ export default function HomePage() {
         <PublicHomePage />
       </main>
       <Footer />
-      <WhatsAppButton />
+      <ContactHub showOnPages="all" />
       <ConsentBanner />
     </div>
   )
