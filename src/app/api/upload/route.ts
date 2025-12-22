@@ -48,9 +48,15 @@ export async function POST(request: Request) {
     // Usar R2 se configurado (produção), senão local (desenvolvimento)
     if (isR2Configured()) {
       try {
+        logger.info('[UPLOAD] Attempting R2 upload', {
+          filename: file.name,
+          size: file.size,
+          type: file.type,
+        })
+
         const result = await uploadToR2(buffer, file.name, file.type)
 
-        logger.info('[UPLOAD] R2 upload success', { key: result.key })
+        logger.info('[UPLOAD] R2 upload success', { key: result.key, url: result.url })
 
         return NextResponse.json({
           url: result.url,
@@ -60,7 +66,11 @@ export async function POST(request: Request) {
           storage: 'r2',
         })
       } catch (r2Error) {
-        logger.error('[UPLOAD] R2 upload failed, falling back to local', r2Error)
+        const errorMessage = r2Error instanceof Error ? r2Error.message : 'Unknown R2 error'
+        logger.error('[UPLOAD] R2 upload failed', {
+          error: errorMessage,
+          stack: r2Error instanceof Error ? r2Error.stack : undefined,
+        })
         // Fall through to local storage
       }
     }

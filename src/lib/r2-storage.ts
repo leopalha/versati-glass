@@ -155,15 +155,21 @@ export async function uploadToR2(
 
   const signedHeaders = await signRequest('PUT', endpoint, headers, fileData, config)
 
-  const response = await fetch(endpoint, {
-    method: 'PUT',
-    headers: signedHeaders,
-    body: fileData,
-  })
+  let response: Response
+  try {
+    response = await fetch(endpoint, {
+      method: 'PUT',
+      headers: signedHeaders,
+      body: fileData,
+    })
+  } catch (fetchError) {
+    const msg = fetchError instanceof Error ? fetchError.message : 'Network error'
+    throw new Error(`R2 network error: ${msg}`)
+  }
 
   if (!response.ok) {
     const error = await response.text()
-    throw new Error(`R2 upload failed: ${response.status} - ${error}`)
+    throw new Error(`R2 upload failed: ${response.status} ${response.statusText} - ${error}`)
   }
 
   // Return public URL
