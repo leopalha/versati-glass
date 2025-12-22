@@ -91,7 +91,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
         {/* Back button */}
         <Link
           href="/portal/pedidos"
-          className="mb-6 inline-flex items-center gap-2 text-neutral-700 hover:text-white"
+          className="mb-6 inline-flex items-center gap-2 text-neutral-400 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar para pedidos
@@ -152,7 +152,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                       <CreditCard className="h-5 w-5 text-yellow-400" />
                       <div>
                         <p className="font-medium text-white">Pagamento Pendente</p>
-                        <p className="text-sm text-neutral-700">
+                        <p className="text-sm text-neutral-300">
                           Realize o pagamento para continuar
                         </p>
                       </div>
@@ -173,25 +173,25 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start justify-between rounded-lg border border-neutral-400 p-4"
+                    className="flex items-start justify-between rounded-lg border border-neutral-700 p-4"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-neutral-200">
-                        <Package className="h-6 w-6 text-neutral-700" />
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-neutral-800">
+                        <Package className="h-6 w-6 text-neutral-400" />
                       </div>
                       <div>
                         <p className="font-medium text-white">{item.description}</p>
                         {item.specifications && (
-                          <p className="text-sm text-neutral-700">{item.specifications}</p>
+                          <p className="text-sm text-neutral-400">{item.specifications}</p>
                         )}
                         <div className="mt-1 flex gap-2">
                           {item.color && (
-                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
+                            <span className="rounded bg-neutral-800 px-2 py-0.5 text-xs text-neutral-300">
                               {item.color}
                             </span>
                           )}
                           {item.finish && (
-                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
+                            <span className="rounded bg-neutral-800 px-2 py-0.5 text-xs text-neutral-300">
                               {item.finish}
                             </span>
                           )}
@@ -202,7 +202,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                       <p className="font-medium text-white">
                         {formatCurrency(Number(item.totalPrice))}
                       </p>
-                      <p className="text-sm text-neutral-700">Qtd: {item.quantity}</p>
+                      <p className="text-sm text-neutral-400">Qtd: {item.quantity}</p>
                     </div>
                   </div>
                 ))}
@@ -233,8 +233,8 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                       </div>
                       <div className="pb-4">
                         <p className="font-medium text-white">{entry.status}</p>
-                        <p className="text-sm text-neutral-700">{entry.description}</p>
-                        <p className="mt-1 text-xs text-neutral-600">
+                        <p className="text-sm text-neutral-400">{entry.description}</p>
+                        <p className="mt-1 text-xs text-neutral-500">
                           {new Date(entry.createdAt).toLocaleString('pt-BR')}
                         </p>
                       </div>
@@ -253,12 +253,12 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
 
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-neutral-700">Subtotal</span>
+                  <span className="text-neutral-400">Subtotal</span>
                   <span className="text-white">{formatCurrency(Number(order.subtotal))}</span>
                 </div>
                 {Number(order.discount) > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-neutral-700">Desconto</span>
+                    <span className="text-neutral-400">Desconto</span>
                     <span className="text-green-400">
                       -{formatCurrency(Number(order.discount))}
                     </span>
@@ -266,7 +266,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                 )}
                 {Number(order.installationFee) > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-neutral-700">Instalacao</span>
+                    <span className="text-neutral-400">Instalacao</span>
                     <span className="text-white">
                       {formatCurrency(Number(order.installationFee))}
                     </span>
@@ -290,7 +290,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                 <h2 className="font-display text-lg font-semibold text-white">Endereco</h2>
               </div>
 
-              <p className="text-neutral-800">
+              <p className="text-neutral-300">
                 {order.serviceStreet}, {order.serviceNumber}
                 {order.serviceComplement && ` - ${order.serviceComplement}`}
                 <br />
@@ -312,7 +312,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
 
                 <div className="space-y-3">
                   {order.appointments.map((appointment) => (
-                    <div key={appointment.id} className="rounded-lg border border-neutral-400 p-3">
+                    <div key={appointment.id} className="rounded-lg border border-neutral-700 p-3">
                       <p className="font-medium text-white">
                         {appointment.type === 'VISITA_TECNICA'
                           ? 'Visita Tecnica'
@@ -320,7 +320,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                             ? 'Instalacao'
                             : appointment.type}
                       </p>
-                      <p className="text-sm text-neutral-700">
+                      <p className="text-sm text-neutral-400">
                         {new Date(appointment.scheduledDate).toLocaleDateString('pt-BR')} as{' '}
                         {appointment.scheduledTime}
                       </p>
@@ -345,7 +345,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                       href={doc.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 rounded-lg border border-neutral-400 p-3 text-sm text-neutral-800 hover:bg-neutral-200"
+                      className="flex items-center gap-2 rounded-lg border border-neutral-700 p-3 text-sm text-neutral-300 hover:bg-neutral-800"
                     >
                       <FileText className="h-4 w-4" />
                       {doc.name}

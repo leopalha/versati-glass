@@ -79,11 +79,11 @@ export default async function AgendamentosPage() {
       <div className="p-6">
         {totalAppointments === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <Calendar className="mb-4 h-16 w-16 text-neutral-600" />
+            <Calendar className="mb-4 h-16 w-16 text-neutral-500" />
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhum agendamento
             </h3>
-            <p className="text-neutral-700">Seus agendamentos aparecerao aqui</p>
+            <p className="text-neutral-400">Seus agendamentos aparecerao aqui</p>
           </Card>
         ) : (
           <div className="space-y-8">
@@ -106,7 +106,7 @@ export default async function AgendamentosPage() {
                               {typeLabels[appointment.type] || appointment.type}
                             </p>
                             {appointment.order && (
-                              <p className="text-sm text-neutral-700">
+                              <p className="text-sm text-neutral-400">
                                 Pedido #{appointment.order.number}
                               </p>
                             )}
@@ -120,7 +120,7 @@ export default async function AgendamentosPage() {
                         </div>
 
                         <div className="space-y-3">
-                          <div className="flex items-center gap-3 text-neutral-800">
+                          <div className="flex items-center gap-3 text-neutral-300">
                             <Calendar className="h-5 w-5 text-gold-500" />
                             <span>
                               {new Date(appointment.scheduledDate).toLocaleDateString('pt-BR', {
@@ -130,16 +130,16 @@ export default async function AgendamentosPage() {
                               })}
                             </span>
                           </div>
-                          <div className="flex items-center gap-3 text-neutral-800">
+                          <div className="flex items-center gap-3 text-neutral-300">
                             <Clock className="h-5 w-5 text-gold-500" />
                             <span>{appointment.scheduledTime}</span>
                             {appointment.estimatedDuration && (
-                              <span className="text-neutral-600">
+                              <span className="text-neutral-400">
                                 (~{appointment.estimatedDuration} min)
                               </span>
                             )}
                           </div>
-                          <div className="flex items-start gap-3 text-neutral-800">
+                          <div className="flex items-start gap-3 text-neutral-300">
                             <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-gold-500" />
                             <span className="text-sm">
                               {appointment.addressStreet}, {appointment.addressNumber}
@@ -152,7 +152,7 @@ export default async function AgendamentosPage() {
                         </div>
 
                         {appointment.notes && (
-                          <p className="mt-4 rounded-lg bg-neutral-200 p-3 text-sm text-neutral-700">
+                          <p className="mt-4 rounded-lg bg-neutral-800 p-3 text-sm text-neutral-300">
                             {appointment.notes}
                           </p>
                         )}
@@ -178,14 +178,14 @@ export default async function AgendamentosPage() {
                       <Card key={appointment.id} className="p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-200">
-                              <Calendar className="h-5 w-5 text-neutral-600" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-800">
+                              <Calendar className="h-5 w-5 text-neutral-400" />
                             </div>
                             <div>
                               <p className="font-medium text-white">
                                 {typeLabels[appointment.type] || appointment.type}
                               </p>
-                              <p className="text-sm text-neutral-700">
+                              <p className="text-sm text-neutral-400">
                                 {new Date(appointment.scheduledDate).toLocaleDateString('pt-BR')} -{' '}
                                 {appointment.scheduledTime}
                               </p>

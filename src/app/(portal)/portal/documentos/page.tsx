@@ -80,11 +80,11 @@ export default async function DocumentosPage() {
       <div className="p-6">
         {documents.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <FileText className="mb-4 h-16 w-16 text-neutral-600" />
+            <FileText className="mb-4 h-16 w-16 text-neutral-500" />
             <h3 className="mb-2 font-display text-xl font-semibold text-white">
               Nenhum documento
             </h3>
-            <p className="text-neutral-700">
+            <p className="text-neutral-400">
               Seus documentos aparecerao aqui
             </p>
           </Card>
@@ -105,12 +105,12 @@ export default async function DocumentosPage() {
                       <Card key={doc.id} className="p-4">
                         <div className="flex items-start justify-between">
                           <div className="flex items-start gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-200">
-                              <Icon className="h-5 w-5 text-neutral-700" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-800">
+                              <Icon className="h-5 w-5 text-neutral-400" />
                             </div>
                             <div>
                               <p className="font-medium text-white">{doc.name}</p>
-                              <div className="mt-1 flex items-center gap-2 text-xs text-neutral-600">
+                              <div className="mt-1 flex items-center gap-2 text-xs text-neutral-400">
                                 <span>{formatFileSize(doc.size)}</span>
                                 <span>-</span>
                                 <span className="flex items-center gap-1">
@@ -119,7 +119,7 @@ export default async function DocumentosPage() {
                                 </span>
                               </div>
                               {(doc.order || doc.quote) && (
-                                <p className="mt-1 text-xs text-neutral-700">
+                                <p className="mt-1 text-xs text-neutral-400">
                                   {doc.order
                                     ? `Pedido #${doc.order.number}`
                                     : `Orcamento #${doc.quote?.number}`}
@@ -132,7 +132,7 @@ export default async function DocumentosPage() {
                             href={doc.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-700 hover:bg-neutral-200 hover:text-white"
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-white"
                           >
                             <Download className="h-4 w-4" />
                           </a>

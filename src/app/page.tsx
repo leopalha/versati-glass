@@ -18,7 +18,7 @@ export default function HomePage() {
         <PublicHomePage />
       </main>
       <Footer />
-      <ContactHub showOnPages="all" autoOpenChatDuration={3000} />
+      <ContactHub showOnPages="all" />
       <ConsentBanner />
     </div>
   )

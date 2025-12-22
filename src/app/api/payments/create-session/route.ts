@@ -71,12 +71,17 @@ export async function POST(request: Request) {
     // Get base URL
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
+    // Validate amount
+    if (Number(order.total) <= 0) {
+      return NextResponse.json({ error: 'Valor do pedido invalido' }, { status: 400 })
+    }
+
     // Create Stripe checkout session
     const checkoutSession = await createCheckoutSession({
       orderId: order.id,
       orderNumber: order.number,
       customerEmail: order.user.email,
-      customerName: order.user.name,
+      customerName: order.user.name || 'Cliente',
       amount: Number(order.total),
       description,
       paymentMethod,

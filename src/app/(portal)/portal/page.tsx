@@ -112,8 +112,8 @@ export default async function PortalDashboardPage() {
                 <Package className="h-6 w-6 text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total de Pedidos</p>
-                <p className="text-2xl font-bold">{stats.totalOrders}</p>
+                <p className="text-sm text-neutral-400">Total de Pedidos</p>
+                <p className="text-2xl font-bold text-white">{stats.totalOrders}</p>
               </div>
             </div>
           </Card>
@@ -124,8 +124,8 @@ export default async function PortalDashboardPage() {
                 <TrendingUp className="h-6 w-6 text-yellow-400" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Pedidos Ativos</p>
-                <p className="text-2xl font-bold">{stats.activeOrders}</p>
+                <p className="text-sm text-neutral-400">Pedidos Ativos</p>
+                <p className="text-2xl font-bold text-white">{stats.activeOrders}</p>
               </div>
             </div>
           </Card>
@@ -136,8 +136,8 @@ export default async function PortalDashboardPage() {
                 <FileText className="h-6 w-6 text-purple-400" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Orcamentos Pendentes</p>
-                <p className="text-2xl font-bold">{stats.pendingQuotes}</p>
+                <p className="text-sm text-neutral-400">Orcamentos Pendentes</p>
+                <p className="text-2xl font-bold text-white">{stats.pendingQuotes}</p>
               </div>
             </div>
           </Card>
@@ -148,8 +148,8 @@ export default async function PortalDashboardPage() {
                 <Calendar className="h-6 w-6 text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Proximo Agendamento</p>
-                <p className="text-lg font-bold">
+                <p className="text-sm text-neutral-400">Proximo Agendamento</p>
+                <p className="text-lg font-bold text-white">
                   {stats.nextAppointment
                     ? new Date(stats.nextAppointment.scheduledDate).toLocaleDateString('pt-BR', {
                         day: '2-digit',
@@ -177,9 +177,9 @@ export default async function PortalDashboardPage() {
 
             {orders.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
-                <Package className="mb-3 h-12 w-12 text-muted-foreground" />
-                <p className="text-muted-foreground">Nenhum pedido ainda</p>
-                <Link href="/orcamento" className="mt-2 text-sm text-primary hover:text-primary/80">
+                <Package className="mb-3 h-12 w-12 text-neutral-500" />
+                <p className="text-neutral-400">Nenhum pedido ainda</p>
+                <Link href="/orcamento" className="mt-2 text-sm text-gold-500 hover:text-gold-400">
                   Solicitar orcamento
                 </Link>
               </div>
@@ -193,8 +193,8 @@ export default async function PortalDashboardPage() {
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium">#{order.number}</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="font-medium text-white">#{order.number}</p>
+                        <p className="text-sm text-neutral-400">
                           {order.items.length} item(s) - {formatCurrency(Number(order.total))}
                         </p>
                       </div>
@@ -226,9 +226,9 @@ export default async function PortalDashboardPage() {
 
             {quotes.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
-                <FileText className="mb-3 h-12 w-12 text-muted-foreground" />
-                <p className="text-muted-foreground">Nenhum orcamento</p>
-                <Link href="/orcamento" className="mt-2 text-sm text-primary hover:text-primary/80">
+                <FileText className="mb-3 h-12 w-12 text-neutral-500" />
+                <p className="text-neutral-400">Nenhum orcamento</p>
+                <Link href="/orcamento" className="mt-2 text-sm text-gold-500 hover:text-gold-400">
                   Solicitar orcamento
                 </Link>
               </div>
@@ -242,8 +242,8 @@ export default async function PortalDashboardPage() {
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium">#{quote.number}</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="font-medium text-white">#{quote.number}</p>
+                        <p className="text-sm text-neutral-400">
                           {formatCurrency(Number(quote.total))}
                         </p>
                       </div>
@@ -297,11 +297,11 @@ export default async function PortalDashboardPage() {
                       })}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2 text-sm text-neutral-400">
                     <Clock className="h-4 w-4" />
                     <span>{appointment.scheduledTime}</span>
                   </div>
-                  <p className="mt-2 text-sm text-muted-foreground">
+                  <p className="mt-2 text-sm text-neutral-400">
                     {appointment.type === 'VISITA_TECNICA'
                       ? 'Visita Tecnica'
                       : appointment.type === 'INSTALACAO'

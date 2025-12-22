@@ -150,9 +150,9 @@ export default function PerfilPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="mb-2 block text-sm text-neutral-700">Nome</label>
+                <label className="mb-2 block text-sm text-neutral-400">Nome</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-600" />
+                  <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
                   <Input
                     name="name"
                     value={formData.name}
@@ -163,9 +163,9 @@ export default function PerfilPage() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-neutral-700">Email</label>
+                <label className="mb-2 block text-sm text-neutral-400">Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-600" />
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
                   <Input
                     name="email"
                     type="email"
@@ -175,13 +175,13 @@ export default function PerfilPage() {
                     disabled
                   />
                 </div>
-                <p className="mt-1 text-xs text-neutral-600">O email nao pode ser alterado</p>
+                <p className="mt-1 text-xs text-neutral-500">O email nao pode ser alterado</p>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-neutral-700">Telefone</label>
+                <label className="mb-2 block text-sm text-neutral-400">Telefone</label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-600" />
+                  <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
                   <Input
                     name="phone"
                     value={formData.phone}
@@ -212,7 +212,7 @@ export default function PerfilPage() {
 
             <form className="space-y-4">
               <div>
-                <label className="mb-2 block text-sm text-neutral-700">CEP</label>
+                <label className="mb-2 block text-sm text-neutral-400">CEP</label>
                 <Input
                   name="zipCode"
                   value={formData.zipCode}
@@ -223,17 +223,17 @@ export default function PerfilPage() {
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-2">
-                  <label className="mb-2 block text-sm text-neutral-700">Rua</label>
+                  <label className="mb-2 block text-sm text-neutral-400">Rua</label>
                   <Input name="street" value={formData.street} onChange={handleChange} />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-700">Numero</label>
+                  <label className="mb-2 block text-sm text-neutral-400">Numero</label>
                   <Input name="number" value={formData.number} onChange={handleChange} />
                 </div>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-neutral-700">Complemento</label>
+                <label className="mb-2 block text-sm text-neutral-400">Complemento</label>
                 <Input
                   name="complement"
                   value={formData.complement}
@@ -243,17 +243,17 @@ export default function PerfilPage() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-neutral-700">Bairro</label>
+                <label className="mb-2 block text-sm text-neutral-400">Bairro</label>
                 <Input name="neighborhood" value={formData.neighborhood} onChange={handleChange} />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-700">Cidade</label>
+                  <label className="mb-2 block text-sm text-neutral-400">Cidade</label>
                   <Input name="city" value={formData.city} onChange={handleChange} />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-700">Estado</label>
+                  <label className="mb-2 block text-sm text-neutral-400">Estado</label>
                   <Input
                     name="state"
                     value={formData.state}
@@ -275,7 +275,7 @@ export default function PerfilPage() {
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-700">Senha Atual</label>
+                  <label className="mb-2 block text-sm text-neutral-400">Senha Atual</label>
                   <Input
                     name="currentPassword"
                     type="password"
@@ -284,7 +284,7 @@ export default function PerfilPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-700">Nova Senha</label>
+                  <label className="mb-2 block text-sm text-neutral-400">Nova Senha</label>
                   <Input
                     name="newPassword"
                     type="password"
@@ -293,7 +293,7 @@ export default function PerfilPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm text-neutral-700">
+                  <label className="mb-2 block text-sm text-neutral-400">
                     Confirmar Nova Senha
                   </label>
                   <Input
