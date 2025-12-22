@@ -6,7 +6,6 @@ import { getToken } from 'next-auth/jwt'
 const protectedRoutes = ['/portal', '/admin']
 const authRoutes = ['/login', '/registro', '/recuperar-senha', '/redefinir-senha']
 const adminRoutes = ['/admin']
-const customerRoutes = ['/portal']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -15,7 +14,6 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route))
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
   const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route))
-  const isCustomerRoute = customerRoutes.some((route) => pathname.startsWith(route))
 
   // Get token (works in edge runtime)
   const token = await getToken({
@@ -26,6 +24,7 @@ export async function middleware(request: NextRequest) {
   const isAdmin = token?.role === 'ADMIN' || token?.role === 'STAFF'
 
   // If accessing auth routes while logged in, redirect to appropriate dashboard
+  // Admins go to /admin, customers go to /portal
   if (isAuthRoute && token) {
     const redirectUrl = isAdmin ? '/admin' : '/portal'
     return NextResponse.redirect(new URL(redirectUrl, request.url))
@@ -38,12 +37,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  // If admin/staff tries to access customer portal, redirect to admin
-  if (isCustomerRoute && token && isAdmin) {
-    return NextResponse.redirect(new URL('/admin', request.url))
-  }
-
-  // If non-admin/staff tries to access admin routes, redirect to portal
+  // If non-admin tries to access admin routes, redirect to portal
+  // Note: Google users are ALWAYS customers, so they can't access /admin
   if (isAdminRoute && token && !isAdmin) {
     return NextResponse.redirect(new URL('/portal', request.url))
   }

@@ -148,11 +148,10 @@ function LoginForm() {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
     try {
-      // For Google OAuth, redirect to /portal - middleware will handle role-based redirect
-      // If user is admin, middleware will redirect to /admin automatically
-      const redirectUrl = callbackUrlParam || '/portal'
-      logger.debug('[LOGIN] Starting Google sign-in with redirect:', redirectUrl)
-      await signIn('google', { callbackUrl: redirectUrl })
+      // Google users are ALWAYS customers - admins are created by the admin with email/password
+      // So we always redirect Google users to /portal
+      logger.debug('[LOGIN] Starting Google sign-in, redirecting to /portal')
+      await signIn('google', { callbackUrl: '/portal' })
     } catch (error) {
       // ARCH-P1-2: Standardized error handling
       const errorMsg = getErrorMessage(error)
