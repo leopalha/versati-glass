@@ -23,9 +23,15 @@ export async function middleware(request: NextRequest) {
   const isCustomerRoute = customerRoutes.some((route) => pathname.startsWith(route))
 
   // Get token (works in edge runtime)
+  // In production with HTTPS, NextAuth v5 uses __Secure- prefixed cookies
+  // We need to specify the correct cookie name
+  const isSecure = request.url.startsWith('https')
+  const cookieName = isSecure ? '__Secure-authjs.session-token' : 'authjs.session-token'
+
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+    cookieName,
   })
 
   const isAdmin = token?.role === 'ADMIN' || token?.role === 'STAFF'
