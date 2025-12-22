@@ -24,12 +24,16 @@ import Image from 'next/image'
 interface ContactHubProps {
   /** Show only on specific pages (default: show everywhere) */
   showOnPages?: 'all' | 'public' | 'orcamento'
+  /** Auto-open chat for a duration then minimize (in ms, e.g., 3000 for 3s) */
+  autoOpenChatDuration?: number
 }
 
 type ActiveView = 'closed' | 'ai-chat' | 'whatsapp-menu'
 
-export function ContactHub({ showOnPages = 'all' }: ContactHubProps) {
-  const [activeView, setActiveView] = useState<ActiveView>('closed')
+export function ContactHub({ showOnPages = 'all', autoOpenChatDuration }: ContactHubProps) {
+  const [activeView, setActiveView] = useState<ActiveView>(
+    autoOpenChatDuration ? 'ai-chat' : 'closed'
+  )
 
   // WhatsApp business number (get from env)
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '5521982536229'
@@ -207,7 +211,11 @@ export function ContactHub({ showOnPages = 'all' }: ContactHubProps) {
 
         {/* AI Chat Component (quando clica no botão AI) */}
         {activeView === 'ai-chat' && (
-          <ChatAssistido onClose={() => setActiveView('closed')} showInitially={true} />
+          <ChatAssistido
+            onClose={() => setActiveView('closed')}
+            showInitially={true}
+            autoOpenDuration={autoOpenChatDuration}
+          />
         )}
       </div>
     </>

@@ -177,7 +177,7 @@ async function detectAndFetchCep(message: string): Promise<{
   try {
     const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`, {
       method: 'GET',
-      headers: { 'Accept': 'application/json' },
+      headers: { Accept: 'application/json' },
     })
 
     if (!response.ok) {
@@ -511,15 +511,17 @@ const SYSTEM_PROMPT_BASE = `Voce e Ana, a assistente virtual da Versati Glass. S
 5. Preferencias (cor, acabamento - se relevante)
 6. SE QUER MAIS ALGUMA COISA (sempre perguntar!)
 7. NOME do cliente (pergunte de forma natural: "E qual seu nome pra gente registrar?")
-8. TELEFONE do cliente (pergunte: "Me passa seu WhatsApp pra gente entrar em contato?")
+8. EMAIL do cliente (pergunte: "Qual seu email pra enviar o orcamento?")
+9. TELEFONE do cliente (pergunte: "Me passa seu WhatsApp pra gente entrar em contato?")
 
 📱 COLETA PROGRESSIVA DE DADOS DO CLIENTE - MUITO IMPORTANTE:
 
 FASE 1 - DADOS BASICOS (antes do checkout):
 - Nome: "Qual seu nome pra eu registrar aqui?"
+- Email: "Qual seu email pra eu enviar o orcamento?"
 - Telefone: "Me passa seu WhatsApp pra nossa equipe entrar em contato?"
 
-Isso e OBRIGATORIO antes de finalizar. Sem nome e telefone, nao direcione pro checkout!
+Isso e OBRIGATORIO antes de finalizar. Sem nome, email e telefone, nao direcione pro checkout!
 
 FASE 2 - DADOS COMPLETOS (quando cliente confirmar que quer finalizar):
 Apos ter nome e telefone, pergunte DE FORMA NATURAL:
@@ -547,15 +549,17 @@ Exemplo de fluxo COMPLETO:
 5. Cliente: "So isso"
 6. Voce: "Beleza! Pra registrar, qual seu nome?"
 7. Cliente: "Joao"
-8. Voce: "Prazer, Joao! Me passa seu WhatsApp?"
-9. Cliente: "21999999999"
-10. Voce: "Perfeito! Pra emitir nota e agendar instalacao, qual seu CPF?"
-11. Cliente: "123.456.789-00"
-12. Voce: "Anotado! Qual o CEP do local de instalacao?"
-13. Cliente: "22041-080"
-14. Voce: "Rua Figueiredo Magalhaes, Copacabana - Rio de Janeiro/RJ. Qual o numero e apartamento?"
-15. Cliente: "123, apto 401"
-16. Voce: "Show, Joao! Tudo certo. Clica no botao 'Finalizar' ali embaixo! 👇"
+8. Voce: "Prazer, Joao! Qual seu email pra eu enviar o orcamento?"
+9. Cliente: "joao@email.com"
+10. Voce: "Anotado! Me passa seu WhatsApp?"
+11. Cliente: "21999999999"
+12. Voce: "Perfeito! Pra emitir nota e agendar instalacao, qual seu CPF?"
+13. Cliente: "123.456.789-00"
+14. Voce: "Anotado! Qual o CEP do local de instalacao?"
+15. Cliente: "22041-080"
+16. Voce: "Rua Figueiredo Magalhaes, Copacabana - Rio de Janeiro/RJ. Qual o numero e apartamento?"
+17. Cliente: "123, apto 401"
+18. Voce: "Show, Joao! Tudo certo. Clica no botao 'Finalizar' ali embaixo! 👇"
 
 🎯 QUANDO CLIENTE DESCREVE UM PRODUTO (ex: "quero um vidro 2x2"):
 O sistema mostra cards de sugestao automaticamente. Sua resposta deve:
@@ -944,16 +948,18 @@ async function extractQuoteDataFromConversation(
       // MELHORADO: Aceitar itens com apenas categoria OU medidas
       // Isso permite progresso inicial quando cliente menciona produto
       const hasItems = parsed.items && Array.isArray(parsed.items) && parsed.items.length > 0
-      const hasValidItem = hasItems && parsed.items.some(
-        (item: any) => item.category || item.productName || item.width || item.height
-      )
-      const hasCustomerData = parsed.customerData && (
-        parsed.customerData.name ||
-        parsed.customerData.phone ||
-        parsed.customerData.email ||
-        parsed.customerData.street ||
-        parsed.customerData.city
-      )
+      const hasValidItem =
+        hasItems &&
+        parsed.items.some(
+          (item: any) => item.category || item.productName || item.width || item.height
+        )
+      const hasCustomerData =
+        parsed.customerData &&
+        (parsed.customerData.name ||
+          parsed.customerData.phone ||
+          parsed.customerData.email ||
+          parsed.customerData.street ||
+          parsed.customerData.city)
 
       // Retornar dados se tiver items (mesmo parciais) OU dados do cliente
       if (!hasValidItem && !hasCustomerData) {
@@ -1035,9 +1041,63 @@ export async function POST(request: Request) {
     // MELHORIAS Sprint M3: Build dynamic system prompt with product catalog
     const SYSTEM_PROMPT = await buildSystemPrompt()
 
-    // AI-CHAT Sprint P2.3: Fetch customer history for returning customers
+    // AI-CHAT Sprint P2.3: Fetch customer history and profile for returning customers
     let customerContext = ''
+    let loggedUserData: {
+      name?: string | null
+      email?: string | null
+      phone?: string | null
+      street?: string | null
+      number?: string | null
+      complement?: string | null
+      neighborhood?: string | null
+      city?: string | null
+      state?: string | null
+      zipCode?: string | null
+      cpfCnpj?: string | null
+    } | null = null
+
     if (userId) {
+      // Buscar perfil completo do usuario
+      const userProfile = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          name: true,
+          email: true,
+          phone: true,
+          street: true,
+          number: true,
+          complement: true,
+          neighborhood: true,
+          city: true,
+          state: true,
+          zipCode: true,
+          cpfCnpj: true,
+        },
+      })
+
+      if (userProfile) {
+        loggedUserData = userProfile
+
+        // Montar contexto com dados do usuario logado
+        const hasAddress = userProfile.street && userProfile.city && userProfile.state
+        const addressInfo = hasAddress
+          ? `Endereco cadastrado: ${userProfile.street}${userProfile.number ? `, ${userProfile.number}` : ''}${userProfile.complement ? ` - ${userProfile.complement}` : ''}, ${userProfile.neighborhood || ''}, ${userProfile.city}/${userProfile.state} - CEP: ${userProfile.zipCode || 'nao informado'}`
+          : 'Sem endereco cadastrado'
+
+        customerContext = `\n\n===CLIENTE LOGADO===
+Nome: ${userProfile.name || 'Nao informado'}
+Email: ${userProfile.email || 'Nao informado'}
+Telefone: ${userProfile.phone || 'Nao informado'}
+CPF/CNPJ: ${userProfile.cpfCnpj || 'Nao informado'}
+${addressInfo}
+
+IMPORTANTE: Este cliente JA ESTA LOGADO! NAO pergunte dados que ja tem acima.
+${hasAddress ? 'Pergunte: "Quer usar o endereco cadastrado ou outro endereco para este servico?"' : 'Precisa coletar endereco para este servico.'}
+======================\n`
+      }
+
+      // Buscar historico de orcamentos
       const previousQuotes = await prisma.quote.findMany({
         where: { userId },
         orderBy: { createdAt: 'desc' },
@@ -1060,7 +1120,7 @@ export async function POST(request: Request) {
           )
           .join('\n')
 
-        customerContext = `\n\n===CLIENTE RETORNANDO===\nEste cliente ja fez ${previousQuotes.length} orcamento(s) anteriormente:\n${quotesList}\n\nSeja ainda mais atenciosa e mencione que reconhece o cliente!\n======================\n`
+        customerContext += `\n===HISTORICO===\nEste cliente ja fez ${previousQuotes.length} orcamento(s):\n${quotesList}\n\nSeja atenciosa e mencione que reconhece o cliente!\n======================\n`
       }
     }
 
@@ -1309,7 +1369,12 @@ export async function POST(request: Request) {
             messages: [
               {
                 role: 'system',
-                content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary + cepContext,
+                content:
+                  SYSTEM_PROMPT +
+                  customerContext +
+                  productContext +
+                  unifiedContextSummary +
+                  cepContext,
               },
               ...messages,
             ],
@@ -1331,7 +1396,8 @@ export async function POST(request: Request) {
         const openaiMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
           {
             role: 'system',
-            content: SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary + cepContext,
+            content:
+              SYSTEM_PROMPT + customerContext + productContext + unifiedContextSummary + cepContext,
           },
           ...messages.map((msg) => ({
             role: msg.role as 'user' | 'assistant',
@@ -1417,9 +1483,11 @@ export async function POST(request: Request) {
     }
 
     // Detectar se usuario quer cancelar/reiniciar o orcamento
-    const isCancellation = message.toLowerCase().match(
-      /\b(cancelar|reiniciar|começar de novo|comecar de novo|desistir|novo orçamento|novo orcamento)\b/
-    )
+    const isCancellation = message
+      .toLowerCase()
+      .match(
+        /\b(cancelar|reiniciar|começar de novo|comecar de novo|desistir|novo orçamento|novo orcamento)\b/
+      )
 
     // MELHORADO: Mesclar dados extraidos com contexto anterior
     // Isso garante que dados do cliente (nome, telefone) nao sejam perdidos
@@ -1432,19 +1500,19 @@ export async function POST(request: Request) {
       // CORRECAO: Acumular items em vez de substituir
       // Usa productName + category como chave unica para evitar duplicatas
       // Cria copia do array para evitar mutacao
-      let mergedItems = [...(existingContext.items || [])]
+      const mergedItems = [...(existingContext.items || [])]
 
       if (extractedData.items?.length > 0) {
         for (const newItem of extractedData.items) {
           // Verifica se item ja existe (mesmo produto/categoria com medidas similares)
           const existingIndex = mergedItems.findIndex((existing: any) => {
-            const sameProduct = (
-              (existing.productName && newItem.productName &&
-               existing.productName.toLowerCase() === newItem.productName.toLowerCase()) ||
+            const sameProduct =
+              (existing.productName &&
+                newItem.productName &&
+                existing.productName.toLowerCase() === newItem.productName.toLowerCase()) ||
               (existing.category === newItem.category &&
-               existing.width === newItem.width &&
-               existing.height === newItem.height)
-            )
+                existing.width === newItem.width &&
+                existing.height === newItem.height)
             return sameProduct
           })
 
@@ -1566,6 +1634,9 @@ export async function POST(request: Request) {
           }
         : null,
       schedulingDetected: extractedData?.scheduling?.wantsVisit || false,
+      // Dados do usuario logado (se houver)
+      loggedUserData: loggedUserData || null,
+      isLoggedIn: !!userId,
     })
   } catch (error) {
     logger.error('AI Chat error:', error)

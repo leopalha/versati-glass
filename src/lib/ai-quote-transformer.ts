@@ -323,14 +323,15 @@ export function isQuoteContextFullyComplete(
  * Get completion percentage of quote context (0-100)
  * Useful for progress indicators
  *
- * Campos OBRIGATÓRIOS para chegar a 100% (cada um vale ~14%):
- * - Produto/categoria selecionado: 14%
- * - AMBAS as medidas (largura E altura): 14%
- * - Nome do cliente: 14%
- * - Telefone do cliente: 14%
- * - CPF/CNPJ: 14%
- * - CEP + Endereço (rua, cidade, estado): 15%
- * - Número do endereço: 15%
+ * Campos OBRIGATÓRIOS para chegar a 100% (cada um vale ~12.5%):
+ * - Produto/categoria selecionado: 12.5%
+ * - AMBAS as medidas (largura E altura): 12.5%
+ * - Nome do cliente: 12.5%
+ * - Email do cliente: 12.5%
+ * - Telefone do cliente: 12.5%
+ * - CPF/CNPJ: 12.5%
+ * - CEP + Endereço (rua, cidade, estado): 12.5%
+ * - Número do endereço: 12.5%
  *
  * Isso garante que só mostra checkout quando tem TUDO preenchido
  */
@@ -338,7 +339,7 @@ export function getQuoteContextCompletion(quoteContext: AiQuoteContext | null | 
   if (!quoteContext) return 0
 
   let earnedPoints = 0
-  const TOTAL_FIELDS = 7
+  const TOTAL_FIELDS = 8
 
   // Produto (obrigatório)
   if (quoteContext.items && quoteContext.items.length > 0) {
@@ -359,6 +360,11 @@ export function getQuoteContextCompletion(quoteContext: AiQuoteContext | null | 
   if (quoteContext.customerData) {
     // Nome
     if (quoteContext.customerData.name) {
+      earnedPoints += 1
+    }
+
+    // Email
+    if (quoteContext.customerData.email) {
       earnedPoints += 1
     }
 
@@ -542,6 +548,12 @@ export function getProgressDetails(quoteContext: AiQuoteContext | null | undefin
       key: 'name',
       label: 'Nome',
       completed: !!quoteContext.customerData?.name,
+      required: true,
+    },
+    {
+      key: 'email',
+      label: 'Email',
+      completed: !!quoteContext.customerData?.email,
       required: true,
     },
     {

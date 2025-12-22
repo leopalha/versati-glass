@@ -134,6 +134,7 @@ interface ChatAssistidoProps {
   position?: 'bottom-right' | 'bottom-left'
   onClose?: () => void
   showInitially?: boolean
+  autoOpenDuration?: number // Duration in ms to auto-open and then minimize (e.g., 3000 for 3 seconds)
 }
 
 export function ChatAssistido({
@@ -142,6 +143,7 @@ export function ChatAssistido({
   position = 'bottom-right',
   onClose,
   showInitially = false,
+  autoOpenDuration,
 }: ChatAssistidoProps) {
   const router = useRouter()
   const { toast } = useToast()
@@ -183,6 +185,21 @@ export function ChatAssistido({
   // Register confirmation modal state
   const [showRegisterModal, setShowRegisterModal] = useState(false)
   const [isRegisterLoading, setIsRegisterLoading] = useState(false)
+
+  // Logged user data from API
+  const [loggedUserData, setLoggedUserData] = useState<{
+    name?: string
+    email?: string
+    phone?: string
+    street?: string
+    number?: string
+    complement?: string
+    neighborhood?: string
+    city?: string
+    state?: string
+    zipCode?: string
+    cpfCnpj?: string
+  } | null>(null)
 
   // Product suggestions removed - using conversational flow instead
 
@@ -338,6 +355,25 @@ export function ChatAssistido({
       ])
     }
   }, [isOpen, messages.length])
+
+  // Auto-open and minimize after duration (for homepage greeting)
+  const autoOpenTriggeredRef = useRef(false)
+  useEffect(() => {
+    if (autoOpenDuration && !autoOpenTriggeredRef.current) {
+      autoOpenTriggeredRef.current = true
+
+      // Open immediately
+      setIsOpen(true)
+      setIsMinimized(false)
+
+      // Minimize after the duration
+      const timer = setTimeout(() => {
+        setIsMinimized(true)
+      }, autoOpenDuration)
+
+      return () => clearTimeout(timer)
+    }
+  }, [autoOpenDuration])
 
   // Old auto-speak removed - now using per-message play button
 
@@ -1024,10 +1060,37 @@ export function ChatAssistido({
         setProgressConfirmed(true)
       }
 
+      // Capturar dados do usuario logado (se houver)
+      if (data.loggedUserData) {
+        setLoggedUserData(data.loggedUserData)
+      }
+
       // IMPORTANTE: Atualiza progresso imediatamente da resposta da API
+      // Se tiver dados do usuario logado, mesclar com o quoteContext
       if (data.quoteContext) {
-        setQuoteContext(data.quoteContext)
-        const completion = getQuoteContextCompletion(data.quoteContext)
+        const updatedContext = { ...data.quoteContext }
+
+        // Preencher dados do cliente se estiver logado e o contexto ainda nao tiver
+        if (data.loggedUserData && data.isLoggedIn) {
+          updatedContext.customerData = {
+            ...updatedContext.customerData,
+            name: updatedContext.customerData?.name || data.loggedUserData.name,
+            email: updatedContext.customerData?.email || data.loggedUserData.email,
+            phone: updatedContext.customerData?.phone || data.loggedUserData.phone,
+            cpfCnpj: updatedContext.customerData?.cpfCnpj || data.loggedUserData.cpfCnpj,
+            street: updatedContext.customerData?.street || data.loggedUserData.street,
+            number: updatedContext.customerData?.number || data.loggedUserData.number,
+            complement: updatedContext.customerData?.complement || data.loggedUserData.complement,
+            neighborhood:
+              updatedContext.customerData?.neighborhood || data.loggedUserData.neighborhood,
+            city: updatedContext.customerData?.city || data.loggedUserData.city,
+            state: updatedContext.customerData?.state || data.loggedUserData.state,
+            zipCode: updatedContext.customerData?.zipCode || data.loggedUserData.zipCode,
+          }
+        }
+
+        setQuoteContext(updatedContext)
+        const completion = getQuoteContextCompletion(updatedContext)
         setQuoteProgress(completion)
       }
 
@@ -1681,9 +1744,8 @@ export function ChatAssistido({
                         // PRIMEIRO: Usa contexto local se disponível (mais confiável)
                         if (quoteContext) {
                           try {
-                            const { transformAiContextToQuoteData } = await import(
-                              '@/lib/ai-quote-transformer'
-                            )
+                            const { transformAiContextToQuoteData } =
+                              await import('@/lib/ai-quote-transformer')
                             quoteData = transformAiContextToQuoteData(quoteContext)
                             console.log('[CHAT] Using local quoteContext:', quoteData)
                           } catch (transformError) {
@@ -1704,7 +1766,9 @@ export function ChatAssistido({
                               quoteData = result.data
                               console.log('[CHAT] Using API export:', quoteData)
                             } else {
-                              console.warn('[CHAT] API export returned error, continuing without data')
+                              console.warn(
+                                '[CHAT] API export returned error, continuing without data'
+                              )
                             }
                           } catch (exportError) {
                             console.warn('[CHAT] Export API failed:', exportError)
