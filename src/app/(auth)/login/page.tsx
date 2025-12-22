@@ -1,10 +1,10 @@
 'use client'
 
 import { logger, getErrorMessage } from '@/lib/logger'
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { signIn, getSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -24,12 +24,14 @@ type LoginFormData = z.infer<typeof loginSchema>
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { data: session, status } = useSession()
   const { toast } = useToast()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+  const [loginSuccess, setLoginSuccess] = useState(false)
 
-  // Get callbackUrl from query params (used when redirected from protected route)
+  // Get callbackUrl from query params
   const callbackUrlParam = searchParams.get('callbackUrl')
 
   const {
@@ -41,34 +43,50 @@ function LoginForm() {
     mode: 'onBlur',
   })
 
-  // Helper function to get redirect URL based on user role
-  const getRedirectUrl = (role: string, callbackUrl?: string | null): string => {
-    // Always prioritize role-based redirect
-    const roleBasedUrl = role === 'ADMIN' || role === 'STAFF' ? '/admin' : '/portal'
+  // Redirect when session is available after login
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user) {
+      const role = session.user.role
+      logger.debug('[LOGIN] Session detected, role:', role)
 
-    // If there's a specific callbackUrl (user was redirected from a protected page)
-    // and it's not a base portal/admin route, use the specific callback
-    if (callbackUrl && !callbackUrl.match(/^\/(portal|admin)$/)) {
-      // But ensure admin doesn't go to /portal/* and customer doesn't go to /admin/*
-      if (callbackUrl.startsWith('/admin') && role !== 'ADMIN' && role !== 'STAFF') {
-        return '/portal'
+      // Determine redirect URL based on role
+      let redirectUrl = '/portal'
+      if (role === 'ADMIN' || role === 'STAFF') {
+        redirectUrl = '/admin'
       }
-      if (callbackUrl.startsWith('/portal') && (role === 'ADMIN' || role === 'STAFF')) {
-        return '/admin'
+
+      // If there's a callback URL that matches the user's permission, use it
+      if (callbackUrlParam) {
+        if (callbackUrlParam.startsWith('/admin') && (role === 'ADMIN' || role === 'STAFF')) {
+          redirectUrl = callbackUrlParam
+        } else if (callbackUrlParam.startsWith('/portal') && role === 'CUSTOMER') {
+          redirectUrl = callbackUrlParam
+        }
       }
-      return callbackUrl
+
+      logger.debug('[LOGIN] Redirecting to:', redirectUrl)
+
+      // Show success toast only if we just logged in
+      if (loginSuccess) {
+        toast({
+          variant: 'success',
+          title: 'Login realizado!',
+          description: `Bem-vindo(a), ${session.user.name || 'usuário'}!`,
+        })
+      }
+
+      // Use router.push for client-side navigation
+      router.push(redirectUrl)
+      router.refresh()
     }
-
-    return roleBasedUrl
-  }
+  }, [status, session, callbackUrlParam, router, toast, loginSuccess])
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
 
     try {
-      logger.debug('[LOGIN] Attempting login with:', { email: data.email })
+      logger.debug('[LOGIN] Attempting credentials login:', { email: data.email })
 
-      // Validate credentials first
       const result = await signIn('credentials', {
         email: data.email,
         password: data.password,
@@ -77,7 +95,7 @@ function LoginForm() {
 
       logger.debug('[LOGIN] SignIn result:', result)
 
-      if (result?.error && result?.error !== 'Configuration') {
+      if (result?.error) {
         logger.error('[LOGIN] SignIn error:', result.error)
         toast({
           variant: 'error',
@@ -89,53 +107,12 @@ function LoginForm() {
       }
 
       if (result?.ok) {
-        // Login successful - poll for session before redirecting
-        logger.debug('[LOGIN] Login successful, polling for session...')
-
-        let attempts = 0
-        const maxAttempts = 10
-        const pollInterval = 300
-
-        const checkSession = async (): Promise<void> => {
-          attempts++
-          logger.debug(`[LOGIN] Checking session (attempt ${attempts}/${maxAttempts})`)
-
-          const session = await getSession()
-
-          if (session?.user) {
-            // Get the correct redirect URL based on user role
-            const redirectUrl = getRedirectUrl(session.user.role, callbackUrlParam)
-            logger.debug(
-              `[LOGIN] Session confirmed, user role: ${session.user.role}, redirecting to: ${redirectUrl}`
-            )
-
-            toast({
-              variant: 'success',
-              title: 'Login realizado!',
-              description: `Bem-vindo(a), ${session.user.name || 'usuário'}!`,
-            })
-
-            // Small delay to show toast before redirect
-            setTimeout(() => {
-              window.location.href = redirectUrl
-            }, 500)
-            return
-          }
-
-          if (attempts < maxAttempts) {
-            setTimeout(() => checkSession(), pollInterval)
-          } else {
-            logger.error('[LOGIN] Session polling timeout, forcing redirect to /portal')
-            window.location.href = '/portal'
-          }
-        }
-
-        // Start polling
-        await checkSession()
+        logger.debug('[LOGIN] Login successful, waiting for session...')
+        setLoginSuccess(true)
+        // Session will be detected by useEffect above
       }
     } catch (error) {
       logger.error('[LOGIN] Login failed:', error)
-
       toast({
         variant: 'error',
         title: 'Erro',
@@ -148,23 +125,42 @@ function LoginForm() {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
     try {
-      // Google users are ALWAYS customers - admins are created by the admin with email/password
-      // So we always redirect Google users to /portal
-      logger.debug('[LOGIN] Starting Google sign-in, redirecting to /portal')
+      // Google users are ALWAYS customers
+      logger.debug('[LOGIN] Starting Google sign-in')
       await signIn('google', { callbackUrl: '/portal' })
     } catch (error) {
-      // ARCH-P1-2: Standardized error handling
       const errorMsg = getErrorMessage(error)
       logger.error('[LOGIN] Google sign-in failed:', { error: errorMsg })
-
       toast({
         variant: 'error',
         title: 'Erro',
         description: 'Erro ao conectar com Google',
       })
-    } finally {
       setIsGoogleLoading(false)
     }
+  }
+
+  // Show loading while checking session
+  if (status === 'loading') {
+    return (
+      <Card className="w-full max-w-md p-8">
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin text-accent-400" />
+        </div>
+      </Card>
+    )
+  }
+
+  // If already logged in and waiting for redirect
+  if (status === 'authenticated') {
+    return (
+      <Card className="w-full max-w-md p-8">
+        <div className="flex flex-col items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin text-accent-400" />
+          <p className="mt-4 text-theme-muted">Redirecionando...</p>
+        </div>
+      </Card>
+    )
   }
 
   return (

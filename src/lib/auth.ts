@@ -134,8 +134,14 @@ export const authConfig: NextAuthConfig = {
       return baseUrl
     },
     async jwt({ token, user, trigger, session, account }) {
-      logger.debug('[AUTH] JWT callback', { hasUser: !!user, trigger })
+      logger.debug('[AUTH] JWT callback', {
+        hasUser: !!user,
+        trigger,
+        provider: account?.provider,
+        currentTokenRole: token.role,
+      })
 
+      // Initial sign in - user object is available
       if (user) {
         // For OAuth users, fetch role from database
         if (account?.provider === 'google') {
@@ -148,14 +154,43 @@ export const authConfig: NextAuthConfig = {
             token.id = dbUser.id
             token.role = dbUser.role
             token.phone = dbUser.phone
+            logger.debug('[AUTH] JWT - Google user role set', {
+              userId: dbUser.id,
+              role: dbUser.role,
+            })
+          } else {
+            // New Google user - default to CUSTOMER
+            token.role = 'CUSTOMER'
+            logger.debug('[AUTH] JWT - New Google user, defaulting to CUSTOMER')
           }
         } else {
-          // For credentials users
+          // For credentials users - role comes from authorize()
           token.id = user.id as string
           token.role = user.role
           token.phone = user.phone
+          logger.debug('[AUTH] JWT - Credentials user role set', {
+            userId: user.id,
+            role: user.role,
+          })
         }
-        logger.debug('[AUTH] JWT - User added to token', { userId: token.id, role: token.role })
+      }
+
+      // Ensure role is always set - fallback to database lookup if missing
+      if (!token.role && token.email) {
+        logger.debug('[AUTH] JWT - Role missing, fetching from database...')
+        const dbUser = await prisma.user.findUnique({
+          where: { email: (token.email as string).toLowerCase() },
+          select: { id: true, role: true, phone: true },
+        })
+        if (dbUser) {
+          token.id = dbUser.id
+          token.role = dbUser.role
+          token.phone = dbUser.phone
+          logger.debug('[AUTH] JWT - Role fetched from DB as fallback', {
+            userId: dbUser.id,
+            role: dbUser.role,
+          })
+        }
       }
 
       // Handle session updates
@@ -164,6 +199,7 @@ export const authConfig: NextAuthConfig = {
         token.phone = session.phone
       }
 
+      logger.debug('[AUTH] JWT - Final token state', { userId: token.id, role: token.role })
       return token
     },
     async session({ session, token }) {
