@@ -1,7 +1,7 @@
 'use client'
 
 import { logger, getErrorMessage } from '@/lib/logger'
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
@@ -31,6 +31,26 @@ function LoginForm() {
   // Get callbackUrl from query params (used when redirected from protected route)
   const callbackUrlParam = searchParams.get('callbackUrl')
 
+  // Check for error from NextAuth redirect
+  const errorParam = searchParams.get('error')
+
+  // Show error toast if there's an auth error
+  useEffect(() => {
+    if (errorParam) {
+      let errorMessage = 'Ocorreu um erro ao fazer login'
+      if (errorParam === 'CredentialsSignin') {
+        errorMessage = 'Email ou senha incorretos'
+      } else if (errorParam === 'OAuthSignin' || errorParam === 'OAuthCallback') {
+        errorMessage = 'Erro ao conectar com Google'
+      }
+      toast({
+        variant: 'error',
+        title: 'Erro ao entrar',
+        description: errorMessage,
+      })
+    }
+  }, [errorParam, toast])
+
   const {
     register,
     handleSubmit,
@@ -46,44 +66,23 @@ function LoginForm() {
     try {
       logger.debug('[LOGIN] Attempting credentials login:', { email: data.email })
 
-      // Use redirect: false to handle the result manually
-      const result = await signIn('credentials', {
+      // Use redirect: true - let NextAuth handle the redirect directly
+      // This is more reliable than manually handling the redirect
+      await signIn('credentials', {
         email: data.email,
         password: data.password,
-        redirect: false,
+        callbackUrl: callbackUrlParam || '/portal',
+        redirect: true,
       })
 
-      logger.debug('[LOGIN] SignIn result:', result)
-
-      if (result?.error) {
-        logger.error('[LOGIN] SignIn error:', result.error)
-        toast({
-          variant: 'error',
-          title: 'Erro ao entrar',
-          description: 'Email ou senha incorretos',
-        })
-        setIsLoading(false)
-        return
-      }
-
-      if (result?.ok) {
-        // Success! Redirect to portal - middleware will handle admin redirect
-        toast({
-          variant: 'success',
-          title: 'Login realizado!',
-          description: 'Redirecionando...',
-        })
-
-        // Use window.location for full page reload to ensure cookies are set
-        const redirectTo = callbackUrlParam || '/portal'
-        window.location.href = redirectTo
-      }
+      // If we reach here with redirect: true, something went wrong
+      // because successful login would redirect before this point
     } catch (error) {
       logger.error('[LOGIN] Login failed:', error)
       toast({
         variant: 'error',
-        title: 'Erro',
-        description: 'Ocorreu um erro ao fazer login',
+        title: 'Erro ao entrar',
+        description: 'Email ou senha incorretos. Verifique suas credenciais.',
       })
       setIsLoading(false)
     }
