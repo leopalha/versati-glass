@@ -867,6 +867,9 @@ export function ChatAssistido({
       if (signInResult?.error) {
         console.warn('Auto sign-in failed:', signInResult.error)
         // Continue anyway - user can login later
+      } else if (signInResult?.ok) {
+        // Refresh to update session state across the app
+        router.refresh()
       }
 
       toast({
