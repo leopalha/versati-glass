@@ -1,6 +1,10 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { ProductForm } from '@/components/admin/product-form'
+import { AdminHeader } from '@/components/admin/admin-header'
+import { Button } from '@/components/ui/button'
+import { ArrowLeft } from 'lucide-react'
 
 interface EditarProdutoPageProps {
   params: Promise<{ id: string }>
@@ -67,15 +71,23 @@ export default async function EditarProdutoPage({ params }: EditarProdutoPagePro
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold">Editar Produto</h1>
-        <p className="text-neutral-500 dark:text-neutral-400">{product.name}</p>
-      </div>
+    <div>
+      <AdminHeader
+        title="Editar Produto"
+        subtitle={product.name}
+        actions={
+          <Link href="/admin/produtos">
+            <Button variant="outline">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Voltar
+            </Button>
+          </Link>
+        }
+      />
 
-      {/* Form */}
-      <ProductForm mode="edit" initialData={product} />
+      <div className="p-6">
+        <ProductForm mode="edit" initialData={product} />
+      </div>
     </div>
   )
 }

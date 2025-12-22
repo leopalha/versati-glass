@@ -117,10 +117,12 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Informações Básicas */}
-        <Card>
+        <Card className="border-neutral-700 bg-neutral-800">
           <CardHeader>
-            <CardTitle>Informações Básicas</CardTitle>
-            <CardDescription>Dados principais do produto</CardDescription>
+            <CardTitle className="text-white">Informações Básicas</CardTitle>
+            <CardDescription className="text-neutral-400">
+              Dados principais do produto
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Grid para Nome e Categoria */}
@@ -134,9 +136,9 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
                     <FormControl>
                       <Input placeholder="Ex: Box Elegance 8mm" {...field} />
                     </FormControl>
-                    <FormDescription>
+                    <FormDescription className="text-neutral-400">
                       Slug:{' '}
-                      <code className="rounded bg-neutral-100 px-2 py-1 text-xs dark:bg-neutral-800">
+                      <code className="rounded bg-neutral-700 px-2 py-1 text-xs text-neutral-300">
                         {generatedSlug || 'produto-exemplo'}
                       </code>
                     </FormDescription>
@@ -232,10 +234,12 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
         </Card>
 
         {/* Imagens */}
-        <Card>
+        <Card className="border-neutral-700 bg-neutral-800">
           <CardHeader>
-            <CardTitle>Imagens do Produto</CardTitle>
-            <CardDescription>Adicione fotos de alta qualidade do produto</CardDescription>
+            <CardTitle className="text-white">Imagens do Produto</CardTitle>
+            <CardDescription className="text-neutral-400">
+              Adicione fotos de alta qualidade do produto
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <FormField
@@ -249,9 +253,11 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
                       images={field.value || []}
                       onChange={(images) => {
                         field.onChange(images)
-                        // Atualizar thumbnail automaticamente para a primeira imagem
-                        if (images.length > 0 && !form.getValues('thumbnail')) {
+                        // Sempre atualizar thumbnail para a primeira imagem da galeria
+                        if (images.length > 0) {
                           form.setValue('thumbnail', images[0])
+                        } else {
+                          form.setValue('thumbnail', '')
                         }
                       }}
                       maxImages={8}
@@ -265,10 +271,12 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
         </Card>
 
         {/* Preços */}
-        <Card>
+        <Card className="border-neutral-700 bg-neutral-800">
           <CardHeader>
-            <CardTitle>Preços</CardTitle>
-            <CardDescription>Configure o tipo de precificação</CardDescription>
+            <CardTitle className="text-white">Preços</CardTitle>
+            <CardDescription className="text-neutral-400">
+              Configure o tipo de precificação
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <FormField
@@ -409,9 +417,9 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
         </Card>
 
         {/* Status */}
-        <Card>
+        <Card className="border-neutral-700 bg-neutral-800">
           <CardHeader>
-            <CardTitle>Status</CardTitle>
+            <CardTitle className="text-white">Status</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <FormField
@@ -449,7 +457,7 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
         </Card>
 
         {/* Ações */}
-        <div className="flex items-center justify-end gap-4 border-t pt-6">
+        <div className="flex items-center justify-end gap-4 border-t border-neutral-700 pt-6">
           <Button
             type="button"
             variant="outline"
@@ -458,7 +466,11 @@ export function ProductForm({ initialData, mode }: ProductFormProps) {
           >
             Cancelar
           </Button>
-          <Button type="submit" disabled={isLoading}>
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="bg-gold-500 text-neutral-900 hover:bg-gold-600"
+          >
             {isLoading ? 'Salvando...' : mode === 'create' ? 'Criar Produto' : 'Salvar Alterações'}
           </Button>
         </div>

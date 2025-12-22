@@ -4,13 +4,14 @@ import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
 import { logger } from '@/lib/logger'
+import { uploadToR2, isR2Configured } from '@/lib/r2-storage'
 
 /**
  * POST /api/upload
  * Faz upload de imagem (apenas ADMIN/STAFF)
  *
- * NOTA: Esta é uma implementação simples para desenvolvimento.
- * Em produção, recomenda-se usar Vercel Blob, Cloudinary ou S3.
+ * Em produção: usa Cloudflare R2 (persistente)
+ * Em desenvolvimento: usa sistema de arquivos local
  */
 export async function POST(request: Request) {
   try {
@@ -41,32 +42,54 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Imagem muito grande (máximo 5MB)' }, { status: 400 })
     }
 
-    // Gerar nome único
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+
+    // Usar R2 se configurado (produção), senão local (desenvolvimento)
+    if (isR2Configured()) {
+      try {
+        const result = await uploadToR2(buffer, file.name, file.type)
+
+        logger.info('[UPLOAD] R2 upload success', { key: result.key })
+
+        return NextResponse.json({
+          url: result.url,
+          key: result.key,
+          size: file.size,
+          type: file.type,
+          storage: 'r2',
+        })
+      } catch (r2Error) {
+        logger.error('[UPLOAD] R2 upload failed, falling back to local', r2Error)
+        // Fall through to local storage
+      }
+    }
+
+    // Fallback: Local storage (desenvolvimento)
     const timestamp = Date.now()
     const randomStr = Math.random().toString(36).substring(2, 8)
     const ext = file.name.split('.').pop()
     const filename = `${timestamp}-${randomStr}.${ext}`
 
-    // Criar pasta de uploads se não existir
     const uploadsDir = join(process.cwd(), 'public', 'uploads', 'products')
     if (!existsSync(uploadsDir)) {
       await mkdir(uploadsDir, { recursive: true })
     }
 
-    // Salvar arquivo
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
     const filepath = join(uploadsDir, filename)
     await writeFile(filepath, buffer)
 
-    // Retornar URL pública
     const url = `/uploads/products/${filename}`
+
+    logger.info('[UPLOAD] Local upload success', { filename })
 
     return NextResponse.json({
       url,
       filename,
       size: file.size,
       type: file.type,
+      storage: 'local',
+      warning: 'Arquivo salvo localmente. Configure Cloudflare R2 para persistência em produção.',
     })
   } catch (error) {
     logger.error('[UPLOAD_ERROR]', error)

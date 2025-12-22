@@ -1,19 +1,28 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import Link from 'next/link'
 import { ProductForm } from '@/components/admin/product-form'
+import { AdminHeader } from '@/components/admin/admin-header'
+import { Button } from '@/components/ui/button'
+import { ArrowLeft } from 'lucide-react'
 
 export default function NovoProdutoPage() {
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold">Novo Produto</h1>
-        <p className="text-neutral-500 dark:text-neutral-400">
-          Adicione um novo produto ao catálogo
-        </p>
-      </div>
+    <div>
+      <AdminHeader
+        title="Novo Produto"
+        subtitle="Adicione um novo produto ao catálogo"
+        actions={
+          <Link href="/admin/produtos">
+            <Button variant="outline">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Voltar
+            </Button>
+          </Link>
+        }
+      />
 
-      {/* Form */}
-      <ProductForm mode="create" />
+      <div className="p-6">
+        <ProductForm mode="create" />
+      </div>
     </div>
   )
 }

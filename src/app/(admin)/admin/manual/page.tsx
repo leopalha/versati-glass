@@ -15,6 +15,8 @@ import {
   CheckCircle,
   AlertTriangle,
   Info,
+  Mail,
+  Plug,
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -236,6 +238,84 @@ Ajustes gerais do sistema e preferencias.
 - Definir permissoes
 - Resetar senhas
 - Desativar acessos
+    `,
+  },
+  {
+    id: 'email',
+    title: 'Email Profissional',
+    icon: Mail,
+    content: `
+Configure um email profissional para sua empresa (contato@versatiglass.com.br).
+
+**Opcoes Recomendadas:**
+
+1. **Google Workspace (Recomendado)**
+- Custo: ~R$28/mes por usuario
+- Acesso via Gmail, app no celular, Outlook
+- Integra com Google Calendar, Drive
+- Muito facil de usar
+- Link: workspace.google.com
+
+2. **Microsoft 365**
+- Custo: ~R$45/mes por usuario
+- Acesso via Outlook
+- Integra com Word, Excel, Teams
+- Link: microsoft.com/microsoft-365
+
+3. **Zoho Mail**
+- Custo: ~R$15/mes por usuario
+- Mais barato, funcional
+- Menos intuitivo
+- Link: zoho.com/mail
+
+**Como Configurar (Google Workspace):**
+1. Acesse workspace.google.com
+2. Informe seu dominio (versatiglass.com.br)
+3. Siga o passo a passo para verificar propriedade
+4. Configure os registros MX no seu dominio
+5. Crie usuarios (contato@, vendas@, etc)
+
+**Dica:**
+Apos configurar, voce pode usar o Gmail no navegador, app do Gmail no celular, ou configurar no Outlook do computador.
+    `,
+  },
+  {
+    id: 'integracoes',
+    title: 'Integracoes do Sistema',
+    icon: Plug,
+    content: `
+O sistema Versati Glass utiliza diversas integracoes para funcionar.
+
+**WhatsApp (Twilio):**
+- Envia/recebe mensagens automaticamente
+- NAO e WhatsApp Web (nao requer QR code)
+- Usa numero dedicado da Twilio
+- Permite multiplos atendentes
+- IA pode responder automaticamente
+- Creditos Twilio: ~$0.005 por mensagem
+
+**Como funciona:**
+1. Cliente envia mensagem para numero Twilio
+2. Twilio recebe e envia para nosso sistema
+3. Sistema processa e responde (IA ou manual)
+4. Resposta vai de volta pelo Twilio
+
+**Email (Resend):**
+- Envia emails transacionais
+- Confirmacao de orcamentos
+- Notificacoes de status
+- Creditos: 3.000 emails/mes gratis
+
+**Pagamentos (Stripe):**
+- Recebe pagamentos online
+- Cartao de credito/debito
+- PIX (em breve)
+- Taxa: ~2.9% + R$0.39 por transacao
+
+**Google Calendar:**
+- Agenda visitas tecnicas
+- Agenda instalacoes
+- Sincroniza com calendario do celular
     `,
   },
 ]

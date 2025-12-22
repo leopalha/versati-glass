@@ -77,14 +77,15 @@ export function ConvertQuoteButton({
             throw new Error(data.error || 'Erro ao carregar orçamento')
           }
 
+          const quote = data.quote || data
           setQuoteDetails({
-            items: data.items || [],
-            subtotal: data.subtotal || 0,
-            discount: data.discount || 0,
-            shippingFee: data.shippingFee || 0,
-            laborFee: data.laborFee || 0,
-            materialFee: data.materialFee || 0,
-            total: data.total || 0,
+            items: quote.items || [],
+            subtotal: quote.subtotal || 0,
+            discount: quote.discount || 0,
+            shippingFee: quote.shippingFee || 0,
+            laborFee: quote.laborFee || 0,
+            materialFee: quote.materialFee || 0,
+            total: quote.total || 0,
           })
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Erro ao carregar orçamento'

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { AdminHeader } from '@/components/admin/admin-header'
 import { WhatsAppConversationList } from '@/components/admin/whatsapp-conversation-list'
+import { WhatsAppHelpPanel } from '@/components/admin/whatsapp-help-panel'
 
 export const metadata: Metadata = {
   title: 'Conversas WhatsApp | Admin - Versati Glass',
@@ -99,6 +100,7 @@ export default async function WhatsAppPage() {
       />
 
       <div className="p-6">
+        <WhatsAppHelpPanel />
         <WhatsAppConversationList conversations={conversations} />
       </div>
     </div>

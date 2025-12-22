@@ -64,12 +64,57 @@ export async function GET(request: Request, { params }: RouteParams) {
       quote.viewedAt = new Date()
     }
 
+    // Get related data for admin view
+    let orders = null
+    let appointments = null
+    let aiConversation = null
+
+    if (session?.user?.role === 'ADMIN') {
+      // Get linked orders
+      orders = await prisma.order.findMany({
+        where: { quoteId: id },
+        select: {
+          id: true,
+          number: true,
+          status: true,
+        },
+      })
+
+      // Get linked appointments
+      appointments = await prisma.appointment.findMany({
+        where: { quoteId: id },
+        select: {
+          id: true,
+          scheduledDate: true,
+          scheduledTime: true,
+          type: true,
+          status: true,
+        },
+      })
+
+      // Get AI conversation if exists
+      aiConversation = await prisma.aiConversation.findFirst({
+        where: { quoteId: id },
+        select: {
+          id: true,
+          messages: {
+            select: { id: true },
+          },
+        },
+      })
+    }
+
     // Serialize decimals
     const serializedQuote = {
       ...quote,
       subtotal: Number(quote.subtotal),
       discount: Number(quote.discount),
+      shippingFee: 0,
+      laborFee: 0,
+      materialFee: 0,
       total: Number(quote.total),
+      orders: orders || [],
+      appointments: appointments || [],
       items: quote.items.map((item) => ({
         ...item,
         width: item.width ? Number(item.width) : null,
@@ -79,7 +124,7 @@ export async function GET(request: Request, { params }: RouteParams) {
       })),
     }
 
-    return NextResponse.json(serializedQuote)
+    return NextResponse.json({ quote: serializedQuote, aiConversation })
   } catch (error) {
     logger.error('Error fetching quote:', error)
     return NextResponse.json({ error: 'Erro ao buscar orcamento' }, { status: 500 })

@@ -1,11 +1,10 @@
-import { Suspense } from 'react'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
 import { AdminHeader } from '@/components/admin/admin-header'
+import { ProductActions } from '@/components/admin/product-actions'
 import { formatCurrency } from '@/lib/utils'
 import { Plus, Package, TrendingUp, Eye, EyeOff } from 'lucide-react'
 
@@ -216,11 +215,15 @@ export default async function ProdutosPage() {
                         </div>
                       </div>
 
-                      <Link href={`/admin/produtos/${product.id}`}>
-                        <Button variant="outline" size="sm">
-                          Editar
-                        </Button>
-                      </Link>
+                      <ProductActions
+                        product={{
+                          id: product.id,
+                          slug: product.slug,
+                          name: product.name,
+                          isActive: product.isActive,
+                          isFeatured: product.isFeatured,
+                        }}
+                      />
                     </div>
                   )
                 })}

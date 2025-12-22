@@ -70,7 +70,7 @@ export default function OrcamentoDetalhePage() {
         const res = await fetch(`/api/quotes/${params.id}`)
         if (!res.ok) throw new Error('Failed to fetch quote')
         const data = await res.json()
-        setQuote(data)
+        setQuote(data.quote || data)
       } catch {
         toast({
           variant: 'error',
@@ -214,9 +214,7 @@ export default function OrcamentoDetalhePage() {
           <div className="space-y-6 lg:col-span-2">
             {/* Items */}
             <Card className="p-6">
-              <h2 className="mb-4 font-display text-lg font-semibold">
-                Itens do Orcamento
-              </h2>
+              <h2 className="mb-4 font-display text-lg font-semibold">Itens do Orcamento</h2>
 
               <div className="space-y-4">
                 {quote.items.map((item) => (
@@ -258,9 +256,7 @@ export default function OrcamentoDetalhePage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">
-                        {formatCurrency(Number(item.totalPrice))}
-                      </p>
+                      <p className="font-medium">{formatCurrency(Number(item.totalPrice))}</p>
                       <p className="text-sm text-muted-foreground">
                         {item.quantity}x {formatCurrency(Number(item.unitPrice))}
                       </p>
@@ -301,7 +297,7 @@ export default function OrcamentoDetalhePage() {
                 <div className="border-t pt-3">
                   <div className="flex justify-between">
                     <span className="font-medium">Total</span>
-                    <span className="font-display text-xl font-bold text-primary">
+                    <span className="text-primary font-display text-xl font-bold">
                       {formatCurrency(Number(quote.total))}
                     </span>
                   </div>
@@ -351,10 +347,8 @@ export default function OrcamentoDetalhePage() {
             {/* Address */}
             <Card className="p-6">
               <div className="mb-4 flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-primary" />
-                <h2 className="font-display text-lg font-semibold">
-                  Endereco de Instalacao
-                </h2>
+                <MapPin className="text-primary h-5 w-5" />
+                <h2 className="font-display text-lg font-semibold">Endereco de Instalacao</h2>
               </div>
 
               <p className="text-muted-foreground">

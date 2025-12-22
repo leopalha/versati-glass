@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,50 +7,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ====================
-// AUTH & USERS
-// ====================
-
 model User {
-  id       String  @id @default(uuid())
-  email    String  @unique
-  password String?
-  name     String
-  phone    String?
-  cpfCnpj  String?
-
-  // Endereço principal
-  street       String?
-  number       String?
-  complement   String?
-  neighborhood String?
-  city         String?
-  state        String?
-  zipCode      String?
-
-  // Auth
-  role          Role         @default(CUSTOMER)
-  emailVerified DateTime?
-  phoneVerified Boolean      @default(false)
-  authProvider  AuthProvider @default(EMAIL)
-  googleId      String?      @unique
-
-  // Timestamps
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  lastLoginAt DateTime?
-
-  // Relações
+  id                    String         @id @default(uuid())
+  email                 String         @unique
+  password              String?
+  name                  String
+  phone                 String?
+  cpfCnpj               String?
+  street                String?
+  number                String?
+  complement            String?
+  neighborhood          String?
+  city                  String?
+  state                 String?
+  zipCode               String?
+  role                  Role           @default(CUSTOMER)
+  emailVerified         DateTime?
+  phoneVerified         Boolean        @default(false)
+  authProvider          AuthProvider   @default(EMAIL)
+  googleId              String?        @unique
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  lastLoginAt           DateTime?
   accounts              Account[]
-  sessions              Session[]
+  assignedAppointments  Appointment[]  @relation("AssignedTo")
+  appointments          Appointment[]
+  assignedConversations Conversation[] @relation("AssignedConversations")
+  conversations         Conversation[]
+  documents             Document[]
+  messages              Message[]
   orders                Order[]
   quotes                Quote[]
-  appointments          Appointment[]
-  documents             Document[]
-  conversations         Conversation[]
-  messages              Message[]
-  assignedAppointments  Appointment[]  @relation("AssignedTo")
-  assignedConversations Conversation[] @relation("AssignedConversations")
+  sessions              Session[]
 
   @@map("users")
 }
@@ -71,8 +56,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -97,6 +81,360 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
+model Product {
+  id               String          @id @default(uuid())
+  name             String
+  slug             String          @unique
+  description      String
+  shortDescription String?
+  category         ProductCategory
+  subcategory      String?
+  images           String[]
+  thumbnail        String?
+  priceType        PriceType
+  basePrice        Decimal?
+  pricePerM2       Decimal?
+  priceRangeMin    Decimal?
+  priceRangeMax    Decimal?
+  colors           String[]
+  finishes         String[]
+  thicknesses      String[]
+  isActive         Boolean         @default(true)
+  isFeatured       Boolean         @default(false)
+  metaTitle        String?
+  metaDescription  String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  orderItems       OrderItem[]
+  quoteItems       QuoteItem[]
+
+  @@map("products")
+}
+
+model Quote {
+  id                  String          @id @default(uuid())
+  number              String          @unique
+  userId              String
+  customerName        String
+  customerEmail       String
+  customerPhone       String
+  serviceStreet       String
+  serviceNumber       String
+  serviceComplement   String?
+  serviceNeighborhood String
+  serviceCity         String
+  serviceState        String
+  serviceZipCode      String
+  subtotal            Decimal
+  discount            Decimal         @default(0)
+  total               Decimal
+  status              QuoteStatus     @default(DRAFT)
+  validUntil          DateTime
+  internalNotes       String?
+  customerNotes       String?
+  source              QuoteSource
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  sentAt              DateTime?
+  viewedAt            DateTime?
+  acceptedAt          DateTime?
+  selectedSupplierId  String?
+  aiConversation      AiConversation?
+  appointments        Appointment[]
+  conversations       Conversation[]
+  documents           Document[]
+  orders              Order[]
+  items               QuoteItem[]
+  selectedSupplier    Supplier?       @relation("SelectedSupplier", fields: [selectedSupplierId], references: [id])
+  user                User            @relation(fields: [userId], references: [id])
+  supplierQuotes      SupplierQuote[]
+
+  @@map("quotes")
+}
+
+model QuoteItem {
+  id             String   @id @default(uuid())
+  quoteId        String
+  productId      String?
+  description    String
+  specifications String?
+  width          Decimal?
+  height         Decimal?
+  quantity       Int      @default(1)
+  color          String?
+  finish         String?
+  thickness      String?
+  glassType      String?
+  glassColor     String?
+  model          String?
+  unitPrice      Decimal
+  totalPrice     Decimal
+  customerImages String[]
+  product        Product? @relation(fields: [productId], references: [id])
+  quote          Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  @@map("quote_items")
+}
+
+model Order {
+  id                    String               @id @default(uuid())
+  number                String               @unique
+  quoteId               String?
+  supplierId            String?
+  userId                String
+  serviceStreet         String
+  serviceNumber         String
+  serviceComplement     String?
+  serviceNeighborhood   String
+  serviceCity           String
+  serviceState          String
+  serviceZipCode        String
+  subtotal              Decimal
+  discount              Decimal              @default(0)
+  installationFee       Decimal              @default(0)
+  total                 Decimal
+  paymentStatus         PaymentStatus        @default(PENDING)
+  paymentMethod         PaymentMethod?
+  paidAmount            Decimal              @default(0)
+  stripeSessionId       String?
+  stripePaymentIntentId String?
+  status                OrderStatus          @default(ORCAMENTO_ENVIADO)
+  estimatedDelivery     DateTime?
+  installedAt           DateTime?
+  completedAt           DateTime?
+  warrantyUntil         DateTime?
+  internalNotes         String?
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  appointments          Appointment[]
+  documents             Document[]
+  items                 OrderItem[]
+  timeline              OrderTimelineEntry[]
+  quote                 Quote?               @relation(fields: [quoteId], references: [id])
+  supplier              Supplier?            @relation(fields: [supplierId], references: [id])
+  user                  User                 @relation(fields: [userId], references: [id])
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id             String          @id @default(uuid())
+  orderId        String
+  productId      String?
+  description    String
+  specifications String?
+  width          Decimal?
+  height         Decimal?
+  quantity       Int             @default(1)
+  color          String?
+  finish         String?
+  thickness      String?
+  unitPrice      Decimal
+  totalPrice     Decimal
+  status         OrderItemStatus @default(PENDING)
+  order          Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product        Product?        @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model OrderTimelineEntry {
+  id          String   @id @default(uuid())
+  orderId     String
+  status      String
+  description String
+  createdBy   String
+  createdAt   DateTime @default(now())
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_timeline")
+}
+
+model Appointment {
+  id                  String            @id @default(uuid())
+  userId              String
+  orderId             String?
+  quoteId             String?
+  type                AppointmentType
+  scheduledDate       DateTime
+  scheduledTime       String
+  estimatedDuration   Int
+  addressStreet       String
+  addressNumber       String
+  addressComplement   String?
+  addressNeighborhood String
+  addressCity         String
+  addressState        String
+  addressZipCode      String
+  status              AppointmentStatus @default(SCHEDULED)
+  assignedToId        String?
+  notes               String?
+  completionNotes     String?
+  reminderSentAt      DateTime?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  completedAt         DateTime?
+  assignedTo          User?             @relation("AssignedTo", fields: [assignedToId], references: [id])
+  order               Order?            @relation(fields: [orderId], references: [id])
+  quote               Quote?            @relation(fields: [quoteId], references: [id])
+  user                User              @relation(fields: [userId], references: [id])
+
+  @@map("appointments")
+}
+
+model Document {
+  id           String         @id @default(uuid())
+  userId       String
+  orderId      String?
+  quoteId      String?
+  type         DocumentType
+  name         String
+  url          String
+  mimeType     String
+  size         Int
+  status       DocumentStatus @default(PENDING)
+  signedAt     DateTime?
+  signedBy     String?
+  signatureUrl String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  order        Order?         @relation(fields: [orderId], references: [id])
+  quote        Quote?         @relation(fields: [quoteId], references: [id])
+  user         User           @relation(fields: [userId], references: [id])
+
+  @@map("documents")
+}
+
+model Conversation {
+  id            String             @id @default(uuid())
+  userId        String?
+  phoneNumber   String
+  customerName  String?
+  status        ConversationStatus @default(ACTIVE)
+  assignedToId  String?
+  context       Json?
+  quoteId       String?
+  appointmentId String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  lastMessageAt DateTime           @default(now())
+  assignedTo    User?              @relation("AssignedConversations", fields: [assignedToId], references: [id])
+  quote         Quote?             @relation(fields: [quoteId], references: [id])
+  user          User?              @relation(fields: [userId], references: [id])
+  messages      Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String           @id @default(uuid())
+  conversationId String
+  direction      MessageDirection
+  type           MessageType
+  content        String
+  mediaUrl       String?
+  senderType     SenderType
+  senderId       String?
+  status         MessageStatus?
+  createdAt      DateTime         @default(now())
+  conversation   Conversation     @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User?            @relation(fields: [senderId], references: [id])
+
+  @@map("messages")
+}
+
+model AiConversation {
+  id            String      @id @default(uuid())
+  sessionId     String      @unique
+  customerName  String?
+  customerEmail String?
+  customerPhone String?
+  quoteContext  Json?
+  quoteId       String?     @unique
+  status        String      @default("ACTIVE")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  lastMessageAt DateTime    @default(now())
+  quote         Quote?      @relation(fields: [quoteId], references: [id])
+  messages      AiMessage[]
+
+  @@index([sessionId])
+  @@index([quoteId])
+  @@map("ai_conversations")
+}
+
+model AiMessage {
+  id             String         @id @default(uuid())
+  conversationId String
+  role           String
+  content        String
+  metadata       Json?
+  imageUrl       String?
+  createdAt      DateTime       @default(now())
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@map("ai_messages")
+}
+
+model Supplier {
+  id                  String          @id @default(uuid())
+  name                String
+  tradeName           String?
+  cnpj                String?         @unique
+  email               String          @unique
+  phone               String?
+  whatsapp            String?
+  street              String?
+  number              String?
+  complement          String?
+  neighborhood        String?
+  city                String?
+  state               String?
+  zipCode             String?
+  categories          String[]
+  rating              Decimal?
+  totalQuotes         Int             @default(0)
+  totalOrders         Int             @default(0)
+  isActive            Boolean         @default(true)
+  isPreferred         Boolean         @default(false)
+  notes               String?
+  averageDeliveryDays Int?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  orders              Order[]
+  selectedQuotes      Quote[]         @relation("SelectedSupplier")
+  supplierQuotes      SupplierQuote[]
+
+  @@map("suppliers")
+}
+
+model SupplierQuote {
+  id              String              @id @default(uuid())
+  quoteId         String
+  supplierId      String
+  status          SupplierQuoteStatus @default(PENDING)
+  subtotal        Decimal?
+  shippingFee     Decimal             @default(0)
+  laborFee        Decimal             @default(0)
+  materialFee     Decimal             @default(0)
+  total           Decimal?
+  deliveryDays    Int?
+  supplierNotes   String?
+  internalNotes   String?
+  emailSentAt     DateTime?
+  respondedAt     DateTime?
+  parseConfidence String?
+  rawResponse     String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  quote           Quote               @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  supplier        Supplier            @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  @@unique([quoteId, supplierId])
+  @@map("supplier_quotes")
+}
+
 enum Role {
   CUSTOMER
   ADMIN
@@ -106,59 +444,6 @@ enum Role {
 enum AuthProvider {
   EMAIL
   GOOGLE
-}
-
-// ====================
-// PRODUCTS
-// ====================
-
-model Product {
-  id String @id @default(uuid())
-
-  // Básico
-  name             String
-  slug             String  @unique
-  description      String
-  shortDescription String?
-
-  // Categorização
-  category    ProductCategory
-  subcategory String?
-  // finishLine  String? // TODO: Adicionar migração para linha de acabamento (ELEGANCE, PREMIUM, CRISTAL)
-
-  // Mídia
-  images    String[]
-  thumbnail String?
-
-  // Preço
-  priceType     PriceType
-  basePrice     Decimal?
-  pricePerM2    Decimal?
-  priceRangeMin Decimal?
-  priceRangeMax Decimal?
-
-  // Opções
-  colors      String[]
-  finishes    String[]
-  thicknesses String[]
-
-  // Status
-  isActive   Boolean @default(true)
-  isFeatured Boolean @default(false)
-
-  // SEO
-  metaTitle       String?
-  metaDescription String?
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relações
-  quoteItems QuoteItem[]
-  orderItems OrderItem[]
-
-  @@map("products")
 }
 
 enum ProductCategory {
@@ -173,119 +458,18 @@ enum ProductCategory {
   TAMPOS_PRATELEIRAS
   DIVISORIAS
   FECHAMENTOS
-  FACHADAS
-  PAINEIS_DECORATIVOS
   FERRAGENS
   KITS
   SERVICOS
   OUTROS
+  FACHADAS
+  PAINEIS_DECORATIVOS
 }
 
 enum PriceType {
   FIXED
   PER_M2
   QUOTE_ONLY
-}
-
-// ====================
-// QUOTES
-// ====================
-
-model Quote {
-  id     String @id @default(uuid())
-  number String @unique
-
-  // Cliente
-  userId        String
-  customerName  String
-  customerEmail String
-  customerPhone String
-
-  // Endereço do serviço
-  serviceStreet       String
-  serviceNumber       String
-  serviceComplement   String?
-  serviceNeighborhood String
-  serviceCity         String
-  serviceState        String
-  serviceZipCode      String
-
-  // Valores
-  subtotal Decimal
-  discount Decimal @default(0)
-  total    Decimal
-
-  // Status
-  status QuoteStatus @default(DRAFT)
-
-  // Validade
-  validUntil DateTime
-
-  // Notas
-  internalNotes String?
-  customerNotes String?
-
-  // Origem
-  source QuoteSource
-
-  // Timestamps
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  sentAt     DateTime?
-  viewedAt   DateTime?
-  acceptedAt DateTime?
-
-  // Fornecedor selecionado
-  selectedSupplierId String?
-  selectedSupplier   Supplier? @relation("SelectedSupplier", fields: [selectedSupplierId], references: [id])
-
-  // Relações
-  user           User            @relation(fields: [userId], references: [id])
-  items          QuoteItem[]
-  orders         Order[]
-  conversations  Conversation[]
-  appointments   Appointment[]
-  documents      Document[]
-  aiConversation AiConversation?
-  supplierQuotes SupplierQuote[]
-
-  @@map("quotes")
-}
-
-model QuoteItem {
-  id        String  @id @default(uuid())
-  quoteId   String
-  productId String?
-
-  // Descrição
-  description    String
-  specifications String?
-
-  // Medidas
-  width    Decimal?
-  height   Decimal?
-  quantity Int      @default(1)
-
-  // Opções
-  color      String?
-  finish     String?
-  thickness  String?
-  glassType  String?
-  glassColor String?
-  model      String?
-
-  // Valores
-  unitPrice  Decimal
-  totalPrice Decimal
-
-  // Imagens do cliente
-  customerImages String[]
-
-  // Relações
-  quote   Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
-  product Product? @relation(fields: [productId], references: [id])
-
-  @@map("quote_items")
 }
 
 enum QuoteStatus {
@@ -303,116 +487,6 @@ enum QuoteSource {
   WHATSAPP
   PHONE
   WALKIN
-}
-
-// ====================
-// ORDERS
-// ====================
-
-model Order {
-  id     String @id @default(uuid())
-  number String @unique
-
-  // Origem
-  quoteId    String?
-  supplierId String?
-
-  // Cliente
-  userId String
-
-  // Endereço
-  serviceStreet       String
-  serviceNumber       String
-  serviceComplement   String?
-  serviceNeighborhood String
-  serviceCity         String
-  serviceState        String
-  serviceZipCode      String
-
-  // Valores
-  subtotal        Decimal
-  discount        Decimal @default(0)
-  installationFee Decimal @default(0)
-  total           Decimal
-
-  // Pagamento
-  paymentStatus         PaymentStatus  @default(PENDING)
-  paymentMethod         PaymentMethod?
-  paidAmount            Decimal        @default(0)
-  stripeSessionId       String?
-  stripePaymentIntentId String?
-
-  // Status
-  status OrderStatus @default(ORCAMENTO_ENVIADO)
-
-  // Datas
-  estimatedDelivery DateTime?
-  installedAt       DateTime?
-  completedAt       DateTime?
-
-  // Garantia
-  warrantyUntil DateTime?
-
-  // Notas
-  internalNotes String?
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relações
-  user         User                 @relation(fields: [userId], references: [id])
-  quote        Quote?               @relation(fields: [quoteId], references: [id])
-  supplier     Supplier?            @relation(fields: [supplierId], references: [id])
-  items        OrderItem[]
-  timeline     OrderTimelineEntry[]
-  appointments Appointment[]
-  documents    Document[]
-
-  @@map("orders")
-}
-
-model OrderItem {
-  id        String  @id @default(uuid())
-  orderId   String
-  productId String?
-
-  description    String
-  specifications String?
-
-  width    Decimal?
-  height   Decimal?
-  quantity Int      @default(1)
-
-  color     String?
-  finish    String?
-  thickness String?
-
-  unitPrice  Decimal
-  totalPrice Decimal
-
-  status OrderItemStatus @default(PENDING)
-
-  // Relações
-  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product? @relation(fields: [productId], references: [id])
-
-  @@map("order_items")
-}
-
-model OrderTimelineEntry {
-  id      String @id @default(uuid())
-  orderId String
-
-  status      String
-  description String
-  createdBy   String // userId ou 'system'
-  createdAt   DateTime @default(now())
-
-  // Relações
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  @@map("order_timeline")
 }
 
 enum PaymentStatus {
@@ -451,62 +525,6 @@ enum OrderItemStatus {
   INSTALLED
 }
 
-// ====================
-// APPOINTMENTS
-// ====================
-
-model Appointment {
-  id String @id @default(uuid())
-
-  // Referência
-  userId  String
-  orderId String?
-  quoteId String?
-
-  // Tipo
-  type AppointmentType
-
-  // Data/Hora
-  scheduledDate     DateTime
-  scheduledTime     String // HH:MM format
-  estimatedDuration Int // minutos
-
-  // Endereço
-  addressStreet       String
-  addressNumber       String
-  addressComplement   String?
-  addressNeighborhood String
-  addressCity         String
-  addressState        String
-  addressZipCode      String
-
-  // Status
-  status AppointmentStatus @default(SCHEDULED)
-
-  // Técnico
-  assignedToId String?
-
-  // Notas
-  notes           String?
-  completionNotes String?
-
-  // Lembretes
-  reminderSentAt DateTime?
-
-  // Timestamps
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  completedAt DateTime?
-
-  // Relações
-  user       User   @relation(fields: [userId], references: [id])
-  order      Order? @relation(fields: [orderId], references: [id])
-  quote      Quote? @relation(fields: [quoteId], references: [id])
-  assignedTo User?  @relation("AssignedTo", fields: [assignedToId], references: [id])
-
-  @@map("appointments")
-}
-
 enum AppointmentType {
   VISITA_TECNICA
   INSTALACAO
@@ -524,47 +542,6 @@ enum AppointmentStatus {
   NO_SHOW
 }
 
-// ====================
-// DOCUMENTS
-// ====================
-
-model Document {
-  id String @id @default(uuid())
-
-  // Referência
-  userId  String
-  orderId String?
-  quoteId String?
-
-  // Tipo
-  type DocumentType
-
-  // Arquivo
-  name     String
-  url      String
-  mimeType String
-  size     Int // bytes
-
-  // Status
-  status DocumentStatus @default(PENDING)
-
-  // Assinatura
-  signedAt     DateTime?
-  signedBy     String?
-  signatureUrl String?
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relações
-  user  User   @relation(fields: [userId], references: [id])
-  order Order? @relation(fields: [orderId], references: [id])
-  quote Quote? @relation(fields: [quoteId], references: [id])
-
-  @@map("documents")
-}
-
 enum DocumentType {
   CONTRATO
   GARANTIA
@@ -579,132 +556,6 @@ enum DocumentStatus {
   SIGNED
   ACTIVE
   EXPIRED
-}
-
-// ====================
-// WHATSAPP
-// ====================
-
-model Conversation {
-  id String @id @default(uuid())
-
-  // Cliente
-  userId       String?
-  phoneNumber  String
-  customerName String?
-
-  // Status
-  status       ConversationStatus @default(ACTIVE)
-  assignedToId String?
-
-  // Contexto (JSON)
-  context Json?
-
-  // Resultado
-  quoteId       String?
-  appointmentId String?
-
-  // Timestamps
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  lastMessageAt DateTime @default(now())
-
-  // Relações
-  user       User?     @relation(fields: [userId], references: [id])
-  assignedTo User?     @relation("AssignedConversations", fields: [assignedToId], references: [id])
-  quote      Quote?    @relation(fields: [quoteId], references: [id])
-  messages   Message[]
-
-  @@map("conversations")
-}
-
-model Message {
-  id             String @id @default(uuid())
-  conversationId String
-
-  // Direção
-  direction MessageDirection
-
-  // Conteúdo
-  type     MessageType
-  content  String
-  mediaUrl String?
-
-  // Remetente
-  senderType SenderType
-  senderId   String?
-
-  // Status (outbound)
-  status MessageStatus?
-
-  // Timestamps
-  createdAt DateTime @default(now())
-
-  // Relações
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender       User?        @relation(fields: [senderId], references: [id])
-
-  @@map("messages")
-}
-
-// ====================
-// AI CONVERSATIONS (Website Chat)
-// ====================
-
-model AiConversation {
-  id String @id @default(uuid())
-
-  // Session
-  sessionId String @unique
-
-  // Customer Info
-  customerName  String?
-  customerEmail String?
-  customerPhone String?
-
-  // Context
-  quoteContext Json? // Armazena dados do orçamento em progresso
-
-  // Vinculação com Quote
-  quoteId String? @unique
-
-  // Status
-  status String @default("ACTIVE") // ACTIVE, CONVERTED, CLOSED
-
-  // Timestamps
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  lastMessageAt DateTime @default(now())
-
-  // Relações
-  quote    Quote?      @relation(fields: [quoteId], references: [id])
-  messages AiMessage[]
-
-  @@index([sessionId])
-  @@index([quoteId])
-  @@map("ai_conversations")
-}
-
-model AiMessage {
-  id             String @id @default(uuid())
-  conversationId String
-
-  // Message
-  role    String // "user" | "assistant" | "system"
-  content String @db.Text
-
-  // Metadados
-  metadata Json? // Informações extras (produto sugerido, etc)
-  imageUrl String? // URL da imagem se houver
-
-  // Timestamps
-  createdAt DateTime @default(now())
-
-  // Relações
-  conversation AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-
-  @@index([conversationId])
-  @@map("ai_messages")
 }
 
 enum ConversationStatus {
@@ -739,111 +590,9 @@ enum MessageStatus {
   FAILED
 }
 
-// ====================
-// SUPPLIERS (FORNECEDORES)
-// ====================
-
-model Supplier {
-  id String @id @default(uuid())
-
-  // Informações básicas
-  name      String
-  tradeName String? // Nome fantasia
-  cnpj      String? @unique
-
-  // Contato
-  email    String  @unique
-  phone    String?
-  whatsapp String?
-
-  // Endereço
-  street       String?
-  number       String?
-  complement   String?
-  neighborhood String?
-  city         String?
-  state        String?
-  zipCode      String?
-
-  // Categorias que fornece
-  categories String[] // ["BOX", "ESPELHOS", "VIDROS"]
-
-  // Avaliação
-  rating      Decimal? // 0-5 estrelas
-  totalQuotes Int      @default(0)
-  totalOrders Int      @default(0)
-
-  // Status
-  isActive    Boolean @default(true)
-  isPreferred Boolean @default(false) // Fornecedor preferencial
-
-  // Notas internas
-  notes String?
-
-  // Prazos típicos
-  averageDeliveryDays Int?
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relações
-  supplierQuotes SupplierQuote[]
-  orders         Order[]
-  selectedQuotes Quote[]         @relation("SelectedSupplier")
-
-  @@map("suppliers")
-}
-
-model SupplierQuote {
-  id String @id @default(uuid())
-
-  // Referências
-  quoteId    String
-  supplierId String
-
-  // Status
-  status SupplierQuoteStatus @default(PENDING)
-
-  // Valores fornecidos
-  subtotal    Decimal?
-  shippingFee Decimal  @default(0)
-  laborFee    Decimal  @default(0)
-  materialFee Decimal  @default(0)
-  total       Decimal?
-
-  // Prazo
-  deliveryDays Int?
-
-  // Notas
-  supplierNotes String? // O que o fornecedor respondeu
-  internalNotes String? // Notas internas do admin
-
-  // Email enviado
-  emailSentAt DateTime?
-
-  // Resposta recebida
-  respondedAt DateTime?
-
-  // Confiança do parsing automático
-  parseConfidence String? // "HIGH", "MEDIUM", "LOW"
-  rawResponse     String? // Texto original da resposta
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relações
-  quote    Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
-  supplier Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-
-  @@unique([quoteId, supplierId])
-  @@map("supplier_quotes")
-}
-
 enum SupplierQuoteStatus {
-  PENDING // Enviado, aguardando resposta
-  RESPONDED // Fornecedor respondeu
-  SELECTED // Este fornecedor foi escolhido
-  REJECTED // Orçamento rejeitado pelo admin
+  PENDING
+  RESPONDED
+  SELECTED
+  REJECTED
 }

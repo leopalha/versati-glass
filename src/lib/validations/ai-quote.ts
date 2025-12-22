@@ -120,12 +120,13 @@ export function validateAiQuoteContext(context: unknown): {
     if (!result.data.items || result.data.items.length === 0) {
       validationErrors.push('At least one product item is required')
     } else {
+      // Relaxed validation: item just needs category OR productName
       const hasValidItem = result.data.items.some((item) => {
-        return item.category && (item.width || item.height)
+        return item.category || item.productName || item.description
       })
 
       if (!hasValidItem) {
-        validationErrors.push('At least one item must have category and dimensions')
+        validationErrors.push('At least one item must have category, product name, or description')
       }
     }
 

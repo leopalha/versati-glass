@@ -115,7 +115,7 @@ export function ImageUpload({ images, onChange, maxImages = 5 }: ImageUploadProp
           {images.map((url, index) => (
             <div
               key={index}
-              className="group relative aspect-square overflow-hidden rounded-lg border border-neutral-400"
+              className="group relative aspect-square overflow-hidden rounded-lg border border-neutral-600 bg-neutral-900"
             >
               <Image src={url} alt={`Imagem ${index + 1}`} fill className="object-cover" />
               <button
@@ -140,7 +140,7 @@ export function ImageUpload({ images, onChange, maxImages = 5 }: ImageUploadProp
         <div
           onDrop={handleDrop}
           onDragOver={handleDragOver}
-          className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-neutral-400 bg-neutral-200 p-8 text-center hover:border-gold-500 hover:bg-neutral-300"
+          className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-neutral-600 bg-neutral-900 p-8 text-center transition-colors hover:border-gold-500 hover:bg-neutral-800"
         >
           <input
             ref={fileInputRef}
@@ -159,11 +159,11 @@ export function ImageUpload({ images, onChange, maxImages = 5 }: ImageUploadProp
             </>
           ) : (
             <>
-              <ImageIcon className="mb-3 h-12 w-12 text-neutral-600" />
+              <ImageIcon className="mb-3 h-12 w-12 text-neutral-500" />
               <p className="mb-2 text-sm font-medium text-white">
                 Arraste imagens ou clique para selecionar
               </p>
-              <p className="mb-4 text-xs text-neutral-700">
+              <p className="mb-4 text-xs text-neutral-400">
                 PNG, JPG ou WEBP (máx. 5MB cada) • {images.length}/{maxImages} imagens
               </p>
               <Button
@@ -188,7 +188,7 @@ export function ImageUpload({ images, onChange, maxImages = 5 }: ImageUploadProp
       )}
 
       {/* Ajuda */}
-      <p className="text-xs text-neutral-600">
+      <p className="text-xs text-neutral-400">
         A primeira imagem será usada como miniatura principal do produto.
         {images.length > 0 && ' Arraste para reordenar (em breve).'}
       </p>

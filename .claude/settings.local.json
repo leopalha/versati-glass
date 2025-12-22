@@ -325,7 +325,10 @@
       "Bash(timeout /t)",
       "Bash(pnpm prisma migrate:*)",
       "Bash(timeout 120 vercel logs:*)",
-      "Bash(timeout 60 vercel ls:*)"
+      "Bash(timeout 60 vercel ls:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(npm config:*)",
+      "Bash(npm --version)"
     ]
   }
 }
