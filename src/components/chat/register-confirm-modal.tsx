@@ -105,11 +105,18 @@ export function RegisterConfirmModal({
     try {
       await onConfirmRegister(email, password)
     } catch (error) {
-      toast({
-        title: 'Erro ao criar conta',
-        description: error instanceof Error ? error.message : 'Tente novamente',
-        variant: 'error',
-      })
+      const errorMessage = error instanceof Error ? error.message : 'Tente novamente'
+
+      // Se for erro de email duplicado, mostra no campo de email
+      if (errorMessage.toLowerCase().includes('email') && errorMessage.toLowerCase().includes('cadastrado')) {
+        setErrors({ email: errorMessage })
+      } else {
+        toast({
+          title: 'Erro ao criar conta',
+          description: errorMessage,
+          variant: 'error',
+        })
+      }
     } finally {
       setIsRegistering(false)
     }

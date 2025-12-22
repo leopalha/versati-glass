@@ -409,7 +409,7 @@ export function ChatAssistido({
     }
   }, [isOpen, messages.length])
 
-  // Auto-open and minimize after duration (for homepage greeting)
+  // Auto-open and close after duration (for homepage greeting)
   const autoOpenTriggeredRef = useRef(false)
   useEffect(() => {
     if (autoOpenDuration && !autoOpenTriggeredRef.current) {
@@ -419,14 +419,16 @@ export function ChatAssistido({
       setIsOpen(true)
       setIsMinimized(false)
 
-      // Minimize after the duration
+      // Close chat after the duration (shows ContactHub buttons again)
       const timer = setTimeout(() => {
-        setIsMinimized(true)
+        if (onClose) {
+          onClose()
+        }
       }, autoOpenDuration)
 
       return () => clearTimeout(timer)
     }
-  }, [autoOpenDuration])
+  }, [autoOpenDuration, onClose])
 
   // Old auto-speak removed - now using per-message play button
 
@@ -1723,19 +1725,8 @@ export function ChatAssistido({
                     onClick={async () => {
                       setIsLoading(true)
                       try {
-                        // Adiciona mensagem de checkout
-                        const checkoutMessage: Message = {
-                          id: `checkout-${Date.now()}`,
-                          role: 'ASSISTANT',
-                          content: 'Perfeito! Vou redirecionar você para o checkout agora. 🛒',
-                          createdAt: new Date().toISOString(),
-                        }
-                        setMessages((prev) => [...prev, checkoutMessage])
-                        setTimeout(() => scrollToBottom(), 100)
-                        setIsProgressMinimized(true)
-
                         // Tenta exportar os dados do orçamento - prioriza contexto local
-                        let quoteData = null
+                        let quoteData: AiQuoteData | null = null
 
                         // PRIMEIRO: Usa contexto local se disponível (mais confiável)
                         if (quoteContext) {
@@ -1771,29 +1762,26 @@ export function ChatAssistido({
                           }
                         }
 
-                        // Importa os dados para o wizard store se tiver dados válidos
-                        if (quoteData && quoteData.items && quoteData.items.length > 0) {
-                          importFromAI(quoteData)
-                          console.log('[CHAT] Quote data imported to store')
-                        } else {
-                          console.log('[CHAT] No quote data to import, redirecting anyway')
-                        }
-
-                        // Minimiza o chat e redireciona
-                        setIsMinimized(true)
-                        router.push('/orcamento')
-                      } catch (error) {
-                        console.error('[CHAT] Checkout redirect failed:', error)
-                        // Mesmo com erro, redireciona
-                        setIsMinimized(true)
-                        router.push('/orcamento')
-                        toast({
-                          variant: 'default',
-                          title: 'Redirecionando...',
-                          description: 'Continue seu orçamento na página de produtos.',
-                        })
-                      } finally {
+                        // Salva dados pendentes
+                        setPendingQuoteData(quoteData)
                         setIsLoading(false)
+
+                        // VERIFICA SE USUÁRIO ESTÁ LOGADO
+                        if (!session?.user) {
+                          // Não está logado - mostra modal de registro
+                          setShowRegisterModal(true)
+                        } else {
+                          // Está logado - mostra modal de transição
+                          setShowTransitionModal(true)
+                        }
+                      } catch (error) {
+                        console.error('[CHAT] Checkout failed:', error)
+                        setIsLoading(false)
+                        toast({
+                          variant: 'error',
+                          title: 'Erro',
+                          description: 'Não foi possível preparar o orçamento. Tente novamente.',
+                        })
                       }
                     }}
                     disabled={isLoading}
