@@ -1,10 +1,10 @@
 'use client'
 
 import { logger, getErrorMessage } from '@/lib/logger'
-import { Suspense, useState, useEffect } from 'react'
+import { Suspense, useState } from 'react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { signIn, useSession } from 'next-auth/react'
+import { useSearchParams } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -22,16 +22,13 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>
 
 function LoginForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
-  const { data: session, status } = useSession()
   const { toast } = useToast()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
-  const [loginSuccess, setLoginSuccess] = useState(false)
 
-  // Get callbackUrl from query params
+  // Get callbackUrl from query params (used when redirected from protected route)
   const callbackUrlParam = searchParams.get('callbackUrl')
 
   const {
@@ -43,80 +40,28 @@ function LoginForm() {
     mode: 'onBlur',
   })
 
-  // Redirect when session is available after login
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user) {
-      const role = session.user.role
-      logger.debug('[LOGIN] Session detected, role:', role)
-
-      // Determine redirect URL based on role
-      let redirectUrl = '/portal'
-      if (role === 'ADMIN' || role === 'STAFF') {
-        redirectUrl = '/admin'
-      }
-
-      // If there's a callback URL that matches the user's permission, use it
-      if (callbackUrlParam) {
-        if (callbackUrlParam.startsWith('/admin') && (role === 'ADMIN' || role === 'STAFF')) {
-          redirectUrl = callbackUrlParam
-        } else if (callbackUrlParam.startsWith('/portal') && role === 'CUSTOMER') {
-          redirectUrl = callbackUrlParam
-        }
-      }
-
-      logger.debug('[LOGIN] Redirecting to:', redirectUrl)
-
-      // Show success toast only if we just logged in
-      if (loginSuccess) {
-        toast({
-          variant: 'success',
-          title: 'Login realizado!',
-          description: `Bem-vindo(a), ${session.user.name || 'usuário'}!`,
-        })
-      }
-
-      // Use router.push for client-side navigation
-      router.push(redirectUrl)
-      router.refresh()
-    }
-  }, [status, session, callbackUrlParam, router, toast, loginSuccess])
-
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
 
     try {
       logger.debug('[LOGIN] Attempting credentials login:', { email: data.email })
 
-      const result = await signIn('credentials', {
+      // Use redirect: true to let NextAuth handle the redirect properly
+      // After successful login, middleware will redirect based on role
+      await signIn('credentials', {
         email: data.email,
         password: data.password,
-        redirect: false,
+        redirect: true,
+        callbackUrl: callbackUrlParam || '/portal',
       })
-
-      logger.debug('[LOGIN] SignIn result:', result)
-
-      if (result?.error) {
-        logger.error('[LOGIN] SignIn error:', result.error)
-        toast({
-          variant: 'error',
-          title: 'Erro ao entrar',
-          description: 'Email ou senha incorretos',
-        })
-        setIsLoading(false)
-        return
-      }
-
-      if (result?.ok) {
-        logger.debug('[LOGIN] Login successful, waiting for session...')
-        setLoginSuccess(true)
-        // Session will be detected by useEffect above
-      }
+      // If we reach here with redirect: true, it means there was an error
+      // (successful login would have redirected the page)
     } catch (error) {
       logger.error('[LOGIN] Login failed:', error)
       toast({
         variant: 'error',
-        title: 'Erro',
-        description: 'Ocorreu um erro ao fazer login',
+        title: 'Erro ao entrar',
+        description: 'Email ou senha incorretos',
       })
       setIsLoading(false)
     }
@@ -125,7 +70,7 @@ function LoginForm() {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
     try {
-      // Google users are ALWAYS customers
+      // Google users are ALWAYS customers - redirect to /portal
       logger.debug('[LOGIN] Starting Google sign-in')
       await signIn('google', { callbackUrl: '/portal' })
     } catch (error) {
@@ -138,29 +83,6 @@ function LoginForm() {
       })
       setIsGoogleLoading(false)
     }
-  }
-
-  // Show loading while checking session
-  if (status === 'loading') {
-    return (
-      <Card className="w-full max-w-md p-8">
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin text-accent-400" />
-        </div>
-      </Card>
-    )
-  }
-
-  // If already logged in and waiting for redirect
-  if (status === 'authenticated') {
-    return (
-      <Card className="w-full max-w-md p-8">
-        <div className="flex flex-col items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin text-accent-400" />
-          <p className="mt-4 text-theme-muted">Redirecionando...</p>
-        </div>
-      </Card>
-    )
   }
 
   return (
