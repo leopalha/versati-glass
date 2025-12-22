@@ -114,13 +114,53 @@ export async function POST(request: NextRequest) {
     const serviceState = customerData.state || ''
     const serviceZipCode = customerData.zipCode || ''
 
+    // Determine userId - use session if logged in, or find/create user by email
+    let userId = session?.user?.id
+
+    if (!userId && customerEmail) {
+      // Try to find existing user by email
+      const existingUser = await prisma.user.findUnique({
+        where: { email: customerEmail.toLowerCase() },
+      })
+
+      if (existingUser) {
+        userId = existingUser.id
+      } else {
+        // Create a new user without password (they can set it later)
+        const newUser = await prisma.user.create({
+          data: {
+            email: customerEmail.toLowerCase(),
+            name: customerName,
+            phone: customerPhone || null,
+            street: serviceStreet || null,
+            number: serviceNumber || null,
+            complement: serviceComplement || null,
+            neighborhood: serviceNeighborhood || null,
+            city: serviceCity || null,
+            state: serviceState || null,
+            zipCode: serviceZipCode || null,
+          },
+        })
+        userId = newUser.id
+        logger.info('Created new user for quote', { userId: newUser.id, email: customerEmail })
+      }
+    }
+
+    // If still no userId, return error - we need a user to create a quote
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Email do cliente é obrigatório para criar o orçamento' },
+        { status: 400 }
+      )
+    }
+
     // Create Quote with items (transaction to ensure atomicity)
     const quote = await prisma.$transaction(async (tx) => {
       // Create the Quote
       const newQuote = await tx.quote.create({
         data: {
           number: quoteNumber,
-          userId: session?.user?.id || '',
+          userId,
           customerName,
           customerEmail,
           customerPhone,
