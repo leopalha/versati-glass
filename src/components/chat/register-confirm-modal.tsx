@@ -63,14 +63,16 @@ export function RegisterConfirmModal({
   const { toast } = useToast()
   const [email, setEmail] = useState(customerData?.email || '')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isRegistering, setIsRegistering] = useState(false)
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
+  const [errors, setErrors] = useState<{ email?: string; password?: string; confirmPassword?: string }>({})
 
   if (!isOpen) return null
 
   const validateForm = (): boolean => {
-    const newErrors: { email?: string; password?: string } = {}
+    const newErrors: { email?: string; password?: string; confirmPassword?: string } = {}
 
     if (!email) {
       newErrors.email = 'Email e obrigatorio'
@@ -82,6 +84,12 @@ export function RegisterConfirmModal({
       newErrors.password = 'Senha e obrigatoria'
     } else if (password.length < 6) {
       newErrors.password = 'Senha deve ter no minimo 6 caracteres'
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Confirme sua senha'
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = 'As senhas nao conferem'
     }
 
     setErrors(newErrors)
@@ -255,6 +263,37 @@ export function RegisterConfirmModal({
                   </div>
                   {errors.password && (
                     <p className="mt-1 text-xs text-red-400">{errors.password}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium text-white">
+                    Confirmar senha
+                  </label>
+                  <div className="relative">
+                    <Shield className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                    <Input
+                      id="confirmPassword"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value)
+                        if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: undefined }))
+                      }}
+                      placeholder="Digite a senha novamente"
+                      className="pl-10 pr-10"
+                      disabled={isRegistering || isLoading}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+                    >
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="mt-1 text-xs text-red-400">{errors.confirmPassword}</p>
                   )}
                 </div>
               </div>
