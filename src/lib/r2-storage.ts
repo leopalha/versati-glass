@@ -14,11 +14,12 @@ interface R2Config {
 }
 
 function getR2Config(): R2Config {
-  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID
-  const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID
-  const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY
-  const bucketName = process.env.CLOUDFLARE_R2_BUCKET_NAME || 'versati-glass'
-  const publicUrl = process.env.CLOUDFLARE_R2_PUBLIC_URL || ''
+  // Trim all env vars to remove trailing newlines/whitespace
+  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID?.trim()
+  const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID?.trim()
+  const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY?.trim()
+  const bucketName = (process.env.CLOUDFLARE_R2_BUCKET_NAME || 'versati-glass').trim()
+  const publicUrl = (process.env.CLOUDFLARE_R2_PUBLIC_URL || '').trim()
 
   if (!accountId || !accessKeyId || !secretAccessKey) {
     throw new Error('Cloudflare R2 credentials not configured')

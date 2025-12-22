@@ -27,11 +27,12 @@ export async function GET(request: Request) {
       hasSecretKey: !!process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
       hasBucketName: !!process.env.CLOUDFLARE_R2_BUCKET_NAME,
       hasPublicUrl: !!process.env.CLOUDFLARE_R2_PUBLIC_URL,
-      bucketName: process.env.CLOUDFLARE_R2_BUCKET_NAME || 'not-set',
-      publicUrl: process.env.CLOUDFLARE_R2_PUBLIC_URL || 'not-set',
-      // Show partial values for debugging (first 4 chars)
-      accountIdPrefix: process.env.CLOUDFLARE_ACCOUNT_ID?.substring(0, 8) || 'not-set',
-      accessKeyPrefix: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID?.substring(0, 8) || 'not-set',
+      // Trim values to show actual config (without trailing newlines)
+      bucketName: (process.env.CLOUDFLARE_R2_BUCKET_NAME || 'not-set').trim(),
+      publicUrl: (process.env.CLOUDFLARE_R2_PUBLIC_URL || 'not-set').trim(),
+      // Show partial values for debugging (first 8 chars)
+      accountIdPrefix: process.env.CLOUDFLARE_ACCOUNT_ID?.trim().substring(0, 8) || 'not-set',
+      accessKeyPrefix: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID?.trim().substring(0, 8) || 'not-set',
     }
 
     // Test upload with a tiny image (1x1 transparent PNG) - only if requested

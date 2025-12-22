@@ -332,7 +332,8 @@
       "Bash(git commit --no-verify -m \"$\\(cat <<''EOF''\nrefactor: Simplify auth - Google users are always customers\n\n- Google OAuth always redirects to /portal \\(no admin role possible\\)\n- Admins are created by admin with email/password only\n- Simplified middleware by removing unnecessary customer route redirect\n- Cleaner separation: Google = Customer, Email/Password = Admin possible\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(npx vercel --prod --yes)",
       "Bash(npx vercel logs:*)",
-      "Bash(npx vercel env:*)"
+      "Bash(npx vercel env:*)",
+      "Bash(python -m json.tool:*)"
     ]
   }
 }
