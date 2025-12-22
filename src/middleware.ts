@@ -6,6 +6,7 @@ import { getToken } from 'next-auth/jwt'
 const protectedRoutes = ['/portal', '/admin']
 const authRoutes = ['/login', '/registro', '/recuperar-senha', '/redefinir-senha']
 const adminRoutes = ['/admin']
+const customerRoutes = ['/portal']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -14,6 +15,7 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route))
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
   const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route))
+  const isCustomerRoute = customerRoutes.some((route) => pathname.startsWith(route))
 
   // Get token (works in edge runtime)
   const token = await getToken({
@@ -21,9 +23,11 @@ export async function middleware(request: NextRequest) {
     secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   })
 
+  const isAdmin = token?.role === 'ADMIN' || token?.role === 'STAFF'
+
   // If accessing auth routes while logged in, redirect to appropriate dashboard
   if (isAuthRoute && token) {
-    const redirectUrl = token.role === 'ADMIN' || token.role === 'STAFF' ? '/admin' : '/portal'
+    const redirectUrl = isAdmin ? '/admin' : '/portal'
     return NextResponse.redirect(new URL(redirectUrl, request.url))
   }
 
@@ -34,8 +38,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  // If accessing admin routes without admin/staff role
-  if (isAdminRoute && token?.role !== 'ADMIN' && token?.role !== 'STAFF') {
+  // If admin/staff tries to access customer portal, redirect to admin
+  if (isCustomerRoute && token && isAdmin) {
+    return NextResponse.redirect(new URL('/admin', request.url))
+  }
+
+  // If non-admin/staff tries to access admin routes, redirect to portal
+  if (isAdminRoute && token && !isAdmin) {
     return NextResponse.redirect(new URL('/portal', request.url))
   }
 

@@ -121,6 +121,18 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // If URL starts with base, check if it's a simple redirect
+      if (url.startsWith(baseUrl)) {
+        return url
+      }
+      // For relative URLs
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`
+      }
+      // Default fallback
+      return baseUrl
+    },
     async jwt({ token, user, trigger, session, account }) {
       logger.debug('[AUTH] JWT callback', { hasUser: !!user, trigger })
 

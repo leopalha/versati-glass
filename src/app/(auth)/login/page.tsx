@@ -43,16 +43,23 @@ function LoginForm() {
 
   // Helper function to get redirect URL based on user role
   const getRedirectUrl = (role: string, callbackUrl?: string | null): string => {
-    // If there's a specific callbackUrl (user was redirected from a protected page), use it
-    if (callbackUrl && callbackUrl !== '/portal' && callbackUrl !== '/admin') {
+    // Always prioritize role-based redirect
+    const roleBasedUrl = role === 'ADMIN' || role === 'STAFF' ? '/admin' : '/portal'
+
+    // If there's a specific callbackUrl (user was redirected from a protected page)
+    // and it's not a base portal/admin route, use the specific callback
+    if (callbackUrl && !callbackUrl.match(/^\/(portal|admin)$/)) {
+      // But ensure admin doesn't go to /portal/* and customer doesn't go to /admin/*
+      if (callbackUrl.startsWith('/admin') && role !== 'ADMIN' && role !== 'STAFF') {
+        return '/portal'
+      }
+      if (callbackUrl.startsWith('/portal') && (role === 'ADMIN' || role === 'STAFF')) {
+        return '/admin'
+      }
       return callbackUrl
     }
 
-    // Otherwise, redirect based on role
-    if (role === 'ADMIN' || role === 'STAFF') {
-      return '/admin'
-    }
-    return '/portal'
+    return roleBasedUrl
   }
 
   const onSubmit = async (data: LoginFormData) => {
@@ -141,9 +148,10 @@ function LoginForm() {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
     try {
-      // For Google OAuth, use callbackUrl if provided, otherwise redirect will be handled by middleware
-      // based on user role after OAuth completes
-      const redirectUrl = callbackUrlParam || '/'
+      // For Google OAuth, redirect to /portal - middleware will handle role-based redirect
+      // If user is admin, middleware will redirect to /admin automatically
+      const redirectUrl = callbackUrlParam || '/portal'
+      logger.debug('[LOGIN] Starting Google sign-in with redirect:', redirectUrl)
       await signIn('google', { callbackUrl: redirectUrl })
     } catch (error) {
       // ARCH-P1-2: Standardized error handling
