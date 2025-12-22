@@ -46,22 +46,44 @@ function LoginForm() {
     try {
       logger.debug('[LOGIN] Attempting credentials login:', { email: data.email })
 
-      // Use redirect: true to let NextAuth handle the redirect properly
-      // After successful login, middleware will redirect based on role
-      await signIn('credentials', {
+      // Use redirect: false to handle the result manually
+      const result = await signIn('credentials', {
         email: data.email,
         password: data.password,
-        redirect: true,
-        callbackUrl: callbackUrlParam || '/portal',
+        redirect: false,
       })
-      // If we reach here with redirect: true, it means there was an error
-      // (successful login would have redirected the page)
+
+      logger.debug('[LOGIN] SignIn result:', result)
+
+      if (result?.error) {
+        logger.error('[LOGIN] SignIn error:', result.error)
+        toast({
+          variant: 'error',
+          title: 'Erro ao entrar',
+          description: 'Email ou senha incorretos',
+        })
+        setIsLoading(false)
+        return
+      }
+
+      if (result?.ok) {
+        // Success! Redirect to portal - middleware will handle admin redirect
+        toast({
+          variant: 'success',
+          title: 'Login realizado!',
+          description: 'Redirecionando...',
+        })
+
+        // Use window.location for full page reload to ensure cookies are set
+        const redirectTo = callbackUrlParam || '/portal'
+        window.location.href = redirectTo
+      }
     } catch (error) {
       logger.error('[LOGIN] Login failed:', error)
       toast({
         variant: 'error',
-        title: 'Erro ao entrar',
-        description: 'Email ou senha incorretos',
+        title: 'Erro',
+        description: 'Ocorreu um erro ao fazer login',
       })
       setIsLoading(false)
     }
