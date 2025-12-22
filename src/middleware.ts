@@ -11,11 +11,6 @@ const customerRoutes = ['/portal']
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Skip test-auth page completely
-  if (pathname === '/test-auth' || pathname.startsWith('/test-auth')) {
-    return NextResponse.next()
-  }
-
   // Check if route is protected
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route))
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
@@ -35,16 +30,6 @@ export async function middleware(request: NextRequest) {
   })
 
   const isAdmin = token?.role === 'ADMIN' || token?.role === 'STAFF'
-
-  // Debug logging (only in development or can be checked in Vercel logs)
-  console.log('[MIDDLEWARE]', {
-    pathname,
-    hasToken: !!token,
-    role: token?.role,
-    isAdmin,
-    isProtectedRoute,
-    isAuthRoute,
-  })
 
   // If accessing auth routes while logged in, redirect to appropriate dashboard
   if (isAuthRoute && token) {
