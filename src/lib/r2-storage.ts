@@ -1,5 +1,3 @@
-'use server'
-
 /**
  * Cloudflare R2 Storage Integration
  *
