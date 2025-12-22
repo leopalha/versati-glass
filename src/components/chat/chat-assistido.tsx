@@ -264,6 +264,48 @@ export function ChatAssistido({
   const inputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const hasRestoredRef = useRef(false)
+  const previousUserIdRef = useRef<string | null | undefined>(undefined)
+
+  // Detect user change and clear chat when user switches
+  useEffect(() => {
+    const currentUserId = session?.user?.id
+
+    // Skip on first render (undefined means not initialized yet)
+    if (previousUserIdRef.current === undefined) {
+      previousUserIdRef.current = currentUserId || null
+      return
+    }
+
+    // If user changed (login/logout or different user), clear chat
+    if (previousUserIdRef.current !== currentUserId) {
+      console.log('[CHAT] User changed, clearing chat history', {
+        from: previousUserIdRef.current,
+        to: currentUserId,
+      })
+
+      // Clear localStorage and reset state
+      clearChatStorage()
+      setMessages([])
+      setConversationId(null)
+      setQuoteContext(null)
+      setQuoteProgress(0)
+      setCanExportQuote(false)
+      setLoggedUserData(null)
+
+      // Show welcome message for new user
+      setMessages([
+        {
+          id: 'welcome',
+          role: 'ASSISTANT',
+          content:
+            'Oi! Sou a Ana, da Versati Glass 😊\n\nPosso te ajudar a fazer um orçamento ou tirar dúvidas sobre nossos produtos.\n\n📸 Dica: Se quiser, pode me enviar fotos do local - assim consigo entender melhor o que você precisa!',
+          createdAt: new Date().toISOString(),
+        },
+      ])
+
+      previousUserIdRef.current = currentUserId || null
+    }
+  }, [session?.user?.id])
 
   // GAP.6: Restore chat from localStorage on mount
   useEffect(() => {
@@ -323,6 +365,17 @@ export function ChatAssistido({
       },
     ])
   }, [])
+
+  // Listen for quote reset from /orcamento page to clear chat
+  useEffect(() => {
+    const handleQuoteReset = () => {
+      console.log('[CHAT] Quote reset event received, clearing chat')
+      handleClearHistory()
+    }
+
+    window.addEventListener('versati:quote-reset', handleQuoteReset)
+    return () => window.removeEventListener('versati:quote-reset', handleQuoteReset)
+  }, [handleClearHistory])
 
   // Auto-scroll para ultima mensagem
   const scrollToBottom = useCallback(() => {
@@ -1630,70 +1683,10 @@ export function ChatAssistido({
                       <div className="mt-4 flex flex-col gap-2">
                         {/* Cancel/Reset Quote */}
                         <Button
-                          onClick={async () => {
-                            if (confirm('Tem certeza que deseja cancelar este orçamento?')) {
-                              // IMEDIATAMENTE limpar todos os estados para evitar exibicao incorreta
-                              setQuoteContext(null)
-                              setQuoteProgress(0)
-                              setCanExportQuote(false)
-                              setIsProgressMinimized(true)
-
-                              // Add cancellation message
-                              const cancelMessage: Message = {
-                                id: `user-${Date.now()}`,
-                                role: 'USER',
-                                content: 'Quero cancelar este orçamento e começar de novo',
-                                createdAt: new Date().toISOString(),
-                              }
-
-                              setMessages((prev) => [...prev, cancelMessage])
-                              setIsLoading(true)
-
-                              setTimeout(() => scrollToBottom(), 100)
-
-                              try {
-                                // Send message to AI to restart conversation
-                                const response = await fetch('/api/ai/chat', {
-                                  method: 'POST',
-                                  headers: { 'Content-Type': 'application/json' },
-                                  body: JSON.stringify({
-                                    message: 'Quero cancelar este orçamento e começar de novo',
-                                    conversationId,
-                                    sessionId,
-                                    imageBase64: null,
-                                    imageUrl: null,
-                                  }),
-                                })
-
-                                if (!response.ok) {
-                                  throw new Error('Erro ao enviar mensagem')
-                                }
-
-                                const data = await response.json()
-
-                                const assistantMessage: Message = {
-                                  id: `assistant-${Date.now()}`,
-                                  role: 'ASSISTANT',
-                                  content: data.message,
-                                  createdAt: new Date().toISOString(),
-                                }
-
-                                setMessages((prev) => [...prev, assistantMessage])
-                              } catch (error) {
-                                console.error('[CHAT] Error restarting conversation:', error)
-                                setMessages((prev) => [
-                                  ...prev,
-                                  {
-                                    id: `error-${Date.now()}`,
-                                    role: 'ASSISTANT',
-                                    content:
-                                      'Tudo bem! Vamos começar de novo. Como posso ajudá-lo com seu novo orçamento?',
-                                    createdAt: new Date().toISOString(),
-                                  },
-                                ])
-                              } finally {
-                                setIsLoading(false)
-                              }
+                          onClick={() => {
+                            if (confirm('Tem certeza que deseja cancelar este orçamento? O histórico da conversa será apagado.')) {
+                              // Limpa todo o chat e reinicia do zero
+                              handleClearHistory()
                             }
                           }}
                           variant="outline"

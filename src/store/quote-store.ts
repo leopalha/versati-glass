@@ -398,7 +398,13 @@ export const useQuoteStore = create<QuoteState>()(
       // AI-CHAT Sprint P1.3: Clear everything for a fresh quote
       clearForNewQuote: () => set({ ...initialState, ...updateActivity() }),
 
-      reset: () => set(initialState),
+      reset: () => {
+        set(initialState)
+        // Dispatch event to clear chat when quote is reset from /orcamento page
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('versati:quote-reset'))
+        }
+      },
 
       getTotalItems: () => {
         return get().items.reduce((acc, item) => acc + item.quantity, 0)
