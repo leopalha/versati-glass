@@ -16,7 +16,7 @@ import {
   CreditCard,
 } from 'lucide-react'
 import Link from 'next/link'
-import { PaymentButton } from '@/components/portal/payment-button'
+import { PaymentMethodSelector } from '@/components/portal/payment-method-selector'
 import { UploadDocumentDialog } from '@/components/portal/upload-document-dialog'
 
 interface PageProps {
@@ -158,7 +158,7 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                         </p>
                       </div>
                     </div>
-                    <PaymentButton orderId={order.id} />
+                    <PaymentMethodSelector orderId={order.id} />
                   </div>
                 </div>
               )}
