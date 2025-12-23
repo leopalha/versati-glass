@@ -36,6 +36,10 @@ import {
   Loader2,
   Download,
   MessageCircle,
+  Truck,
+  Building2,
+  Star,
+  Check,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -122,6 +126,23 @@ interface AiConversation {
   messages: Array<{ id: string }>
 }
 
+interface Supplier {
+  id: string
+  name: string
+  tradeName?: string | null
+  email: string
+  phone?: string | null
+  whatsapp?: string | null
+  categories: string[]
+  isPreferred: boolean
+  isActive: boolean
+  rating?: number | null
+  _count: {
+    supplierQuotes: number
+    orders: number
+  }
+}
+
 const statusLabels: Record<string, { label: string; color: string; icon: typeof Clock }> = {
   DRAFT: { label: 'Rascunho', color: 'bg-neutral-500/20 text-neutral-400', icon: Clock },
   SENT: { label: 'Enviado', color: 'bg-blue-500/20 text-blue-400', icon: AlertCircle },
@@ -168,6 +189,14 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   // PDF export
   const [exportingPdf, setExportingPdf] = useState(false)
   const [exportingCustomerPdf, setExportingCustomerPdf] = useState(false)
+
+  // Supplier quote dialog
+  const [showSupplierDialog, setShowSupplierDialog] = useState(false)
+  const [suppliers, setSuppliers] = useState<Supplier[]>([])
+  const [loadingSuppliers, setLoadingSuppliers] = useState(false)
+  const [selectedSuppliers, setSelectedSuppliers] = useState<string[]>([])
+  const [sendingToSuppliers, setSendingToSuppliers] = useState(false)
+  const [supplierError, setSupplierError] = useState<string | null>(null)
 
   useEffect(() => {
     params.then((p) => setQuoteId(p.id))
@@ -338,6 +367,63 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
     }
   }
 
+  const fetchSuppliers = async () => {
+    setLoadingSuppliers(true)
+    try {
+      const response = await fetch('/api/admin/suppliers?isActive=true')
+      if (!response.ok) throw new Error('Erro ao carregar fornecedores')
+      const data = await response.json()
+      setSuppliers(data.suppliers || [])
+    } catch (error) {
+      console.error('Erro:', error)
+      setSupplierError('Erro ao carregar fornecedores')
+    } finally {
+      setLoadingSuppliers(false)
+    }
+  }
+
+  const handleOpenSupplierDialog = () => {
+    setShowSupplierDialog(true)
+    setSelectedSuppliers([])
+    setSupplierError(null)
+    fetchSuppliers()
+  }
+
+  const toggleSupplierSelection = (supplierId: string) => {
+    setSelectedSuppliers((prev) =>
+      prev.includes(supplierId) ? prev.filter((id) => id !== supplierId) : [...prev, supplierId]
+    )
+  }
+
+  const handleSendToSuppliers = async () => {
+    if (selectedSuppliers.length === 0) {
+      setSupplierError('Selecione pelo menos um fornecedor')
+      return
+    }
+
+    setSendingToSuppliers(true)
+    setSupplierError(null)
+
+    try {
+      const response = await fetch(`/api/quotes/${quoteId}/send-to-suppliers`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ supplierIds: selectedSuppliers }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Erro ao enviar')
+
+      setShowSupplierDialog(false)
+      alert(data.message || 'Cotacao enviada com sucesso!')
+      await fetchQuote()
+    } catch (error) {
+      setSupplierError(error instanceof Error ? error.message : 'Erro ao enviar cotacao')
+    } finally {
+      setSendingToSuppliers(false)
+    }
+  }
+
   const handleExportPdf = async (type: 'supplier' | 'customer' = 'supplier') => {
     if (type === 'customer') {
       setExportingCustomerPdf(true)
@@ -470,6 +556,15 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                     <FileText className="h-4 w-4" />
                   )}
                   PDF Cliente
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleOpenSupplierDialog}
+                  className="gap-2"
+                >
+                  <Truck className="h-4 w-4" />
+                  Cotar Fornecedores
                 </Button>
                 {canSend && (
                   <Button size="sm" onClick={() => setShowSendDialog(true)} className="gap-2">
@@ -1229,6 +1324,149 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           <DialogFooter>
             <Button variant="ghost" onClick={() => setShowEmailPreview(false)}>
               Fechar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Supplier Quote Dialog */}
+      <Dialog open={showSupplierDialog} onOpenChange={setShowSupplierDialog}>
+        <DialogContent className="sm:max-w-[700px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Truck className="h-5 w-5 text-accent-500" />
+              Cotar com Fornecedores
+            </DialogTitle>
+            <DialogDescription>
+              Selecione os fornecedores para receber a cotacao do orcamento{' '}
+              <strong>#{quote.number}</strong>.
+            </DialogDescription>
+          </DialogHeader>
+
+          {supplierError && (
+            <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400">
+              {supplierError}
+            </div>
+          )}
+
+          <div className="max-h-[400px] overflow-y-auto">
+            {loadingSuppliers ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+              </div>
+            ) : suppliers.length === 0 ? (
+              <div className="py-8 text-center">
+                <Building2 className="mx-auto mb-2 h-8 w-8 text-neutral-500" />
+                <p className="text-neutral-400">Nenhum fornecedor cadastrado</p>
+                <Button variant="outline" size="sm" className="mt-4" asChild>
+                  <Link href="/admin/fornecedores/novo">Cadastrar Fornecedor</Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {suppliers.map((supplier) => (
+                  <div
+                    key={supplier.id}
+                    onClick={() => toggleSupplierSelection(supplier.id)}
+                    className={`flex cursor-pointer items-center gap-4 rounded-lg border p-4 transition-colors ${
+                      selectedSuppliers.includes(supplier.id)
+                        ? 'border-accent-500 bg-accent-500/10'
+                        : 'border-neutral-700 bg-neutral-800/50 hover:border-neutral-600'
+                    }`}
+                  >
+                    <div
+                      className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${
+                        selectedSuppliers.includes(supplier.id)
+                          ? 'border-accent-500 bg-accent-500'
+                          : 'border-neutral-600'
+                      }`}
+                    >
+                      {selectedSuppliers.includes(supplier.id) && (
+                        <Check className="h-4 w-4 text-black" />
+                      )}
+                    </div>
+
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-white">{supplier.name}</span>
+                        {supplier.isPreferred && (
+                          <Badge className="bg-gold-500/20 text-gold-400 text-xs">
+                            <Star className="mr-1 h-3 w-3" />
+                            Preferido
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-neutral-400">
+                        <span className="flex items-center gap-1">
+                          <Mail className="h-3 w-3" />
+                          {supplier.email}
+                        </span>
+                        {supplier.phone && (
+                          <span className="flex items-center gap-1">
+                            <Phone className="h-3 w-3" />
+                            {supplier.phone}
+                          </span>
+                        )}
+                      </div>
+                      {supplier.categories.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {supplier.categories.slice(0, 3).map((cat) => (
+                            <Badge
+                              key={cat}
+                              variant="outline"
+                              className="text-xs text-neutral-500"
+                            >
+                              {cat}
+                            </Badge>
+                          ))}
+                          {supplier.categories.length > 3 && (
+                            <Badge variant="outline" className="text-xs text-neutral-500">
+                              +{supplier.categories.length - 3}
+                            </Badge>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="text-right text-xs text-neutral-500">
+                      <p>{supplier._count.supplierQuotes} cotacoes</p>
+                      <p>{supplier._count.orders} pedidos</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-lg border border-neutral-700 bg-neutral-800/50 p-4">
+            <p className="mb-2 text-sm font-medium text-white">Os fornecedores receberao:</p>
+            <ul className="space-y-1 text-sm text-neutral-400">
+              <li>• Lista de itens com especificacoes</li>
+              <li>• Endereco de instalacao</li>
+              <li>• Prazo de 48 horas para resposta</li>
+            </ul>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setShowSupplierDialog(false)}
+              disabled={sendingToSuppliers}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleSendToSuppliers}
+              disabled={sendingToSuppliers || selectedSuppliers.length === 0}
+              className="gap-2"
+            >
+              {sendingToSuppliers ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
+              Enviar para {selectedSuppliers.length} fornecedor
+              {selectedSuppliers.length !== 1 ? 'es' : ''}
             </Button>
           </DialogFooter>
         </DialogContent>
