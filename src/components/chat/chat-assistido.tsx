@@ -149,6 +149,7 @@ export function ChatAssistido({
   const { toast } = useToast()
   const { data: session, status: sessionStatus } = useSession()
   const importFromAI = useQuoteStore((state) => state.importFromAI)
+  const setStep = useQuoteStore((state) => state.setStep)
 
   const [isOpen, setIsOpen] = useState(initialOpen || showInitially)
   const [isMinimized, setIsMinimized] = useState(false)
@@ -989,6 +990,12 @@ export function ChatAssistido({
       // Step 2: Import data into quote store
       importFromAI(pendingQuoteData)
 
+      // If user is authenticated (just registered), skip to step 6 (summary)
+      // since they already saw the cart and filled their data in the modal
+      if (session) {
+        setStep(6)
+      }
+
       // Step 3: Close modal and chat
       setShowTransitionModal(false)
       setPendingQuoteData(null)
@@ -1686,7 +1693,11 @@ export function ChatAssistido({
                         {/* Cancel/Reset Quote */}
                         <Button
                           onClick={() => {
-                            if (confirm('Tem certeza que deseja cancelar este orçamento? O histórico da conversa será apagado.')) {
+                            if (
+                              confirm(
+                                'Tem certeza que deseja cancelar este orçamento? O histórico da conversa será apagado.'
+                              )
+                            ) {
                               // Limpa todo o chat e reinicia do zero
                               handleClearHistory()
                             }
