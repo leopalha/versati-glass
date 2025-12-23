@@ -699,7 +699,7 @@ function generateSupplierQuoteHtml(quote: any): string {
     </div>
 
     <div class="footer">
-      <p>VERSATI GLASS - CNPJ: XX.XXX.XXX/0001-XX</p>
+      <p>VERSATI GLASS - CNPJ: 56.025.592/0001-36</p>
       <p>Rio de Janeiro, RJ | Tel: (21) 98253-6229 | contato@versatiglass.com.br</p>
       <p style="margin-top: 10px;">Documento gerado em ${new Date().toLocaleString('pt-BR')}</p>
     </div>
