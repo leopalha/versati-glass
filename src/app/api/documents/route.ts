@@ -2,10 +2,8 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
 import { logger } from '@/lib/logger'
+import { uploadToR2, isR2Configured } from '@/lib/r2-storage'
 
 const createDocumentSchema = z.object({
   orderId: z.string().optional(),
@@ -134,22 +132,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Arquivo muito grande (máx 10MB)' }, { status: 400 })
     }
 
-    // Salvar arquivo
-    const uploadsDir = join(process.cwd(), 'public', 'uploads', 'documents')
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true })
+    // Upload para R2
+    if (!isR2Configured()) {
+      logger.error('R2 não configurado. Configure as variáveis de ambiente R2.')
+      return NextResponse.json(
+        { error: 'Serviço de upload não disponível. Entre em contato com o suporte.' },
+        { status: 503 }
+      )
     }
 
     const buffer = Buffer.from(await file.arrayBuffer())
     const timestamp = Date.now()
     const randomStr = Math.random().toString(36).substring(7)
     const ext = file.name.split('.').pop()
-    const filename = `${timestamp}-${randomStr}.${ext}`
-    const filepath = join(uploadsDir, filename)
+    const filename = `documents/${timestamp}-${randomStr}.${ext}`
 
-    await writeFile(filepath, buffer)
-
-    const fileUrl = `/uploads/documents/${filename}`
+    const { url: fileUrl } = await uploadToR2(buffer, filename, file.type)
 
     // Criar documento no banco
     const document = await prisma.document.create({
