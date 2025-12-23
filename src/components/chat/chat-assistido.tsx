@@ -206,7 +206,7 @@ export function ChatAssistido({
   // Old voice feature removed - now using per-message audio playback
 
   // Progress bar minimize state
-  const [isProgressMinimized, setIsProgressMinimized] = useState(false)
+  const [isProgressMinimized, setIsProgressMinimized] = useState(true)
 
   // Progress confirmation state - only show after user confirms
   const [progressConfirmed, setProgressConfirmed] = useState(false)
