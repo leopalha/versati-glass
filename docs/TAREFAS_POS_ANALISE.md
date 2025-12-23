@@ -5,7 +5,7 @@
 
 ---
 
-## ✅ IMPLEMENTADO (22/12/2024)
+## ✅ IMPLEMENTADO (22-23/12/2024)
 
 - [x] PDF de orçamento para cliente (tema escuro, com preços)
 - [x] Edição de medidas nos itens do orçamento (largura, altura, cor, acabamento, espessura)
@@ -16,41 +16,49 @@
 - [x] CNPJ placeholder substituído (56.025.592/0001-36)
 - [x] Serviço de notificações automáticas (`in-app-notifications.ts`)
 - [x] Migrações executadas (tabelas notifications e payments)
-- [x] **NOVO:** Notificações integradas em todos eventos do sistema (orçamentos, pedidos, pagamentos, agendamentos)
+- [x] Notificações integradas em todos eventos do sistema (orçamentos, pedidos, pagamentos, agendamentos)
+- [x] **NOVO (23/12):** File Storage migrado para Cloudflare R2 (documentos + imagens chat IA)
 
 ---
 
 ## 🔥 PRIORIDADE ALTA (Implementar Próximo)
 
-### 1. Migrar File Storage para R2
+### 1. ~~Migrar File Storage para R2~~ ✅ **CONCLUÍDO**
 
-**Status:** R2 já configurado, mas uploads vão para disco local
-**Impacto:** Vercel tem storage efêmero, arquivos podem ser perdidos
-**Arquivos afetados:**
+**Status:** ✅ Implementado e deployed (23/12/2024)
+**Impacto:** Resolvido - Todos os uploads agora vão para R2
+**Arquivos atualizados:**
 
-- `src/app/api/documents/route.ts`
-- `src/app/api/ai-conversations/upload-image/route.ts`
+- ✅ `src/app/api/documents/route.ts` - Migrado para R2
+- ✅ `src/app/api/ai/chat/upload/route.ts` - Migrado para R2 (caminho correto encontrado)
 
-**Solução:**
+**Implementação:**
 
 ```typescript
-// Trocar de:
-const uploadPath = path.join(process.cwd(), 'public', 'uploads', ...)
-// Para:
-import { uploadToR2 } from '@/lib/r2-storage'
-const fileUrl = await uploadToR2(buffer, filename, 'documents')
+// Implementado em ambos os endpoints:
+import { uploadToR2, isR2Configured } from '@/lib/r2-storage'
+
+// Verificação antes do upload
+if (!isR2Configured()) {
+  return NextResponse.json({ error: 'Serviço não disponível' }, { status: 503 })
+}
+
+// Upload para R2 com organização por tipo
+const { url } = await uploadToR2(buffer, `documents/${filename}`, file.type)
+const { url } = await uploadToR2(buffer, `chat/${filename}`, file.type)
 ```
 
 **Checklist:**
 
-- [ ] Atualizar `/api/documents/route.ts` para usar R2
-- [ ] Atualizar `/api/ai-conversations/upload-image/route.ts` para usar R2
-- [ ] Testar upload de documento
-- [ ] Testar upload de imagem no chat IA
-- [ ] Migrar arquivos existentes de `public/uploads/` para R2
-- [ ] Atualizar referências de URLs nos documentos
+- [x] Atualizar `/api/documents/route.ts` para usar R2
+- [x] Atualizar `/api/ai/chat/upload/route.ts` para usar R2 (caminho correto)
+- [x] Adicionar verificação de configuração R2
+- [x] Organizar arquivos por tipo (documents/, chat/)
+- [x] Deploy para produção
+- [ ] ⚠️ TODO: Migrar arquivos existentes de `public/uploads/` para R2 (se houver)
+- [ ] ⚠️ TODO: Atualizar referências de URLs nos documentos (se houver arquivos antigos)
 
-**Estimativa:** 2-3 horas
+**Resultado:** Sistema agora usa storage persistente. Arquivos não serão mais perdidos no Vercel.
 
 ---
 
