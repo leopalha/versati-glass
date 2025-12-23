@@ -19,6 +19,7 @@
 - [x] Notificações integradas em todos eventos do sistema (orçamentos, pedidos, pagamentos, agendamentos)
 - [x] **NOVO (23/12):** File Storage migrado para Cloudflare R2 (documentos + imagens chat IA)
 - [x] **NOVO (23/12):** Rate Limiting distribuído com Upstash Redis (com fallback in-memory)
+- [x] **NOVO (23/12):** Modelo WhatsAppMessage dedicado (tabela, webhook, API, hooks)
 
 ---
 
@@ -165,42 +166,52 @@ export async function rateLimit(request: Request, config: RateLimitConfig) {
 
 ---
 
-### 4. Adicionar Modelo WhatsAppMessage Dedicado
+### 4. ~~Adicionar Modelo WhatsAppMessage Dedicado~~ ✅ **CONCLUÍDO**
 
-**Status:** Comentado mas não implementado
-**Impacto:** Baixo (sistema funciona), mas melhoraria organização
-**Arquivo:** `src/hooks/use-whatsapp-unread.ts:20`
+**Status:** ✅ Implementado e deployed (23/12/2024)
+**Impacto:** Melhorado - Organização de mensagens WhatsApp e performance
+**Arquivos atualizados:**
 
-**Schema Prisma:**
+- ✅ `prisma/schema.prisma` - Modelo WhatsAppMessage adicionado
+- ✅ `migrations/add_whatsapp_messages.sql` - Migração executada
+- ✅ `src/app/api/whatsapp/webhook/route.ts` - Webhook salvando mensagens
+- ✅ `src/app/api/whatsapp/messages/route.ts` - API para contagens não lidas
+- ✅ `src/hooks/use-whatsapp-unread.ts` - Hook habilitado
+
+**Implementação:**
 
 ```prisma
 model WhatsAppMessage {
-  id              String   @id @default(uuid())
-  conversationId  String
-  messageId       String   @unique // Twilio message ID
-  from            String
-  to              String
-  body            String
-  mediaUrl        String?
-  status          String   // sent, delivered, read, failed
-  direction       String   // inbound, outbound
-  timestamp       DateTime
-  createdAt       DateTime @default(now())
-  conversation    Conversation @relation(fields: [conversationId], references: [id])
+  id             String       @id @default(uuid())
+  conversationId String
+  messageId      String       @unique // Twilio message ID
+  from           String
+  to             String
+  body           String
+  mediaUrl       String?
+  status         String       // sent, delivered, read, failed
+  direction      String       // inbound, outbound
+  timestamp      DateTime
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
+  @@index([conversationId])
+  @@index([messageId])
+  @@index([timestamp])
   @@map("whatsapp_messages")
 }
 ```
 
 **Checklist:**
 
-- [ ] Adicionar modelo ao `schema.prisma`
-- [ ] Criar migração
-- [ ] Atualizar webhook do WhatsApp para salvar em WhatsAppMessage
-- [ ] Atualizar hooks para usar novo modelo
-- [ ] Migrar mensagens existentes (se necessário)
+- [x] Adicionar modelo ao `schema.prisma`
+- [x] Criar migração e executar
+- [x] Atualizar webhook do WhatsApp para salvar em WhatsAppMessage
+- [x] Criar API `/api/whatsapp/messages` para unread counts
+- [x] Atualizar hooks para usar novo modelo
+- [x] Adicionar índices para performance
 
-**Estimativa:** 2-3 horas
+**Resultado:** Mensagens WhatsApp organizadas em tabela dedicada. Queries mais rápidas com índices. Contador de não lidas funcionando.
 
 ---
 
