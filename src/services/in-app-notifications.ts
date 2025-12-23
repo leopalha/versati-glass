@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { logger } from '@/lib/logger'
+import { sendPushToUser } from './push-notifications'
 
 type NotificationType =
   | 'QUOTE_RECEIVED'
@@ -42,6 +43,18 @@ export async function createNotification(params: CreateNotificationParams) {
       type: params.type,
       title: params.title,
     })
+
+    // Also send push notification (fire-and-forget)
+    try {
+      await sendPushToUser(params.userId, {
+        title: params.title,
+        body: params.message,
+        url: params.link,
+      })
+    } catch (pushError) {
+      // Don't fail if push fails
+      logger.error('Failed to send push notification:', pushError)
+    }
 
     return notification
   } catch (error) {

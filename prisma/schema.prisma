@@ -40,6 +40,7 @@ model User {
   quotes                Quote[]
   sessions              Session[]
   notifications         Notification[]
+  pushSubscriptions     PushSubscription[]
 
   @@map("users")
 }
@@ -665,4 +666,20 @@ enum NotificationType {
   NEW_MESSAGE
   DOCUMENT_UPLOADED
   SYSTEM
+}
+
+// Push notification subscriptions (PWA)
+model PushSubscription {
+  id         String   @id @default(uuid())
+  userId     String
+  endpoint   String   @unique
+  p256dh     String
+  auth       String
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
 }

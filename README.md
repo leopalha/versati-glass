@@ -208,6 +208,47 @@ UPSTASH_REDIS_REST_TOKEN=your-token-here
 
 ---
 
+## 🔔 Push Notifications (PWA)
+
+### ⚡ Configurar Web Push Notifications
+
+O sistema suporta push notifications via Service Worker para notificar usuários instantaneamente sobre pedidos, mensagens e atualizações.
+
+#### Passo 1: Gerar VAPID Keys
+
+```bash
+node scripts/generate-vapid-keys.js
+```
+
+#### Passo 2: Adicionar ao .env
+
+```bash
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=your-public-key-here
+VAPID_PRIVATE_KEY=your-private-key-here
+VAPID_EMAIL=noreply@versatiglass.com.br
+```
+
+#### Passo 3: Deploy e Testar
+
+1. Deploy da aplicação
+2. Usuário acessa o portal
+3. Sistema solicita permissão para notificações
+4. Quando houver evento (novo pedido, mensagem, etc), usuário recebe push notification
+
+**Recursos:**
+
+- ✅ Notificações push para todos os eventos (pedidos, pagamentos, mensagens, etc)
+- ✅ Service Worker com cache offline
+- ✅ Gerenciamento de subscrições por usuário
+- ✅ Auto-limpeza de subscrições expiradas
+- ✅ Fallback automático se push falhar
+
+**Configuração no Portal:**
+
+Usuários podem ativar/desativar push notifications em **Portal > Configurações > Notificações**
+
+---
+
 ## 📱 WhatsApp Integration
 
 ### ✅ Status: Configurado e Testado
