@@ -607,10 +607,9 @@ export default function PerfilPage() {
                     Cancelar
                   </Button>
                   <Button
-                    variant="destructive"
+                    variant="danger"
                     onClick={handleDeleteAccount}
                     disabled={isDeleting || deleteConfirmation !== 'EXCLUIR MINHA CONTA'}
-                    className="bg-red-600 hover:bg-red-700"
                   >
                     {isDeleting ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

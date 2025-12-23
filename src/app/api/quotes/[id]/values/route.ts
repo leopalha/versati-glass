@@ -13,6 +13,8 @@ const itemUpdateSchema = z.object({
   width: z.number().nullable().optional(),
   height: z.number().nullable().optional(),
   color: z.string().nullable().optional(),
+  finish: z.string().nullable().optional(),
+  thickness: z.string().nullable().optional(),
 })
 
 const updateValuesSchema = z.object({
@@ -96,6 +98,8 @@ export async function PUT(request: Request, { params }: RouteParams) {
             width: item.width,
             height: item.height,
             color: item.color,
+            finish: item.finish,
+            thickness: item.thickness,
           },
         })
       })
@@ -114,6 +118,8 @@ export async function PUT(request: Request, { params }: RouteParams) {
           width: item.width,
           height: item.height,
           color: item.color,
+          finish: item.finish,
+          thickness: item.thickness,
         })),
       })
     }

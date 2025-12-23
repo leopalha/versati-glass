@@ -167,6 +167,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
 
   // PDF export
   const [exportingPdf, setExportingPdf] = useState(false)
+  const [exportingCustomerPdf, setExportingCustomerPdf] = useState(false)
 
   useEffect(() => {
     params.then((p) => setQuoteId(p.id))
@@ -268,6 +269,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             width: item.width,
             height: item.height,
             color: item.color,
+            finish: item.finish,
+            thickness: item.thickness,
           })),
           discount: editDiscount,
           shippingFee: editShippingFee,
@@ -335,17 +338,21 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
     }
   }
 
-  const handleExportPdf = async () => {
-    setExportingPdf(true)
+  const handleExportPdf = async (type: 'supplier' | 'customer' = 'supplier') => {
+    if (type === 'customer') {
+      setExportingCustomerPdf(true)
+    } else {
+      setExportingPdf(true)
+    }
     try {
-      const response = await fetch(`/api/quotes/${quoteId}/pdf`)
+      const response = await fetch(`/api/quotes/${quoteId}/pdf?type=${type}`)
       if (!response.ok) throw new Error('Erro ao gerar PDF')
 
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `orcamento-${quote?.number}.pdf`
+      a.download = `orcamento-${quote?.number}${type === 'customer' ? '-cliente' : '-fornecedor'}.pdf`
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
@@ -354,7 +361,11 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
       console.error('Erro:', error)
       alert('Erro ao exportar PDF')
     } finally {
-      setExportingPdf(false)
+      if (type === 'customer') {
+        setExportingCustomerPdf(false)
+      } else {
+        setExportingPdf(false)
+      }
     }
   }
 
@@ -435,7 +446,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleExportPdf}
+                  onClick={() => handleExportPdf('supplier')}
                   disabled={exportingPdf}
                   className="gap-2"
                 >
@@ -445,6 +456,20 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                     <Download className="h-4 w-4" />
                   )}
                   PDF Fornecedor
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleExportPdf('customer')}
+                  disabled={exportingCustomerPdf}
+                  className="gap-2"
+                >
+                  {exportingCustomerPdf ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <FileText className="h-4 w-4" />
+                  )}
+                  PDF Cliente
                 </Button>
                 {canSend && (
                   <Button size="sm" onClick={() => setShowSendDialog(true)} className="gap-2">
@@ -701,6 +726,17 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                 <tr>
                   <th className="pb-3 text-left text-sm font-medium text-neutral-500">Produto</th>
                   <th className="pb-3 text-center text-sm font-medium text-neutral-500">Medidas</th>
+                  {editMode && (
+                    <>
+                      <th className="pb-3 text-center text-sm font-medium text-neutral-500">Cor</th>
+                      <th className="pb-3 text-center text-sm font-medium text-neutral-500">
+                        Acabamento
+                      </th>
+                      <th className="pb-3 text-center text-sm font-medium text-neutral-500">
+                        Espessura
+                      </th>
+                    </>
+                  )}
                   <th className="pb-3 text-center text-sm font-medium text-neutral-500">Qtd</th>
                   <th className="pb-3 text-right text-sm font-medium text-neutral-500">
                     Preco Unit.
@@ -743,7 +779,42 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                       )}
                     </td>
                     <td className="py-4 text-center text-sm text-white">
-                      {item.width && item.height ? (
+                      {editMode ? (
+                        <div className="flex items-center justify-center gap-1">
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            placeholder="Larg."
+                            value={item.width || ''}
+                            onChange={(e) =>
+                              updateItemField(
+                                item.id,
+                                'width',
+                                e.target.value ? Number(e.target.value) : ''
+                              )
+                            }
+                            className="w-20 text-center text-xs"
+                          />
+                          <span className="text-neutral-500">x</span>
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            placeholder="Alt."
+                            value={item.height || ''}
+                            onChange={(e) =>
+                              updateItemField(
+                                item.id,
+                                'height',
+                                e.target.value ? Number(e.target.value) : ''
+                              )
+                            }
+                            className="w-20 text-center text-xs"
+                          />
+                          <span className="text-xs text-neutral-500">m</span>
+                        </div>
+                      ) : item.width && item.height ? (
                         <span>
                           {Number(item.width).toFixed(2)}m x {Number(item.height).toFixed(2)}m
                         </span>
@@ -751,6 +822,37 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
                         <span className="text-neutral-500">-</span>
                       )}
                     </td>
+                    {editMode && (
+                      <>
+                        <td className="py-4 text-center">
+                          <Input
+                            type="text"
+                            placeholder="Cor"
+                            value={item.color || ''}
+                            onChange={(e) => updateItemField(item.id, 'color', e.target.value)}
+                            className="w-24 text-center text-xs"
+                          />
+                        </td>
+                        <td className="py-4 text-center">
+                          <Input
+                            type="text"
+                            placeholder="Acabamento"
+                            value={item.finish || ''}
+                            onChange={(e) => updateItemField(item.id, 'finish', e.target.value)}
+                            className="w-24 text-center text-xs"
+                          />
+                        </td>
+                        <td className="py-4 text-center">
+                          <Input
+                            type="text"
+                            placeholder="Espessura"
+                            value={item.thickness || ''}
+                            onChange={(e) => updateItemField(item.id, 'thickness', e.target.value)}
+                            className="w-20 text-center text-xs"
+                          />
+                        </td>
+                      </>
+                    )}
                     <td className="py-4 text-center">
                       {editMode ? (
                         <Input
