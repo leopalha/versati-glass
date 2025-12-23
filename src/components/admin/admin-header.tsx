@@ -1,9 +1,9 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { Bell, Search } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { NotificationBell } from '@/components/notifications/notification-bell'
 
 interface AdminHeaderProps {
   title: string
@@ -32,12 +32,7 @@ export function AdminHeader({ title, subtitle, actions }: AdminHeaderProps) {
         </div>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
-            3
-          </span>
-        </Button>
+        <NotificationBell />
 
         {/* User info */}
         <div className="hidden items-center gap-3 sm:flex">

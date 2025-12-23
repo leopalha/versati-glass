@@ -39,6 +39,7 @@ model User {
   orders                Order[]
   quotes                Quote[]
   sessions              Session[]
+  notifications         Notification[]
 
   @@map("users")
 }
@@ -595,4 +596,32 @@ enum SupplierQuoteStatus {
   RESPONDED
   SELECTED
   REJECTED
+}
+
+// In-app notifications
+model Notification {
+  id          String             @id @default(uuid())
+  userId      String
+  type        NotificationType
+  title       String
+  message     String
+  link        String?
+  isRead      Boolean            @default(false)
+  createdAt   DateTime           @default(now())
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  QUOTE_RECEIVED
+  QUOTE_ACCEPTED
+  QUOTE_REJECTED
+  ORDER_STATUS_CHANGED
+  PAYMENT_RECEIVED
+  APPOINTMENT_REMINDER
+  APPOINTMENT_CONFIRMED
+  NEW_MESSAGE
+  SYSTEM
 }
