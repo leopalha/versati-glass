@@ -62,12 +62,14 @@ export function RegisterConfirmModal({
   isLoading = false,
 }: RegisterConfirmModalProps) {
   const { toast } = useToast()
+  const [mode, setMode] = useState<'register' | 'login'>('register')
   const [email, setEmail] = useState(customerData?.email || '')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isRegistering, setIsRegistering] = useState(false)
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [errors, setErrors] = useState<{ email?: string; password?: string; confirmPassword?: string }>({})
 
@@ -84,14 +86,17 @@ export function RegisterConfirmModal({
 
     if (!password) {
       newErrors.password = 'Senha e obrigatoria'
-    } else if (password.length < 6) {
+    } else if (mode === 'register' && password.length < 6) {
       newErrors.password = 'Senha deve ter no minimo 6 caracteres'
     }
 
-    if (!confirmPassword) {
-      newErrors.confirmPassword = 'Confirme sua senha'
-    } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'As senhas nao conferem'
+    // Only validate confirmPassword in register mode
+    if (mode === 'register') {
+      if (!confirmPassword) {
+        newErrors.confirmPassword = 'Confirme sua senha'
+      } else if (password !== confirmPassword) {
+        newErrors.confirmPassword = 'As senhas nao conferem'
+      }
     }
 
     setErrors(newErrors)
@@ -107,9 +112,14 @@ export function RegisterConfirmModal({
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Tente novamente'
 
-      // Se for erro de email duplicado, mostra no campo de email
+      // Se for erro de email duplicado, sugere fazer login
       if (errorMessage.toLowerCase().includes('email') && errorMessage.toLowerCase().includes('cadastrado')) {
-        setErrors({ email: errorMessage })
+        setErrors({
+          email: 'Este email já está cadastrado. Faça login abaixo.'
+        })
+        // Auto-switch to login mode
+        setMode('login')
+        setConfirmPassword('') // Clear confirm password field
       } else {
         toast({
           title: 'Erro ao criar conta',
@@ -119,6 +129,42 @@ export function RegisterConfirmModal({
       }
     } finally {
       setIsRegistering(false)
+    }
+  }
+
+  const handleLogin = async () => {
+    if (!validateForm()) return
+
+    setIsLoggingIn(true)
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setErrors({
+          password: 'Email ou senha incorretos'
+        })
+      } else if (result?.ok) {
+        toast({
+          title: 'Login realizado!',
+          description: 'Redirecionando para o resumo do orçamento...',
+          variant: 'success',
+        })
+        // Close modal and let the parent component handle the transition
+        // The parent will detect the session and redirect to step 6
+        window.location.reload()
+      }
+    } catch (error) {
+      toast({
+        title: 'Erro ao fazer login',
+        description: 'Tente novamente',
+        variant: 'error',
+      })
+    } finally {
+      setIsLoggingIn(false)
     }
   }
 
@@ -167,14 +213,56 @@ export function RegisterConfirmModal({
             {/* Header */}
             <div className="border-theme-default from-accent-500/10 border-b bg-gradient-to-r to-purple-500/10 p-6">
               <div className="flex items-start justify-between">
-                <div>
+                <div className="flex-1">
                   <div className="mb-2 flex items-center gap-2">
-                    <UserPlus className="h-6 w-6 text-accent-500" />
-                    <h2 className="font-display text-xl font-bold text-white">Criar Conta?</h2>
+                    {mode === 'register' ? (
+                      <UserPlus className="h-6 w-6 text-accent-500" />
+                    ) : (
+                      <Shield className="h-6 w-6 text-accent-500" />
+                    )}
+                    <h2 className="font-display text-xl font-bold text-white">
+                      {mode === 'register' ? 'Criar Conta' : 'Fazer Login'}
+                    </h2>
                   </div>
                   <p className="text-theme-muted text-sm">
-                    Crie uma conta para acompanhar seu orcamento e receber atualizacoes
+                    {mode === 'register'
+                      ? 'Crie uma conta para acompanhar seu orcamento'
+                      : 'Entre na sua conta para continuar'}
                   </p>
+
+                  {/* Mode toggle */}
+                  <div className="mt-3 flex gap-2">
+                    <button
+                      onClick={() => {
+                        setMode('register')
+                        setErrors({})
+                        setPassword('')
+                        setConfirmPassword('')
+                      }}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                        mode === 'register'
+                          ? 'bg-accent-500 text-white'
+                          : 'text-theme-muted hover:text-white'
+                      }`}
+                    >
+                      Criar Conta
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMode('login')
+                        setErrors({})
+                        setPassword('')
+                        setConfirmPassword('')
+                      }}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                        mode === 'login'
+                          ? 'bg-accent-500 text-white'
+                          : 'text-theme-muted hover:text-white'
+                      }`}
+                    >
+                      Já tenho conta
+                    </button>
+                  </div>
                 </div>
                 <button
                   onClick={onCancel}
@@ -245,7 +333,7 @@ export function RegisterConfirmModal({
                   variant="outline"
                   className="w-full"
                   onClick={handleGoogleSignIn}
-                  disabled={isGoogleLoading || isRegistering || isLoading}
+                  disabled={isGoogleLoading || isRegistering || isLoggingIn || isLoading}
                 >
                   {isGoogleLoading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -278,7 +366,9 @@ export function RegisterConfirmModal({
                   <span className="border-theme-default w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-theme-secondary text-theme-subtle px-2">ou crie uma conta</span>
+                  <span className="bg-theme-secondary text-theme-subtle px-2">
+                    {mode === 'register' ? 'ou crie uma conta' : 'ou faça login'}
+                  </span>
                 </div>
               </div>
 
@@ -300,7 +390,7 @@ export function RegisterConfirmModal({
                       }}
                       placeholder="seu@email.com"
                       className="pl-10"
-                      disabled={isRegistering || isLoading}
+                      disabled={isRegistering || isLoggingIn || isLoading}
                     />
                   </div>
                   {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
@@ -308,7 +398,7 @@ export function RegisterConfirmModal({
 
                 <div>
                   <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-white">
-                    Criar senha
+                    {mode === 'register' ? 'Criar senha' : 'Senha'}
                   </label>
                   <div className="relative">
                     <Shield className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
@@ -320,9 +410,9 @@ export function RegisterConfirmModal({
                         setPassword(e.target.value)
                         if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }))
                       }}
-                      placeholder="Minimo 6 caracteres"
+                      placeholder={mode === 'register' ? 'Minimo 6 caracteres' : 'Digite sua senha'}
                       className="pl-10 pr-10"
-                      disabled={isRegistering || isLoading}
+                      disabled={isRegistering || isLoggingIn || isLoading}
                     />
                     <button
                       type="button"
@@ -337,36 +427,39 @@ export function RegisterConfirmModal({
                   )}
                 </div>
 
-                <div>
-                  <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium text-white">
-                    Confirmar senha
-                  </label>
-                  <div className="relative">
-                    <Shield className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value)
-                        if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: undefined }))
-                      }}
-                      placeholder="Digite a senha novamente"
-                      className="pl-10 pr-10"
-                      disabled={isRegistering || isLoading}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
-                    >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
+                {/* Only show confirm password in register mode */}
+                {mode === 'register' && (
+                  <div>
+                    <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium text-white">
+                      Confirmar senha
+                    </label>
+                    <div className="relative">
+                      <Shield className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                      <Input
+                        id="confirmPassword"
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        value={confirmPassword}
+                        onChange={(e) => {
+                          setConfirmPassword(e.target.value)
+                          if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: undefined }))
+                        }}
+                        placeholder="Digite a senha novamente"
+                        className="pl-10 pr-10"
+                        disabled={isRegistering || isLoading}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+                      >
+                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                    {errors.confirmPassword && (
+                      <p className="mt-1 text-xs text-red-400">{errors.confirmPassword}</p>
+                    )}
                   </div>
-                  {errors.confirmPassword && (
-                    <p className="mt-1 text-xs text-red-400">{errors.confirmPassword}</p>
-                  )}
-                </div>
+                )}
               </div>
 
               {/* Benefits */}
@@ -381,39 +474,47 @@ export function RegisterConfirmModal({
             {/* Footer Actions */}
             <div className="border-theme-default border-t p-6">
               <div className="flex flex-col gap-3">
-                {/* Register Button */}
+                {/* Main Action Button (Register or Login) */}
                 <Button
-                  onClick={handleRegister}
-                  disabled={isRegistering || isLoading}
+                  onClick={mode === 'register' ? handleRegister : handleLogin}
+                  disabled={isRegistering || isLoggingIn || isLoading}
                   className="w-full bg-accent-500 font-medium text-neutral-900 hover:bg-accent-600"
                 >
-                  {isRegistering ? (
+                  {isRegistering || isLoggingIn ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Criando conta...
+                      {mode === 'register' ? 'Criando conta...' : 'Entrando...'}
                     </>
                   ) : (
                     <>
-                      <UserPlus className="mr-2 h-4 w-4" />
-                      Criar Conta e Continuar
+                      {mode === 'register' ? (
+                        <UserPlus className="mr-2 h-4 w-4" />
+                      ) : (
+                        <Shield className="mr-2 h-4 w-4" />
+                      )}
+                      {mode === 'register' ? 'Criar Conta e Continuar' : 'Entrar e Continuar'}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </>
                   )}
                 </Button>
 
-                {/* Continue as Guest */}
-                <Button
-                  variant="outline"
-                  onClick={onContinueAsGuest}
-                  disabled={isRegistering || isLoading}
-                  className="w-full"
-                >
-                  Continuar sem conta
-                </Button>
+                {/* Continue as Guest - only in register mode */}
+                {mode === 'register' && (
+                  <Button
+                    variant="outline"
+                    onClick={onContinueAsGuest}
+                    disabled={isRegistering || isLoading}
+                    className="w-full"
+                  >
+                    Continuar sem conta
+                  </Button>
+                )}
               </div>
 
               <p className="text-theme-subtle mt-3 text-center text-xs">
-                Ao criar uma conta, voce concorda com nossos termos de uso
+                {mode === 'register'
+                  ? 'Ao criar uma conta, voce concorda com nossos termos de uso'
+                  : 'Seus dados estao protegidos'}
               </p>
             </div>
           </Card>
