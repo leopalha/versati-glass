@@ -211,11 +211,30 @@ model Order {
   documents             Document[]
   items                 OrderItem[]
   timeline              OrderTimelineEntry[]
+  payments              Payment[]
   quote                 Quote?               @relation(fields: [quoteId], references: [id])
   supplier              Supplier?            @relation(fields: [supplierId], references: [id])
   user                  User                 @relation(fields: [userId], references: [id])
 
   @@map("orders")
+}
+
+// Payments for flexible payment methods
+model Payment {
+  id            String          @id @default(uuid())
+  orderId       String
+  method        PaymentMethod
+  amount        Decimal
+  installments  Int             @default(1)
+  status        PaymentStatus   @default(PENDING)
+  externalId    String?         // Stripe payment intent, PIX code, etc.
+  paidAt        DateTime?
+  notes         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  order         Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
 }
 
 model OrderItem {
