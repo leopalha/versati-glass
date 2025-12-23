@@ -4,9 +4,6 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '10mb',
     },
-    outputFileTracingExcludes: {
-      '/(public)/page': ['**/*'],
-    },
   },
   images: {
     formats: ['image/avif', 'image/webp'],
