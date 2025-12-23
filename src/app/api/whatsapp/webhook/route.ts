@@ -50,6 +50,10 @@ export async function POST(request: NextRequest) {
       mediaUrl: incomingMessage.mediaUrls[0] || null,
     })
 
+    // Save incoming WhatsApp message to dedicated table
+    const twilioMessageId = body.MessageSid || `msg_${Date.now()}`
+    const messageTimestamp = body.DateCreated ? new Date(body.DateCreated) : new Date()
+
     // Tentar vincular com usuário existente
     const user = await prisma.user.findFirst({
       where: {
@@ -101,6 +105,38 @@ export async function POST(request: NextRequest) {
       status: result.conversation.status,
       responseLength: result.response.length,
     })
+
+    // Save WhatsApp message to dedicated table after conversation is created
+    try {
+      await prisma.$executeRaw`
+        INSERT INTO whatsapp_messages (
+          id, "conversationId", "messageId", "from", "to", body, "mediaUrl",
+          status, direction, timestamp, "createdAt"
+        )
+        VALUES (
+          ${crypto.randomUUID()},
+          ${result.conversation.id},
+          ${twilioMessageId},
+          ${incomingMessage.from},
+          ${body.To?.replace('whatsapp:', '') || process.env.TWILIO_WHATSAPP_NUMBER || ''},
+          ${incomingMessage.body || ''},
+          ${incomingMessage.mediaUrls[0] || null},
+          ${'received'},
+          ${'inbound'},
+          ${messageTimestamp},
+          ${new Date()}
+        )
+        ON CONFLICT ("messageId") DO NOTHING
+      `
+
+      logger.debug('WhatsApp message saved to dedicated table', {
+        messageId: twilioMessageId,
+        conversationId: result.conversation.id,
+      })
+    } catch (saveError) {
+      logger.error('Error saving WhatsApp message to dedicated table:', saveError)
+      // Don't fail the webhook if saving to dedicated table fails
+    }
 
     // Return TwiML response (empty because we send via API)
     return new NextResponse(generateTwiMLResponse(), {

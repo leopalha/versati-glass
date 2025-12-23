@@ -337,13 +337,34 @@ model Conversation {
   appointmentId String?
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
-  lastMessageAt DateTime           @default(now())
-  assignedTo    User?              @relation("AssignedConversations", fields: [assignedToId], references: [id])
-  quote         Quote?             @relation(fields: [quoteId], references: [id])
-  user          User?              @relation(fields: [userId], references: [id])
-  messages      Message[]
+  lastMessageAt   DateTime           @default(now())
+  assignedTo      User?              @relation("AssignedConversations", fields: [assignedToId], references: [id])
+  quote           Quote?             @relation(fields: [quoteId], references: [id])
+  user            User?              @relation(fields: [userId], references: [id])
+  messages        Message[]
+  whatsappMessages WhatsAppMessage[]
 
   @@map("conversations")
+}
+
+model WhatsAppMessage {
+  id             String       @id @default(uuid())
+  conversationId String
+  messageId      String       @unique // Twilio message ID
+  from           String
+  to             String
+  body           String
+  mediaUrl       String?
+  status         String       // sent, delivered, read, failed
+  direction      String       // inbound, outbound
+  timestamp      DateTime
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([messageId])
+  @@index([timestamp])
+  @@map("whatsapp_messages")
 }
 
 model Message {

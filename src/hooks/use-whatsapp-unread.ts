@@ -15,25 +15,18 @@ export function useWhatsAppUnread() {
 
     const connect = () => {
       try {
-        // TEMP FIX: WhatsAppMessage model not in schema yet
-        // Disabled to prevent 500 errors
-        // TODO: Add WhatsAppMessage model to schema.prisma
-        /*
-        // Initial fetch
+        // Initial fetch from WhatsAppMessage model
         fetch('/api/whatsapp/messages')
           .then((res) => res.json())
           .then((data) => {
-            const total =
-              data.conversations?.reduce(
-                (sum: number, conv: { unreadCount: number }) => sum + conv.unreadCount,
-                0
-              ) || 0
-            setUnreadCount(total)
+            if (data.totalUnread !== undefined) {
+              setUnreadCount(data.totalUnread)
+            }
           })
-          .catch(() => {
-            // Ignore errors
+          .catch((error) => {
+            console.error('[useWhatsAppUnread] Error fetching messages:', error)
+            // Ignore errors - will retry via SSE
           })
-        */
 
         // Connect to SSE for real-time updates
         eventSource = new EventSource('/api/whatsapp/stream')
