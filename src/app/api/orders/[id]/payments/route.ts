@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 import { logger } from '@/lib/logger'
 import { Decimal } from '@prisma/client/runtime/library'
+import { notifyPaymentReceived } from '@/services/in-app-notifications'
 
 // Payment interface (until Prisma is regenerated)
 interface PaymentRecord {
@@ -168,6 +169,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
           paymentStatus: isPaidInFull ? 'PAID' : 'PARTIAL',
         },
       })
+
+      // Create in-app notification for customer
+      try {
+        await notifyPaymentReceived(order.userId, order.number, order.id, amount)
+      } catch (notifError) {
+        logger.error('Error creating payment notification:', notifError)
+      }
     }
 
     logger.info(`Payment added to order ${order.number}`, {
@@ -277,6 +285,15 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         paymentStatus: isPaidInFull ? 'PAID' : hasPartialPayment ? 'PARTIAL' : 'PENDING',
       },
     })
+
+    // Create in-app notification for customer if payment was confirmed
+    if (status === 'PAID') {
+      try {
+        await notifyPaymentReceived(order.userId, order.number, order.id, Number(payment.amount))
+      } catch (notifError) {
+        logger.error('Error creating payment notification:', notifError)
+      }
+    }
 
     logger.info(`Payment status updated`, {
       paymentId,

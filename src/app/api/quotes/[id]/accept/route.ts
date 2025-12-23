@@ -8,6 +8,7 @@ import {
   sanitizeCustomerName,
   formatCurrency,
 } from '@/lib/whatsapp-templates'
+import { notifyQuoteAccepted, createNotification } from '@/services/in-app-notifications'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -164,6 +165,33 @@ export async function PUT(request: Request, { params }: RouteParams) {
       orderNumber: order.number,
       userId: session.user.id,
     })
+
+    // Create in-app notification for customer
+    try {
+      await notifyQuoteAccepted(quote.userId, quote.number, quote.id)
+    } catch (notifError) {
+      logger.error('Error creating quote accepted notification:', notifError)
+    }
+
+    // Notify admins about quote acceptance
+    try {
+      const admins = await prisma.user.findMany({
+        where: { role: { in: ['ADMIN', 'STAFF'] } },
+        select: { id: true },
+      })
+
+      for (const admin of admins) {
+        await createNotification({
+          userId: admin.id,
+          type: 'QUOTE_ACCEPTED',
+          title: 'Orçamento Aceito',
+          message: `O cliente aceitou o orçamento #${quote.number}. Pedido #${order.number} criado.`,
+          link: `/admin/pedidos/${order.id}`,
+        })
+      }
+    } catch (notifError) {
+      logger.error('Error creating admin notifications:', notifError)
+    }
 
     // NOTIF.1: Enviar notificação WhatsApp de confirmação para cliente
     if (process.env.TWILIO_WHATSAPP_NUMBER && quote.customerPhone) {

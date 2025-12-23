@@ -11,6 +11,7 @@ import {
   sanitizeCustomerName,
 } from '@/lib/whatsapp-templates'
 import { createCalendarEvent, isGoogleCalendarEnabled } from '@/services/google-calendar'
+import { createNotification } from '@/services/in-app-notifications'
 
 // Get appointments for current user (or all if admin)
 export async function GET(request: NextRequest) {
@@ -209,6 +210,53 @@ export async function POST(request: NextRequest) {
       type: appointment.type,
       scheduledDate: appointment.scheduledDate,
     })
+
+    // Create in-app notification for customer
+    try {
+      const typeLabels: Record<string, string> = {
+        VISITA_TECNICA: 'Visita Técnica',
+        INSTALACAO: 'Instalação',
+        MANUTENCAO: 'Manutenção',
+        REVISAO: 'Revisão',
+      }
+
+      await createNotification({
+        userId: session.user.id,
+        type: 'APPOINTMENT_CONFIRMED',
+        title: 'Agendamento Criado',
+        message: `Sua ${typeLabels[type] || type} foi agendada para ${new Date(scheduledDate).toLocaleDateString('pt-BR')} às ${scheduledTime}.`,
+        link: '/portal/agendamentos',
+      })
+    } catch (notifError) {
+      logger.error('Error creating appointment notification:', notifError)
+    }
+
+    // Notify admins about new appointment
+    try {
+      const admins = await prisma.user.findMany({
+        where: { role: { in: ['ADMIN', 'STAFF'] } },
+        select: { id: true },
+      })
+
+      const typeLabels: Record<string, string> = {
+        VISITA_TECNICA: 'Visita Técnica',
+        INSTALACAO: 'Instalação',
+        MANUTENCAO: 'Manutenção',
+        REVISAO: 'Revisão',
+      }
+
+      for (const admin of admins) {
+        await createNotification({
+          userId: admin.id,
+          type: 'SYSTEM',
+          title: 'Novo Agendamento',
+          message: `${appointment.user.name || 'Cliente'} agendou uma ${typeLabels[type] || type} para ${new Date(scheduledDate).toLocaleDateString('pt-BR')}.`,
+          link: '/admin/agendamentos',
+        })
+      }
+    } catch (notifError) {
+      logger.error('Error creating admin notifications:', notifError)
+    }
 
     // NOTIF.3: Criar evento no Google Calendar
     if (isGoogleCalendarEnabled()) {

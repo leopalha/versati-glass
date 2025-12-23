@@ -11,6 +11,7 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import { z } from 'zod'
 import { OrderStatus } from '@prisma/client'
 import { logger } from '@/lib/logger'
+import { notifyOrderStatusChanged } from '@/services/in-app-notifications'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -134,6 +135,18 @@ export async function PUT(request: Request, { params }: RouteParams) {
         unitPrice: Number(item.unitPrice),
         totalPrice: Number(item.totalPrice),
       })),
+    }
+
+    // Create in-app notification for customer
+    try {
+      await notifyOrderStatusChanged(
+        updatedOrder.user.id,
+        updatedOrder.number,
+        updatedOrder.id,
+        validatedData.status
+      )
+    } catch (notifError) {
+      logger.error('Error creating order status notification:', notifError)
     }
 
     // Enviar notificação ao cliente via email

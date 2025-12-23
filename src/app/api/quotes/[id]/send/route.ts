@@ -6,6 +6,7 @@ import { generateQuoteSentEmailHtml } from '@/services/email-templates'
 import { sendWhatsAppMessage } from '@/services/whatsapp'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { logger } from '@/lib/logger'
+import { notifyQuoteReceived } from '@/services/in-app-notifications'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -156,6 +157,14 @@ export async function POST(request: Request, { params }: RouteParams) {
         html: emailHtml,
       })
       emailSent = true
+
+      // Create in-app notification for customer
+      try {
+        await notifyQuoteReceived(quote.user.id, quote.number, quote.id)
+      } catch (notifError) {
+        logger.error('Error creating quote notification:', notifError)
+        // Don't fail the request if notification creation fails
+      }
     } catch (emailError) {
       logger.error('Error sending quote email:', emailError)
       // Se falhou o envio do email, reverter status

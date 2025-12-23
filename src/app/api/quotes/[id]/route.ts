@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { logger } from '@/lib/logger'
+import { createNotification } from '@/services/in-app-notifications'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -179,6 +180,29 @@ export async function PATCH(request: Request, { params }: RouteParams) {
         status: newStatus,
       },
     })
+
+    // Send notification to admins about quote rejection/cancellation
+    if (newStatus === 'REJECTED' && isOwner && !isAdmin) {
+      try {
+        // Notify all admins
+        const admins = await prisma.user.findMany({
+          where: { role: { in: ['ADMIN', 'STAFF'] } },
+          select: { id: true },
+        })
+
+        for (const admin of admins) {
+          await createNotification({
+            userId: admin.id,
+            type: 'QUOTE_REJECTED',
+            title: 'Orçamento Recusado',
+            message: `O cliente recusou o orçamento #${quote.number}.`,
+            link: `/admin/orcamentos/${quote.id}`,
+          })
+        }
+      } catch (notifError) {
+        logger.error('Error creating quote rejection notification:', notifError)
+      }
+    }
 
     return NextResponse.json({
       id: updatedQuote.id,

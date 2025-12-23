@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { z } from 'zod'
 import { logger } from '@/lib/logger'
+import { notifyAppointmentConfirmed } from '@/services/in-app-notifications'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -71,6 +72,21 @@ export async function PUT(request: Request, { params }: RouteParams) {
         assignedTo: { select: { id: true, name: true } },
       },
     })
+
+    // Create in-app notification when status changes to CONFIRMED
+    if (validatedData.status === 'CONFIRMED' && existingAppointment.status !== 'CONFIRMED') {
+      try {
+        await notifyAppointmentConfirmed(
+          updatedAppointment.userId,
+          updatedAppointment.id,
+          updatedAppointment.type,
+          new Date(updatedAppointment.scheduledDate).toLocaleDateString('pt-BR'),
+          updatedAppointment.scheduledTime
+        )
+      } catch (notifError) {
+        logger.error('Error creating appointment confirmation notification:', notifError)
+      }
+    }
 
     // Enviar notificação por email ao cliente quando status mudar
     if (validatedData.status && validatedData.status !== existingAppointment.status) {

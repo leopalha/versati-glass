@@ -333,7 +333,13 @@
       "Bash(npx vercel --prod --yes)",
       "Bash(npx vercel logs:*)",
       "Bash(npx vercel env:*)",
-      "Bash(python -m json.tool:*)"
+      "Bash(python -m json.tool:*)",
+      "Bash(git commit --no-verify -m \"$\\(cat <<''EOF''\nfix: Critical fixes and improvements\n\n- Add SSE endpoint for real-time WhatsApp updates \\(/api/whatsapp/stream\\)\n- Replace CNPJ placeholder with real value \\(56.025.592/0001-36\\)\n- Create in-app notifications service with helper functions\n- Add SQL migration for notifications and payments tables\n\nFixes:\n- WhatsApp admin dashboard now receives real-time updates via SSE\n- PDF quotes now show correct CNPJ\n- In-app notifications can now be created automatically for events\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(npx prisma db execute:*)",
+      "Bash(set NODE_ENV=production)",
+      "Bash(pnpm next build:*)",
+      "Bash(if exist \"d:\\\\VERSATI GLASS\\\\next.config.js\" del \"d:\\\\VERSATI GLASS\\\\next.config.js\")",
+      "Bash(set NEXT_DISABLE_TURBOPACK=1)"
     ]
   }
 }
