@@ -170,6 +170,42 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 
 **Status:** ✅ Resolvido - Build funciona perfeitamente no Next.js 15.5.9
 
+### ⚡ Configurar Rate Limiting com Upstash Redis (Recomendado para Produção)
+
+O sistema usa rate limiting dual-mode: **Upstash Redis** (persistente) com fallback **in-memory** (desenvolvimento).
+
+**⚠️ IMPORTANTE:** Em produção, configure Upstash Redis para rate limiting distribuído entre todas as instâncias serverless.
+
+#### Passo 1: Criar conta gratuita Upstash
+
+1. Acesse https://upstash.com e crie uma conta
+2. Crie um novo Redis database (região mais próxima do deploy)
+3. Copie as credenciais REST API
+
+#### Passo 2: Adicionar ao .env.production
+
+```bash
+# Upstash Redis (Rate Limiting Distribuído)
+UPSTASH_REDIS_REST_URL=https://your-region.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your-token-here
+```
+
+#### Passo 3: Verificar funcionamento
+
+```bash
+# Checar logs para confirmar uso do Redis
+# Deve aparecer: [RATE_LIMIT] Upstash Redis initialized
+```
+
+**Benefícios:**
+
+- ✅ FREE tier: 10,000 requests/dia
+- ✅ Serverless-friendly (REST API)
+- ✅ Compartilhado entre todas as instâncias Vercel
+- ✅ Analytics built-in
+
+**Sem Upstash:** Sistema usa fallback in-memory (não persiste entre restarts, não compartilha entre instâncias).
+
 ---
 
 ## 📱 WhatsApp Integration

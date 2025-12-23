@@ -8,9 +8,10 @@ import { NotificationBell } from '@/components/notifications/notification-bell'
 interface PortalHeaderProps {
   title: string
   subtitle?: string
+  action?: React.ReactNode
 }
 
-export function PortalHeader({ title, subtitle }: PortalHeaderProps) {
+export function PortalHeader({ title, subtitle, action }: PortalHeaderProps) {
   const { data: session } = useSession()
 
   return (
@@ -21,6 +22,8 @@ export function PortalHeader({ title, subtitle }: PortalHeaderProps) {
       </div>
 
       <div className="flex items-center gap-4">
+        {/* Action button (optional) */}
+        {action && <div>{action}</div>}
         {/* Search */}
         <div className="relative hidden md:block">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />

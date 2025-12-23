@@ -6,6 +6,7 @@ import { logger } from '@/lib/logger'
 import { sendOrderStatusUpdateEmail } from '@/services/email'
 import { sendTemplateMessage } from '@/services/whatsapp'
 import { formatCurrency } from '@/lib/utils'
+import { notifyPaymentReceived } from '@/services/in-app-notifications'
 
 const PORTAL_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://versatiglass.com.br'
 
@@ -74,6 +75,14 @@ export async function POST(request: Request) {
         })
 
         // Send notifications to customer
+        try {
+          // Send in-app notification
+          await notifyPaymentReceived(order.userId, order.number, order.id, paidAmount)
+          logger.debug(`In-app notification sent for order ${order.number}`)
+        } catch (notifError) {
+          logger.error(`Failed to send in-app notification for order ${order.number}:`, notifError)
+        }
+
         try {
           // Send email notification
           await sendOrderStatusUpdateEmail({

@@ -8,6 +8,7 @@ import { processIncomingMessage } from '@/services/conversation'
 import { logger } from '@/lib/logger'
 import { prisma } from '@/lib/prisma'
 import { linkWebChatToWhatsApp } from '@/services/unified-context'
+import { notifyNewMessage } from '@/services/in-app-notifications'
 
 // Twilio sends webhooks as POST requests
 export async function POST(request: NextRequest) {
@@ -136,6 +137,34 @@ export async function POST(request: NextRequest) {
     } catch (saveError) {
       logger.error('Error saving WhatsApp message to dedicated table:', saveError)
       // Don't fail the webhook if saving to dedicated table fails
+    }
+
+    // Send in-app notification to admin users about new WhatsApp message
+    try {
+      // Get all admin/staff users
+      const adminUsers = await prisma.user.findMany({
+        where: {
+          role: { in: ['ADMIN', 'STAFF'] },
+        },
+        select: { id: true },
+      })
+
+      // Send notification to each admin
+      for (const admin of adminUsers) {
+        await notifyNewMessage(
+          admin.id,
+          incomingMessage.profileName || 'Cliente',
+          result.conversation.id
+        )
+      }
+
+      logger.debug('New message notifications sent to admins', {
+        conversationId: result.conversation.id,
+        adminCount: adminUsers.length,
+      })
+    } catch (notifError) {
+      logger.error('Error sending new message notifications:', notifError)
+      // Don't fail the webhook if notification fails
     }
 
     // Return TwiML response (empty because we send via API)
