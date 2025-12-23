@@ -1,33 +1,103 @@
 /**
  * FQ.7.2: Rate Limiting Middleware
  *
- * Simple in-memory rate limiter for API routes.
- * For production, consider using Redis or Upstash Rate Limit.
+ * Distributed rate limiter using Upstash Redis for serverless environments.
+ * Falls back to in-memory rate limiting if Redis is not configured.
  */
 
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
 import { logger } from './logger'
+
+// ============================================================================
+// UPSTASH REDIS CONFIGURATION
+// ============================================================================
+
+let redis: Redis | null = null
+let ratelimiters: Map<string, Ratelimit> = new Map()
+
+/**
+ * Check if Upstash Redis is configured
+ */
+function isRedisConfigured(): boolean {
+  return !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
+}
+
+/**
+ * Initialize Redis client (lazy loading)
+ */
+function getRedis(): Redis | null {
+  if (!isRedisConfigured()) {
+    return null
+  }
+
+  if (!redis) {
+    redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL!,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    })
+    logger.info('[RATE_LIMIT] Upstash Redis initialized')
+  }
+
+  return redis
+}
+
+/**
+ * Get or create a ratelimiter for specific configuration
+ */
+function getRatelimiter(config: RateLimitConfig): Ratelimit | null {
+  const redisClient = getRedis()
+  if (!redisClient) {
+    return null
+  }
+
+  const key = `${config.maxRequests}-${config.windowSeconds}`
+
+  if (!ratelimiters.has(key)) {
+    const ratelimiter = new Ratelimit({
+      redis: redisClient,
+      limiter: Ratelimit.slidingWindow(config.maxRequests, `${config.windowSeconds} s`),
+      analytics: true,
+      prefix: 'versati_glass',
+    })
+    ratelimiters.set(key, ratelimiter)
+    logger.debug('[RATE_LIMIT] Created new ratelimiter', { key, config })
+  }
+
+  return ratelimiters.get(key)!
+}
+
+// ============================================================================
+// IN-MEMORY FALLBACK (for development or when Redis is not configured)
+// ============================================================================
 
 interface RateLimitEntry {
   count: number
   resetTime: number
 }
 
-// In-memory store for rate limiting
+// In-memory store for rate limiting (fallback)
 const rateLimitStore = new Map<string, RateLimitEntry>()
 
 // Cleanup old entries every 5 minutes
-setInterval(
-  () => {
-    const now = Date.now()
-    const entries = Array.from(rateLimitStore.entries())
-    for (const [key, entry] of entries) {
-      if (entry.resetTime < now) {
-        rateLimitStore.delete(key)
+if (typeof setInterval !== 'undefined') {
+  setInterval(
+    () => {
+      const now = Date.now()
+      const entries = Array.from(rateLimitStore.entries())
+      for (const [key, entry] of entries) {
+        if (entry.resetTime < now) {
+          rateLimitStore.delete(key)
+        }
       }
-    }
-  },
-  5 * 60 * 1000
-)
+    },
+    5 * 60 * 1000
+  )
+}
+
+// ============================================================================
+// TYPE DEFINITIONS
+// ============================================================================
 
 export interface RateLimitConfig {
   /**
@@ -53,8 +123,14 @@ export interface RateLimitResult {
   reset: number
 }
 
+// ============================================================================
+// MAIN RATE LIMIT FUNCTION
+// ============================================================================
+
 /**
  * Check if a request should be rate limited
+ *
+ * Uses Upstash Redis if configured, otherwise falls back to in-memory rate limiting.
  *
  * @param request - Next.js Request object
  * @param config - Rate limit configuration
@@ -68,7 +144,45 @@ export async function rateLimit(
 
   // Get identifier (IP address or custom identifier)
   const ip = identifier || getClientIP(request)
-  const key = `rate_limit:${ip}`
+  const key = ip
+
+  // Try to use Redis-based rate limiting
+  const ratelimiter = getRatelimiter(config)
+
+  if (ratelimiter) {
+    try {
+      const result = await ratelimiter.limit(key)
+
+      if (!result.success) {
+        logger.warn('[RATE_LIMIT] Request blocked (Redis)', {
+          ip,
+          limit: result.limit,
+          remaining: result.remaining,
+          reset: new Date(result.reset).toISOString(),
+        })
+      }
+
+      return {
+        success: result.success,
+        limit: result.limit,
+        remaining: result.remaining,
+        reset: Math.ceil(result.reset / 1000),
+      }
+    } catch (error) {
+      logger.error('[RATE_LIMIT] Redis error, falling back to in-memory', error)
+      // Fall through to in-memory implementation
+    }
+  }
+
+  // Fallback: In-memory rate limiting
+  return rateLimitInMemory(key, config)
+}
+
+/**
+ * In-memory rate limiting (fallback when Redis is not available)
+ */
+function rateLimitInMemory(key: string, config: RateLimitConfig): RateLimitResult {
+  const { maxRequests, windowSeconds } = config
 
   const now = Date.now()
   const windowMs = windowSeconds * 1000
@@ -94,8 +208,8 @@ export async function rateLimit(
   const reset = Math.ceil(entry.resetTime / 1000)
 
   if (!success) {
-    logger.warn('[RATE_LIMIT] Request blocked', {
-      ip,
+    logger.warn('[RATE_LIMIT] Request blocked (in-memory)', {
+      key,
       count: entry.count,
       limit: maxRequests,
       resetTime: new Date(entry.resetTime).toISOString(),
@@ -128,6 +242,10 @@ function getClientIP(request: Request): string {
   // Fallback to a default identifier
   return 'unknown'
 }
+
+// ============================================================================
+// PRESET RATE LIMIT CONFIGURATIONS
+// ============================================================================
 
 /**
  * Preset rate limit configurations
@@ -184,6 +302,10 @@ export const RATE_LIMITS = {
   },
 } as const
 
+// ============================================================================
+// LEGACY API (for backward compatibility)
+// ============================================================================
+
 /**
  * Legacy getClientIp function for backward compatibility
  */
@@ -201,32 +323,11 @@ interface LegacyRateLimitResult {
 }
 
 export function rateLimitSync(key: string, config: RateLimitConfig): LegacyRateLimitResult {
-  const now = Date.now()
-  const windowMs = config.windowSeconds * 1000
+  const result = rateLimitInMemory(key, config)
+  const resetIn = result.reset - Math.floor(Date.now() / 1000)
 
-  let entry = rateLimitStore.get(key)
-
-  if (!entry || entry.resetTime < now) {
-    entry = {
-      count: 0,
-      resetTime: now + windowMs,
-    }
-    rateLimitStore.set(key, entry)
+  return {
+    success: result.success,
+    resetIn: Math.max(0, resetIn),
   }
-
-  entry.count++
-
-  const success = entry.count <= config.maxRequests
-  const resetIn = Math.ceil((entry.resetTime - now) / 1000)
-
-  if (!success) {
-    logger.warn('[RATE_LIMIT] Request blocked (sync)', {
-      key,
-      count: entry.count,
-      limit: config.maxRequests,
-      resetIn,
-    })
-  }
-
-  return { success, resetIn }
 }
