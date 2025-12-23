@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { PaymentButton } from '@/components/portal/payment-button'
+import { UploadDocumentDialog } from '@/components/portal/upload-document-dialog'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -331,13 +332,16 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
             )}
 
             {/* Documents */}
-            {order.documents.length > 0 && (
-              <Card className="p-6">
-                <div className="mb-4 flex items-center gap-2">
+            <Card className="p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
                   <FileText className="h-5 w-5 text-gold-500" />
                   <h2 className="font-display text-lg font-semibold text-white">Documentos</h2>
                 </div>
+                <UploadDocumentDialog orderId={order.id} />
+              </div>
 
+              {order.documents.length > 0 ? (
                 <div className="space-y-2">
                   {order.documents.map((doc) => (
                     <a
@@ -352,8 +356,12 @@ export default async function PedidoDetalhePage({ params }: PageProps) {
                     </a>
                   ))}
                 </div>
-              </Card>
-            )}
+              ) : (
+                <p className="text-center text-sm text-neutral-400">
+                  Nenhum documento ainda. Envie fotos ou documentos relacionados a este pedido.
+                </p>
+              )}
+            </Card>
           </div>
         </div>
       </div>

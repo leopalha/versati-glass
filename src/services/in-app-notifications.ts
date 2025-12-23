@@ -10,6 +10,7 @@ type NotificationType =
   | 'APPOINTMENT_REMINDER'
   | 'APPOINTMENT_CONFIRMED'
   | 'NEW_MESSAGE'
+  | 'DOCUMENT_UPLOADED'
   | 'SYSTEM'
 
 interface CreateNotificationParams {
@@ -164,4 +165,39 @@ export async function notifyNewMessage(userId: string, senderName: string, conve
     message: `${senderName} enviou uma mensagem para você.`,
     link: `/portal/conversas/${conversationId}`,
   })
+}
+
+export async function notifyDocumentUploaded(
+  customerName: string,
+  documentName: string,
+  orderId?: string,
+  quoteId?: string
+) {
+  // Notify all admins and staff
+  const admins = await prisma.user.findMany({
+    where: {
+      role: { in: ['ADMIN', 'STAFF'] },
+    },
+    select: { id: true },
+  })
+
+  const link = orderId
+    ? `/admin/pedidos/${orderId}`
+    : quoteId
+      ? `/admin/orcamentos/${quoteId}`
+      : '/admin/documentos'
+
+  const referenceText = orderId ? `no pedido` : quoteId ? `no orçamento` : ''
+
+  await Promise.all(
+    admins.map((admin) =>
+      createNotification({
+        userId: admin.id,
+        type: 'DOCUMENT_UPLOADED',
+        title: 'Cliente Enviou Documento',
+        message: `${customerName} enviou "${documentName}" ${referenceText}.`,
+        link,
+      })
+    )
+  )
 }

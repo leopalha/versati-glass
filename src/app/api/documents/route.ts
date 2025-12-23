@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 import { logger } from '@/lib/logger'
 import { uploadToR2, isR2Configured } from '@/lib/r2-storage'
+import { notifyDocumentUploaded } from '@/services/in-app-notifications'
 
 const createDocumentSchema = z.object({
   orderId: z.string().optional(),
@@ -95,8 +96,7 @@ export async function POST(request: Request) {
   try {
     const session = await auth()
 
-    // Apenas admin e staff podem fazer upload
-    if (!session?.user || (session.user.role !== 'ADMIN' && session.user.role !== 'STAFF')) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
@@ -112,24 +112,88 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Nenhum arquivo enviado' }, { status: 400 })
     }
 
-    // Validar tipo de arquivo (permitir PDFs, imagens e documentos)
-    const allowedTypes = [
-      'application/pdf',
-      'image/jpeg',
-      'image/jpg',
-      'image/png',
-      'image/webp',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    ]
+    // Verificar se o cliente está tentando fazer upload para seus próprios pedidos/orçamentos
+    const isCustomer = session.user.role === 'CUSTOMER'
+    if (isCustomer) {
+      // Validar ownership do pedido ou orçamento
+      if (orderId) {
+        const order = await prisma.order.findUnique({
+          where: { id: orderId },
+          select: { userId: true },
+        })
 
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json({ error: 'Tipo de arquivo não permitido' }, { status: 400 })
+        if (!order || order.userId !== session.user.id) {
+          return NextResponse.json(
+            { error: 'Você não tem permissão para fazer upload neste pedido' },
+            { status: 403 }
+          )
+        }
+      }
+
+      if (quoteId) {
+        const quote = await prisma.quote.findUnique({
+          where: { id: quoteId },
+          select: { userId: true },
+        })
+
+        if (!quote || quote.userId !== session.user.id) {
+          return NextResponse.json(
+            { error: 'Você não tem permissão para fazer upload neste orçamento' },
+            { status: 403 }
+          )
+        }
+      }
+
+      // Clientes só podem enviar fotos e PDFs
+      if (!['PHOTO', 'OTHER'].includes(type)) {
+        return NextResponse.json(
+          { error: 'Clientes podem enviar apenas fotos ou documentos gerais' },
+          { status: 400 }
+        )
+      }
     }
 
-    // Tamanho máximo: 10MB
-    if (file.size > 10 * 1024 * 1024) {
-      return NextResponse.json({ error: 'Arquivo muito grande (máx 10MB)' }, { status: 400 })
+    // Validar tipo de arquivo
+    const allowedTypes = isCustomer
+      ? [
+          // Clientes: apenas fotos e PDFs
+          'application/pdf',
+          'image/jpeg',
+          'image/jpg',
+          'image/png',
+          'image/webp',
+        ]
+      : [
+          // Admin/Staff: todos os tipos
+          'application/pdf',
+          'image/jpeg',
+          'image/jpg',
+          'image/png',
+          'image/webp',
+          'application/msword',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ]
+
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json(
+        {
+          error: isCustomer
+            ? 'Apenas PDFs e imagens são permitidos'
+            : 'Tipo de arquivo não permitido',
+        },
+        { status: 400 }
+      )
+    }
+
+    // Tamanho máximo: 5MB para clientes, 10MB para admin/staff
+    const maxSize = isCustomer ? 5 * 1024 * 1024 : 10 * 1024 * 1024
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        {
+          error: isCustomer ? 'Arquivo muito grande (máx 5MB)' : 'Arquivo muito grande (máx 10MB)',
+        },
+        { status: 400 }
+      )
     }
 
     // Upload para R2
@@ -176,6 +240,26 @@ export async function POST(request: Request) {
         },
       },
     })
+
+    // Notificar admins quando cliente faz upload
+    if (isCustomer) {
+      try {
+        await notifyDocumentUploaded(
+          session.user.name || 'Cliente',
+          document.name,
+          orderId || undefined,
+          quoteId || undefined
+        )
+        logger.info('Admin notified of customer document upload', {
+          documentId: document.id,
+          customerId: session.user.id,
+          customerName: session.user.name,
+        })
+      } catch (notifError) {
+        logger.error('Failed to notify admins of document upload:', notifError)
+        // Don't fail the upload if notification fails
+      }
+    }
 
     return NextResponse.json(
       {

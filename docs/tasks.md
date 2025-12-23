@@ -1,44 +1,51 @@
 # VERSATI GLASS - ROADMAP COMPLETO
 
-**Última Atualização:** 23 Dezembro 2024 - INFRAESTRUTURA + WHATSAPP
-**Status Geral:** ✅ 100% MVP COMPLETO | R2 Storage ✅ | Rate Limiting ✅ | WhatsApp Model ✅ | Build ✅ | TypeScript 0 erros ✅
+**Última Atualização:** 23 Dezembro 2024 - CUSTOMER DOCUMENT UPLOAD
+**Status Geral:** ✅ 100% MVP COMPLETO | R2 Storage ✅ | Rate Limiting ✅ | WhatsApp Model ✅ | Customer Upload ✅ | Build ✅ | TypeScript 0 erros ✅
 **BLOCKER CRÍTICO:** ✅ RESOLVIDO - Next.js 15.5.9 | Build perfeito | Dev script corrigido
 
 ---
 
-## 🚨 SESSÃO ATUAL: MANUTENÇÃO E DOCUMENTAÇÃO (23 DEZ 2024)
+## 🚨 SESSÃO ATUAL: CUSTOMER DOCUMENT UPLOAD (23 DEZ 2024)
 
-**Início:** 23 Dezembro 2024 - 00:15
+**Início:** 23 Dezembro 2024 - 02:30
 **Agente:** Autônomo de Desenvolvimento (--dangerously-skip-user-approvals)
 **Protocolo:** Executar tarefas pendentes → Atualizar documentação → Repetir
-**Status:** ✅ COMPLETO - Todas tarefas P0-P2 dos sprints BUILD e QUALITY concluídas
+**Status:** ✅ COMPLETO - Task #10 from TAREFAS_POS_ANALISE.md implementada
 
 ### 📋 Tarefas Completadas Nesta Sessão (23 DEZ 2024)
 
-| ID | Tarefa | Tempo | Status |
-|----|--------|-------|--------|
-| 1 | Migrar File Storage para Cloudflare R2 | 45min | ✅ Completo |
-| 2 | Implementar Rate Limiting distribuído (Upstash Redis) | 60min | ✅ Completo |
-| 3 | Adicionar modelo WhatsAppMessage dedicado | 40min | ✅ Completo |
-| 4 | Atualizar documentação (TAREFAS_POS_ANALISE.md) | 15min | ✅ Completo |
+| ID  | Tarefa                                                | Tempo | Status      |
+| --- | ----------------------------------------------------- | ----- | ----------- |
+| 1   | Migrar File Storage para Cloudflare R2                | 45min | ✅ Completo |
+| 2   | Implementar Rate Limiting distribuído (Upstash Redis) | 60min | ✅ Completo |
+| 3   | Adicionar modelo WhatsAppMessage dedicado             | 40min | ✅ Completo |
+| 4   | Atualizar documentação (TAREFAS_POS_ANALISE.md)       | 15min | ✅ Completo |
+| 5   | Implementar Customer Document Upload (Task #10)       | 60min | ✅ Completo |
 
-**Tempo Total:** ~2h40min
-**Arquivos Modificados:** 10+
+**Tempo Total:** ~3h40min
+**Arquivos Modificados:** 15+
 **Principais Mudanças:**
+
 - ✅ Todos uploads agora vão para R2 (persistent storage)
 - ✅ Rate limiting pronto para Redis distribuído (fallback in-memory)
 - ✅ Mensagens WhatsApp organizadas em tabela dedicada
 - ✅ APIs e hooks atualizados para novos modelos
+- ✅ Clientes podem fazer upload de documentos/fotos para seus pedidos
+- ✅ Notificações in-app para admins quando clientes enviam documentos
+- ✅ Validação de ownership e limites de segurança para clientes
 
 ### 🎯 Próximas Ações Recomendadas (Por Prioridade)
 
 #### P1 - Alta Prioridade (Bloqueadores de Deploy)
+
 1. **E2E Tests** - Completar cobertura de testes E2E (GAP.1)
    - 4 testes pendentes identificados
    - Aumentar cobertura de 93.75% para 100%
    - Arquivo: `e2e/tests/` (vários)
 
 #### P2 - Média Prioridade (Melhorias Importantes)
+
 2. **Configurar Upstash Redis** - Rate limiting persistente (docs/17_INTEGRACOES.md#12.9)
    - Criar conta gratuita em https://upstash.com
    - Adicionar `UPSTASH_REDIS_REST_URL` e `UPSTASH_REDIS_REST_TOKEN` ao .env
@@ -55,6 +62,7 @@
    - Backend para envio de notificações
 
 #### P3 - Baixa Prioridade (Nice-to-Have)
+
 5. **QUAL.7** - Adicionar testes unitários para hooks
    - Criar `src/__tests__/hooks/`
    - Testar hooks customizados (use-whatsapp-unread, etc)
@@ -71,6 +79,7 @@
    - Download automático
 
 #### 📋 Backlog (Futuro)
+
 - Migração Twilio Sandbox → WhatsApp Business API
 - Dashboard de analytics avançado
 - Sistema de notificações por email para admin
@@ -92,23 +101,27 @@
 **Problema:** Next.js 16.1.0-canary.12 usa Turbopack por padrão, que falha ao criar symlinks no Windows sem privilégios de administrador.
 
 **Erro Exato:**
+
 ```
 Error [TurbopackInternalError]: create symlink to ../../../node_modules/.pnpm/@prisma+client@6.19.0...
 Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 ```
 
 **Impacto:**
+
 - ❌ `pnpm build` falha 100% das vezes
 - ❌ Deploy para produção bloqueado
 - ✅ `pnpm dev` funciona normalmente (usa `--webpack` flag)
 - ✅ `pnpm type-check` passa sem erros
 
 **Soluções Tentadas:**
+
 1. ❌ Desabilitar Turbopack via `experimental.turbo: false` → Não funcionou
 2. ❌ Variável `NEXT_DISABLE_TURBOPACK=1` → Não reconhecida
 3. ✅ Criado [next.config.mjs](../next.config.mjs) com configuração Webpack
 
 **Soluções Pendentes:**
+
 - [ ] Executar PowerShell como Administrador e rodar `pnpm build`
 - [ ] OU fazer downgrade para Next.js 15.x estável (sem Turbopack forçado)
 - [ ] OU criar script de build alternativo com Webpack forçado
@@ -127,6 +140,7 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 **Status:** ✅ COMPLETO
 
 **Resumo Executivo:**
+
 - **Código Total:** ~200+ arquivos TypeScript/TSX
 - **Páginas:** 54 rotas funcionais
 - **APIs:** 74 endpoints
@@ -138,17 +152,18 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 
 **Problemas Identificados:**
 
-| ID   | Tipo       | Descrição                                              | Arquivo                                | Severidade | Status    |
-| ---- | ---------- | ------------------------------------------------------ | -------------------------------------- | ---------- | --------- |
-| P.1  | BLOCKER    | Turbopack symlink error (Windows privilege)            | package.json, build process            | 🔴 P0      | Detectado |
-| P.2  | WARNING    | Hook WhatsApp unread retorna sempre 0                  | src/hooks/use-whatsapp-unread.ts:20    | 🟡 P2      | Detectado |
-| P.3  | WARNING    | Google OAuth depende de env vars corretas              | src/lib/auth.ts:39-44                  | 🟡 P2      | Detectado |
-| P.4  | INFO       | Rate limiting em memória (não persiste entre restarts) | src/lib/rate-limit.ts                  | 🟢 P3      | Detectado |
-| P.5  | INFO       | Logger recursion fix aplicado                          | src/lib/logger.ts:59,69                | ✅ Fixado  | Validado  |
-| P.6  | CHALLENGE  | Middleware deprecation warning (use "proxy" instead)   | Next.js warnings                       | 🟡 P2      | Detectado |
-| P.7  | CHALLENGE  | TypeScript `ignoreBuildErrors: true` em produção       | next.config.js:30                      | 🟡 P2      | Detectado |
+| ID  | Tipo      | Descrição                                              | Arquivo                             | Severidade | Status    |
+| --- | --------- | ------------------------------------------------------ | ----------------------------------- | ---------- | --------- |
+| P.1 | BLOCKER   | Turbopack symlink error (Windows privilege)            | package.json, build process         | 🔴 P0      | Detectado |
+| P.2 | WARNING   | Hook WhatsApp unread retorna sempre 0                  | src/hooks/use-whatsapp-unread.ts:20 | 🟡 P2      | Detectado |
+| P.3 | WARNING   | Google OAuth depende de env vars corretas              | src/lib/auth.ts:39-44               | 🟡 P2      | Detectado |
+| P.4 | INFO      | Rate limiting em memória (não persiste entre restarts) | src/lib/rate-limit.ts               | 🟢 P3      | Detectado |
+| P.5 | INFO      | Logger recursion fix aplicado                          | src/lib/logger.ts:59,69             | ✅ Fixado  | Validado  |
+| P.6 | CHALLENGE | Middleware deprecation warning (use "proxy" instead)   | Next.js warnings                    | 🟡 P2      | Detectado |
+| P.7 | CHALLENGE | TypeScript `ignoreBuildErrors: true` em produção       | next.config.js:30                   | 🟡 P2      | Detectado |
 
 **Estatísticas de Qualidade:**
+
 - ✅ TypeScript: 0 erros de compilação (`pnpm type-check` passou)
 - ✅ Arquitetura: Clean Architecture bem implementada
 - ✅ Validação: Zod schemas em todas as APIs críticas
@@ -159,15 +174,15 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 
 **Métricas de Cobertura:**
 
-| Categoria            | Implementado   | Pendente      | % Completo |
-| -------------------- | -------------- | ------------- | ---------- |
-| Core MVP             | 195/195 tasks  | 0             | ✅ 100%    |
-| IA Features          | 90%            | 10%           | ⚠️ 90%     |
-| Notifications        | 100%           | 0             | ✅ 100%    |
-| E2E Tests            | 60/64 testes   | 4             | ✅ 93.75%  |
-| Documentation        | 23/23 docs     | 0             | ✅ 100%    |
-| Deploy Readiness     | 95% (blocked)  | Build issue   | 🔴 95%     |
-| **TOTAL PLATAFORMA** | **~99%**       | **Build + 4** | **🟡 99%** |
+| Categoria            | Implementado  | Pendente      | % Completo |
+| -------------------- | ------------- | ------------- | ---------- |
+| Core MVP             | 195/195 tasks | 0             | ✅ 100%    |
+| IA Features          | 90%           | 10%           | ⚠️ 90%     |
+| Notifications        | 100%          | 0             | ✅ 100%    |
+| E2E Tests            | 60/64 testes  | 4             | ✅ 93.75%  |
+| Documentation        | 23/23 docs    | 0             | ✅ 100%    |
+| Deploy Readiness     | 95% (blocked) | Build issue   | 🔴 95%     |
+| **TOTAL PLATAFORMA** | **~99%**      | **Build + 4** | **🟡 99%** |
 
 ---
 
@@ -232,18 +247,21 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 **Objetivo:** Resolver BLOCKER P0 - Build de produção falhando
 
 **Problema:**
+
 - Next.js 16.1.0-canary forçava Turbopack
 - Turbopack falhava criando symlinks no Windows (privilege error 1314)
 - `pnpm build` bloqueado 100%
 
 **Solução Implementada:**
+
 1. ✅ Downgrade Next.js: `16.1.0-canary` → `15.5.9` (versão estável)
 2. ✅ Correção de 2 erros ESLint:
-   - [conversas/unificadas/page.tsx:60](../src/app/(admin)/admin/conversas/unificadas/page.tsx#L60) - Escaped quotes
+   - [conversas/unificadas/page.tsx:60](<../src/app/(admin)/admin/conversas/unificadas/page.tsx#L60>) - Escaped quotes
    - [rate-limit.ts:17](../src/lib/rate-limit.ts#L17) - `let` → `const`
 3. ✅ Build compilado com sucesso em 47s (primeiro build) / 3.4min (com TypeScript validation)
 
 **Resultados:**
+
 - ✅ Build para produção funcionando 100%
 - ✅ 0 erros TypeScript
 - ✅ 0 erros ESLint bloqueantes
@@ -251,9 +269,10 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 - ✅ Plataforma pronta para deploy
 
 **Arquivos Modificados:**
+
 - [package.json:71](../package.json#L71) - Next.js version
 - [next.config.mjs:38](../next.config.mjs#L38) - ignoreBuildErrors: false
-- [conversas/unificadas/page.tsx:60](../src/app/(admin)/admin/conversas/unificadas/page.tsx#L60)
+- [conversas/unificadas/page.tsx:60](<../src/app/(admin)/admin/conversas/unificadas/page.tsx#L60>)
 - [rate-limit.ts:17](../src/lib/rate-limit.ts#L17)
 
 ---
@@ -266,15 +285,16 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 
 **Issues Investigados:**
 
-| ID | Issue | Status | Resolução |
-|----|-------|--------|-----------|
-| P.2 | WhatsApp unread hook retorna 0 | 📋 DOCUMENTADO | Known Issue - Requer refactor para adicionar tracking de leitura |
-| P.3 | Google OAuth dependencies | ✅ NÃO É PROBLEMA | Conditional loading já implementado (best practice) |
-| P.7 | `ignoreBuildErrors: true` | ✅ CORRIGIDO | Mudado para `false` - TypeScript validation habilitado |
+| ID  | Issue                          | Status            | Resolução                                                        |
+| --- | ------------------------------ | ----------------- | ---------------------------------------------------------------- |
+| P.2 | WhatsApp unread hook retorna 0 | 📋 DOCUMENTADO    | Known Issue - Requer refactor para adicionar tracking de leitura |
+| P.3 | Google OAuth dependencies      | ✅ NÃO É PROBLEMA | Conditional loading já implementado (best practice)              |
+| P.7 | `ignoreBuildErrors: true`      | ✅ CORRIGIDO      | Mudado para `false` - TypeScript validation habilitado           |
 
 **Descobertas:**
 
 **P.2 - WhatsApp Unread Hook:**
+
 - Models `Conversation` e `Message` existem e funcionam
 - API `/api/whatsapp/conversations` funcional
 - Hook comentado intencionalmente (TEMP FIX)
@@ -283,6 +303,7 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 - **Recomendação:** Adicionar tracking de leitura em sprint futuro
 
 **P.3 - Google OAuth:**
+
 - ✅ Implementação EXCELENTE com conditional loading
 - ✅ Valida env vars antes de adicionar provider
 - ✅ Todas as 6 variáveis Google configuradas no .env
@@ -290,12 +311,14 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 - **Conclusão:** Não é problema - é feature de segurança
 
 **P.7 - ignoreBuildErrors:**
+
 - ✅ Confirmado 0 erros TypeScript (`pnpm type-check` passou)
 - ✅ Desabilitado com segurança
 - ✅ Build passa com TypeScript validation habilitado
 - **Impacto:** Aumenta segurança e qualidade do código
 
 **Métricas Finais:**
+
 - TypeScript errors: 0
 - ESLint errors: 0
 - Build time: 3.4min (com validation completa)
@@ -307,21 +330,22 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 
 **Serviços Configurados e Funcionais:**
 
-| Serviço            | Status | Arquivo Configuração                    | Observações                          |
-| ------------------ | ------ | --------------------------------------- | ------------------------------------ |
-| **PostgreSQL**     | ✅     | .env (DATABASE_URL)                     | Prisma ORM funcionando               |
-| **Groq AI**        | ✅     | src/lib/ai.ts                           | Llama 3.3-70b para chat              |
-| **OpenAI**         | ✅     | src/lib/ai.ts                           | GPT-4o Vision para imagens           |
-| **Anthropic**      | ✅     | src/lib/ai.ts                           | Claude (fallback configurado)        |
-| **Stripe**         | ✅     | src/lib/stripe.ts                       | Checkout + Webhooks                  |
-| **Twilio**         | ✅     | src/services/whatsapp.ts                | WhatsApp Business API                |
-| **Resend**         | ✅     | src/services/email.ts                   | Email transacional                   |
-| **Google OAuth**   | ⚠️     | src/lib/auth.ts (condicional)           | Requer env vars corretas             |
-| **Google Calendar** | ✅     | src/services/google-calendar.ts         | Agendamentos sincronizados           |
-| **Cloudflare R2**  | ✅     | src/lib/r2-storage.ts                   | Upload de imagens                    |
-| **Next-Auth v5**   | ✅     | src/lib/auth.ts                         | Autenticação JWT + Database Sessions |
+| Serviço             | Status | Arquivo Configuração            | Observações                          |
+| ------------------- | ------ | ------------------------------- | ------------------------------------ |
+| **PostgreSQL**      | ✅     | .env (DATABASE_URL)             | Prisma ORM funcionando               |
+| **Groq AI**         | ✅     | src/lib/ai.ts                   | Llama 3.3-70b para chat              |
+| **OpenAI**          | ✅     | src/lib/ai.ts                   | GPT-4o Vision para imagens           |
+| **Anthropic**       | ✅     | src/lib/ai.ts                   | Claude (fallback configurado)        |
+| **Stripe**          | ✅     | src/lib/stripe.ts               | Checkout + Webhooks                  |
+| **Twilio**          | ✅     | src/services/whatsapp.ts        | WhatsApp Business API                |
+| **Resend**          | ✅     | src/services/email.ts           | Email transacional                   |
+| **Google OAuth**    | ⚠️     | src/lib/auth.ts (condicional)   | Requer env vars corretas             |
+| **Google Calendar** | ✅     | src/services/google-calendar.ts | Agendamentos sincronizados           |
+| **Cloudflare R2**   | ✅     | src/lib/r2-storage.ts           | Upload de imagens                    |
+| **Next-Auth v5**    | ✅     | src/lib/auth.ts                 | Autenticação JWT + Database Sessions |
 
 **Dependências Críticas (Runtime):**
+
 - next@16.1.0-canary.12 (🔴 PROBLEMA IDENTIFICADO)
 - @prisma/client@6.1.0 ✅
 - zod@3.24.1 ✅
@@ -338,20 +362,21 @@ Caused by: O cliente não tem o privilégio necessário. (os error 1314)
 
 #### Tarefas do Sprint
 
-| ID        | Tarefa                                                  | Prioridade | Estimativa | Status    |
-| --------- | ------------------------------------------------------- | ---------- | ---------- | --------- |
-| BUILD.1   | Testar build como Administrador (Windows)               | 🔴 P0      | 15min      | ⏭️ Ignorado (BUILD.2 escolhido) |
-| BUILD.2   | OU Fazer downgrade Next.js 16 → 15.5.9 estável          | 🔴 P0      | 30min      | ✅ COMPLETO |
-| BUILD.3   | OU Habilitar modo desenvolvedor Windows (symlink sem admin) | 🔴 P0      | 20min      | ⏭️ Ignorado (BUILD.2 escolhido) |
-| BUILD.4   | Validar build com `pnpm build`                          | 🔴 P0      | 5min       | ✅ COMPLETO |
-| BUILD.5   | Documentar solução final no README.md                   | 🟡 P2      | 10min      | ✅ COMPLETO (Troubleshooting section added) |
-| BUILD.6   | Atualizar CI/CD se necessário                           | 🟡 P2      | 15min      | ✅ N/A (sem CI/CD configurado ainda) |
+| ID      | Tarefa                                                      | Prioridade | Estimativa | Status                                      |
+| ------- | ----------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- |
+| BUILD.1 | Testar build como Administrador (Windows)                   | 🔴 P0      | 15min      | ⏭️ Ignorado (BUILD.2 escolhido)             |
+| BUILD.2 | OU Fazer downgrade Next.js 16 → 15.5.9 estável              | 🔴 P0      | 30min      | ✅ COMPLETO                                 |
+| BUILD.3 | OU Habilitar modo desenvolvedor Windows (symlink sem admin) | 🔴 P0      | 20min      | ⏭️ Ignorado (BUILD.2 escolhido)             |
+| BUILD.4 | Validar build com `pnpm build`                              | 🔴 P0      | 5min       | ✅ COMPLETO                                 |
+| BUILD.5 | Documentar solução final no README.md                       | 🟡 P2      | 10min      | ✅ COMPLETO (Troubleshooting section added) |
+| BUILD.6 | Atualizar CI/CD se necessário                               | 🟡 P2      | 15min      | ✅ N/A (sem CI/CD configurado ainda)        |
 
 **Solução Recomendada:** BUILD.2 (Downgrade para Next.js 15.1.0)
 
 **Razão:** Next.js 15.1.0 é versão estável, não força Turbopack, compatível com todas as dependências atuais.
 
 **Comando de Implementação:**
+
 ```bash
 # Editar package.json: "next": "^15.1.0"
 pnpm install
@@ -362,6 +387,7 @@ pnpm build  # Deve funcionar sem erros
 **Compatibilidade:** Verificada - todas features funcionam no Next 15
 
 #### Critérios de Aceitação
+
 - ✅ `pnpm build` completa sem erros
 - ✅ Build otimizado gerado em `.next/`
 - ✅ `pnpm start` inicia servidor de produção
@@ -379,31 +405,34 @@ pnpm build  # Deve funcionar sem erros
 
 #### Tarefas do Sprint
 
-| ID      | Tarefa                                                | Prioridade | Estimativa | Arquivo Afetado                      | Status    |
-| ------- | ----------------------------------------------------- | ---------- | ---------- | ------------------------------------ | --------- |
-| QUAL.1  | Fix WhatsApp unread hook (sempre retorna 0)           | 🟡 P2      | 30min      | src/hooks/use-whatsapp-unread.ts     | 📋 DOCUMENTADO (Known Issue) |
-| QUAL.2  | Adicionar validação env vars Google OAuth             | 🟡 P2      | 20min      | src/lib/auth.ts                      | ✅ NÃO É PROBLEMA (já implementado) |
-| QUAL.3  | Documentar rate limiting in-memory limitation         | 🟢 P3      | 15min      | docs/17_INTEGRACOES.md               | ✅ COMPLETO (Seção 12 adicionada) |
-| QUAL.4  | Migrar middleware para "proxy" (Next.js deprecation)  | 🟡 P2      | 45min      | src/middleware.ts → src/proxy.ts     | ✅ NÃO NECESSÁRIO (Next 15.5.9 não deprecou) |
-| QUAL.5  | Remover `ignoreBuildErrors: true` de next.config      | 🟡 P2      | 10min      | next.config.mjs                      | ✅ COMPLETO |
-| QUAL.6  | Validar todos os TypeScript errors após QUAL.5        | 🟡 P2      | 30min      | Projeto inteiro                      | ✅ COMPLETO (0 erros) |
-| QUAL.7  | Adicionar testes unitários para hooks                 | 🟢 P3      | 2h         | src/__tests__/hooks/                 | ⏳ Pendente |
+| ID     | Tarefa                                               | Prioridade | Estimativa | Arquivo Afetado                  | Status                                       |
+| ------ | ---------------------------------------------------- | ---------- | ---------- | -------------------------------- | -------------------------------------------- |
+| QUAL.1 | Fix WhatsApp unread hook (sempre retorna 0)          | 🟡 P2      | 30min      | src/hooks/use-whatsapp-unread.ts | 📋 DOCUMENTADO (Known Issue)                 |
+| QUAL.2 | Adicionar validação env vars Google OAuth            | 🟡 P2      | 20min      | src/lib/auth.ts                  | ✅ NÃO É PROBLEMA (já implementado)          |
+| QUAL.3 | Documentar rate limiting in-memory limitation        | 🟢 P3      | 15min      | docs/17_INTEGRACOES.md           | ✅ COMPLETO (Seção 12 adicionada)            |
+| QUAL.4 | Migrar middleware para "proxy" (Next.js deprecation) | 🟡 P2      | 45min      | src/middleware.ts → src/proxy.ts | ✅ NÃO NECESSÁRIO (Next 15.5.9 não deprecou) |
+| QUAL.5 | Remover `ignoreBuildErrors: true` de next.config     | 🟡 P2      | 10min      | next.config.mjs                  | ✅ COMPLETO                                  |
+| QUAL.6 | Validar todos os TypeScript errors após QUAL.5       | 🟡 P2      | 30min      | Projeto inteiro                  | ✅ COMPLETO (0 erros)                        |
+| QUAL.7 | Adicionar testes unitários para hooks                | 🟢 P3      | 2h         | src/**tests**/hooks/             | ⏳ Pendente                                  |
 
 **Total Estimado:** 4h 30min
 
 #### Detalhes das Tarefas
 
 **QUAL.1: Fix WhatsApp Unread Hook**
+
 - **Problema:** Hook sempre retorna 0 porque model WhatsAppMessage não existe
 - **Solução:** Usar model `Message` com filtro `direction: INBOUND` e `read: false`
 - **Arquivo:** [src/hooks/use-whatsapp-unread.ts:20](../src/hooks/use-whatsapp-unread.ts#L20)
 
 **QUAL.4: Migrar Middleware para Proxy**
+
 - **Problema:** Next.js 16 deprecou `middleware.ts`, recomenda `proxy.ts`
 - **Impacto:** Warning em build logs
 - **Solução:** Renomear arquivo + atualizar imports
 
 **QUAL.5 + QUAL.6: Remover ignoreBuildErrors**
+
 - **Problema Atual:** Build ignora erros TypeScript
 - **Risco:** Bugs não detectados em produção
 - **Ação:** Remover flag + corrigir todos os errors (se houver)
@@ -412,16 +441,17 @@ pnpm build  # Deve funcionar sem erros
 
 ### 📊 RESUMO EXECUTIVO DA SESSÃO (22 DEZ 2024)
 
-| Categoria                     | Status                        | Próxima Ação                       |
-| ----------------------------- | ----------------------------- | ---------------------------------- |
-| **Análise de Código**         | ✅ COMPLETO                   | -                                  |
-| **Mapeamento de Integrações** | ✅ COMPLETO                   | -                                  |
-| **Identificação de Blockers** | ✅ 1 BLOCKER CRÍTICO (BUILD)  | Executar SPRINT-BUILD-FIX          |
-| **Identificação P1-P3**       | ✅ 6 PROBLEMAS IDENTIFICADOS  | Executar SPRINT-QUALITY            |
-| **Documentação**              | ✅ tasks.md ATUALIZADO        | -                                  |
-| **Próximo Ciclo**             | 🟡 AGUARDANDO APROVAÇÃO       | Implementar ou continuar varredura |
+| Categoria                     | Status                       | Próxima Ação                       |
+| ----------------------------- | ---------------------------- | ---------------------------------- |
+| **Análise de Código**         | ✅ COMPLETO                  | -                                  |
+| **Mapeamento de Integrações** | ✅ COMPLETO                  | -                                  |
+| **Identificação de Blockers** | ✅ 1 BLOCKER CRÍTICO (BUILD) | Executar SPRINT-BUILD-FIX          |
+| **Identificação P1-P3**       | ✅ 6 PROBLEMAS IDENTIFICADOS | Executar SPRINT-QUALITY            |
+| **Documentação**              | ✅ tasks.md ATUALIZADO       | -                                  |
+| **Próximo Ciclo**             | 🟡 AGUARDANDO APROVAÇÃO      | Implementar ou continuar varredura |
 
 **Arquivos Modificados Nesta Sessão:**
+
 - [docs/tasks.md](../docs/tasks.md) - Adicionado sessão de auditoria completa + 2 sprints planejados
 - [next.config.mjs](../next.config.mjs) - Criado com tentativa de desabilitar Turbopack
 

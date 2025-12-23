@@ -2,15 +2,8 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { PortalHeader } from '@/components/portal/portal-header'
 import { Card } from '@/components/ui/card'
-import {
-  FileText,
-  Download,
-  Calendar,
-  File,
-  Shield,
-  Receipt,
-  Image,
-} from 'lucide-react'
+import { FileText, Download, Calendar, File, Shield, Receipt, Image } from 'lucide-react'
+import { UploadDocumentDialog } from '@/components/portal/upload-document-dialog'
 
 const typeIcons: Record<string, typeof FileText> = {
   CONTRATO: FileText,
@@ -75,18 +68,21 @@ export default async function DocumentosPage() {
 
   return (
     <div>
-      <PortalHeader title="Documentos" subtitle={`${documents.length} documento(s)`} />
+      <PortalHeader
+        title="Documentos"
+        subtitle={`${documents.length} documento(s)`}
+        action={<UploadDocumentDialog />}
+      />
 
       <div className="p-6">
         {documents.length === 0 ? (
           <Card className="flex flex-col items-center justify-center p-12 text-center">
             <FileText className="mb-4 h-16 w-16 text-neutral-500" />
-            <h3 className="mb-2 font-display text-xl font-semibold text-white">
-              Nenhum documento
-            </h3>
-            <p className="text-neutral-400">
-              Seus documentos aparecerao aqui
+            <h3 className="mb-2 font-display text-xl font-semibold text-white">Nenhum documento</h3>
+            <p className="mb-4 text-neutral-400">
+              Envie fotos ou documentos relacionados aos seus pedidos e orçamentos
             </p>
+            <UploadDocumentDialog />
           </Card>
         ) : (
           <div className="space-y-8">
@@ -140,17 +136,14 @@ export default async function DocumentosPage() {
 
                         {doc.status === 'PENDING' && doc.type === 'CONTRATO' && (
                           <div className="mt-3 rounded-lg bg-yellow-500/10 p-2">
-                            <p className="text-xs text-yellow-400">
-                              Aguardando assinatura
-                            </p>
+                            <p className="text-xs text-yellow-400">Aguardando assinatura</p>
                           </div>
                         )}
 
                         {doc.signedAt && (
                           <div className="mt-3 rounded-lg bg-green-500/10 p-2">
                             <p className="text-xs text-green-400">
-                              Assinado em{' '}
-                              {new Date(doc.signedAt).toLocaleDateString('pt-BR')}
+                              Assinado em {new Date(doc.signedAt).toLocaleDateString('pt-BR')}
                             </p>
                           </div>
                         )}
