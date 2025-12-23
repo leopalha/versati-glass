@@ -16,6 +16,7 @@
 - [x] CNPJ placeholder substituído (56.025.592/0001-36)
 - [x] Serviço de notificações automáticas (`in-app-notifications.ts`)
 - [x] Migrações executadas (tabelas notifications e payments)
+- [x] **NOVO:** Notificações integradas em todos eventos do sistema (orçamentos, pedidos, pagamentos, agendamentos)
 
 ---
 
@@ -53,11 +54,10 @@ const fileUrl = await uploadToR2(buffer, filename, 'documents')
 
 ---
 
-### 2. Conectar Notificações aos Eventos do Sistema
+### 2. ~~Conectar Notificações aos Eventos do Sistema~~ ✅ **CONCLUÍDO**
 
-**Status:** Serviço criado mas não está sendo chamado
-**Impacto:** Usuários não veem notificações in-app para eventos importantes
-**Integração necessária em:**
+**Status:** ✅ Implementado e deployed
+**Implementação:** Notificações integradas em todos os eventos críticos do sistema
 
 ```typescript
 // src/app/api/quotes/[id]/route.ts - Quando orçamento é enviado
