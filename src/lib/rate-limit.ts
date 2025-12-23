@@ -14,7 +14,7 @@ import { logger } from './logger'
 // ============================================================================
 
 let redis: Redis | null = null
-let ratelimiters: Map<string, Ratelimit> = new Map()
+const ratelimiters: Map<string, Ratelimit> = new Map()
 
 /**
  * Check if Upstash Redis is configured
@@ -140,7 +140,7 @@ export async function rateLimit(
   request: Request,
   config: RateLimitConfig
 ): Promise<RateLimitResult> {
-  const { maxRequests, windowSeconds, identifier } = config
+  const { identifier } = config
 
   // Get identifier (IP address or custom identifier)
   const ip = identifier || getClientIP(request)
