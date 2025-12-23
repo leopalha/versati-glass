@@ -19,6 +19,7 @@
 9. [Google Analytics](#9-google-analytics)
 10. [Meta Pixel](#10-meta-pixel)
 11. [Configuração](#11-configuração)
+12. [Rate Limiting](#12-rate-limiting)
 
 ---
 
@@ -2739,16 +2740,158 @@ railway logs
 
 ---
 
-## Próximos Passos
+## 12. RATE LIMITING
+
+### 12.1 Visão Geral
+
+**O que é:** Sistema de proteção contra abuso e spam que limita o número de requisições por IP/usuário em janelas de tempo.
+
+**Implementação:** Dual-mode com Upstash Redis (produção) e fallback in-memory (desenvolvimento).
+
+**Arquivo:** `src/lib/rate-limit.ts`
+
+### 12.2 Arquitetura
+
+```
+┌─────────────────────────────────────────────────────┐
+│              RATE LIMITING ARCHITECTURE              │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│   Request → Check Redis Config                     │
+│                ↓                                    │
+│             YES? → Upstash Redis (Persistent)      │
+│                ↓                                    │
+│              NO? → In-Memory Map (Fallback)        │
+│                ↓                                    │
+│           Return: {success, limit, remaining}      │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+### 12.3 Modos de Operação
+
+| Modo                  | Trigger                              | Storage          | Persistência | Produção      |
+| --------------------- | ------------------------------------ | ---------------- | ------------ | ------------- |
+| **Redis (Preferred)** | `UPSTASH_REDIS_REST_URL` configurado | Upstash Redis    | ✅ Sim       | ✅ Ideal      |
+| **In-Memory**         | Redis não configurado                | Map() JavaScript | ❌ Não       | ⚠️ Temporário |
+
+### 12.4 Presets Configurados
+
+| Preset             | Max Requests | Window | Uso                         |
+| ------------------ | ------------ | ------ | --------------------------- |
+| **QUOTE_CREATION** | 5 (prod)     | 15 min | Criação de orçamentos       |
+|                    | 50 (dev)     | 5 min  | Desenvolvimento             |
+| **MUTATIONS**      | 20           | 5 min  | APIs de criação/atualização |
+| **QUERIES**        | 60           | 1 min  | APIs de leitura             |
+| **PASSWORD_RESET** | 3            | 30 min | Recuperação de senha        |
+
+### 12.5 Limitações do In-Memory Mode
+
+⚠️ **IMPORTANTE:** O modo in-memory possui limitações críticas em ambientes serverless/multi-instância:
+
+1. **Não persiste entre restarts** - Contadores são resetados ao reiniciar servidor
+2. **Não compartilha entre instâncias** - Cada instância Vercel/Railway tem seu próprio Map
+3. **Memória limitada** - Pode crescer indefinidamente sem cleanup adequado
+4. **Não ideal para produção** - Atacante pode bypassar limitando-se a diferentes instâncias
+
+### 12.6 Solução Recomendada para Produção
+
+**Opção 1: Upstash Redis (RECOMENDADO)**
+
+```bash
+# .env.production
+UPSTASH_REDIS_REST_URL=https://your-redis-url.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your-token-here
+```
+
+**Benefícios:**
+
+- ✅ FREE tier generoso (10k requests/dia)
+- ✅ Serverless-friendly (REST API)
+- ✅ Compartilhado entre todas as instâncias
+- ✅ Analytics built-in
+
+**Opção 2: Redis próprio (Railway/Render)**
+
+```bash
+# Deploy Redis no Railway
+railway add redis
+
+# Configure DATABASE_REDIS_URL
+REDIS_URL=redis://default:password@host:6379
+```
+
+### 12.7 Uso no Código
+
+```typescript
+import { rateLimit, RateLimitPresets } from '@/lib/rate-limit'
+
+// Em qualquer API route
+export async function POST(request: Request) {
+  const result = await rateLimit(request, RateLimitPresets.QUOTE_CREATION)
+
+  if (!result.success) {
+    return NextResponse.json(
+      { error: 'Too many requests. Try again later.' },
+      {
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': result.limit.toString(),
+          'X-RateLimit-Remaining': result.remaining.toString(),
+          'X-RateLimit-Reset': result.reset.toString(),
+        },
+      }
+    )
+  }
+
+  // Continue com a lógica normal
+}
+```
+
+### 12.8 Monitoramento
+
+O sistema de rate limiting inclui logging automático:
+
+```typescript
+// Logs quando requisição é bloqueada
+logger.warn('[RATE_LIMIT] Request blocked', {
+  ip: '192.168.1.1',
+  limit: 5,
+  remaining: 0,
+  reset: '2024-12-22T23:30:00.000Z',
+})
+```
+
+### 12.9 Próximos Passos
+
+1. ⏳ **Configurar Upstash Redis para produção** (PRIORIDADE ALTA)
+   - Criar conta em https://upstash.com
+   - Configurar variáveis de ambiente
+   - Validar que Redis está sendo usado (checar logs)
+
+2. 🔜 **Adicionar rate limiting granular por usuário autenticado**
+   - Usar `userId` em vez de IP para usuários logados
+   - Limites diferentes para usuários autenticados
+
+3. 🔜 **Dashboard de monitoramento**
+   - Visualizar requisições bloqueadas
+   - Identificar possíveis ataques
+   - Ajustar limites baseado em métricas reais
+
+---
+
+## 13. Próximos Passos
 
 1. ✅ Groq + OpenAI configurados e funcionando
 2. ✅ Resend configurado para emails transacionais
-3. ⏳ Migrar Twilio do Sandbox para WhatsApp Business API
-4. 🔜 Implementar integração Stripe (v1.2.0)
-5. 🔜 Configurar Cloudflare R2 para armazenamento
-6. 🔜 Adicionar Google Analytics 4
+3. ✅ Rate Limiting implementado (in-memory fallback)
+4. ⏳ Migrar Twilio do Sandbox para WhatsApp Business API
+5. ⏳ **Configurar Upstash Redis para rate limiting persistente** (NOVO)
+6. 🔜 Implementar integração Stripe (v1.2.0)
+7. 🔜 Configurar Cloudflare R2 para armazenamento
+8. 🔜 Adicionar Google Analytics 4
 
 ---
 
 **Mantido por**: Equipe Versati Glass
-**Última Revisão**: 17 Dezembro 2024
+**Última Revisão**: 22 Dezembro 2024

@@ -62,7 +62,7 @@
 
 ## 🛠️ Stack Tecnológica
 
-- **Frontend:** Next.js 14 (App Router) + React 18 + TypeScript
+- **Frontend:** Next.js 15.5.9 (App Router) + React 18 + TypeScript
 - **Styling:** Tailwind CSS + Radix UI + Framer Motion
 - **Backend:** Node.js + Prisma ORM + PostgreSQL
 - **Auth:** NextAuth.js v5 (Credentials + Google OAuth)
@@ -142,6 +142,33 @@ pnpm build
 # 3. Iniciar em produção
 pnpm start
 ```
+
+#### ⚠️ Troubleshooting: Build Issues no Windows
+
+Se você encontrar erro de build relacionado a **symlinks** ou **Turbopack** no Windows:
+
+```
+Error [TurbopackInternalError]: create symlink...
+Caused by: O cliente não tem o privilégio necessário. (os error 1314)
+```
+
+**Solução Aplicada:** Fizemos downgrade do Next.js 16 canary para versão estável:
+
+```json
+{
+  "dependencies": {
+    "next": "15.5.9" // Versão estável (não usa Turbopack por padrão)
+  }
+}
+```
+
+**Por que isso resolve:**
+
+- Next.js 16 canary forçava uso do Turbopack
+- Turbopack requer privilégios de administrador no Windows para criar symlinks
+- Next.js 15.5.9 usa Webpack por padrão (sem necessidade de symlinks)
+
+**Status:** ✅ Resolvido - Build funciona perfeitamente no Next.js 15.5.9
 
 ---
 

@@ -21,7 +21,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    // Get conversations with their WhatsApp message counts
+    // Get all active conversations
     const conversations = await prisma.conversation.findMany({
       where: {
         status: 'ACTIVE',
@@ -31,37 +31,43 @@ export async function GET() {
         phoneNumber: true,
         customerName: true,
         lastMessageAt: true,
-        whatsappMessages: {
-          where: {
-            direction: 'inbound',
-            // Consider messages from last 24 hours as "unread"
-            timestamp: {
-              gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
-            },
-          },
-          select: {
-            id: true,
-            timestamp: true,
-          },
-          orderBy: {
-            timestamp: 'desc',
-          },
-        },
       },
       orderBy: {
         lastMessageAt: 'desc',
       },
     })
 
-    // Transform to include unread count
-    const conversationsWithUnread = conversations.map((conv) => ({
-      conversationId: conv.id,
-      phoneNumber: conv.phoneNumber,
-      customerName: conv.customerName,
-      lastMessageAt: conv.lastMessageAt,
-      unreadCount: conv.whatsappMessages.length,
-      lastInboundMessage: conv.whatsappMessages[0]?.timestamp || null,
-    }))
+    // Get recent inbound messages for each conversation (from last 24h)
+    const conversationsWithUnread = await Promise.all(
+      conversations.map(async (conv) => {
+        const messages = await prisma.message.findMany({
+          where: {
+            conversationId: conv.id,
+            direction: 'INBOUND',
+            // Consider messages from last 24 hours as "unread"
+            createdAt: {
+              gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
+            },
+          },
+          select: {
+            id: true,
+            createdAt: true,
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        })
+
+        return {
+          conversationId: conv.id,
+          phoneNumber: conv.phoneNumber,
+          customerName: conv.customerName,
+          lastMessageAt: conv.lastMessageAt,
+          unreadCount: messages.length,
+          lastInboundMessage: messages[0]?.createdAt || null,
+        }
+      })
+    )
 
     // Calculate total unread
     const totalUnread = conversationsWithUnread.reduce((sum, conv) => sum + conv.unreadCount, 0)
